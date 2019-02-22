@@ -40,7 +40,7 @@ bundle exec rspec spec
 ## Deploying
 
 ```bash
-heroku create request-a-repair-purple --manifest --region eu
+heroku create --manifest --region eu
 ```
 
 
