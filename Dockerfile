@@ -49,7 +49,7 @@ RUN \
 
 COPY . $INSTALL_PATH
 
-RUN RAILS_ENV=production bundle exec rake DATABASE_URL=postgresql:does_not_exist --quiet assets:precompile
+RUN RAILS_ENV=production bin/rails DATABASE_URL=postgresql:does_not_exist assets:precompile
 
 EXPOSE 3000
 
