@@ -1,50 +1,53 @@
-Request A Repair Purple
-================
+# Request a Repair - Purple
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+A web service that allows users to report problems with their home.
 
-This application was generated with the [rails_apps_composer](https://github.com/RailsApps/rails_apps_composer) gem
-provided by the [RailsApps Project](http://railsapps.github.io/).
+## Getting started **with** Docker
 
-Rails Composer is supported by developers who purchase our RailsApps tutorials.
+```bash
+docker-compose up
+```
 
-Problems? Issues?
------------
+## Getting started **without** Docker
 
-Need help? Ask on Stack Overflow with the tag 'railsapps.'
+```bash
+rails s
+```
 
-Your application contains diagnostics in the README file. Please provide a copy of the README file when reporting any issues.
+## Testing
 
-If the application doesn't work as expected, please [report an issue](https://github.com/RailsApps/rails_apps_composer/issues)
-and include the diagnostics.
+### Start and stop the test server
+```bash
+bin/dtest-server up
+bin/dtest-server down
+```
 
-Ruby on Rails
--------------
+Run Rake
+```bash
+bin/dspec
+```
 
-This application requires:
+# Run specific tests
+```bash
+bin/dspec spec/features/*
+```
+### Or without Docker
 
-- Ruby 2.5.1
-- Rails 5.1.6
+```bash
+bundle exec rspec spec
+```
 
-Learn more about [Installing Rails](http://railsapps.github.io/installing-rails.html).
+## Deploying
 
-Getting Started
----------------
+```bash
+heroku buildpacks:set https://github.com/bundler/heroku-buildpack-bundler2
+```
 
-Documentation and Support
--------------------------
+```bash
+heroku create request-a-repair-purple --manifest --region eu
+```
 
-Issues
--------------
-
-Similar Projects
-----------------
-
-Contributing
-------------
-
-Credits
--------
-
-License
--------
+```
+heroku config:set SECRET_KEY_BASE=e6258316c349d4526b5fb29b25a94c3a8f7417e5c6fe1de061d9fe7d8dfe5737b20164507dc817a449a5cd4f5c5d7d60eeeb188361bafbeb1e8fcc31f1e1551 \
+  -a report-a-repair-purple
+```
