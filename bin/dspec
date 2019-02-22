@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+if [ $# -eq 0 ]
+then
+  echo "No arguments supplied. Defaults to 'rake default'"
+  docker exec -it request-a-repair-purple_test_web_1 rake default $@
+else
+  echo "Testing: $@"
+  docker exec -it request-a-repair-purple_test_web_1 rspec $@
+fi

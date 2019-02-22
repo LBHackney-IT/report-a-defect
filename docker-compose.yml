@@ -6,6 +6,7 @@ services:
       args:
         RAILS_ENV: "development"
     ports: ["3000:3000"]
+    container_name: request-a-repair-purple_dev_web_1
     environment:
       RAILS_ENV: "development"
     env_file:
@@ -22,6 +23,7 @@ services:
 
   db:
     image: postgres
+    container_name: request-a-repair-purple_dev_db_1
     volumes:
       - pg_data:/var/lib/postgresql/data/:cached
     restart: on-failure
