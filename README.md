@@ -8,6 +8,11 @@ A web service that allows users to report problems with their home.
 docker-compose up
 ```
 
+If you'd like to use the `pry` gem for debugging start with:
+```bash
+bin/dstart
+```
+
 ## Getting started **without** Docker
 
 ```bash
