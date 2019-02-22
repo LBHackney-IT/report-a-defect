@@ -40,14 +40,19 @@ bundle exec rspec spec
 ## Deploying
 
 ```bash
-heroku buildpacks:set https://github.com/bundler/heroku-buildpack-bundler2
+heroku create request-a-repair-purple --manifest --region eu
 ```
 
+
 ```bash
-heroku create request-a-repair-purple --manifest --region eu
+heroku buildpacks:set https://github.com/bundler/heroku-buildpack-bundler2
 ```
 
 ```
 heroku config:set SECRET_KEY_BASE=e6258316c349d4526b5fb29b25a94c3a8f7417e5c6fe1de061d9fe7d8dfe5737b20164507dc817a449a5cd4f5c5d7d60eeeb188361bafbeb1e8fcc31f1e1551 \
   -a report-a-repair-purple
+```
+
+```
+git push heroku/master
 ```
