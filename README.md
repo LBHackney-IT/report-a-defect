@@ -44,6 +44,10 @@ bundle exec rspec spec
 
 ## Deploying
 
+We'll use Heroku's container deployment to get this live for free.
+
+[Make sure you have the `heroku-cli` installed, connected to your personal account and ready to go.](https://devcenter.heroku.com/articles/heroku-cli)
+
 ```bash
 heroku create --manifest --region eu
 ```
