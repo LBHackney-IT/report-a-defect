@@ -1,1 +1,8 @@
-%h1 Purple
+%p= I18n.t('welcome.message')
+
+.card{ style: 'width: 18rem' }
+  %img.card-img-top{ src: 'repairs.jpeg', alt: "Card image cap"}
+  %div.card-body
+    %h5.card-title Request a repair
+    %p.card-text Some quick example text to build on the card title and make up the bulk of the card's content.
+    = link_to(I18n.t('repair.call_to_action'), new_repairs_path, class: 'btn btn-primary')
