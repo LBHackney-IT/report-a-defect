@@ -11,5 +11,7 @@
     %header
       = render 'layouts/navigation'
     %main{:role => "main"}
+      %h1= I18n.t('service.name')
+
       = render 'layouts/messages'
       = yield
