@@ -1,0 +1,12 @@
+$govuk-text-colour: #0b0c0c;
+$govuk-secondary-text-colour: #6f777b;
+$font-family-text: 'Helvetica';
+
+body {
+  font-family: 'Helvetica';
+  color: $govuk-text-colour;
+}
+
+.hint {
+  color: $govuk-secondary-text-colour;
+}
