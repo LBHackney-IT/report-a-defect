@@ -2,5 +2,5 @@
 
 = simple_form_for @repair, class: 'request-a-repair' do |f|
   .form-group
-    = f.input :description, as: :text, input_html: { class: 'form-control' }
-  = f.button :submit, class: 'btn btn-primary'
+    = f.input :description, as: :text, input_html: { class: 'form-control', rows: '10' }
+  = f.button :submit, I18n.t('repair.submit'), class: 'btn btn-success'

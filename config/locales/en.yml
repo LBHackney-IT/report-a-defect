@@ -2,9 +2,23 @@ en:
   service:
     name: 'Purple Housing Association'
   welcome:
-    message: 'Welcome to the Purple housing association. Below are the services available to you.'
+    message: 'Services'
+    services:
+      repair:
+        title: 'Request a repair for your home'
+        introduction: 'Residents of the Purple Housing Association can request for defects in and around their home to be repaired.'
+        emergency_text: 'In an emergency, please contact the emergency services instead.'
+        lists:
+          - item: structural defects
+          - item: boundary damage
+          - item: plumbing and water damage
+          - item: electrical faults
+          - item: white good defects
+          - item: windows and doors
+
   repair:
-    call_to_action: 'Request a repair'
+    submit: 'Submit repair'
+    call_to_action: 'Start now'
     new:
       header: 'Request your repair'
     success:

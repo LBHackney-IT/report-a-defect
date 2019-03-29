@@ -10,7 +10,7 @@ RSpec.feature 'Anyone can request a repair' do
     within('form.new_repair') do
       fill_in 'repair[description]', with: 'I have a leaky water pipe in
         the bathroom'
-      click_on('Create Repair')
+      click_on(I18n.t('repair.submit'))
     end
 
     expect(page).to have_content('We have successfully received your repair,
@@ -25,7 +25,7 @@ RSpec.feature 'Anyone can request a repair' do
     expect(page).to have_content(I18n.t('repair.new.header'))
     within('form.new_repair') do
       # Deliberately forget to fill out the required description field
-      click_on('Create Repair')
+      click_on(I18n.t('repair.submit'))
     end
 
     expect(page).to have_content("Description can't be blank")
