@@ -1,28 +1,35 @@
 #!/bin/bash
+
 set -e
+
+run_with_pretty_print()
+{
+  echo "\n\033[36m===> $1\033[0m\n"
+  eval $1
+}
 
 start_test_server()
 {
-  docker-compose --file docker-compose.test.yml build
-  docker-compose --file docker-compose.test.yml up -d db-test
-  docker-compose --file docker-compose.test.yml run --rm test rake db:setup db:migrate
-  docker-compose --file docker-compose.test.yml up -d test
+  run_with_pretty_print 'docker-compose --file docker-compose.test.yml build'
+  run_with_pretty_print 'docker-compose --file docker-compose.test.yml up -d db-test'
+  run_with_pretty_print 'docker-compose --file docker-compose.test.yml run --rm test rake db:setup db:migrate'
+  run_with_pretty_print 'docker-compose --file docker-compose.test.yml up -d test'
 }
 
 
 if [[ $# -eq 0 ]]
 then
-  docker-compose --file docker-compose.test.yml down
+  run_with_pretty_print 'docker-compose --file docker-compose.test.yml down'
   start_test_server
 fi
 
 if [[ $1 == "up" ]]
 then
-  docker-compose --file docker-compose.test.yml down
+  run_with_pretty_print 'docker-compose --file docker-compose.test.yml down'
   start_test_server
 fi
 
 if [[ $1 == "down" ]]
 then
-  docker-compose --file docker-compose.test.yml down
+  run_with_pretty_print 'docker-compose --file docker-compose.test.yml down'
 fi
