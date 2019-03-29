@@ -16,6 +16,7 @@ function cleanup {
 }
 
 trap cleanup EXIT
+docker-compose build
 docker-compose run --rm web rake db:setup db:migrate
 docker-compose up -d
 
