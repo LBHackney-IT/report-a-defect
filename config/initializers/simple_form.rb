@@ -13,8 +13,8 @@ SimpleForm.setup do |config|
   # wrapper, change the order or even add your own to the
   # stack. The options given below are used to wrap the
   # whole input.
-  config.wrappers :default, class: :input,
-    hint_class: :field_with_hint, error_class: :field_with_errors, valid_class: :field_without_errors do |b|
+
+  config.wrappers :default, tag: 'div', class: 'form-group', error_class: 'form-group--error' do |b|
     ## Extensions enabled by default
     # Any of these extensions can be disabled for a
     # given input by passing: `f.input EXTENSION_NAME => false`.
@@ -52,10 +52,10 @@ SimpleForm.setup do |config|
     b.optional :readonly
 
     ## Inputs
-    # b.use :input, class: 'input', error_class: 'is-invalid', valid_class: 'is-valid'
-    b.use :label_input
-    b.use :hint,  wrap_with: { tag: :span, class: :hint }
-    b.use :error, wrap_with: { tag: :span, class: :error }
+    b.use :label, class: 'label label'
+    b.use :hint, wrap_with: { tag: 'div', class: 'hint' }
+    b.use :error, wrap_with: { tag: 'div', class: 'error-message' }
+    b.use :input, class: 'input'
 
     ## full_messages_for
     # If you want to display the full error message for the attribute, you can
@@ -179,4 +179,37 @@ SimpleForm.setup do |config|
   # Defines validation classes to the input_field. By default it's nil.
   # config.input_field_valid_class = 'is-valid'
   # config.input_field_error_class = 'is-invalid'
+
+  config.item_wrapper_tag = :div
+
+  config.wrappers :select, tag: 'div',
+                             class: 'form-group',
+                             error_class: 'form-group--error' do |field|
+    field.use :label, wrap_with: { tag: 'span', class: 'label label' }
+    field.use :hint, wrap_with: { tag: 'div', class: 'hint' }
+    field.use :error, wrap_with: { tag: 'div', class: 'error-message' }
+    field.use :input, as: :select, class: 'select'
+  end
+
+  config.wrappers :textarea, tag: 'div',
+                             class: 'form-group',
+                             error_class: 'form-group--error' do |field|
+    field.use :label, wrap_with: { tag: 'span', class: 'label label' }
+    field.use :hint, wrap_with: { tag: 'div', class: 'hint' }
+    field.use :error, wrap_with: { tag: 'div', class: 'error-message' }
+    field.use :input, as: :text, class: 'textarea'
+  end
+
+  config.wrappers :inline_checkbox, :tag => 'div',
+                                    :class => 'form-group',
+                                    :error_class => 'error' do |checkbox|
+    checkbox.use :html5
+    checkbox.wrapper :class => 'checkboxes__item' do |field|
+      field.use :input, class: 'checkboxes__input'
+      field.use :label_text, wrap_with: { tag: 'label', class: 'label label checkboxes__label' }
+    end
+
+    checkbox.use :error, :wrap_with => { :tag => 'div', :class => 'help-inline' }
+    checkbox.use :hint,  :wrap_with => { :tag => 'div', :class => 'hint' }
+  end
 end
