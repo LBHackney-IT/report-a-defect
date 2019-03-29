@@ -28,6 +28,13 @@ RSpec.feature 'Anyone can request a repair' do
       click_on(I18n.t('repair.submit'))
     end
 
-    expect(page).to have_content("Description can't be blank")
+    within('.repair_description') do
+      expect(page).to have_content("can't be blank")
+    end
+    
+    within('.error-message-list') do
+      expect(page).to have_content("Description can't be blank")
+    end
+
   end
 end

@@ -3,3 +3,12 @@
   border: 3px solid #b10e1e;
   margin-bottom: 5px;
 }
+
+.error-message-list {
+  @extend .error-message;
+  margin-bottom: 3rem;
+
+  ul {
+    margin-bottom: 0px;
+  }
+}
