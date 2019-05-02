@@ -1,23 +1,28 @@
 #!/bin/sh
 
+pretty_print()
+{
+  echo "\n\033[36m$1\033[0m"
+}
+
 run_with_pretty_print()
 {
-  echo "\n\033[36m===> $1\033[0m\n"
+  pretty_print "===> $1\n"
   eval $1
 }
 
-echo "Remove all unused images before we build new ones…"
+pretty_print "Remove all unused images before we build new ones…"
 run_with_pretty_print 'docker image prune -f'
 
-echo "Rebuilding the test server…"
+pretty_print "Rebuilding the test server…"
 run_with_pretty_print 'docker-compose --file=docker-compose.test.yml down -v --remove-orphans'
 run_with_pretty_print 'bin/dtest-server'
-echo "Rebuilt and started the testing server for TVS."
+pretty_print "Rebuilt and started the testing server for TVS."
 
-echo "Rebuilding the web server…"
+pretty_print "Rebuilding the web server…"
 run_with_pretty_print 'docker-compose down -v --remove-orphans'
 run_with_pretty_print 'docker-compose build'
 run_with_pretty_print 'docker-compose run web bin/dsetup'
 run_with_pretty_print 'docker-compose run web rake db:seed'
-echo "Rebuilt and starting the web server…"
+pretty_print "Rebuilt and starting the web server…"
 run_with_pretty_print 'bin/dstart'
