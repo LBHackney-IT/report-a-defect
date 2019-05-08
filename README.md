@@ -8,8 +8,10 @@ Documentation can be found in the doc directory.
 ## ADRs
 Architecture decision records can be found in the doc/architecture/decisions directory.
 
-## Getting started **with** Docker
+## Prerequisites
+* (Docker)[https://docs.docker.com/docker-for-mac]
 
+## Getting started
 ```bash
 docker-compose up
 ```
@@ -19,7 +21,7 @@ If you'd like to use the `pry` gem for debugging start with:
 bin/dstart
 ```
 
-## Testing
+## Running the tests
 
 ### Start and stop the test server
 ```bash
