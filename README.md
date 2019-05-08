@@ -19,12 +19,6 @@ If you'd like to use the `pry` gem for debugging start with:
 bin/dstart
 ```
 
-## Getting started **without** Docker
-
-```bash
-rails s
-```
-
 ## Testing
 
 ### Start and stop the test server
@@ -42,12 +36,6 @@ bin/dspec
 ```bash
 bin/dspec spec/features/*
 ```
-### Or without Docker
-
-```bash
-bundle exec rspec spec
-```
-
 ## Access
 
 ### Staging
