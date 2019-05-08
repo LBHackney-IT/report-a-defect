@@ -1,0 +1,3 @@
+inherit_gem:
+  dxw-utils:
+    - dxw-rubocop.yml

@@ -21,6 +21,7 @@ group :development, :test do
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
   gem 'pry'
+  gem 'dxw-utils', git: 'https://github.com/dxw/dxw-utils'
 end
 
 group :development do
