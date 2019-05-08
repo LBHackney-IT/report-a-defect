@@ -2,6 +2,12 @@
 
 A web service that allows Hackney residents to report defects with their newly built properties and the new build team to manage those defects.
 
+## Documentation
+Documentation can be found in the doc directory.
+
+## ADRs
+Architecture decision records can be found in the doc/architecture/decisions directory.
+
 ## Getting started **with** Docker
 
 ```bash
