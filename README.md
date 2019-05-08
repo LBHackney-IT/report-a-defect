@@ -1,6 +1,6 @@
 # Report a Defect
 
-A web service that allows users to report problems with their home.
+A web service that allows Hackney residents to report defects with their newly built properties and the new build team to manage those defects.
 
 ## Getting started **with** Docker
 
