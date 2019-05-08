@@ -7,4 +7,4 @@ test:
 production:
   adapter: redis
   url: redis://localhost:6379/1
-  channel_prefix: request-a-repair-purple_production
+  channel_prefix: report-a-defect_production

@@ -6,7 +6,7 @@ services:
       args:
         RAILS_ENV: "development"
     ports: ["3000:3000"]
-    container_name: request-a-repair-purple_dev_web_1
+    container_name: report-a-defect_dev_web_1
     environment:
       RAILS_ENV: "development"
     env_file:
@@ -17,13 +17,13 @@ services:
     stdin_open: true
     restart: on-failure
     volumes:
-      - .:/srv/request-a-repair-purple:cached
-      - node_modules:/srv/request-a-repair-purple/node_modules
+      - .:/srv/report-a-defect:cached
+      - node_modules:/srv/report-a-defect/node_modules
     command: bash -c "rm -f tmp/pids/server.pid && rails s"
 
   db:
     image: postgres
-    container_name: request-a-repair-purple_dev_db_1
+    container_name: report-a-defect_dev_db_1
     volumes:
       - pg_data:/var/lib/postgresql/data/:cached
     restart: on-failure

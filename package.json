@@ -1,5 +1,5 @@
 {
-  "name": "request-a-repair-purple",
+  "name": "report-a-defect",
   "private": true,
   "dependencies": {
     "govuk-frontend": "^1.1.1"

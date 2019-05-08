@@ -8,7 +8,7 @@
       - @repair.errors.full_messages.each do |error_message|
         %li= error_message
 
-= simple_form_for @repair, class: 'request-a-repair' do |f|
+= simple_form_for @repair, class: 'report-a-defect' do |f|
   .form-group
     = f.input :description, as: :text, input_html: { class: 'form-control', rows: '10' }
   = f.button :submit, I18n.t('repair.submit'), class: 'btn btn-success'

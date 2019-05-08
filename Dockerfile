@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -qq -y \
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
         && apt-get install -y nodejs
 
-ENV INSTALL_PATH /srv/request-a-repair-purple
+ENV INSTALL_PATH /srv/report-a-defect
 RUN mkdir -p $INSTALL_PATH
 
 # This must be ordered before rake assets:precompile
