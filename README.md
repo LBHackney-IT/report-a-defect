@@ -48,5 +48,10 @@ bin/dspec spec/features/*
 bundle exec rspec spec
 ```
 
+## Access
 
+### Staging
+https://lbh-report-a-defect-staging.herokuapp.com/
 
+### Production
+https://lbh-report-a-defect-production.herokuapp.com/
