@@ -31,10 +31,9 @@ RSpec.feature 'Anyone can request a repair' do
     within('.repair_description') do
       expect(page).to have_content("can't be blank")
     end
-    
+
     within('.error-message-list') do
       expect(page).to have_content("Description can't be blank")
     end
-
   end
 end

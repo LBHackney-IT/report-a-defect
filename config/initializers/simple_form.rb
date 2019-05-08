@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #
 # Uncomment this and change the path if necessary to include your own
 # components.
@@ -183,8 +184,8 @@ SimpleForm.setup do |config|
   config.item_wrapper_tag = :div
 
   config.wrappers :select, tag: 'div',
-                             class: 'form-group',
-                             error_class: 'form-group--error' do |field|
+                           class: 'form-group',
+                           error_class: 'form-group--error' do |field|
     field.use :label, wrap_with: { tag: 'span', class: 'label label' }
     field.use :hint, wrap_with: { tag: 'div', class: 'hint' }
     field.use :error, wrap_with: { tag: 'div', class: 'error-message' }
@@ -200,16 +201,16 @@ SimpleForm.setup do |config|
     field.use :input, as: :text, class: 'textarea'
   end
 
-  config.wrappers :inline_checkbox, :tag => 'div',
-                                    :class => 'form-group',
-                                    :error_class => 'error' do |checkbox|
+  config.wrappers :inline_checkbox, tag: 'div',
+                                    class: 'form-group',
+                                    error_class: 'error' do |checkbox|
     checkbox.use :html5
-    checkbox.wrapper :class => 'checkboxes__item' do |field|
+    checkbox.wrapper class: 'checkboxes__item' do |field|
       field.use :input, class: 'checkboxes__input'
       field.use :label_text, wrap_with: { tag: 'label', class: 'label label checkboxes__label' }
     end
 
-    checkbox.use :error, :wrap_with => { :tag => 'div', :class => 'help-inline' }
-    checkbox.use :hint,  :wrap_with => { :tag => 'div', :class => 'hint' }
+    checkbox.use :error, wrap_with: { tag: 'div', class: 'help-inline' }
+    checkbox.use :hint,  wrap_with: { tag: 'div', class: 'hint' }
   end
 end
