@@ -14,7 +14,9 @@ class RepairsController < ApplicationController
     end
   end
 
-  private def repair_params
+  private
+
+  def repair_params
     params.require(:repair).permit(:description)
   end
 end
