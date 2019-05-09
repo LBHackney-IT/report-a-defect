@@ -4,3 +4,6 @@
 require_relative 'config/application'
 
 Rails.application.load_tasks
+
+desc 'Run all the specs'
+task default: %i[spec]
