@@ -1,0 +1,67 @@
+version: 2
+jobs:
+  build_and_test:
+    working_directory: ~/report_a_defect
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install Docker
+          command: |
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+            rm get-docker.sh
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - run:
+          name: Start the test server
+          command: bin/dtest-server ci
+      - run:
+          name: Run the tests and linting checker
+          command: bin/dspec
+
+  deploy: &deploy
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - run: true
+  deploy-staging:
+    <<: *deploy
+    steps:
+      - run:
+          name: Deploy Staging to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_STAGING.git develop
+  deploy-production:
+    <<: *deploy
+    steps:
+      - run:
+          name: Deploy Master to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_PRODUCTION.git master
+
+workflows:
+  version: 2
+  continuous_delivery:
+    jobs:
+      - build_and_test
+      - deploy-staging:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only:
+                - develop
+      - deploy-production:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only:
+                - master
