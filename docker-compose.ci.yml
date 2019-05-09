@@ -1,0 +1,37 @@
+version: '3.1'
+services:
+  test:
+    build:
+      context: .
+      args:
+        RAILS_ENV: "test"
+    environment:
+      RAILS_ENV: "test"
+      DATABASE_URL: "postgres://postgres@db-test:5432/report-a-defect?template=template0&pool=5&encoding=unicode"
+    container_name: report-a-defect_test_web_1
+    env_file:
+      - docker-compose.env
+    volumes:
+      - node_modules:/srv/report-a-defect/node_modules:cached
+    depends_on:
+      - db-ci
+    command: ["bundle", "exec", "./bin/dsetup && spring server"]
+    restart: on-failure
+    networks:
+      - ci
+
+  db-ci:
+    image: postgres
+    container_name: report-a-defect_test_db_1
+    volumes:
+      - pg_test_data:/var/lib/postgresql/data/:cached
+    networks:
+      - test
+    restart: on-failure
+
+networks:
+  test:
+
+volumes:
+  pg_test_data: {}
+  node_modules:

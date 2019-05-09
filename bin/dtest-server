@@ -10,10 +10,10 @@ run_with_pretty_print()
 
 start_test_server()
 {
-  run_with_pretty_print 'docker-compose --file docker-compose.test.yml build'
-  run_with_pretty_print 'docker-compose --file docker-compose.test.yml up -d db-test'
-  run_with_pretty_print 'docker-compose --file docker-compose.test.yml run --rm test rake db:setup db:migrate'
-  run_with_pretty_print 'docker-compose --file docker-compose.test.yml up -d test'
+  run_with_pretty_print "docker-compose --file ${1:-docker-compose.test.yml} build"
+  run_with_pretty_print "docker-compose --file ${1:-docker-compose.test.yml} up -d db-test"
+  run_with_pretty_print "docker-compose --file ${1:-docker-compose.test.yml} run --rm test rake db:setup db:migrate"
+  run_with_pretty_print "docker-compose --file ${1:-docker-compose.test.yml} up -d test"
 }
 
 
@@ -32,4 +32,12 @@ fi
 if [[ $1 == "down" ]]
 then
   run_with_pretty_print 'docker-compose --file docker-compose.test.yml down'
+fi
+
+if [[ $1 == "ci" ]]
+then
+  # Circle CI cannot mount volumes which are very useful for quick file reloading
+  # in dev and test. Therefore we require an almost identical docker-compose.yml
+  # file for CI only.
+  start_test_server 'docker-compose.ci.yml'
 fi
