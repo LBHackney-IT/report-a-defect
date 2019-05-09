@@ -24,6 +24,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'pry'
   gem 'dxw-utils', git: 'https://github.com/dxw/dxw-utils'
+  gem 'bullet'
 end
 
 group :development do
