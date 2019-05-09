@@ -14,13 +14,13 @@ services:
     volumes:
       - node_modules:/srv/report-a-defect/node_modules:cached
     depends_on:
-      - db-ci
+      - db-test
     command: ["bundle", "exec", "./bin/dsetup && spring server"]
     restart: on-failure
     networks:
-      - ci
+      - test
 
-  db-ci:
+  db-test:
     image: postgres
     container_name: report-a-defect_test_db_1
     volumes:
