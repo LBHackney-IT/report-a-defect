@@ -59,6 +59,8 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  config.include AuthHelpers
+
   if Bullet.enable?
     config.before(:each) do
       Bullet.start_request
