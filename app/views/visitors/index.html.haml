@@ -7,4 +7,15 @@
         %li= list[:item]
     %p= I18n.t('welcome.services.repair.emergency_text')
 
-    = link_to(I18n.t('scheme.call_to_action'), new_repairs_path, class: 'govuk-button mb0')
+    = link_to(I18n.t('scheme.call_to_action'), new_schemes_path, class: 'govuk-button mb0')
+
+    %table.table.schemes
+      %thead.thead-light
+        %tr
+          %th #
+          %th Name
+      %tbody
+        - @schemes.each_with_index do |scheme, count|
+          %tr
+            %th{ scope: 'row' }= count
+            %td= scheme.name

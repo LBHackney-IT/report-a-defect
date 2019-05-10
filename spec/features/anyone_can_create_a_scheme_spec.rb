@@ -14,6 +14,9 @@ RSpec.feature 'Anyone can create a scheme' do
     end
 
     expect(page).to have_content(I18n.t('scheme.success.notice'))
+    within('table.schemes') do
+      expect(page).to have_content(Scheme.first.name)
+    end
   end
 
   scenario 'an invalid scheme cannot be submitted' do

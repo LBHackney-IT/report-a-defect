@@ -7,6 +7,7 @@ class SchemesController < ApplicationController
     @scheme = Scheme.new(scheme_params)
 
     if @scheme.valid?
+      @scheme.save
       flash[:notice] = I18n.t('scheme.success.notice')
       redirect_to root_path
     else
