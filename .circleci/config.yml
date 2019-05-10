@@ -25,40 +25,81 @@ jobs:
       - run:
           name: Run the tests and linting checker
           command: bin/dspec
+      - run:
+          name: Save the tested Docker image for deployment
+          command: |
+            mkdir -p docker-cache
+            docker tag reportadefect_test:latest reportadefect:$CIRCLE_SHA1
+            docker image save -o docker-cache/built-image.tar reportadefect:$CIRCLE_SHA1
+            docker image load --input docker-cache/built-image.tar
+      - save_cache:
+          key: docker-images-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - docker-cache/built-image.tar
 
-  deploy: &deploy
+  deploy_staging:
+    working_directory: ~/report_a_defect
     docker:
       - image: buildpack-deps:trusty
     steps:
-      - run: true
-  deploy-staging:
-    <<: *deploy
-    steps:
+      - restore_cache:
+          keys:
+            - docker-images-{{ .Environment.CIRCLE_SHA1 }}
+      - setup_remote_docker
       - run:
-          name: Deploy Staging to Heroku
+          name: Install Docker
           command: |
-            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_STAGING.git develop
-  deploy-production:
-    <<: *deploy
-    steps:
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+            rm get-docker.sh
       - run:
-          name: Deploy Master to Heroku
+          name: Login to Docker
+          command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+      - run:
+          name: Deploy the Docker image to Heroku Staging
           command: |
-            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_PRODUCTION.git master
+            docker image load --input /root/report_a_defect/docker-cache/built-image.tar
+            docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
+            docker push registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
+
+  deploy_production:
+    working_directory: ~/report_a_defect
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - restore_cache:
+          keys:
+            - docker-images-{{ .Environment.CIRCLE_SHA1 }}
+      - setup_remote_docker
+      - run:
+          name: Install Docker
+          command: |
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+            rm get-docker.sh
+      - run:
+          name: Login to Docker
+          command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+      - run:
+          name: Deploy the Docker image to Heroku Production
+          command: |
+            docker image load --input /root/report_a_defect/docker-cache/built-image.tar
+            docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
+            docker push registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
 
 workflows:
   version: 2
   continuous_delivery:
     jobs:
       - build_and_test
-      - deploy-staging:
+      - deploy_staging:
           requires:
             - build_and_test
           filters:
             branches:
               only:
                 - develop
-      - deploy-production:
+      - deploy_production:
           requires:
             - build_and_test
           filters:
