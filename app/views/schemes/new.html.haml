@@ -1,0 +1,14 @@
+%h3= I18n.t('scheme.new.header')
+%p.hint= 'Step 1 of 1'
+
+- if @scheme.errors.present?
+  %div.error-message-list
+    %p Please correct the following errors:
+    %ul
+      - @scheme.errors.full_messages.each do |error_message|
+        %li= error_message
+
+= simple_form_for @scheme, class: 'report-a-defect' do |f|
+  .form-group
+    = f.input :name, input_html: { class: 'form-control' }
+  = f.button :submit, I18n.t('scheme.submit'), class: 'btn btn-success'
