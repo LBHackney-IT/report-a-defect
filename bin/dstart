@@ -23,7 +23,9 @@ function cleanup {
 trap cleanup EXIT
 
 run_with_pretty_print 'docker-compose build'
-run_with_pretty_print 'docker-compose run --rm web rake db:setup db:migrate'
+
 run_with_pretty_print 'docker-compose up -d'
+
+run_with_pretty_print "docker-compose run --rm web bin/dsetup"
 
 run_with_pretty_print 'docker attach report-a-defect_dev_web_1'

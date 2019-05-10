@@ -20,11 +20,11 @@ jobs:
             chmod +x ~/docker-compose
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - run:
-          name: Start the test server
-          command: bin/dtest-server ci
-      - run:
-          name: Run the tests and linting checker
-          command: bin/dspec
+          name: Run the tests
+          command: |
+            bin/dtest-server ci
+            docker ps
+            bin/dspec
       - run:
           name: Save the tested Docker image for deployment
           command: |
