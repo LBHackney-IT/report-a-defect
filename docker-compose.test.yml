@@ -20,6 +20,14 @@ services:
     restart: on-failure
     networks:
       - tests
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 25M
+        reservations:
+          cpus: '0.50'
+          memory: 50M
 
   db-test:
     image: postgres
@@ -29,6 +37,14 @@ services:
     networks:
       - tests
     restart: on-failure
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 25M
+        reservations:
+          cpus: '0.50'
+          memory: 50M
 
 networks:
   tests:

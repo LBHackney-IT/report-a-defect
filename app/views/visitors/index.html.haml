@@ -1,10 +1,16 @@
 .govuk-grid-row
   .govuk-grid-column-two-thirds
-    %h1.govuk-heading-xl= I18n.t('welcome.services.repair.title')
-    %p= I18n.t('welcome.services.repair.introduction')
-    %ul.govuk-list.govuk-list--bullet
-      - I18n.t('welcome.services.repair.lists').each do |list|
-        %li= list[:item]
-    %p= I18n.t('welcome.services.repair.emergency_text')
+    %h1.govuk-heading-xl= I18n.t('welcome.services.scheme.title')
 
-    = link_to(I18n.t('repair.call_to_action'), new_repairs_path, class: 'govuk-button mb0')
+    = link_to(I18n.t('scheme.call_to_action'), new_schemes_path, class: 'govuk-button mb0')
+
+    %table.govuk-table.schemes
+      %thead.govuk-table__head
+        %tr.govuk-table__row
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Name
+      %tbody.govuk-table__body
+        - @schemes.each do |scheme|
+          %tr.govuk-table__row
+            %td.govuk-table__cell= scheme.name

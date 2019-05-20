@@ -2,26 +2,16 @@ en:
   app:
     title: 'Report a Defect'
   service:
-    name: 'Housing Association'
+    name: 'Report a Defect'
   welcome:
-    message: 'Services'
     services:
-      repair:
-        title: 'Report a Defect'
-        introduction: 'Residents of the  Housing Association can request for defects in and around their home to be repaired.'
-        emergency_text: 'In an emergency, please contact the emergency services instead.'
-        lists:
-          - item: structural defects
-          - item: boundary damage
-          - item: plumbing and water damage
-          - item: electrical faults
-          - item: white good defects
-          - item: windows and doors
+      scheme:
+        title: 'Schemes'
 
-  repair:
-    submit: 'Submit repair'
-    call_to_action: 'Start now'
+  scheme:
+    submit: 'Submit scheme'
+    call_to_action: 'Create a scheme'
     new:
-      header: 'Request your repair'
+      header: 'Create a scheme'
     success:
-      notice: 'We have successfully received your repair, expect a reply within 4 hours.'
+      notice: 'The scheme has successfully been created.'
