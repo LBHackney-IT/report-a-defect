@@ -3,6 +3,9 @@ inherit_gem:
     - dxw-rubocop.yml
 
 Metrics/AbcSize:
-    Max: 25
-    Exclude:
-      - 'spec/**/*'
+  Max: 25
+  Exclude:
+    - 'spec/**/*'
+
+Style/ClassAndModuleChildren:
+  Enabled: false
