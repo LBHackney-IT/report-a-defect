@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 ruby '2.6.1'
-gem 'bootstrap', '>= 4.3.1'
 gem 'coffee-rails', '~> 4.2'
 gem 'haml-rails'
 gem 'high_voltage'
