@@ -1,4 +1,4 @@
-class SchemesController < ApplicationController
+class Staff::SchemesController < Staff::BaseController
   def new
     @scheme = Scheme.new
   end
