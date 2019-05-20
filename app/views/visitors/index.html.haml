@@ -1,12 +1,10 @@
-%section.row
-  %h2= I18n.t('welcome.message')
-%section.row
-  %div
-    %h3= I18n.t('welcome.services.repair.title')
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl= I18n.t('welcome.services.repair.title')
     %p= I18n.t('welcome.services.repair.introduction')
-    %ul
+    %ul.govuk-list.govuk-list--bullet
       - I18n.t('welcome.services.repair.lists').each do |list|
         %li= list[:item]
     %p= I18n.t('welcome.services.repair.emergency_text')
 
-    = link_to(I18n.t('repair.call_to_action'), new_repairs_path, class: 'btn btn-success')
+    = link_to(I18n.t('repair.call_to_action'), new_repairs_path, class: 'govuk-button mb0')

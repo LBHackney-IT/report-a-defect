@@ -1,11 +1,13 @@
 en:
+  app:
+    title: 'Report a Defect'
   service:
-    name: ' Housing Association'
+    name: 'Housing Association'
   welcome:
     message: 'Services'
     services:
       repair:
-        title: 'Request a repair for your home'
+        title: 'Report a Defect'
         introduction: 'Residents of the  Housing Association can request for defects in and around their home to be repaired.'
         emergency_text: 'In an emergency, please contact the emergency services instead.'
         lists:
