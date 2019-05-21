@@ -16,7 +16,6 @@ en:
     button:
       create: 'Create %{resource}'
   scheme:
-    submit: 'Submit scheme'
     call_to_action: 'Create a scheme'
     new:
       header: 'Create a scheme'

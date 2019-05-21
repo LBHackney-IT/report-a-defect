@@ -8,11 +8,11 @@ RSpec.feature 'Anyone can create a scheme' do
 
     click_on(I18n.t('generic.button.create', resource: 'Scheme'))
 
-    expect(page).to have_content(I18n.t('scheme.new.header'))
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.create').titleize)
     within('form.new_scheme') do
       fill_in 'scheme[name]', with: 'I have a leaky water pipe in
         the bathroom'
-      click_on(I18n.t('scheme.submit'))
+      click_on(I18n.t('generic.button.create', resource: 'Scheme'))
     end
 
     expect(page).to have_content(I18n.t('scheme.success.notice'))
@@ -26,18 +26,14 @@ RSpec.feature 'Anyone can create a scheme' do
 
     click_on(I18n.t('generic.button.create', resource: 'Scheme'))
 
-    expect(page).to have_content(I18n.t('scheme.new.header'))
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.create').titleize)
     within('form.new_scheme') do
       # Deliberately forget to fill out the required name field
-      click_on(I18n.t('scheme.submit'))
+      click_on(I18n.t('generic.button.create', resource: 'Scheme'))
     end
 
     within('.scheme_name') do
       expect(page).to have_content("can't be blank")
-    end
-
-    within('.error-message-list') do
-      expect(page).to have_content("Name can't be blank")
     end
   end
 end

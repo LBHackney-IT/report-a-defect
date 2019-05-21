@@ -10,6 +10,7 @@
 # Use this setup block to configure all options available in SimpleForm.
 
 # rubocop:disable Metrics/BlockLength
+# rubocop:disable Metrics/LineLength
 SimpleForm.setup do |config|
   # Wrappers are used by the form builder to generate a
   # complete input. You can remove any component from the
@@ -17,7 +18,7 @@ SimpleForm.setup do |config|
   # stack. The options given below are used to wrap the
   # whole input.
 
-  config.wrappers :default, tag: 'div', class: 'form-group', error_class: 'form-group--error' do |b|
+  config.wrappers :default, tag: 'div', class: 'govuk-form-group', error_class: 'govuk-form-group--error' do |b|
     ## Extensions enabled by default
     # Any of these extensions can be disabled for a
     # given input by passing: `f.input EXTENSION_NAME => false`.
@@ -55,10 +56,10 @@ SimpleForm.setup do |config|
     b.optional :readonly
 
     ## Inputs
-    b.use :label, class: 'label label'
-    b.use :hint, wrap_with: { tag: 'div', class: 'hint' }
-    b.use :error, wrap_with: { tag: 'div', class: 'error-message' }
-    b.use :input, class: 'input'
+    b.use :label, class: 'govuk-label govuk-label'
+    b.use :hint, wrap_with: { tag: 'div', class: 'govuk-hint' }
+    b.use :error, wrap_with: { tag: 'div', class: 'govuk-error-message' }
+    b.use :input, class: 'govuk-input'
 
     ## full_messages_for
     # If you want to display the full error message for the attribute, you can
@@ -74,10 +75,10 @@ SimpleForm.setup do |config|
   # Defaults to :nested for bootstrap config.
   #   inline: input + label
   #   nested: label > input
-  config.boolean_style = :nested
+  config.boolean_style = :inline
 
   # Default class for buttons
-  config.button_class = 'btn'
+  config.button_class = 'govuk-button'
 
   # Method used to tidy up errors. Specify any Rails Array method.
   # :first lists the first message for each field.
@@ -186,34 +187,45 @@ SimpleForm.setup do |config|
   config.item_wrapper_tag = :div
 
   config.wrappers :select, tag: 'div',
-                           class: 'form-group',
-                           error_class: 'form-group--error' do |field|
-    field.use :label, wrap_with: { tag: 'span', class: 'label label' }
-    field.use :hint, wrap_with: { tag: 'div', class: 'hint' }
-    field.use :error, wrap_with: { tag: 'div', class: 'error-message' }
-    field.use :input, as: :select, class: 'select'
+                           class: 'govuk-form-group',
+                           error_class: 'govuk-form-group--error' do |field|
+    field.use :label, wrap_with: { tag: 'span', class: 'govuk-label govuk-label' }
+    field.use :hint, wrap_with: { tag: 'div', class: 'govuk-hint' }
+    field.use :error, wrap_with: { tag: 'div', class: 'govuk-error-message' }
+    field.use :input, as: :select, class: 'govuk-select'
   end
 
   config.wrappers :textarea, tag: 'div',
-                             class: 'form-group',
-                             error_class: 'form-group--error' do |field|
-    field.use :label, wrap_with: { tag: 'span', class: 'label label' }
-    field.use :hint, wrap_with: { tag: 'div', class: 'hint' }
-    field.use :error, wrap_with: { tag: 'div', class: 'error-message' }
-    field.use :input, as: :text, class: 'textarea'
+                             class: 'govuk-form-group',
+                             error_class: 'govuk-form-group--error' do |field|
+    field.use :label, wrap_with: { tag: 'span', class: 'govuk-label govuk-label' }
+    field.use :hint, wrap_with: { tag: 'div', class: 'govuk-hint' }
+    field.use :error, wrap_with: { tag: 'div', class: 'govuk-error-message' }
+    field.use :input, as: :text, class: 'govuk-textarea'
   end
 
   config.wrappers :inline_checkbox, tag: 'div',
-                                    class: 'form-group',
+                                    class: 'govuk-form-group',
                                     error_class: 'error' do |checkbox|
     checkbox.use :html5
-    checkbox.wrapper class: 'checkboxes__item' do |field|
-      field.use :input, class: 'checkboxes__input'
-      field.use :label_text, wrap_with: { tag: 'label', class: 'label label checkboxes__label' }
+    checkbox.wrapper class: 'govuk-checkboxes__item' do |field|
+      field.use :input, class: 'govuk-checkboxes__input'
+      field.use :label_text, wrap_with: { tag: 'label', class: 'govuk-label govuk-label govuk-checkboxes__label' }
     end
 
     checkbox.use :error, wrap_with: { tag: 'div', class: 'help-inline' }
-    checkbox.use :hint,  wrap_with: { tag: 'div', class: 'hint' }
+    checkbox.use :hint,  wrap_with: { tag: 'div', class: 'govuk-hint' }
+  end
+
+  config.wrappers :money, tag: 'div',
+                          class: 'salary_field govuk-form-group',
+                          error_class: 'govuk-form-group--error' do |field|
+    field.use :html5
+    field.use :hint,  wrap_with: { tag: 'div', class: 'govuk-hint' }
+    field.use :error, wrap_with: { tag: 'div', class: 'govuk-error-message' }
+    field.use :label, wrap_with: { tag: 'span', class: 'pound_sign' }
+    field.use :input, class: 'govuk-input', pattern: '\d*'
   end
 end
 # rubocop:enable Metrics/BlockLength
+# rubocop:enable Metrics/LineLength
