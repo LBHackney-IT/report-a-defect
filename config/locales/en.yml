@@ -3,13 +3,9 @@ en:
     title: 'Report a Defect'
   service:
     name: 'Report a Defect'
-  welcome:
-    services:
-      scheme:
-        title: 'Schemes'
-  staff:
-    dashboards:
-      page_title: 'Dashboard'
+  page_title:
+    staff:
+      dashboards: 'Dashboard'
   scheme:
     submit: 'Submit scheme'
     call_to_action: 'Create a scheme'
