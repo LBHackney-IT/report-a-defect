@@ -3,7 +3,7 @@
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl= I18n.t('page_title.staff.dashboard')
-    = link_to(I18n.t('scheme.call_to_action'), new_scheme_path, class: 'govuk-button mb0')
+    = link_to(I18n.t('generic.button.create', resource: 'Scheme'), new_scheme_path, class: 'govuk-button mb0')
 
     %table.govuk-table.schemes
       %thead.govuk-table__head

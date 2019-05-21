@@ -6,7 +6,7 @@ RSpec.feature 'Anyone can create a scheme' do
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
-    click_on(I18n.t('scheme.call_to_action'))
+    click_on(I18n.t('generic.button.create', resource: 'Scheme'))
 
     expect(page).to have_content(I18n.t('scheme.new.header'))
     within('form.new_scheme') do
@@ -24,7 +24,7 @@ RSpec.feature 'Anyone can create a scheme' do
   scenario 'an invalid scheme cannot be submitted' do
     visit root_path
 
-    click_on(I18n.t('scheme.call_to_action'))
+    click_on(I18n.t('generic.button.create', resource: 'Scheme'))
 
     expect(page).to have_content(I18n.t('scheme.new.header'))
     within('form.new_scheme') do

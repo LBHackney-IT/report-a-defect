@@ -8,9 +8,13 @@ en:
       dashboard: 'Dashboard'
       schemes:
         show: '%{name} scheme'
+      priorty:
+        create: 'Create priority'
   generic:
     link:
       show: 'View'
+    button:
+      create: 'Create %{resource}'
   scheme:
     submit: 'Submit scheme'
     call_to_action: 'Create a scheme'
