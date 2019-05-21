@@ -15,9 +15,6 @@ en:
       show: 'View'
     button:
       create: 'Create %{resource}'
-  scheme:
-    call_to_action: 'Create a scheme'
-    new:
-      header: 'Create a scheme'
-    success:
-      notice: 'The scheme has successfully been created.'
+    notice:
+      success:
+        'The %{resource} has successfully been created.'

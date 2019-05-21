@@ -8,7 +8,7 @@ class Staff::SchemesController < Staff::BaseController
 
     if @scheme.valid?
       @scheme.save
-      flash[:notice] = I18n.t('scheme.success.notice')
+      flash[:success] = I18n.t('generic.notice.success', resource: 'scheme')
       redirect_to root_path
     else
       render :new

@@ -2,6 +2,8 @@ $govuk-font-url-function: 'font-url';
 $govuk-image-url-function: 'image-url';
 
 @import 'base/frontend';
+@import 'base/mixins';
+@import 'components/flashes';
 
 p {
   @include govuk-font(19);
