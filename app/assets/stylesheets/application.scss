@@ -1,0 +1,8 @@
+$govuk-font-url-function: 'font-url';
+$govuk-image-url-function: 'image-url';
+
+@import 'base/frontend';
+
+p {
+  @include govuk-font(19);
+}
