@@ -4,7 +4,7 @@ RSpec.feature 'Anyone can create a scheme' do
   scenario 'a scheme can be created' do
     visit root_path
 
-    expect(page).to have_content(I18n.t('page_title.staff.dashboards'))
+    expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
     click_on(I18n.t('scheme.call_to_action'))
 

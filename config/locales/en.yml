@@ -5,7 +5,7 @@ en:
     name: 'Report a Defect'
   page_title:
     staff:
-      dashboards: 'Dashboard'
+      dashboard: 'Dashboard'
   scheme:
     submit: 'Submit scheme'
     call_to_action: 'Create a scheme'
