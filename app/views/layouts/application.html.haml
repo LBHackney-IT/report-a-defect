@@ -8,13 +8,11 @@
     %title #{content_for :page_title_prefix} — #{t('app.title')}
     %meta{content: "width=device-width, initial-scale=1", name: "viewport"}/
     %meta{content: "blue", name: "theme-color"}/
+    %link{href: asset_path("favicon.ico"), rel: "shortcut icon", type: "image/x-icon"}/
 
     /[if !IE 8]
     = stylesheet_link_tag 'application', media: 'all'
-    /[if lte IE 8]
-    -# = stylesheet_link_tag '/govuk-frontend/all-ie8', media: 'all'
     /[if lt IE 9]
-    = javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js'
     = javascript_include_tag 'application'
 
     = csrf_meta_tags
@@ -43,7 +41,6 @@
             beta
           %span.govuk-phase-banner__text
             This is a new service
-
       %main#main-content.govuk-main-wrapper.app-main-class{role: "main"}
         - flash.each do |name, msg|
           %div{class: "flash #{name}"}
