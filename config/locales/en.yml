@@ -8,7 +8,8 @@ en:
       dashboard: 'Dashboard'
       schemes:
         show: '%{name} scheme'
-      priorty:
+        create: 'Create scheme'
+      priorities:
         create: 'Create priority'
   generic:
     link:
