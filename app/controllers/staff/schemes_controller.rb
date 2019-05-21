@@ -15,7 +15,15 @@ class Staff::SchemesController < Staff::BaseController
     end
   end
 
+  def show
+    @scheme = Scheme.find(scheme_id)
+  end
+
   private
+
+  def scheme_id
+    params[:id]
+  end
 
   def scheme_params
     params.require(:scheme).permit(:name)
