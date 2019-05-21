@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Scheme, type: :model do
+RSpec.describe Priority, type: :model do
   it 'validates presence of required fields' do
     blank_repair = described_class.new
     expect(blank_repair.valid?).to be_falsey
@@ -8,5 +8,7 @@ RSpec.describe Scheme, type: :model do
     errors = blank_repair.errors.full_messages
 
     expect(errors).to include("Name can't be blank")
+    expect(errors).to include("Duration can't be blank")
+    expect(errors).to include('Scheme must exist')
   end
 end

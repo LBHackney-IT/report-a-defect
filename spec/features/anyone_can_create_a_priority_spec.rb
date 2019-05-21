@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a priority for a scheme' do
+  let!(:scheme) { create(:scheme) }
+
   scenario 'a scheme priority can be viewed' do
-    scheme = create(:scheme)
     priority = create(:priority, scheme: scheme)
 
     visit root_path
@@ -21,8 +22,6 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
   end
 
   scenario 'a scheme priority can be created' do
-    scheme = create(:scheme)
-
     visit root_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
@@ -46,6 +45,25 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
       priority = Priority.first
       expect(page).to have_content(priority.name)
       expect(page).to have_content(priority.duration)
+    end
+  end
+
+  scenario 'an invalid priority cannot be submitted' do
+    visit new_scheme_priority_path(scheme)
+
+    expect(page).to have_content(I18n.t('page_title.staff.priorities.create').titleize)
+
+    within('form.new_priority') do
+      # Deliberately forget to fill out the required name fields
+      click_on(I18n.t('generic.button.create', resource: 'Priority'))
+    end
+
+    within('.priority_name') do
+      expect(page).to have_content("can't be blank")
+    end
+
+    within('.priority_duration') do
+      expect(page).to have_content("can't be blank")
     end
   end
 end
