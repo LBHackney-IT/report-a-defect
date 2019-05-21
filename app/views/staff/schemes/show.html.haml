@@ -3,4 +3,19 @@
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl= I18n.t('page_title.staff.schemes.show', name: @scheme.name).titleize
-    = link_to(I18n.t('generic.button.create', resource: 'Priority'), new_scheme_path, class: 'govuk-button mb0')
+    = link_to(I18n.t('generic.button.create', resource: 'Priority'), new_scheme_priority_path(@scheme), class: 'govuk-button mb0')
+
+    %table.govuk-table.priorities
+      %thead.govuk-table__head
+        %tr.govuk-table__row
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Name
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Duration
+      %tbody.govuk-table__body
+        - @scheme.priorities.each do |priority|
+          %tr.govuk-table__row
+            %td.govuk-table__cell= priority.name
+            %td.govuk-table__cell= priority.duration
