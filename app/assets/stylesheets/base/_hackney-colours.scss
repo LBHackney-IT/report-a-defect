@@ -1,0 +1,86 @@
+// Hackney palette based on
+// the web UI work,
+// NCC app: https://github.com/LBHackney-IT/NCC
+// Repairs Management: https://github.com/LBHackney-IT/repairs-management
+
+
+// Text
+$lbh-text-colour: #0B0C0C;
+$lbh-text-white-colour: #FFFFFF;
+$lbh-secondary-text-colour: #6F777B;
+
+// Links
+$lbh-link-colour: #0072CE;
+$lbh-link-hover-colour: #0085CA;
+$lbh-link-visited-colour: #8031A7;
+$lbh-link-active-colour: #2B8CC4;
+
+// Border
+$lbh-border-colour: #BFC1C3;
+$lbh-input-border-colour: #0B0C0C;
+
+// Panel colour
+
+$lbh-panel-light: #DEE0E2;
+$lbh-panel-dark: #BFC1C3;
+
+// Focus state
+$lbh-focus-colour: #FFC845;
+$lbh-focus-text-colour: $lbh-text-colour;
+
+// Error state
+$lbh-error-colour: #BE3A34;
+
+// Button colours:
+
+$lbh-primary-button: #00664F;
+$lbh-primary-inner-shadow: #003D2F;
+$lbh-primary-hover: #00513F;
+$lbh-primary-focus-fill: #00664F;
+$lbh-primary-focus-stroke: 3px solid $lbh-focus-colour;
+$lbh-primary-disabled: #7FB2A7;
+$lbh-primary-disabled-inner-shadow: #00513F;
+$lbh-secondary-button-fill: #FFFFFF;
+$lbh-secondary-button-border: 1px solid #00664F;
+
+// Brand main colours:
+$lbh-dark-green: #00664F;
+$lbh-mid-green: #00B341 ;
+$lbh-light-green: #84BD00;
+$lbh-attention-green: #00B140;
+$lbh-confirmation-green: #A4D65E;
+
+$lbh-primary: $lbh-dark-green;
+
+// Housing colours (used in repairs management hub):
+
+$lbh-housing-1: #005f61;
+$lbh-housing-2: #009ca6;
+$lbh-housing-3: #2dccd3;
+$lbh-housing-1: #009ca6;
+
+// From NCC app
+$lbh-dark-grey: #252525;
+
+// Mixins
+$lbh-colours: (
+  "primary": $lbh-primary,
+  "secondary": #FFFFFF
+);
+
+
+@function lbh-colour($colour) {
+  @return map-get($lbh-colours, quote($colour));
+}
+
+$lbh-status: (
+  "outstanding": #009ca6,
+  "completed": darkgray,
+  "overdue": crimson,
+  "due": #FFA300
+);
+
+
+@function lbh-status($status) {
+  @return map-get($lbh-status, quote($status));
+}
