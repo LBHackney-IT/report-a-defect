@@ -1,4 +1,4 @@
 class Estate < ApplicationRecord
   validates :name, presence: true
-  # has_many :priorities, dependent: :destroy
+  has_many :schemes, dependent: :destroy
 end
