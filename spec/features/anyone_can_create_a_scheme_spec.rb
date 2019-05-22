@@ -1,17 +1,18 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a scheme' do
-  scenario 'a scheme can be created' do
-    visit root_path
+  let!(:estate) { create(:estate) }
 
-    expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
+  scenario 'a scheme can be created' do
+    visit estate_path(estate)
+
+    expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name).titleize)
 
     click_on(I18n.t('generic.button.create', resource: 'Scheme'))
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.create').titleize)
     within('form.new_scheme') do
-      fill_in 'scheme[name]', with: 'I have a leaky water pipe in
-        the bathroom'
+      fill_in 'scheme[name]', with: 'Kings Cresent'
       click_on(I18n.t('generic.button.create', resource: 'Scheme'))
     end
 
@@ -22,7 +23,9 @@ RSpec.feature 'Anyone can create a scheme' do
   end
 
   scenario 'an invalid scheme cannot be submitted' do
-    visit root_path
+    visit estate_path(estate)
+
+    expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name).titleize)
 
     click_on(I18n.t('generic.button.create', resource: 'Scheme'))
 

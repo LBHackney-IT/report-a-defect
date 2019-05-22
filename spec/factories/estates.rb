@@ -1,6 +1,5 @@
 FactoryBot.define do
-  factory :scheme do
+  factory :estate do
     name { Faker::GreekPhilosophers.name }
-    association :estate, factory: :estate
   end
 end

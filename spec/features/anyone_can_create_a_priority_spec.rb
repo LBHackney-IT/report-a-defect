@@ -6,14 +6,9 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
   scenario 'a scheme priority can be viewed' do
     priority = create(:priority, scheme: scheme)
 
-    visit root_path
+    visit estate_scheme_path(scheme.estate, scheme)
 
-    expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
-
-    within('table.schemes') do
-      expect(page).to have_content(scheme.name)
-      click_on(I18n.t('generic.link.show'))
-    end
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name).titleize)
 
     within('table.priorities') do
       expect(page).to have_content(priority.name)
@@ -22,14 +17,9 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
   end
 
   scenario 'a scheme priority can be created' do
-    visit root_path
+    visit estate_scheme_path(scheme.estate, scheme)
 
-    expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
-
-    within('table.schemes') do
-      expect(page).to have_content(scheme.name)
-      click_on(I18n.t('generic.link.show'))
-    end
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name).titleize)
 
     click_on(I18n.t('generic.button.create', resource: 'Priority'))
     expect(page).to have_content(I18n.t('page_title.staff.priorities.create').titleize)
@@ -49,7 +39,7 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
   end
 
   scenario 'an invalid priority cannot be submitted' do
-    visit new_scheme_priority_path(scheme)
+    visit new_estate_scheme_priority_path(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.priorities.create').titleize)
 

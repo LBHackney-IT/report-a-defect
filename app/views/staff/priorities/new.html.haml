@@ -6,7 +6,7 @@
       = I18n.t('page_title.staff.priorities.create', name: @scheme.name).titleize
       %span.govuk-caption-l= 'Step 1 of 1'
 
-    = simple_form_for [@scheme, @priority] do |f|
+    = simple_form_for [@scheme.estate, @scheme, @priority] do |f|
       .govuk-form-group
         = f.input :name
         = f.input :duration

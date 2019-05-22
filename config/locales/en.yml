@@ -6,6 +6,9 @@ en:
   page_title:
     staff:
       dashboard: 'Dashboard'
+      estates:
+        show: '%{name} estate'
+        create: 'Create estate'
       schemes:
         show: '%{name} scheme'
         create: 'Create scheme'
