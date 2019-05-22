@@ -8,3 +8,7 @@ $govuk-image-url-function: 'image-url';
 p {
   @include govuk-font(19);
 }
+
+.govuk-header__container {
+  border-bottom: 10px solid $lbh-primary;
+}
