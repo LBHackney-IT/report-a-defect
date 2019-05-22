@@ -4,10 +4,10 @@ RSpec.describe Scheme, type: :model do
   it { should belong_to(:estate) }
   it { should have_many(:priorities) }
   it 'validates presence of required fields' do
-    blank_repair = described_class.new
-    expect(blank_repair.valid?).to be_falsey
+    scheme = described_class.new
+    expect(scheme.valid?).to be_falsey
 
-    errors = blank_repair.errors.full_messages
+    errors = scheme.errors.full_messages
 
     expect(errors).to include("Name can't be blank")
   end
