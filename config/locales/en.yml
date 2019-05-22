@@ -3,17 +3,19 @@ en:
     title: 'Report a Defect'
   service:
     name: 'Report a Defect'
-  welcome:
-    services:
-      scheme:
-        title: 'Schemes'
-  staff:
-    dashboards:
-      page_title: 'Dashboard'
-  scheme:
-    submit: 'Submit scheme'
-    call_to_action: 'Create a scheme'
-    new:
-      header: 'Create a scheme'
-    success:
-      notice: 'The scheme has successfully been created.'
+  page_title:
+    staff:
+      dashboard: 'Dashboard'
+      schemes:
+        show: '%{name} scheme'
+        create: 'Create scheme'
+      priorities:
+        create: 'Create priority'
+  generic:
+    link:
+      show: 'View'
+    button:
+      create: 'Create %{resource}'
+    notice:
+      success:
+        'The %{resource} has successfully been created.'

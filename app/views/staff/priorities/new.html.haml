@@ -1,0 +1,13 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.schemes.show', name: @scheme.name)
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.priorities.create', name: @scheme.name).titleize
+      %span.govuk-caption-l= 'Step 1 of 1'
+
+    = simple_form_for [@scheme, @priority] do |f|
+      .govuk-form-group
+        = f.input :name
+        = f.input :duration
+      = f.button :submit, I18n.t('generic.button.create', resource: 'Priority')

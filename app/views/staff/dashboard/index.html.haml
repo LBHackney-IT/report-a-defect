@@ -1,0 +1,19 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.dashboard')
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl= I18n.t('page_title.staff.dashboard')
+    = link_to(I18n.t('generic.button.create', resource: 'Scheme'), new_scheme_path, class: 'govuk-button mb0')
+
+    %table.govuk-table.schemes
+      %thead.govuk-table__head
+        %tr.govuk-table__row
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Name
+          %th.govuk-table__header
+      %tbody.govuk-table__body
+        - @schemes.each do |scheme|
+          %tr.govuk-table__row
+            %td.govuk-table__cell= scheme.name
+            %td.govuk-table__cell= link_to I18n.t('generic.link.show'), scheme_path(scheme), class: 'govuk-link'

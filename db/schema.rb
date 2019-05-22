@@ -10,11 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190510150928) do
+ActiveRecord::Schema.define(version: 20190521145131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "pgcrypto"
+
+  create_table "priorities", force: :cascade do |t|
+    t.string "name"
+    t.string "duration"
+    t.uuid "scheme_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scheme_id"], name: "index_priorities_on_scheme_id"
+  end
 
   create_table "repairs", force: :cascade do |t|
     t.string "description", null: false
@@ -24,4 +33,5 @@ ActiveRecord::Schema.define(version: 20190510150928) do
     t.string "name", null: false
   end
 
+  add_foreign_key "priorities", "schemes"
 end
