@@ -13,9 +13,9 @@
               Name
           %th.govuk-table__header
             %h2.govuk-heading-m
-              Duration
+              Days
       %tbody.govuk-table__body
         - @scheme.priorities.each do |priority|
           %tr.govuk-table__row
             %td.govuk-table__cell= priority.name
-            %td.govuk-table__cell= priority.duration
+            %td.govuk-table__cell= priority.days
