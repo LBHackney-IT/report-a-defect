@@ -3,8 +3,13 @@ $govuk-image-url-function: 'image-url';
 
 @import 'base/frontend';
 @import 'base/mixins';
+@import 'base/hackney-colours';
 @import 'components/flashes';
 
 p {
   @include govuk-font(19);
+}
+
+.govuk-header__container {
+  border-bottom: 10px solid $lbh-primary;
 }
