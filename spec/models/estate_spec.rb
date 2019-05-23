@@ -2,6 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Estate, type: :model do
   it { should have_many(:schemes) }
+
+  it_behaves_like 'a trackable resource', resource: described_class
+
   it 'validates presence of required fields' do
     estate = described_class.new
     expect(estate.valid?).to be_falsey

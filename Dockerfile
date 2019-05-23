@@ -49,7 +49,7 @@ RUN \
 
 COPY . $INSTALL_PATH
 
-RUN RAILS_ENV=production bin/rails DATABASE_URL=postgresql:does_not_exist assets:precompile
+RUN RAILS_ENV=production SECRET_KEY_BASE=`rake secret` bin/rails DATABASE_URL=postgresql:does_not_exist assets:precompile
 
 EXPOSE 3000
 

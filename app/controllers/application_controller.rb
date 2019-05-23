@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include PublicActivity::StoreController
   protect_from_forgery with: :exception
 
   before_action :check_staging_auth, except: :check
@@ -20,4 +21,8 @@ class ApplicationController < ActionController::Base
     Rails.env.staging? || (Figaro.env.http_user && Figaro.env.http_pass)
   end
   # rubocop:enable Rails/UnknownEnv
+
+  def current_user
+    User.find_or_create_by(identifier: 'dxw')
+  end
 end

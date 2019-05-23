@@ -2,6 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Priority, type: :model do
   it { should belong_to(:scheme) }
+
+  it_behaves_like 'a trackable resource', resource: described_class
+
   it 'validates presence of required fields' do
     priority = described_class.new
     expect(priority.valid?).to be_falsey
