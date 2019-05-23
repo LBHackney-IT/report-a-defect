@@ -1,4 +1,8 @@
 raise if Rails.env.production?
+
+Estate.destroy_all
+Scheme.destroy_all
+
 # Estates
 estate = FactoryBot.create(:estate, name: 'Kings Cresent')
 
