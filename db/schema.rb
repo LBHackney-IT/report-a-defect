@@ -49,6 +49,12 @@ ActiveRecord::Schema.define(version: 20190523095524) do
     t.index ["estate_id"], name: "index_schemes_on_estate_id"
   end
 
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "identifier"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "priorities", "schemes"
   add_foreign_key "properties", "schemes"
   add_foreign_key "schemes", "estates"
