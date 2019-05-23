@@ -1,3 +1,4 @@
+raise if Rails.env.production?
 # Estates
 estate = FactoryBot.create(:estate, name: 'Kings Cresent')
 
