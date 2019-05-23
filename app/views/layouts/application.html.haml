@@ -45,11 +45,8 @@
             This is a new service
       .govuk-breadcrumbs
         %ol.govuk-breadcrumbs__list
-          %li.govuk-breadcrumbs__list-item
-            %a.govuk-breadcrumbs__link{:href => "#"} Home
-          %li.govuk-breadcrumbs__list-item
-            %a.govuk-breadcrumbs__link{:href => "#"} Something view
-          %li.govuk-breadcrumbs__list-item{"aria-current" => "page"} Current page
+          %li.govuk-breadcrumbs__list-item{'aria-current' => 'page'}
+            = link_to "Home", root_path, class: 'govuk-breadcrumbs__link'
 
       %main#main-content.govuk-main-wrapper.app-main-class{role: "main"}
         - flash.each do |name, msg|
