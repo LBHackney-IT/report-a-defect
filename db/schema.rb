@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190522164700) do
+ActiveRecord::Schema.define(version: 20190523095524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,16 @@ ActiveRecord::Schema.define(version: 20190522164700) do
     t.index ["scheme_id"], name: "index_priorities_on_scheme_id"
   end
 
+  create_table "properties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "core_name"
+    t.string "address"
+    t.string "postcode"
+    t.uuid "scheme_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scheme_id"], name: "index_properties_on_scheme_id"
+  end
+
   create_table "schemes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.uuid "estate_id"
@@ -40,5 +50,6 @@ ActiveRecord::Schema.define(version: 20190522164700) do
   end
 
   add_foreign_key "priorities", "schemes"
+  add_foreign_key "properties", "schemes"
   add_foreign_key "schemes", "estates"
 end
