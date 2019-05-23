@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20190523095524) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "priorities", force: :cascade do |t|
+  create_table "priorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.uuid "scheme_id"
     t.datetime "created_at", null: false

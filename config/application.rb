@@ -19,6 +19,10 @@ module RequestARepair
       g.fixture_replacement :factory_bot, dir: 'spec/factories'
     end
 
+    config.generators do |generator|
+      generator.orm :active_record, primary_key_type: :uuid
+    end
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
 
