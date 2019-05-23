@@ -18,7 +18,30 @@ class Staff::PropertiesController < Staff::BaseController
     end
   end
 
+  def edit
+    @scheme = Scheme.find(scheme_id)
+    @property = Property.find(id)
+  end
+
+  def update
+    @scheme = Scheme.find(scheme_id)
+    @property = Property.find(id)
+    @property.assign_attributes(property_params)
+
+    if @property.valid?
+      @property.save
+      flash[:success] = I18n.t('generic.notice.update.success', resource: 'property')
+      redirect_to estate_scheme_path(@scheme.estate, @scheme)
+    else
+      render :edit
+    end
+  end
+
   private
+
+  def id
+    params[:id]
+  end
 
   def scheme_id
     params[:scheme_id]
