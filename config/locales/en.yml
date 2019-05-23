@@ -14,11 +14,20 @@ en:
         create: 'Create scheme'
       priorities:
         create: 'Create priority'
+      properties:
+        create: 'Create property'
+        edit: 'Update property'
   generic:
     link:
       show: 'View'
+      edit: 'Edit'
     button:
       create: 'Create %{resource}'
+      update: 'Update %{resource}'
     notice:
-      success:
-        'The %{resource} has successfully been created.'
+      create:
+        success:
+          'The %{resource} has successfully been created.'
+      update:
+        success:
+          'The %{resource} has successfully been updated.'

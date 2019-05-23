@@ -11,7 +11,7 @@ class Staff::SchemesController < Staff::BaseController
 
     if @scheme.valid?
       @scheme.save
-      flash[:success] = I18n.t('generic.notice.success', resource: 'scheme')
+      flash[:success] = I18n.t('generic.notice.create.success', resource: 'scheme')
       redirect_to estate_path(@estate)
     else
       render :new

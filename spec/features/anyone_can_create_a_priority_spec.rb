@@ -30,7 +30,7 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
       click_on(I18n.t('generic.button.create', resource: 'Priority'))
     end
 
-    expect(page).to have_content(I18n.t('generic.notice.success', resource: 'priority'))
+    expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'priority'))
     within('table.priorities') do
       priority = Priority.first
       expect(page).to have_content(priority.name)

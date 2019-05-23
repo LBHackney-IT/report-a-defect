@@ -14,7 +14,7 @@ RSpec.feature 'Anyone can create a estate' do
       click_on(I18n.t('generic.button.create', resource: 'Estate'))
     end
 
-    expect(page).to have_content(I18n.t('generic.notice.success', resource: 'estate'))
+    expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'estate'))
     within('table.estates') do
       expect(page).to have_content(Estate.first.name)
     end
