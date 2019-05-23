@@ -16,7 +16,7 @@ RSpec.feature 'Anyone can create a scheme' do
       click_on(I18n.t('generic.button.create', resource: 'Scheme'))
     end
 
-    expect(page).to have_content(I18n.t('generic.notice.success', resource: 'scheme'))
+    expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'scheme'))
     within('table.schemes') do
       expect(page).to have_content(Scheme.first.name)
     end

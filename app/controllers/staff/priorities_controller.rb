@@ -11,7 +11,7 @@ class Staff::PrioritiesController < Staff::BaseController
 
     if @priority.valid?
       @priority.save
-      flash[:success] = I18n.t('generic.notice.success', resource: 'priority')
+      flash[:success] = I18n.t('generic.notice.create.success', resource: 'priority')
       redirect_to estate_scheme_path(@scheme.estate, @scheme)
     else
       render :new

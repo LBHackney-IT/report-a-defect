@@ -18,7 +18,7 @@ RSpec.feature 'Anyone can create a property' do
       click_on(I18n.t('generic.button.create', resource: 'Property'))
     end
 
-    expect(page).to have_content(I18n.t('generic.notice.success', resource: 'property'))
+    expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'property'))
     within('table.properties') do
       property = Property.first
       expect(page).to have_content(property.core_name)

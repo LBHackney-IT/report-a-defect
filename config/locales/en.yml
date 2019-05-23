@@ -20,5 +20,6 @@ en:
     button:
       create: 'Create %{resource}'
     notice:
-      success:
-        'The %{resource} has successfully been created.'
+      create:
+        success:
+          'The %{resource} has successfully been created.'
