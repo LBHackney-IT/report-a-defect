@@ -71,6 +71,9 @@ RSpec.configure do |config|
       Bullet.end_request
     end
   end
+
+  # Use built in helpers for stopping Time instead of depending on Timecop
+  config.include ActiveSupport::Testing::TimeHelpers
 end
 
 Shoulda::Matchers.configure do |config|
