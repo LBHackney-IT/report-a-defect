@@ -25,6 +25,6 @@ class Staff::PrioritiesController < Staff::BaseController
   end
 
   def priority_params
-    params.require(:priority).permit(:name, :duration)
+    params.require(:priority).permit(:name, :days)
   end
 end

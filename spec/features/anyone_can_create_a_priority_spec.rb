@@ -12,7 +12,7 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
 
     within('table.priorities') do
       expect(page).to have_content(priority.name)
-      expect(page).to have_content(priority.duration)
+      expect(page).to have_content(priority.days)
     end
   end
 
@@ -26,7 +26,7 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
 
     within('form.new_priority') do
       fill_in 'priority[name]', with: 'P1'
-      fill_in 'priority[duration]', with: '1 day'
+      fill_in 'priority[days]', with: 1
       click_on(I18n.t('generic.button.create', resource: 'Priority'))
     end
 
@@ -34,7 +34,7 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
     within('table.priorities') do
       priority = Priority.first
       expect(page).to have_content(priority.name)
-      expect(page).to have_content(priority.duration)
+      expect(page).to have_content(priority.days)
     end
   end
 
@@ -52,7 +52,7 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
       expect(page).to have_content("can't be blank")
     end
 
-    within('.priority_duration') do
+    within('.priority_days') do
       expect(page).to have_content("can't be blank")
     end
   end
