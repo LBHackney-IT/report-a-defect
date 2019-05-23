@@ -19,3 +19,24 @@
           %tr.govuk-table__row
             %td.govuk-table__cell= priority.name
             %td.govuk-table__cell= priority.days
+
+    = link_to(I18n.t('generic.button.create', resource: 'Property'), new_estate_scheme_property_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
+
+    %table.govuk-table.properties
+      %thead.govuk-table__head
+        %tr.govuk-table__row
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Core name
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Address
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Postcode
+      %tbody.govuk-table__body
+        - @scheme.properties.each do |property|
+          %tr.govuk-table__row
+            %td.govuk-table__cell= property.core_name
+            %td.govuk-table__cell= property.address
+            %td.govuk-table__cell= property.postcode

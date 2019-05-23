@@ -1,0 +1,14 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.properties.create', name: @scheme.name)
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.properties.create', name: @scheme.name).titleize
+      %span.govuk-caption-l= 'Step 1 of 1'
+
+    = simple_form_for [@scheme.estate, @scheme, @property] do |f|
+      .govuk-form-group
+        = f.input :core_name
+        = f.input :address
+        = f.input :postcode
+      = f.button :submit, I18n.t('generic.button.create', resource: 'Property')
