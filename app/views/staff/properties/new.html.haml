@@ -1,5 +1,7 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.properties.create', name: @scheme.name)
 
+= link_to "Back to #{@scheme.name} scheme view", estate_scheme_path(@scheme.estate, @scheme), class: 'govuk-back-link'
+
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl
