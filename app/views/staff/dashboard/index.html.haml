@@ -3,6 +3,14 @@
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl= I18n.t('page_title.staff.dashboard')
+
+    %h3.govuk-heading-m= I18n.t('generic.button.find')
+    = form_tag properties_path, method: :get, class: 'property-search' do |f|
+      .govuk-form-group
+        = label_tag 'address', 'Address', class: 'govuk-label'
+        = search_field_tag :address, @property_search.address, class: 'govuk-input form-control form-control-block', placeholder: '1 Hackney Street'
+      = submit_tag I18n.t('generic.button.find'), class: 'govuk-button mb0'
+
     = link_to(I18n.t('generic.button.create', resource: 'Estate'), new_estate_path, class: 'govuk-button mb0')
 
     %table.govuk-table.estates

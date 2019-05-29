@@ -17,6 +17,7 @@ en:
       properties:
         create: 'Create property'
         edit: 'Update property'
+        index: 'Properties'
   generic:
     link:
       show: 'View'
@@ -24,6 +25,7 @@ en:
     button:
       create: 'Create %{resource}'
       update: 'Update %{resource}'
+      find: 'Find Property'
     notice:
       create:
         success:

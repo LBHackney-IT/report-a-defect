@@ -7,4 +7,5 @@ Rails.application.routes.draw do
       resources :properties, controller: 'staff/properties', only: %i[new create edit update]
     end
   end
+  resources :properties, controller: 'staff/properties', only: %i[index show]
 end
