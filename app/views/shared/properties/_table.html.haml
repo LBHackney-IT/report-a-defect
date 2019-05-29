@@ -1,0 +1,23 @@
+%table.govuk-table.properties
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Core name
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Address
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Postcode
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Actions
+
+  %tbody.govuk-table__body
+    - properties.each do |property|
+      %tr.govuk-table__row
+        %td.govuk-table__cell= property.core_name
+        %td.govuk-table__cell= property.address
+        %td.govuk-table__cell= property.postcode
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.edit'), edit_estate_scheme_property_path(property.scheme.estate, property.scheme, property), class: 'govuk-link')
