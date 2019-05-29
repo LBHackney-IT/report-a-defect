@@ -1,0 +1,19 @@
+- content_for :page_title_prefix, 'Properties'
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl= 'Properties'
+    %span.govuk-caption-l= "Showing #{@properties.count} out of #{Property.count}"
+
+    %table.govuk-table.properties
+      %thead.govuk-table__head
+        %tr.govuk-table__row
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Address
+          %th.govuk-table__header
+      %tbody.govuk-table__body
+        - @properties.each do |property|
+          %tr.govuk-table__row
+            %td.govuk-table__cell= property.address
+            %td.govuk-table__cell= link_to I18n.t('generic.link.show'), property_path(property), class: 'govuk-link'

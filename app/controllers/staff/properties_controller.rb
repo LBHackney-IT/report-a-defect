@@ -37,6 +37,10 @@ class Staff::PropertiesController < Staff::BaseController
     end
   end
 
+  def index
+    @properties = PropertySearch.new(address: address).call
+  end
+
   private
 
   def id
@@ -45,6 +49,10 @@ class Staff::PropertiesController < Staff::BaseController
 
   def scheme_id
     params[:scheme_id]
+  end
+
+  def address
+    params[:address]
   end
 
   def property_params
