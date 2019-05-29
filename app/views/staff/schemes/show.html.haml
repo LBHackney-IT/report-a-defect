@@ -1,5 +1,11 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.schemes.show', name: @scheme.name)
 
+.govuk-breadcrumbs
+  %ol.govuk-breadcrumbs__list
+    = breadcrumb_link_to("Home", root_path)
+    = breadcrumb_link_to(@scheme.estate.name, estate_path(@scheme.estate))
+    = breadcrumb_current("Scheme #{@scheme.name}")
+
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl= I18n.t('page_title.staff.schemes.show', name: @scheme.name).titleize
