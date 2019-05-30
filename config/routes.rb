@@ -9,5 +9,8 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :properties, controller: 'staff/properties', only: %i[index show]
+
+  resources :properties, controller: 'staff/properties', only: %i[index show] do
+    resources :defects, controller: 'staff/defects', only: %i[new create]
+  end
 end

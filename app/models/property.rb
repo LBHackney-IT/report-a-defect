@@ -1,5 +1,6 @@
 class Property < ApplicationRecord
   belongs_to :scheme, dependent: :destroy
+  has_many :defects, dependent: :restrict_with_error
 
   validates :core_name, :address, :postcode, presence: true
 
