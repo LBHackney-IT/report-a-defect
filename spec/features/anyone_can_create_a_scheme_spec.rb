@@ -13,6 +13,8 @@ RSpec.feature 'Anyone can create a scheme' do
     expect(page).to have_content(I18n.t('page_title.staff.schemes.create').titleize)
     within('form.new_scheme') do
       fill_in 'scheme[name]', with: 'Kings Cresent'
+      fill_in 'scheme[contractor_name]', with: 'Builders R Us'
+      fill_in 'scheme[contractor_email_address]', with: 'email@example.com'
       click_on(I18n.t('generic.button.create', resource: 'Scheme'))
     end
 

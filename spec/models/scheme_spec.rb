@@ -14,5 +14,7 @@ RSpec.describe Scheme, type: :model do
     errors = scheme.errors.full_messages
 
     expect(errors).to include("Name can't be blank")
+    expect(errors).to include("Contractor name can't be blank")
+    expect(errors).to include("Contractor email address can't be blank")
   end
 end
