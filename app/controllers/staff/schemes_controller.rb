@@ -22,6 +22,23 @@ class Staff::SchemesController < Staff::BaseController
     @scheme = Scheme.find(scheme_id)
   end
 
+  def edit
+    @scheme = Scheme.find(scheme_id)
+  end
+
+  def update
+    @scheme = Scheme.find(scheme_id)
+    @scheme.assign_attributes(scheme_params)
+
+    if @scheme.valid?
+      @scheme.save
+      flash[:success] = I18n.t('generic.notice.update.success', resource: 'scheme')
+      redirect_to estate_scheme_path(@scheme.estate, @scheme)
+    else
+      render :edit
+    end
+  end
+
   private
 
   def estate_id
