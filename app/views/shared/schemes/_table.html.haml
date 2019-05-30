@@ -1,0 +1,12 @@
+%table.govuk-table.schemes
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Name
+      %th.govuk-table__header
+  %tbody.govuk-table__body
+    - estate.schemes.each do |scheme|
+      %tr.govuk-table__row
+        %td.govuk-table__cell= scheme.name
+        %td.govuk-table__cell= link_to I18n.t('generic.link.show'), estate_scheme_path(scheme.estate, scheme), class: 'govuk-link'
