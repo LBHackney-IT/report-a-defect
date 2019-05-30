@@ -24,4 +24,15 @@ RSpec.describe Priority, type: :model do
     errors = priority.errors.full_messages
     expect(errors).to include('Days is not a number')
   end
+
+  describe '#form_label' do
+    it 'returns a string that combines name and what the expected completion date would be' do
+      travel_to Time.zone.parse('2019-05-23')
+
+      priority = create(:priority, name: 'P1', days: 3)
+      expect(priority.form_label).to eq('P1 - target completion: 26/05/2019')
+
+      travel_back
+    end
+  end
 end
