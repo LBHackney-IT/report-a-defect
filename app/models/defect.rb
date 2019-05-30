@@ -8,6 +8,10 @@ class Defect < ApplicationRecord
             :target_completion_date,
             presence: true
 
+  validates :contact_phone_number, numericality: true,
+                                   length: { minimum: 10, maximum: 15 },
+                                   allow_blank: true
+
   attribute :reference_number, :string, default: -> { SecureRandom.hex(3).upcase }
 
   enum status: %i[
@@ -70,5 +74,9 @@ class Defect < ApplicationRecord
 
   def status
     super.tr('_', ' ').capitalize
+  end
+
+  def contact_phone_number=(value)
+    super(value.tr(' ', ''))
   end
 end

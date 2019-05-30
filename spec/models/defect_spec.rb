@@ -17,6 +17,34 @@ RSpec.describe Defect, type: :model do
     expect(errors).to include("Target completion date can't be blank")
   end
 
+  describe 'validates that contact phone number looks like one' do
+    it 'returns false when it is not a number' do
+      defect = build(:defect, contact_phone_number: 'abc')
+      expect(defect.valid?).to be_falsey
+    end
+
+    context 'when a value includes spaces' do
+      it 'returns true' do
+        defect = build(:defect, contact_phone_number: '1234 567 8901')
+        expect(defect.valid?).to be_truthy
+      end
+    end
+
+    it 'returns false when a number is too short' do
+      defect = build(:defect, contact_phone_number: '123')
+      expect(defect.valid?).to be_falsey
+    end
+
+    it 'returns false when a number is too long' do
+      defect = build(:defect, contact_phone_number: '12345678901234567890')
+      expect(defect.valid?).to be_falsey
+    end
+  end
+
+  it 'validates that contact email address looks like one' do
+
+  end
+
   describe '#status' do
     it 'returns the capitalized status' do
       defect = build(:defect, status: 'outstanding')
