@@ -1,5 +1,10 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.estates.show', name: @estate.name)
 
+.govuk-breadcrumbs
+  %ol.govuk-breadcrumbs__list
+    = breadcrumb_link_to('Home', root_path)
+    = breadcrumb_current(I18n.t('page_title.staff.estates.show', name: @estate.name))
+
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl= I18n.t('page_title.staff.estates.show', name: @estate.name).titleize
