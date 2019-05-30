@@ -41,8 +41,16 @@ RSpec.describe Defect, type: :model do
     end
   end
 
-  it 'validates that contact email address looks like one' do
+  describe 'validates that contact email address looks like one' do
+    it 'returns true with a valid email address' do
+      defect = build(:defect, contact_email_address: 'email@example.com')
+      expect(defect.valid?).to be_truthy
+    end
 
+    it 'returns false with an invalid email address' do
+      defect = build(:defect, contact_email_address: 'not a real email')
+      expect(defect.valid?).to be_falsey
+    end
   end
 
   describe '#status' do

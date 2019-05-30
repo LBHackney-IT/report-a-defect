@@ -8,6 +8,8 @@ class Defect < ApplicationRecord
             :target_completion_date,
             presence: true
 
+  validates :contact_email_address, format: { with: URI::MailTo::EMAIL_REGEXP },
+                                    allow_blank: true
   validates :contact_phone_number, numericality: true,
                                    length: { minimum: 10, maximum: 15 },
                                    allow_blank: true
