@@ -3,6 +3,8 @@
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl= I18n.t('page_title.staff.schemes.show', name: @scheme.name).titleize
+    = render partial: '/shared/schemes/information', locals: { scheme: @scheme }
+
     = link_to(I18n.t('generic.button.create', resource: 'Priority'), new_estate_scheme_priority_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
     = render partial: '/shared/priorities/table', locals: { priorities: @scheme.priorities }
 
