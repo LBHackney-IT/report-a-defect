@@ -1,0 +1,8 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.properties.show', name: @property.address)
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.properties.show', name: @property.address).titleize
+
+    = render partial: '/shared/properties/information', locals: { property: @property }

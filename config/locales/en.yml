@@ -18,6 +18,7 @@ en:
         create: 'Create property'
         edit: 'Update property'
         index: 'Properties'
+        show: '%{name}'
   generic:
     link:
       show: 'View'

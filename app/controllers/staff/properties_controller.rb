@@ -1,4 +1,8 @@
 class Staff::PropertiesController < Staff::BaseController
+  def show
+    @property = Property.find(id)
+  end
+
   def new
     @scheme = Scheme.find(scheme_id)
     @property = Property.new
