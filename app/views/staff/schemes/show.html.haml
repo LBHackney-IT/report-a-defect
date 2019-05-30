@@ -2,8 +2,8 @@
 
 .govuk-breadcrumbs
   %ol.govuk-breadcrumbs__list
-    = breadcrumb_link_to("Home", root_path)
-    = breadcrumb_link_to(@scheme.estate.name, estate_path(@scheme.estate))
+    = breadcrumb_link_to('Home', root_path)
+    = breadcrumb_link_to("#{@scheme.estate.name} estate", estate_path(@scheme.estate))
     = breadcrumb_current("Scheme #{@scheme.name}")
 
 .govuk-grid-row
