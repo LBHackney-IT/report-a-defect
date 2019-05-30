@@ -7,7 +7,7 @@ WORKDIR $INSTALL_PATH
 COPY package.json ./package.json
 COPY package-lock.json ./package-lock.json
 RUN npm set progress=false && npm config set depth 0
-RUN npm install --only=production
+RUN npm install --save govuk-frontend
 
 FROM ruby:2.6.1 as release
 MAINTAINER dxw <rails@dxw.com>

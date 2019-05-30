@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_23_144644) do
+ActiveRecord::Schema.define(version: 2019_05_29_174458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -33,6 +33,23 @@ ActiveRecord::Schema.define(version: 2019_05_23_144644) do
     t.index ["recipient_type", "recipient_id"], name: "index_activities_on_recipient_type_and_recipient_id"
     t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
     t.index ["trackable_type", "trackable_id"], name: "index_activities_on_trackable_type_and_trackable_id"
+  end
+
+  create_table "defects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "description"
+    t.string "contact_name"
+    t.string "contact_email_address"
+    t.string "contact_phone_number"
+    t.string "trade"
+    t.date "target_completion_date"
+    t.integer "status", default: 0
+    t.string "reference_number", null: false
+    t.uuid "property_id"
+    t.uuid "priority_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["priority_id"], name: "index_defects_on_priority_id"
+    t.index ["property_id"], name: "index_defects_on_property_id"
   end
 
   create_table "estates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -74,6 +91,8 @@ ActiveRecord::Schema.define(version: 2019_05_23_144644) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "defects", "priorities"
+  add_foreign_key "defects", "properties"
   add_foreign_key "priorities", "schemes"
   add_foreign_key "properties", "schemes"
   add_foreign_key "schemes", "estates"

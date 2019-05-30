@@ -2,6 +2,8 @@ raise if Rails.env.production?
 
 Estate.destroy_all
 Scheme.destroy_all
+Property.destroy_all
+Defect.destroy_all
 
 # Estates
 estate = FactoryBot.create(:estate, name: 'Kings Cresent')
@@ -29,3 +31,7 @@ FactoryBot.create(
 FactoryBot.create(
   :property, scheme: scheme1, core_name: 'DZ2', address: '4 Hackney Street', postcode: 'N16NP'
 )
+
+Property.all.each do |property|
+  FactoryBot.create_list(:defect, 10, property: property)
+end

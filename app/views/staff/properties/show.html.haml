@@ -1,0 +1,37 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.properties.show', name: @property.address)
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.properties.show', name: @property.address).titleize
+
+    = render partial: '/shared/properties/information', locals: { property: @property }
+    
+    = link_to(I18n.t('generic.button.create', resource: 'Defect'), new_property_defect_path(@property), class: 'govuk-button mb0')
+
+    %table.govuk-table.defects
+      %thead.govuk-table__head
+        %tr.govuk-table__row
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Reference number
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Status
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Priority
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Target completion date
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Trade
+      %tbody.govuk-table__body
+        - @property.defects.each do |defect|
+          %tr.govuk-table__row
+            %td.govuk-table__cell= defect.reference_number
+            %td.govuk-table__cell= defect.status
+            %td.govuk-table__cell= defect.priority.name
+            %td.govuk-table__cell= defect.target_completion_date
+            %td.govuk-table__cell= defect.trade

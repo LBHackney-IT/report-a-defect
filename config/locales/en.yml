@@ -18,6 +18,9 @@ en:
         create: 'Create property'
         edit: 'Update property'
         index: 'Properties'
+        show: '%{name}'
+      defects:
+        create: 'Create Defect'
   generic:
     link:
       show: 'View'

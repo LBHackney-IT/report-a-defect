@@ -1,0 +1,32 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.defects.create')
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.defects.create').titleize
+      %span.govuk-caption-l= 'Step 1 of 1'
+
+
+    = render partial: '/shared/properties/information', locals: { property: @property }
+
+    = simple_form_for @defect, html: { class: 'new_defect' }, action: :post, url: property_defects_path(@property) do |f|
+      .form-group
+        = f.input :description,
+                  wrapper: 'textarea',
+                  as: :text,
+                  input_html: { rows: 5 },
+                  required: true
+        = f.input :contact_name
+        = f.input :contact_email_address
+        = f.input :contact_phone_number
+        = f.input :trade,
+                  wrapper: 'select',
+                  input_html: { class: 'trades' },
+                  collection: Defect::TRADES,
+                  required: true
+        = f.input :priority,
+                  wrapper: 'select',
+                  input_html: { class: 'priorities' },
+                  collection: @property.scheme.priorities,
+                  required: true
+      = f.button :submit, I18n.t('generic.button.create', resource: 'Defect')
