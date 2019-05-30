@@ -9,6 +9,6 @@ class Priority < ApplicationRecord
   tracked owner: ->(controller, _) { controller.current_user if controller }
 
   def form_label
-    "#{name} - target completion: #{days.days.from_now.strftime('%d/%m/%Y')}"
+    "#{name} - target completion: #{days.days.from_now.to_s(:date)}"
   end
 end
