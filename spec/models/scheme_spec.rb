@@ -17,4 +17,16 @@ RSpec.describe Scheme, type: :model do
     expect(errors).to include("Contractor name can't be blank")
     expect(errors).to include("Contractor email address can't be blank")
   end
+
+  describe 'validates that contractor email address looks like one' do
+    it 'returns true with a valid email address' do
+      scheme = build(:scheme, contractor_email_address: 'email@example.com')
+      expect(scheme.valid?).to be_truthy
+    end
+
+    it 'returns false with an invalid email address' do
+      scheme = build(:scheme, contractor_email_address: 'not a real email')
+      expect(scheme.valid?).to be_falsey
+    end
+  end
 end
