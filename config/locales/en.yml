@@ -12,6 +12,7 @@ en:
       schemes:
         show: '%{name} scheme'
         create: 'Create scheme'
+        edit: 'Update scheme'
       priorities:
         create: 'Create priority'
       properties:
@@ -28,6 +29,7 @@ en:
     button:
       create: 'Create %{resource}'
       update: 'Update %{resource}'
+      edit: 'Edit %{resource}'
       find: 'Find Property'
     notice:
       create:

@@ -9,4 +9,6 @@
     = simple_form_for [@estate, @scheme] do |f|
       .form-group
         = f.input :name
+        = f.input :contractor_name
+        = f.input :contractor_email_address
       = f.button :submit, I18n.t('generic.button.create', resource: 'Scheme')
