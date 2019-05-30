@@ -20,7 +20,9 @@ RSpec.feature 'Anyone can create a scheme' do
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'scheme'))
     within('table.schemes') do
-      expect(page).to have_content(Scheme.first.name)
+      scheme = Scheme.first
+      expect(page).to have_content(scheme.name)
+      expect(page).to have_content(scheme.contractor_name)
     end
   end
 

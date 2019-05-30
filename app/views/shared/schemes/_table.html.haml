@@ -6,9 +6,13 @@
           Name
       %th.govuk-table__header
         %h2.govuk-heading-m
+          Contractor
+      %th.govuk-table__header
+        %h2.govuk-heading-m
           Actions
   %tbody.govuk-table__body
     - estate.schemes.each do |scheme|
       %tr.govuk-table__row
         %td.govuk-table__cell= scheme.name
+        %td.govuk-table__cell= scheme.contractor_name
         %td.govuk-table__cell= link_to I18n.t('generic.link.show'), estate_scheme_path(scheme.estate, scheme), class: 'govuk-link'
