@@ -1,0 +1,14 @@
+%table.govuk-table.priorities
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Name
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Days
+  %tbody.govuk-table__body
+    - priorities.each do |priority|
+      %tr.govuk-table__row
+        %td.govuk-table__cell= priority.name
+        %td.govuk-table__cell= priority.days
