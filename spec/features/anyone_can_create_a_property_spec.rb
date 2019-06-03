@@ -20,10 +20,9 @@ RSpec.feature 'Anyone can create a property' do
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'property'))
     within('table.properties') do
-      property = Property.first
-      expect(page).to have_content(property.core_name)
-      expect(page).to have_content(property.address)
-      expect(page).to have_content(property.postcode)
+      expect(page).to have_content('A name for a collection of blocks')
+      expect(page).to have_content('Flat 1, Hackney Street')
+      expect(page).to have_content('N16NU')
     end
   end
 
