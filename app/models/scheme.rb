@@ -8,7 +8,11 @@ class Scheme < ApplicationRecord
             :contractor_email_address,
             presence: true
 
-  validates :contractor_email_address, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :contractor_email_address,
+            format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :employer_agent_email_address,
+            format: { with: URI::MailTo::EMAIL_REGEXP },
+            allow_blank: true
 
   include PublicActivity::Model
   tracked owner: ->(controller, _) { controller.current_user if controller }

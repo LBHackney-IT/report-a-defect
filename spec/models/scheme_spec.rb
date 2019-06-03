@@ -29,4 +29,16 @@ RSpec.describe Scheme, type: :model do
       expect(scheme.valid?).to be_falsey
     end
   end
+
+  describe 'validates that employer_agent email address looks like one' do
+    it 'returns true with a valid email address' do
+      scheme = build(:scheme, employer_agent_email_address: 'email@example.com')
+      expect(scheme.valid?).to be_truthy
+    end
+
+    it 'returns false with an invalid email address' do
+      scheme = build(:scheme, employer_agent_email_address: 'not a real email')
+      expect(scheme.valid?).to be_falsey
+    end
+  end
 end
