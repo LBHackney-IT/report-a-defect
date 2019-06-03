@@ -38,3 +38,13 @@ en:
       update:
         success:
           'The %{resource} has successfully been updated.'
+  activerecord:
+    attributes:
+      property:
+        uprn: 'UPRN'
+    errors:
+      models:
+        property:
+          attributes:
+            uprn:
+              blank: "can't be blank"

@@ -60,6 +60,11 @@ class Staff::PropertiesController < Staff::BaseController
   end
 
   def property_params
-    params.require(:property).permit(:core_name, :address, :postcode)
+    params.require(:property).permit(
+      :core_name,
+      :address,
+      :postcode,
+      :uprn
+    )
   end
 end
