@@ -50,6 +50,12 @@ class Staff::SchemesController < Staff::BaseController
   end
 
   def scheme_params
-    params.require(:scheme).permit(:name, :contractor_name, :contractor_email_address)
+    params.require(:scheme).permit(
+      :name,
+      :contractor_name,
+      :contractor_email_address,
+      :employer_agent_name,
+      :employer_agent_email_address
+    )
   end
 end
