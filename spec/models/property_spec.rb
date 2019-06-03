@@ -12,8 +12,8 @@ RSpec.describe Property, type: :model do
 
     errors = priority.errors.full_messages
 
-    expect(errors).to include("Name can't be blank")
-    expect(errors).to include("Days can't be blank")
-    expect(errors).to include('Scheme must exist')
+    expect(errors).to include("Core name can't be blank")
+    expect(errors).to include("Address can't be blank")
+    expect(errors).to include("Postcode can't be blank")
   end
 end
