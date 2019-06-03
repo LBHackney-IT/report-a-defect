@@ -28,4 +28,22 @@ RSpec.feature 'Anyone can view a property' do
       expect(page).to have_content(property.core_name)
     end
   end
+
+  scenario 'can use breadcrumbs to navigate' do
+    property = create(:property)
+
+    visit property_path(property)
+
+    within('.govuk-breadcrumbs') do
+      expect(page).to have_link('Home', href: '/')
+      expect(page).to have_link(
+        I18n.t('page_title.staff.estates.show', name: property.scheme.estate.name),
+        href: estate_path(property.scheme.estate)
+      )
+      expect(page).to have_link(
+        I18n.t('page_title.staff.schemes.show', name: property.scheme.name),
+        href: estate_scheme_path(property.scheme.estate, property.scheme)
+      )
+    end
+  end
 end
