@@ -8,6 +8,8 @@ class Property < ApplicationRecord
             :uprn,
             presence: true
 
+  validates :uprn, uniqueness: true
+
   include PgSearch
   pg_search_scope :search_by_address, against: %i[address core_name]
 
