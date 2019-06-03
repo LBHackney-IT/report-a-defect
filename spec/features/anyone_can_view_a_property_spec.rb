@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can create a defect' do
-  scenario 'a property can be found and defect can be created' do
+RSpec.feature 'Anyone can view a property' do
+  scenario 'a property can be found and viewed' do
     property = create(:property, address: '1 Hackney Street')
 
     visit root_path
