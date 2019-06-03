@@ -3,10 +3,10 @@
 .govuk-grid-row
   .govuk-grid-column-full
     %h1.govuk-heading-xl
-      = I18n.t('page_title.staff.properties.show', name: @property.address).titleize
+      = I18n.t('page_title.staff.properties.show', name: @property.address)
 
     = render partial: '/shared/properties/information', locals: { property: @property }
-    
+
     = link_to(I18n.t('generic.button.create', resource: 'Defect'), new_property_defect_path(@property), class: 'govuk-button mb0')
 
     %table.govuk-table.defects

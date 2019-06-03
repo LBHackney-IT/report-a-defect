@@ -8,7 +8,7 @@
 
 .govuk-grid-row
   .govuk-grid-column-two-thirds
-    %h1.govuk-heading-xl= I18n.t('page_title.staff.schemes.show', name: @scheme.name).titleize
+    %h1.govuk-heading-xl= I18n.t('page_title.staff.schemes.show', name: @scheme.name)
     = link_to(I18n.t('generic.button.edit', resource: 'Scheme'), edit_estate_scheme_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
     = render partial: '/shared/schemes/information', locals: { scheme: @scheme }
 

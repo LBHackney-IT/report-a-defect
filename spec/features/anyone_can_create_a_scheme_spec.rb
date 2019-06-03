@@ -6,11 +6,11 @@ RSpec.feature 'Anyone can create a scheme' do
   scenario 'a scheme can be created' do
     visit estate_path(estate)
 
-    expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name).titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name))
 
     click_on(I18n.t('generic.button.create', resource: 'Scheme'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.schemes.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.create'))
     within('form.new_scheme') do
       fill_in 'scheme[name]', with: 'Kings Cresent'
       fill_in 'scheme[contractor_name]', with: 'Builders R Us'
@@ -38,11 +38,11 @@ RSpec.feature 'Anyone can create a scheme' do
   scenario 'an invalid scheme cannot be submitted' do
     visit estate_path(estate)
 
-    expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name).titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name))
 
     click_on(I18n.t('generic.button.create', resource: 'Scheme'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.schemes.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.create'))
     within('form.new_scheme') do
       # Deliberately forget to fill out the required name field
       click_on(I18n.t('generic.button.create', resource: 'Scheme'))

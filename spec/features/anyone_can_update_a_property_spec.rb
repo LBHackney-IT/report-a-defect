@@ -8,7 +8,7 @@ RSpec.feature 'Anyone can update a property' do
 
     visit estate_scheme_path(scheme.estate, scheme)
 
-    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name).titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
     within('table.properties') do
       click_on(I18n.t('generic.link.edit'))
@@ -27,7 +27,7 @@ RSpec.feature 'Anyone can update a property' do
 
     visit estate_scheme_path(scheme.estate, scheme)
 
-    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name).titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
     within('table.properties') do
       click_on(I18n.t('generic.link.edit'))

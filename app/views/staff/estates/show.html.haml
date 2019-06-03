@@ -7,7 +7,7 @@
 
 .govuk-grid-row
   .govuk-grid-column-two-thirds
-    %h1.govuk-heading-xl= I18n.t('page_title.staff.estates.show', name: @estate.name).titleize
+    %h1.govuk-heading-xl= I18n.t('page_title.staff.estates.show', name: @estate.name)
     = link_to(I18n.t('generic.button.create', resource: 'Scheme'), new_estate_scheme_path(@estate), class: 'govuk-button mb0')
 
     = render partial: '/shared/schemes/table', locals: { estate: @estate }

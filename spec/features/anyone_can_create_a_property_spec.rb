@@ -6,11 +6,11 @@ RSpec.feature 'Anyone can create a property' do
   scenario 'a property can be created' do
     visit estate_scheme_path(scheme.estate, scheme)
 
-    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name).titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
     click_on(I18n.t('generic.button.create', resource: 'Property'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.properties.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.properties.create'))
     within('form.new_property') do
       fill_in 'property[core_name]', with: 'A name for a collection of blocks'
       fill_in 'property[address]', with: 'Flat 1, Hackney Street'
@@ -30,11 +30,11 @@ RSpec.feature 'Anyone can create a property' do
   scenario 'an invalid property cannot be submitted' do
     visit estate_scheme_path(scheme.estate, scheme)
 
-    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name).titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
     click_on(I18n.t('generic.button.create', resource: 'Property'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.properties.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.properties.create'))
     within('form.new_property') do
       # Deliberately forget to fill out the required name field
       click_on(I18n.t('generic.button.create', resource: 'Property'))
