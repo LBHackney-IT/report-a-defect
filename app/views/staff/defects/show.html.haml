@@ -1,0 +1,8 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.defects.create')
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)
+
+    = render partial: '/shared/defects/information', locals: { defect: @defect }

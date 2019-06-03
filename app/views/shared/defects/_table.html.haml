@@ -16,6 +16,9 @@
       %th.govuk-table__header
         %h2.govuk-heading-m
           Trade
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Actions
   %tbody.govuk-table__body
     - defects.each do |defect|
       %tr.govuk-table__row
@@ -24,3 +27,4 @@
         %td.govuk-table__cell= defect.priority.name
         %td.govuk-table__cell= defect.target_completion_date
         %td.govuk-table__cell= defect.trade
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), property_defect_path(defect.property, defect), class: 'govuk-link')

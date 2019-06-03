@@ -19,6 +19,10 @@ class Staff::DefectsController < Staff::BaseController
     end
   end
 
+  def show
+    @defect = Defect.find(id)
+  end
+
   private
 
   def id
