@@ -1,5 +1,13 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.defects.create')
 
+.govuk-breadcrumbs
+  %ol.govuk-breadcrumbs__list
+    = breadcrumb_link_to('Home', root_path)
+    = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @defect.property.scheme.estate.name), estate_path(@defect.property.scheme.estate))
+    = breadcrumb_link_to(I18n.t('page_title.staff.schemes.show', name: @defect.property.scheme.name), estate_scheme_path(@defect.property.scheme.estate, @defect.property.scheme))
+    = breadcrumb_link_to(I18n.t('page_title.staff.properties.show', name: @defect.property.address), property_path(@defect.property))
+    = breadcrumb_current(I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number))
+
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl
