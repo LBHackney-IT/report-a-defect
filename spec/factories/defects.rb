@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :defect do
-    description { Faker::Lorem.sentences(2).to_sentence }
+    description { Faker::Lorem.paragraph_by_chars(750) }
     contact_name { Faker::Name.name }
     contact_email_address { Faker::Internet.email }
     contact_phone_number { Faker::Base.numerify('###########') }
