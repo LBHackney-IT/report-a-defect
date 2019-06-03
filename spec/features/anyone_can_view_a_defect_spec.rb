@@ -33,6 +33,26 @@ RSpec.feature 'Anyone can view a defect' do
       expect(page).to have_content(defect.target_completion_date)
       expect(page).to have_content(defect.status)
     end
+
+    within('.scheme_information') do
+      expect(page).to have_content(defect.property.scheme.name)
+      expect(page).to have_content(defect.property.scheme.contractor_name)
+      expect(page).to have_content(defect.property.scheme.contractor_email_address)
+      expect(page).to have_content(defect.property.scheme.employer_agent_name)
+      expect(page).to have_content(defect.property.scheme.employer_agent_email_address)
+    end
+
+    within('.property_information') do
+      expect(page).to have_content(defect.property.scheme.estate.name)
+      expect(page).to have_content(defect.property.scheme.name)
+      expect(page).to have_content(defect.property.scheme.contractor_name)
+      expect(page).to have_content(defect.property.scheme.contractor_email_address)
+      expect(page).to have_content(defect.property.scheme.employer_agent_name)
+      expect(page).to have_content(defect.property.scheme.employer_agent_email_address)
+      expect(page).to have_content(defect.property.uprn)
+      expect(page).to have_content(defect.property.address)
+      expect(page).to have_content(defect.property.core_name)
+    end
   end
 
   scenario 'can use breadcrumbs to navigate' do
