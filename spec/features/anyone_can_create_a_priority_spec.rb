@@ -8,7 +8,7 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
 
     visit estate_scheme_path(scheme.estate, scheme)
 
-    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name).titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
     within('table.priorities') do
       expect(page).to have_content(priority.name)
@@ -19,10 +19,10 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
   scenario 'a scheme priority can be created' do
     visit estate_scheme_path(scheme.estate, scheme)
 
-    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name).titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
     click_on(I18n.t('generic.button.create', resource: 'Priority'))
-    expect(page).to have_content(I18n.t('page_title.staff.priorities.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.priorities.create'))
 
     within('form.new_priority') do
       fill_in 'priority[name]', with: 'P1'
@@ -41,7 +41,7 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
   scenario 'an invalid priority cannot be submitted' do
     visit new_estate_scheme_priority_path(scheme.estate, scheme)
 
-    expect(page).to have_content(I18n.t('page_title.staff.priorities.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.priorities.create'))
 
     within('form.new_priority') do
       # Deliberately forget to fill out the required name fields

@@ -8,7 +8,7 @@ RSpec.feature 'Anyone can create a estate' do
 
     click_on(I18n.t('generic.button.create', resource: 'Estate'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.estates.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.estates.create'))
     within('form.new_estate') do
       fill_in 'estate[name]', with: 'Kings Cresent'
       click_on(I18n.t('generic.button.create', resource: 'Estate'))
@@ -25,7 +25,7 @@ RSpec.feature 'Anyone can create a estate' do
 
     click_on(I18n.t('generic.button.create', resource: 'Estate'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.estates.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.estates.create'))
     within('form.new_estate') do
       # Deliberately forget to fill out the required name field
       click_on(I18n.t('generic.button.create', resource: 'Estate'))

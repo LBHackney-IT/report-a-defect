@@ -5,7 +5,7 @@
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl
-      = I18n.t('page_title.staff.properties.edit', name: @scheme.name).titleize
+      = I18n.t('page_title.staff.properties.edit', name: @scheme.name)
       %span.govuk-caption-l= 'Step 1 of 1'
 
     = simple_form_for [@scheme.estate, @scheme, @property] do |f|

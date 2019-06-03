@@ -12,9 +12,9 @@ RSpec.feature 'Anyone can view a scheme' do
     click_on(I18n.t('generic.link.show'))
 
     expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: scheme.estate.name))
-    click_on(I18n.t('generic.link.show').titleize)
+    click_on(I18n.t('generic.link.show'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name).titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
     within('.scheme_information') do
       expect(page).to have_content(scheme.name)
@@ -33,6 +33,20 @@ RSpec.feature 'Anyone can view a scheme' do
       expect(page).to have_content(property.core_name)
       expect(page).to have_content(property.address)
       expect(page).to have_content(property.postcode)
+    end
+  end
+
+  scenario 'can use breadcrumbs to navigate' do
+    scheme = create(:scheme)
+
+    visit estate_scheme_path(scheme.estate, scheme)
+
+    within('.govuk-breadcrumbs') do
+      expect(page).to have_link('Home', href: '/')
+      expect(page).to have_link(
+        I18n.t('page_title.staff.estates.show', name: scheme.estate.name),
+        href: estate_path(scheme.estate)
+      )
     end
   end
 end

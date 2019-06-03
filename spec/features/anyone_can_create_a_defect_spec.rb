@@ -20,7 +20,7 @@ RSpec.feature 'Anyone can create a defect' do
 
     click_on(I18n.t('generic.button.create', resource: 'Defect'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.defects.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.defects.create'))
 
     within('.property_information') do
       expect(page).to have_content(property.scheme.estate.name)
@@ -58,7 +58,7 @@ RSpec.feature 'Anyone can create a defect' do
 
     click_on(I18n.t('generic.button.create', resource: 'Defect'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.defects.create').titleize)
+    expect(page).to have_content(I18n.t('page_title.staff.defects.create'))
     within('form.new_defect') do
       # Deliberately forget to fill out the required name field
       click_on(I18n.t('generic.button.create', resource: 'Defect'))
