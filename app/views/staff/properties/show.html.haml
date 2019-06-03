@@ -11,9 +11,17 @@
   .govuk-grid-column-full
     %h1.govuk-heading-xl
       = I18n.t('page_title.staff.properties.show', name: @property.address)
-
+  .govuk-grid-column-one-half
+    %h2.govuk-heading-l
+      Property
     = render partial: '/shared/properties/information', locals: { property: @property }
+  .govuk-grid-column-one-half
+    %h2.govuk-heading-l
+      Scheme
+    = render partial: '/shared/schemes/information', locals: { scheme: @property.scheme }
 
+  .govuk-grid-column-full
+    %h1.govuk-heading-xl
+      Defects
     = link_to(I18n.t('generic.button.create', resource: 'Defect'), new_property_defect_path(@property), class: 'govuk-button mb0')
-
     = render partial: '/shared/defects/table', locals: { defects: @property.defects }

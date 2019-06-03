@@ -23,12 +23,12 @@ RSpec.feature 'Anyone can create a defect' do
     expect(page).to have_content(I18n.t('page_title.staff.defects.create'))
 
     within('.property_information') do
-      expect(page).to have_content(property.scheme.estate.name)
-      expect(page).to have_content(property.scheme.name)
+      expect(page).to have_content(property.uprn)
       expect(page).to have_content(property.address)
       expect(page).to have_content(property.core_name)
+      expect(page).to have_content(property.postcode)
     end
-
+    
     within('form.new_defect') do
       fill_in 'defect[description]', with: 'None of the electrics work'
       fill_in 'defect[contact_name]', with: 'Alex Stone'
