@@ -15,15 +15,24 @@ RSpec.feature 'Anyone can create a scheme' do
       fill_in 'scheme[name]', with: 'Kings Cresent'
       fill_in 'scheme[contractor_name]', with: 'Builders R Us'
       fill_in 'scheme[contractor_email_address]', with: 'email@example.com'
+      fill_in 'scheme[employer_agent_name]', with: 'Alex'
+      fill_in 'scheme[employer_agent_email_address]', with: 'alex@example.com'
       click_on(I18n.t('generic.button.create', resource: 'Scheme'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'scheme'))
+
+    scheme = Scheme.first
+
     within('table.schemes') do
-      scheme = Scheme.first
       expect(page).to have_content(scheme.name)
       expect(page).to have_content(scheme.contractor_name)
+      click_on(I18n.t('generic.link.show'))
     end
+
+    expect(page).to have_content(scheme.contractor_email_address)
+    expect(page).to have_content(scheme.employer_agent_name)
+    expect(page).to have_content(scheme.employer_agent_email_address)
   end
 
   scenario 'an invalid scheme cannot be submitted' do
