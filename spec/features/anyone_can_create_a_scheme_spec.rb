@@ -42,5 +42,13 @@ RSpec.feature 'Anyone can create a scheme' do
     within('.scheme_name') do
       expect(page).to have_content("can't be blank")
     end
+
+    within('.scheme_contractor_name') do
+      expect(page).to have_content("can't be blank")
+    end
+
+    within('.scheme_contractor_email_address') do
+      expect(page).to have_content("can't be blank")
+    end
   end
 end
