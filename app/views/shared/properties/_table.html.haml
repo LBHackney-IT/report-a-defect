@@ -3,6 +3,9 @@
     %tr.govuk-table__row
       %th.govuk-table__header
         %h2.govuk-heading-m
+          UPRN
+      %th.govuk-table__header
+        %h2.govuk-heading-m
           Core name
       %th.govuk-table__header
         %h2.govuk-heading-m
@@ -18,6 +21,7 @@
   %tbody.govuk-table__body
     - properties.each do |property|
       %tr.govuk-table__row
+        %td.govuk-table__cell= property.uprn
         %td.govuk-table__cell= property.core_name
         %td.govuk-table__cell= property.address
         %td.govuk-table__cell= property.postcode

@@ -15,6 +15,7 @@ RSpec.feature 'Anyone can create a property' do
       fill_in 'property[core_name]', with: 'A name for a collection of blocks'
       fill_in 'property[address]', with: 'Flat 1, Hackney Street'
       fill_in 'property[postcode]', with: 'N16NU'
+      fill_in 'property[uprn]', with: '100081272892'
       click_on(I18n.t('generic.button.create', resource: 'Property'))
     end
 
@@ -23,6 +24,7 @@ RSpec.feature 'Anyone can create a property' do
       expect(page).to have_content('A name for a collection of blocks')
       expect(page).to have_content('Flat 1, Hackney Street')
       expect(page).to have_content('N16NU')
+      expect(page).to have_content('100081272892')
     end
   end
 
@@ -48,6 +50,10 @@ RSpec.feature 'Anyone can create a property' do
     end
 
     within('.property_postcode') do
+      expect(page).to have_content("can't be blank")
+    end
+
+    within('.property_uprn') do
       expect(page).to have_content("can't be blank")
     end
   end
