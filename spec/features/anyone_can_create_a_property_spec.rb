@@ -43,5 +43,13 @@ RSpec.feature 'Anyone can create a property' do
     within('.property_core_name') do
       expect(page).to have_content("can't be blank")
     end
+
+    within('.property_address') do
+      expect(page).to have_content("can't be blank")
+    end
+
+    within('.property_postcode') do
+      expect(page).to have_content("can't be blank")
+    end
   end
 end
