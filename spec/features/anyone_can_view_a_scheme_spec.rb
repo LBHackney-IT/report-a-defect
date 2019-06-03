@@ -20,6 +20,8 @@ RSpec.feature 'Anyone can view a scheme' do
       expect(page).to have_content(scheme.name)
       expect(page).to have_content(scheme.contractor_name)
       expect(page).to have_content(scheme.contractor_email_address)
+      expect(page).to have_content(scheme.employer_agent_name)
+      expect(page).to have_content(scheme.employer_agent_email_address)
     end
 
     within('.priorities') do
