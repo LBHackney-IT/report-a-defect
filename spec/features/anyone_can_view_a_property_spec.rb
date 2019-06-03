@@ -22,6 +22,8 @@ RSpec.feature 'Anyone can view a property' do
       expect(page).to have_content(property.scheme.name)
       expect(page).to have_content(property.scheme.contractor_name)
       expect(page).to have_content(property.scheme.contractor_email_address)
+      expect(page).to have_content(property.scheme.employer_agent_name)
+      expect(page).to have_content(property.scheme.employer_agent_email_address)
       expect(page).to have_content(property.address)
       expect(page).to have_content(property.core_name)
     end
