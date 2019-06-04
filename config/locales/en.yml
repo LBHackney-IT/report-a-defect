@@ -26,6 +26,7 @@ en:
         edit: 'Update defect'
       comments:
         create: 'Create Comment'
+        edit: 'Update Comment'
   generic:
     link:
       show: 'View'

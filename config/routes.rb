@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   resources :properties, controller: 'staff/properties', only: %i[index show] do
     resources :defects, controller: 'staff/defects', only: %i[new create show edit update] do
-      resources :comments, controller: 'staff/comments', only: %i[new create]
+      resources :comments, controller: 'staff/comments', only: %i[new create edit update]
     end
   end
 end
