@@ -1,0 +1,8 @@
+.defect-comments
+  - if comments.empty?
+    %p Add the first comment by clicking the link.
+  - comments.each do |comment|
+    %div.govuk-inset-text
+      %p= comment.message
+      %p= comment.user.name
+      %p= comment.created_at

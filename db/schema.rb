@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_04_141537) do
+ActiveRecord::Schema.define(version: 2019_06_04_143132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -33,6 +33,16 @@ ActiveRecord::Schema.define(version: 2019_06_04_141537) do
     t.index ["recipient_type", "recipient_id"], name: "index_activities_on_recipient_type_and_recipient_id"
     t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
     t.index ["trackable_type", "trackable_id"], name: "index_activities_on_trackable_type_and_trackable_id"
+  end
+
+  create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "message"
+    t.uuid "user_id"
+    t.uuid "defect_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["defect_id"], name: "index_comments_on_defect_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "defects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

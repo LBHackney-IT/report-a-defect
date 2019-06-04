@@ -11,5 +11,11 @@ FactoryBot.define do
 
     association :property, factory: :property
     association :priority, factory: :priority
+
+    trait :with_comments do
+      after(:create) do |defect|
+        create_list(:comment, 3, defect: defect)
+      end
+    end
   end
 end

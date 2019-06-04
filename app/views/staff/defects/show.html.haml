@@ -17,6 +17,11 @@
 
   .govuk-grid-column-one-third
     %h2.govuk-heading-l
+      Comments
+    = render partial: '/shared/comments/list', locals: { comments: @defect.comments }
+
+  .govuk-grid-column-one-third
+    %h2.govuk-heading-l
       Scheme
     = render partial: '/shared/schemes/information', locals: { scheme: @defect.property.scheme }
 

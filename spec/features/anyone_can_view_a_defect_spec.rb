@@ -75,4 +75,17 @@ RSpec.feature 'Anyone can view a defect' do
       )
     end
   end
+
+  scenario 'can see comments' do
+    defect = create(:defect)
+    comment = create(:comment, defect: defect)
+
+    visit property_defect_path(defect.property, defect)
+
+    within('.defect-comments') do
+      expect(page).to have_content(comment.message)
+      expect(page).to have_content(comment.user.name)
+      expect(page).to have_content(comment.created_at)
+    end
+  end
 end
