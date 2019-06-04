@@ -71,7 +71,7 @@ class Defect < ApplicationRecord
   def set_completion_date
     return unless priority
 
-    self.target_completion_date = Time.zone.now + priority.days
+    self.target_completion_date = Time.zone.now + priority.days.days
   end
 
   def status

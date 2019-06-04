@@ -23,10 +23,10 @@ RSpec.feature 'Anyone can create a defect' do
     expect(page).to have_content(I18n.t('page_title.staff.defects.create'))
 
     within('.property_information') do
-      expect(page).to have_content(property.scheme.estate.name)
-      expect(page).to have_content(property.scheme.name)
+      expect(page).to have_content(property.uprn)
       expect(page).to have_content(property.address)
       expect(page).to have_content(property.core_name)
+      expect(page).to have_content(property.postcode)
     end
 
     within('form.new_defect') do
@@ -35,7 +35,7 @@ RSpec.feature 'Anyone can create a defect' do
       fill_in 'defect[contact_email_address]', with: 'email@example.com'
       fill_in 'defect[contact_phone_number]', with: '07123456789'
       select 'Electrical', from: 'defect[trade]'
-      select priority.name, from: 'defect[priority]'
+      choose priority.name
       click_on(I18n.t('generic.button.create', resource: 'Defect'))
     end
 

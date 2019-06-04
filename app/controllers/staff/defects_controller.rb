@@ -19,6 +19,28 @@ class Staff::DefectsController < Staff::BaseController
     end
   end
 
+  def show
+    @defect = Defect.find(id)
+  end
+
+  def edit
+    @defect = Defect.find(id)
+  end
+
+  def update
+    @defect = Defect.find(id)
+    @defect.assign_attributes(defect_params)
+    @defect.priority = Priority.find(priority_id) if priority_id.present?
+
+    if @defect.valid?
+      @defect.save
+      flash[:success] = I18n.t('generic.notice.update.success', resource: 'defect')
+      redirect_to property_defect_path(@defect.property, @defect)
+    else
+      render :edit
+    end
+  end
+
   private
 
   def id
@@ -40,6 +62,7 @@ class Staff::DefectsController < Staff::BaseController
       :contact_email_address,
       :contact_phone_number,
       :trade,
+      :status
     )
   end
 end

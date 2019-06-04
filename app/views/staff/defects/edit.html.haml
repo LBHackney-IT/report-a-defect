@@ -1,0 +1,54 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.defects.edit', reference_number: @defect.reference_number)
+
+= link_to "Back to #{I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)}", property_defect_path(@defect.property, @defect), class: 'govuk-back-link'
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.defects.edit', reference_number: @defect.reference_number)
+      %span.govuk-caption-l= 'Step 1 of 1'
+
+    = simple_form_for [@defect.property, @defect] do |f|
+      .govuk-form-group
+        = f.input :description,
+                  wrapper: 'textarea',
+                  as: :text,
+                  input_html: { rows: 10 },
+                  required: true
+        = f.input :contact_name
+        = f.input :contact_email_address
+        = f.input :contact_phone_number
+        = f.input :trade,
+                  wrapper: 'select',
+                  input_html: { class: 'trades' },
+                  collection: Defect::TRADES,
+                  required: true
+        = f.input :status,
+                  wrapper: 'select',
+                  input_html: { class: 'status' },
+                  collection: Defect.statuses,
+                  selected: @defect.status,
+                  required: true,
+                  label_method: ->(obj){ status_form_label(option_array: obj) },
+                  value_method: :first
+      .existing-priority-information
+        %label.govuk-label
+          %span Priority status
+          %p.govuk-inset-text= @defect.priority.name
+        %label.govuk-label
+          %span Target date for completion
+          %p.govuk-inset-text
+            = format_date(@defect.target_completion_date) if @defect.target_completion_date?
+
+      = f.input :priority,
+                as: :radio_buttons,
+                wrapper: :radio_buttons,
+                item_wrapper_class: 'govuk-radios__item',
+                item_label_class: 'govuk-label',
+                input_html: { class: 'priorities' },
+                collection: @defect.property.scheme.priorities,
+                required: false,
+                selected: @defect.priority,
+                label_method: ->(obj){ priority_form_label(priority: obj) }
+
+      = f.button :submit, I18n.t('generic.button.update', resource: 'Defect')

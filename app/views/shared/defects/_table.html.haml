@@ -1,0 +1,30 @@
+%table.govuk-table.defects
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Reference number
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Status
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Priority
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Target completion date
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Trade
+      %th.govuk-table__header
+        %h2.govuk-heading-m
+          Actions
+  %tbody.govuk-table__body
+    - defects.each do |defect|
+      %tr.govuk-table__row
+        %td.govuk-table__cell= defect.reference_number
+        %td.govuk-table__cell= defect.status
+        %td.govuk-table__cell= defect.priority.name
+        %td.govuk-table__cell= format_date(defect.target_completion_date)
+        %td.govuk-table__cell= defect.trade
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), property_defect_path(defect.property, defect), class: 'govuk-link')
