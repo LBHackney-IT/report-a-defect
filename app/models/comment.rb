@@ -1,4 +1,6 @@
 class Comment < ApplicationRecord
+  validates :message, presence: true
+
   belongs_to :user, dependent: false
   belongs_to :defect, dependent: :destroy
 

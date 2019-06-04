@@ -43,31 +43,19 @@ RSpec.feature 'Anyone can create a comment' do
     end
   end
 
-  # scenario 'an invalid comment cannot be submitted' do
-  #   property = create(:property)
-  #
-  #   visit property_path(property)
-  #
-  #   click_on(I18n.t('generic.button.create', resource: 'Defect'))
-  #
-  #   expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
-  #   within('form.new_comment') do
-  #     # Deliberately forget to fill out the required name field
-  #     click_on(I18n.t('generic.button.create', resource: 'Defect'))
-  #   end
-  #
-  #   within('.comment_description') do
-  #     expect(page).to have_content("can't be blank")
-  #   end
-  #
-  #   within('.comment_trade') do
-  #     expect(page).to have_content("can't be blank")
-  #   end
-  #
-  #   within('.comment_priority') do
-  #     expect(page).to have_content("can't be blank")
-  #   end
-  # end
+  scenario 'an invalid comment cannot be submitted' do
+    visit new_property_defect_comment_path(property, defect)
+
+    expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
+    within('form.new_comment') do
+      # Deliberately forget to fill out the required name field
+      click_on(I18n.t('generic.button.create', resource: 'Comment'))
+    end
+
+    within('.comment_message') do
+      expect(page).to have_content("can't be blank")
+    end
+  end
 
   # TODO: navigation back button
 end

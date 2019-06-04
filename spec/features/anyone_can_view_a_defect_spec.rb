@@ -82,7 +82,7 @@ RSpec.feature 'Anyone can view a defect' do
 
     visit property_defect_path(defect.property, defect)
 
-    within('.defect-comments') do
+    within('.comments') do
       expect(page).to have_content(comment.message)
       expect(page).to have_content(comment.user.name)
       expect(page).to have_content(comment.created_at)
