@@ -1,0 +1,16 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.comments.create')
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.comments.create')
+      %span.govuk-caption-l= 'Step 1 of 1'
+
+    = simple_form_for [@defect.property, @defect, @comment], html: { class: 'new_comment' } do |f|
+      .govuk-form-group
+        = f.input :message,
+                  wrapper: 'textarea',
+                  as: :text,
+                  input_html: { rows: 10 },
+                  required: true
+      = f.button :submit, I18n.t('generic.button.create', resource: 'Comment')

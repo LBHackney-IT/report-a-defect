@@ -18,6 +18,7 @@
   .govuk-grid-column-one-third
     %h2.govuk-heading-l
       Comments
+    = link_to(I18n.t('generic.button.create', resource: 'Comment'), new_property_defect_comment_path(@defect.property, @defect), class: 'govuk-button mb0')
     = render partial: '/shared/comments/list', locals: { comments: @defect.comments }
 
   .govuk-grid-column-one-third
