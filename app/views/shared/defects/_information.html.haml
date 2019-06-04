@@ -3,6 +3,9 @@
     %dt.govuk-summary-list__key Reference number
     %dd.govuk-summary-list__value= defect.reference_number
   %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Status
+    %dd.govuk-summary-list__value= defect.status
+  %div.govuk-summary-list__row
     %dt.govuk-summary-list__key Description
     %dd.govuk-summary-list__value= defect.description
   %div.govuk-summary-list__row
@@ -20,9 +23,6 @@
   %div.govuk-summary-list__row
     %dt.govuk-summary-list__key Target completion date
     %dd.govuk-summary-list__value= format_date(defect.target_completion_date)
-  %div.govuk-summary-list__row
-    %dt.govuk-summary-list__key Status
-    %dd.govuk-summary-list__value= defect.status
   %div.govuk-summary-list__row
     %dt.govuk-summary-list__key Priority
     %dd.govuk-summary-list__value= defect.priority.name

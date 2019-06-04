@@ -62,6 +62,7 @@ class Staff::DefectsController < Staff::BaseController
       :contact_email_address,
       :contact_phone_number,
       :trade,
+      :status
     )
   end
 end

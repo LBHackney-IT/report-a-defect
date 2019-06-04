@@ -39,6 +39,20 @@ RSpec.feature 'Anyone can update a defect' do
     expect(page).to have_content((Time.zone.now + priority.days.days).to_date)
   end
 
+  scenario 'a defect status can be updated' do
+    defect = create(:defect, property: property)
+
+    visit edit_property_defect_path(defect.property, defect)
+
+    within('form.edit_defect') do
+      select 'Completed', from: 'defect[status]'
+      click_on(I18n.t('generic.button.update', resource: 'Defect'))
+    end
+
+    expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
+    expect(page).to have_content('Completed')
+  end
+
   scenario 'an invalid defect cannot be updated' do
     defect = create(:defect, property: property)
 

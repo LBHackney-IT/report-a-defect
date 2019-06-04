@@ -24,4 +24,16 @@ RSpec.describe DefectHelper, type: :helper do
       end
     end
   end
+
+  describe '#status_form_label' do
+    it 'returns a capitalized string' do
+      result = helper.status_form_label(option_array: ['outstanding', 0])
+      expect(result).to eql('Outstanding')
+    end
+
+    it 'returns a string without underscores' do
+      result = helper.status_form_label(option_array: ['end_of_year', 1])
+      expect(result).to eql('End of year')
+    end
+  end
 end
