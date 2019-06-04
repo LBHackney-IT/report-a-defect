@@ -23,6 +23,6 @@ class ApplicationController < ActionController::Base
   # rubocop:enable Rails/UnknownEnv
 
   def current_user
-    User.find_or_create_by(identifier: 'dxw')
+    User.find_or_create_by(identifier: 'dxw', name: 'Generic team user')
   end
 end

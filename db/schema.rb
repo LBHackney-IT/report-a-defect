@@ -95,14 +95,14 @@ ActiveRecord::Schema.define(version: 2019_06_04_141537) do
     t.string "identifier"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "comments_id"
-    t.index ["comments_id"], name: "index_users_on_comments_id"
+    t.string "name"
   end
 
+  add_foreign_key "comments", "defects"
+  add_foreign_key "comments", "users"
   add_foreign_key "defects", "priorities"
   add_foreign_key "defects", "properties"
   add_foreign_key "priorities", "schemes"
   add_foreign_key "properties", "schemes"
   add_foreign_key "schemes", "estates"
-  add_foreign_key "users", "comments", column: "comments_id"
 end
