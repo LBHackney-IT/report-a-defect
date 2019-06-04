@@ -195,6 +195,20 @@ SimpleForm.setup do |config|
     field.use :input, as: :select, class: 'govuk-select'
   end
 
+  config.wrappers :radio_buttons, tag: 'div',
+                                  class: 'govuk-form-group',
+                                  error_class: 'govuk-form-group--error' do |radio|
+    radio.use :hint, wrap_with: { tag: 'div', class: 'govuk-hint' }
+    radio.use :error, wrap_with: { tag: 'div', class: 'govuk-error-message' }
+    radio.use :label, wrap_with: { tag: 'span', class: 'govuk-label govuk-label' }
+
+    radio.use :html5
+
+    radio.wrapper class: 'govuk-radios' do |govuk_radios|
+      govuk_radios.use :input, class: 'govuk-radios__input'
+    end
+  end
+
   config.wrappers :textarea, tag: 'div',
                              class: 'govuk-form-group',
                              error_class: 'govuk-form-group--error' do |field|
