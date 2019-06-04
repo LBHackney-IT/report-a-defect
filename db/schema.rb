@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_03_115200) do
+ActiveRecord::Schema.define(version: 2019_06_04_141537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -95,6 +95,8 @@ ActiveRecord::Schema.define(version: 2019_06_03_115200) do
     t.string "identifier"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "comments_id"
+    t.index ["comments_id"], name: "index_users_on_comments_id"
   end
 
   add_foreign_key "defects", "priorities"
@@ -102,4 +104,5 @@ ActiveRecord::Schema.define(version: 2019_06_03_115200) do
   add_foreign_key "priorities", "schemes"
   add_foreign_key "properties", "schemes"
   add_foreign_key "schemes", "estates"
+  add_foreign_key "users", "comments", column: "comments_id"
 end
