@@ -18,6 +18,7 @@ RSpec.feature 'Anyone can update a defect' do
       fill_in 'defect[core_name]', with: 'A name for a collection of blocks'
       click_on(I18n.t('generic.button.update', resource: 'Property'))
     end
+    expect(page).to have_content((Time.zone.now + priority.days.days).to_date)
   end
 
   scenario 'an invalid defect cannot be updated' do
