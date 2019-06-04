@@ -23,6 +23,7 @@ en:
       defects:
         create: 'Create Defect'
         show: 'Defect %{reference_number}'
+        edit: 'Update defect'
   generic:
     link:
       show: 'View'

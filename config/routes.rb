@@ -11,6 +11,6 @@ Rails.application.routes.draw do
   end
 
   resources :properties, controller: 'staff/properties', only: %i[index show] do
-    resources :defects, controller: 'staff/defects', only: %i[new create show]
+    resources :defects, controller: 'staff/defects', only: %i[new create show edit update]
   end
 end
