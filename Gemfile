@@ -19,6 +19,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'sentry-raven'
 gem 'newrelic_rpm'
 gem 'figaro'
+gem 'factory_bot_rails'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
@@ -41,7 +42,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'factory_bot_rails'
   gem 'faker'
   gem 'rspec-rails'
 end
