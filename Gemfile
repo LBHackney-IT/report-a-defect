@@ -19,6 +19,9 @@ gem 'uglifier', '>= 1.3.0'
 gem 'sentry-raven'
 gem 'newrelic_rpm'
 gem 'figaro'
+
+# Add to termporarily support usability testing
+gem 'faker'
 gem 'factory_bot_rails'
 
 group :development, :test do
@@ -42,7 +45,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'faker'
   gem 'rspec-rails'
 end
 
