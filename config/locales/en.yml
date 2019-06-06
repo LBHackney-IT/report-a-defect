@@ -43,6 +43,10 @@ en:
       update:
         success:
           'The %{resource} has successfully been updated.'
+  email:
+    defect:
+      forward:
+        subject: 'Hackney defect report: %{reference}'
   activerecord:
     attributes:
       property:

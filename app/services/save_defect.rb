@@ -7,5 +7,6 @@ class SaveDefect
 
   def call
     defect.save
+    DefectMailer.forward(defect.id).deliver_now
   end
 end
