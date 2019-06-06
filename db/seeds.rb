@@ -1,11 +1,13 @@
 raise if Rails.env.production?
 
+Comment.delete_all
 Defect.delete_all
 Property.delete_all
 Priority.delete_all
 Scheme.delete_all
 Estate.delete_all
 PublicActivity::Activity.delete_all
+User.delete_all
 
 # Estates
 estate = FactoryBot.create(:estate, name: 'Kings Cresent')
@@ -38,6 +40,7 @@ property4 = FactoryBot.create(
   FactoryBot.create_list(
     :defect,
     10,
+    :with_comments,
     property: property,
     priority: [priority1, priority2, priority3, priority4].sample
   )

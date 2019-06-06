@@ -1,0 +1,9 @@
+.comments
+  - if comments.empty?
+    %p Add the first comment by clicking the link.
+  - comments.each do |comment|
+    %div.govuk-inset-text.comment
+      %p= comment.message
+      %p= comment.user.name
+      %p= comment.created_at
+      = link_to(I18n.t('generic.button.edit', resource: ''), edit_property_defect_comment_path(comment.defect.property, comment.defect, comment), class: 'govuk-button govuk-button--secondary')
