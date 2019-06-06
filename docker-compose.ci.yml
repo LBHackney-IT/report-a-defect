@@ -10,7 +10,7 @@ services:
       DATABASE_URL: "postgres://postgres@db-test:5432/report-a-defect?template=template0&pool=5&encoding=unicode"
     container_name: report-a-defect_test_web_1
     env_file:
-      - docker-compose.env
+      - docker-compose.env.example
     volumes:
       - node_modules:/srv/report-a-defect/node_modules:cached
     depends_on:
