@@ -8,5 +8,6 @@ class SaveDefect
   def call
     defect.save
     DefectMailer.forward(defect.id).deliver_now
+    defect.create_activity key: 'defect.forwarded_to_contractor', owner: nil
   end
 end
