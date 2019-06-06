@@ -6,9 +6,9 @@ class Staff::DefectsController < Staff::BaseController
 
   def create
     @property = Property.find(property_id)
-    @defect = Defect.new(defect_params)
-    @defect.property = @property
-    @defect.priority = Priority.find(priority_id) if priority_id.present?
+
+    options = { property_id: property_id, priority_id: priority_id }
+    @defect = BuildDefect.new(defect_params: defect_params, options: options).call
 
     if @defect.valid?
       @defect.save
