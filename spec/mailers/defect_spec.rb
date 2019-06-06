@@ -29,6 +29,5 @@ RSpec.describe DefectMailer, type: :mailer do
     expect(body_lines[15].strip).to match("#{I18n.t('email.defect.forward.headings.title.contractor')}: #{defect.property.scheme.contractor_name}")
     expect(body_lines[16].strip).to match("#{I18n.t('email.defect.forward.headings.title.priority_name')}: #{defect.priority.name}")
     expect(body_lines[17].strip).to match("#{I18n.t('email.defect.forward.headings.title.target_completion_date')}: #{defect.target_completion_date}")
-
   end
 end
