@@ -84,3 +84,4 @@ pickle-email-*.html
 *~
 
 /node_modules
+docker-compose.env
