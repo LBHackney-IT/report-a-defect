@@ -28,3 +28,7 @@
     %h2.govuk-heading-l
       Property
     = render partial: '/shared/properties/information', locals: { property: @defect.property }
+
+    %h2.govuk-heading-l
+      Events
+    = render partial: '/shared/events/list', locals: { events: @defect.activities }
