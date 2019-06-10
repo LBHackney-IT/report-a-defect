@@ -1,7 +1,6 @@
 en:
   app:
     title: 'Report a Defect'
-  generic:
     email: 'newbuild@hackney.gov.uk'
   service:
     name: 'Report a Defect'
@@ -11,6 +10,8 @@ en:
         accepted:
           title: 'Defect acceptance recorded'
           body: 'Thank you for accepting defect %{reference_number}'
+        unprocessable_entity:
+          body: 'This accept link appears to be invalid. This might be because it has already accepted it or it has expired.'
     staff:
       dashboard: 'Dashboard'
       estates:
@@ -34,6 +35,8 @@ en:
       comments:
         create: 'Create Comment'
         edit: 'Update Comment'
+  error_pages:
+    unprocessable_entity: 'Cannot process this request'
   generic:
     link:
       show: 'View'

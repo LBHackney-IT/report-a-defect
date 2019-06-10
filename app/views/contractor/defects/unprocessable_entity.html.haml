@@ -1,0 +1,8 @@
+- content_for :page_title_prefix, I18n.t('error_pages.unprocessable_entity')
+
+%h1.govuk-heading-xl= I18n.t('error_pages.unprocessable_entity')
+%p.govuk-body= I18n.t('page_title.contractor.defects.unprocessable_entity.body')
+%p.govuk-body
+  = succeed '.' do
+    = "If you believe this is incorrect please let us know by email"
+    = mail_to(I18n.t('app.email'), I18n.t('app.email'), class: 'govuk-link')

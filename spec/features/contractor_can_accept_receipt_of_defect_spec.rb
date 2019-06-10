@@ -29,4 +29,12 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
       travel_back
     end
   end
+
+  context 'with an incorrect token' do
+    it 'returns a custom unprocessable_entity error' do
+      visit defect_accept_path('an-unknown-token')
+      expect(page.status_code).to eq(422)
+      expect(page).to have_content(I18n.t('page_title.contractor.defects.unprocessable_entity.body'))
+    end
+  end
 end

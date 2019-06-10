@@ -10,7 +10,7 @@
     %p.govuk-body
       = succeed '.' do
         = "If this was accepted in error please send an email to"
-        = mail_to(I18n.t('generic.email'), I18n.t('generic.email'), class: 'govuk-link')
+        = mail_to(I18n.t('app.email'), I18n.t('app.email'), class: 'govuk-link')
     .govuk-heading-m What happens next
     %p.govuk-body
       We've notified the person who reported this problem that you will be contact with them to arrange the next steps.
