@@ -54,4 +54,21 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
       travel_back
     end
   end
+
+  context 'when the token has already been used' do
+    it 'does not store an accept event' do
+      defect = create(:defect)
+
+      visit defect_accept_path(defect.token)
+
+      expect(page).to have_content(I18n.t('page_title.contractor.defects.accepted.title'))
+      expect(PublicActivity::Activity.where(key: 'defect.accepted').count).to eq(1)
+
+      # Visit again
+      visit defect_accept_path(defect.token)
+
+      expect(page).to have_content(I18n.t('page_title.contractor.defects.unprocessable_entity.body'))
+      expect(PublicActivity::Activity.where(key: 'defect.accepted').count).to eq(1)
+    end
+  end
 end
