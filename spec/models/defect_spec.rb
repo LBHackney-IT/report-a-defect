@@ -91,7 +91,7 @@ RSpec.describe Defect, type: :model do
       verifier_double = instance_double(ActiveSupport::MessageVerifier)
       expect(ActiveSupport::MessageVerifier).to receive(:new).and_return(verifier_double)
       expect(verifier_double).to receive(:generate)
-        .with(defect.id, purpose: :accept_defect_ownership)
+        .with(defect.id, purpose: :accept_defect_ownership, expires_in: 3.months)
 
       defect.token
     end

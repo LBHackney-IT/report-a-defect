@@ -37,4 +37,44 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
       expect(page).to have_content(I18n.t('page_title.contractor.defects.unprocessable_entity.body'))
     end
   end
+
+  context 'when this token has expired' do
+    it 'returns a custom unprocessable_entity error' do
+      travel_to Time.zone.parse('2019-01-01')
+
+      defect = create(:defect)
+      token = defect.token
+
+      travel_to Time.zone.parse('2019-04-01')
+
+      visit defect_accept_path(token)
+      expect(page.status_code).to eq(422)
+      expect(page).to have_content(I18n.t('page_title.contractor.defects.unprocessable_entity.body'))
+
+      travel_back
+    end
+  end
+
+  context 'when this token has already been used'
+
+  context 'when the token contains suspicious characters'
+
+  #
+  # context 'with the incorrect token' do
+  #   let(:token) { subscription.id }
+  #
+  #   it 'returns not found' do
+  #     expect(page.status_code).to eq(404)
+  #   end
+  # end
+  #
+  # context 'with an old token' do
+  #   let(:token) do
+  #     Timecop.travel(-3.days) { subscription.token }
+  #   end
+  #
+  #   scenario 'still returns 200' do
+  #     expect(page.status_code).to eq(200)
+  #   end
+  # end
 end
