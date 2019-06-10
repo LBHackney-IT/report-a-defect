@@ -83,4 +83,17 @@ RSpec.describe Defect, type: :model do
       travel_back
     end
   end
+
+  describe '#token' do
+    it 'generates a secret token from the ID' do
+      defect = create(:defect)
+
+      verifier_double = instance_double(ActiveSupport::MessageVerifier)
+      expect(ActiveSupport::MessageVerifier).to receive(:new).and_return(verifier_double)
+      expect(verifier_double).to receive(:generate)
+        .with(defect.id, purpose: :accept_defect_ownership)
+
+      defect.token
+    end
+  end
 end

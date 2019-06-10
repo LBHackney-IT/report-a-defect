@@ -82,4 +82,8 @@ class Defect < ApplicationRecord
   def contact_phone_number=(value)
     super(value.tr(' ', ''))
   end
+
+  def token
+    MessageVerifier.verifier.generate(id, purpose: :accept_defect_ownership)
+  end
 end

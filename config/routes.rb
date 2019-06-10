@@ -15,4 +15,8 @@ Rails.application.routes.draw do
       resources :comments, controller: 'staff/comments', only: %i[new create edit update]
     end
   end
+
+  resources :defects, controller: 'contractor/defects' do
+    get :accept
+  end
 end

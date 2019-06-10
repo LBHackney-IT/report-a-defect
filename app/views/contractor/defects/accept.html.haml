@@ -1,0 +1,16 @@
+- content_for :page_title_prefix, I18n.t('page_title.contractor.defects.accepted.title')
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    .govuk-panel.govuk-panel--confirmation
+      %h1.govuk-panel__title
+        = I18n.t('page_title.contractor.defects.accepted.title')
+      .govuk-panel__body
+        = I18n.t('page_title.contractor.defects.accepted.body', reference_number: @defect.reference_number)
+    %p.govuk-body
+      = succeed '.' do
+        = "If this was accepted in error please send an email to"
+        = mail_to(I18n.t('generic.email'), I18n.t('generic.email'), class: 'govuk-link')
+    .govuk-heading-m What happens next
+    %p.govuk-body
+      We've notified the person who reported this problem that you will be contact with them to arrange the next steps.
