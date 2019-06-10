@@ -36,6 +36,7 @@ en:
       update: 'Update %{resource}'
       edit: 'Edit %{resource}'
       find: 'Find Property'
+      search: 'Search'
     notice:
       create:
         success:

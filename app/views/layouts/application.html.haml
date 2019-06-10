@@ -20,12 +20,12 @@
     :javascript
       document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     %a.govuk-skip-link{href: "#main-content"} Skip to main content
-    %header.govuk-header{"data-module": "header", role: "banner"}
-      .govuk-header__container.govuk-width-container
+    %header.govuk-header.lbh-header{"data-module": "header", role: "banner"}
+      .govuk-header.govuk-header__container.lbh-header__container
         .govuk-header__logo
           %a.govuk-header__link.govuk-header__link--homepage{href: root_path}
             %span.govuk-header__logotype
-              %svg.govuk-header__logotype-crown{focusable: "false", height: "32", role: "presentation", viewbox: "0 0 141.78 25.28", width: "200", xmlns: "http://www.w3.org/2000/svg"}
+              %svg.govuk-header__logotype-crown{focusable: "false", height: "28", role: "presentation", viewbox: "0 0 141.78 25.28", width: "200", xmlns: "http://www.w3.org/2000/svg"}
                 %path{d: "M118.94 9.23a2.63 2.63 0 0 0-2.85 2.45h5.28a2.39 2.39 0 0 0-2.43-2.45zM53 16.32a1.59 1.59 0 0 0 1.73 1.34A2.19 2.19 0 0 0 57 15.4v-1.34a9.75 9.75 0 0 1-2.18.7c-1.2.24-1.82.58-1.82 1.56z", fill: "none"}
                 %path{d: "M18 0v8.24H6.66V0a12.35 12.35 0 0 0 0 21.92v-8.24H18v8.24A12.35 12.35 0 0 0 18 0zM40.65 7.59h-5.76V.62h-6.15v19.96h6.15v-7.87h5.76v7.87h6.15V.62h-6.15v6.97zM62.34 11.38c0-2.8.06-5.68-6.87-5.68-3.44 0-7.3.67-7.47 4.75h5.15c0-.63.36-1.5 2.07-1.5.89.05 1.78.36 1.78 1.35s-.75 1.15-1.51 1.3c-2.82.53-8.19.36-8.19 5 0 3 2.32 4.37 5.12 4.37a5.93 5.93 0 0 0 4.67-1.72h.05a3.76 3.76 0 0 0 .2 1.34H63a5.81 5.81 0 0 1-.68-3.24zM57 15.4a2.19 2.19 0 0 1-2.32 2.26A1.59 1.59 0 0 1 53 16.32c0-1 .64-1.28 1.87-1.56a9.75 9.75 0 0 0 2.18-.7zM71 16.91c-2.12 0-2.43-1.81-2.43-3.57s.26-3.59 2.43-3.59a2 2 0 0 1 1.4.47 1.92 1.92 0 0 1 .6 1.36h5.25c-.33-4-3.58-5.87-7.38-5.87A7.51 7.51 0 0 0 63 13.34c0 4.59 3.5 7.61 7.86 7.61 3.92 0 7-2.21 7.55-6.16h-5.3A2.22 2.22 0 0 1 71 16.91zM93.86 6.08H87.6l-3.53 4.18V.62h-5.54v19.95h5.54v-4.2l.98-1.06 2.97 5.26h6.65l-5.98-9.03 5.17-5.46zM105.07 5.7a5.31 5.31 0 0 0-4.71 2.21V6.08H95v14.5h5.54v-7.66c0-2.32 1.25-2.79 2.2-2.79 1.62 0 1.81 1.17 1.81 2.85v7.6h5.55v-9.95a4.68 4.68 0 0 0-5.03-4.93zM118.44 5.7a7.44 7.44 0 0 0-7.66 7.65c0 4.87 3.5 7.6 8.13 7.6 3.3 0 6.35-1.45 7.47-4.56h-5.17a2.8 2.8 0 0 1-2.32 1 2.77 2.77 0 0 1-2.82-2.87h10.61c0-5.62-2.48-8.82-8.24-8.82zm-2.35 6a2.63 2.63 0 0 1 2.85-2.45 2.39 2.39 0 0 1 2.43 2.45z", fill: "white"}
                 %path{d:"M136.05 6.08l-2.35 8.33h-.06l-2.32-8.33h-5.92l2.46 6.68c.3.84 2.43 6.17 2.43 6.87s-.2.93-.53 1.09a4.48 4.48 0 0 1-1.68.14h-1.29v4.42h2.52c2.15 0 4.39 0 5.84-1.79a14.17 14.17 0 0 0 1.82-4l4.81-13.39z", fill: "white"}
