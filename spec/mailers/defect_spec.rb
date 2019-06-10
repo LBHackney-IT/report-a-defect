@@ -8,13 +8,14 @@ RSpec.describe DefectMailer, type: :mailer do
 
   after(:each) { travel_back }
 
+  let(:recipient) { 'email@example.com' }
   let(:defect) { create(:defect) }
-  let(:mail) { DefectMailer.forward(defect.id) }
+  let(:mail) { DefectMailer.forward(defect.id, recipient) }
   let(:body_lines) { mail.body.raw_source.lines }
 
-  it 'sends an email to the contractor' do
+  it 'sends an email to the email address provided' do
     expect(mail.subject).to eq(I18n.t('email.defect.forward.subject', reference: defect.reference_number))
-    expect(mail.to).to eq([defect.property.scheme.contractor_email_address])
+    expect(mail.to).to eq([recipient])
     expect(body_lines[0].strip).to match(/# #{I18n.t('app.title')}/)
     expect(body_lines[2].strip).to match("#{I18n.t('email.defect.forward.headings.title.reference_number')} : #{defect.reference_number}")
     expect(body_lines[3].strip).to match("#{I18n.t('email.defect.forward.headings.title.created_at')}: #{defect.created_at.to_s(:default)}")
