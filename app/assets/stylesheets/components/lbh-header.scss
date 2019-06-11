@@ -43,5 +43,12 @@ header {
   &.lbh-header__container {
     background-color: $lbh-dark-grey;
     border-bottom: none;
+
+    @include govuk-media-query($until: desktop) {
+       .govuk-header__content {
+         padding-left: 1.5em;
+       }
+    }
+
   }
 }
