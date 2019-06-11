@@ -20,7 +20,6 @@ en:
         edit: 'Update property'
         index: 'Properties'
         show: '%{name}'
-        find: 'Find a property'
       defects:
         create: 'Create Defect'
         show: 'Defect %{reference_number}'

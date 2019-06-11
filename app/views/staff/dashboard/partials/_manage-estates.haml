@@ -10,7 +10,7 @@
       %th.govuk-table__header
         Action
   %tbody.govuk-table__body
-    - @estates.each do |estate|
+    - estates.each do |estate|
       %tr.govuk-table__row
         %td.govuk-table__cell= estate.name
         %td.govuk-table__cell= link_to I18n.t('generic.link.show'), estate_path(estate), class: 'govuk-link govuk-link--no-visited-state'

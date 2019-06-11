@@ -4,7 +4,8 @@
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl= I18n.t('page_title.staff.dashboard')
 
-    %h3.govuk-heading-m= I18n.t('page_title.staff.properties.find')
+    %h3.govuk-heading-m
+      Find a property
     %p.govuk-body-s
       Search for a property to view and create defects.
     = form_tag properties_path, method: :get, class: 'property-search' do |f|
@@ -18,4 +19,4 @@
   .govuk-grid-column-one-third
     %h2.govuk-heading-m
       Manage Estates
-    = render partial: 'staff/dashboard/partials/manage-estates'
+    = render partial: 'staff/dashboard/partials/manage-estates', locals: { estates: @estates }
