@@ -15,6 +15,7 @@ RSpec.feature 'Anyone can update a defect' do
     click_on(I18n.t('generic.link.edit'))
 
     within('form.edit_defect') do
+      fill_in 'defect[title]', with: 'New title'
       fill_in 'defect[description]', with: 'New description'
       fill_in 'defect[contact_name]', with: 'New name'
       fill_in 'defect[contact_email_address]', with: 'email@foo.com'
@@ -29,6 +30,7 @@ RSpec.feature 'Anyone can update a defect' do
 
     expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
 
+    expect(page).to have_content('New title')
     expect(page).to have_content('New description')
     expect(page).to have_content('New name')
     expect(page).to have_content('email@foo.com')

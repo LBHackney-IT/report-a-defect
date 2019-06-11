@@ -10,6 +10,9 @@
 
     = simple_form_for [@defect.property, @defect] do |f|
       .govuk-form-group
+        = f.input :title,
+                  hint: I18n.t('form.defect.title.description'),
+                  label: 'Short title'
         = f.input :description,
                   wrapper: 'textarea',
                   as: :text,
