@@ -4,24 +4,19 @@
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl= I18n.t('page_title.staff.dashboard')
 
-    %h3.govuk-heading-m= I18n.t('generic.button.find')
+    %h3.govuk-heading-m
+      Find a property
+    %p.govuk-body-s
+      Search for a property to view and create defects.
     = form_tag properties_path, method: :get, class: 'property-search' do |f|
       .govuk-form-group
         = label_tag 'address', 'Address', class: 'govuk-label'
-        = search_field_tag :address, @property_search.address, class: 'govuk-input form-control form-control-block', placeholder: '1 Hackney Street'
+        = search_field_tag :address, @property_search.address, class: 'govuk-input form-control form-control-block govuk-!-width-three-quarters', placeholder: '1 Hackney Street'
       = submit_tag I18n.t('generic.button.find'), class: 'govuk-button mb0'
 
-    = link_to(I18n.t('generic.button.create', resource: 'Estate'), new_estate_path, class: 'govuk-button mb0')
+      %hr.govuk-section-break.govuk-section-break--l.govuk-section-break--visible
 
-    %table.govuk-table.estates
-      %thead.govuk-table__head
-        %tr.govuk-table__row
-          %th.govuk-table__header
-            %h2.govuk-heading-m
-              Name
-          %th.govuk-table__header
-      %tbody.govuk-table__body
-        - @estates.each do |estate|
-          %tr.govuk-table__row
-            %td.govuk-table__cell= estate.name
-            %td.govuk-table__cell= link_to I18n.t('generic.link.show'), estate_path(estate), class: 'govuk-link'
+  .govuk-grid-column-one-third
+    %h2.govuk-heading-m
+      Manage Estates
+    = render partial: 'staff/dashboard/partials/manage-estates', locals: { estates: @estates }

@@ -31,18 +31,6 @@ $lbh-focus-text-colour: $lbh-text-colour;
 // Error state
 $lbh-error-colour: #BE3A34;
 
-// Button colours:
-
-$lbh-primary-button: #00664F;
-$lbh-primary-inner-shadow: #003D2F;
-$lbh-primary-hover: #00513F;
-$lbh-primary-focus-fill: #00664F;
-$lbh-primary-focus-stroke: 3px solid $lbh-focus-colour;
-$lbh-primary-disabled: #7FB2A7;
-$lbh-primary-disabled-inner-shadow: #00513F;
-$lbh-secondary-button-fill: #FFFFFF;
-$lbh-secondary-button-border: 1px solid #00664F;
-
 // Brand main colours:
 $lbh-dark-green: #00664F;
 $lbh-mid-green: #00B341 ;
@@ -51,6 +39,20 @@ $lbh-attention-green: #00B140;
 $lbh-confirmation-green: #A4D65E;
 
 $lbh-primary: $lbh-dark-green;
+
+// Button colours:
+
+$lbh-primary-button: $lbh-primary;
+$lbh-primary-inner-shadow: #003D2F;
+$lbh-primary-hover: #00513F;
+$lbh-primary-focus-fill: $lbh-primary;
+$lbh-primary-focus-stroke: 3px solid $lbh-focus-colour;
+$lbh-primary-disabled: #7FB2A7;
+$lbh-primary-disabled-inner-shadow: #00513F;
+$lbh-secondary-button-fill: #FFFFFF;
+$lbh-secondary-button-border: 2px solid $lbh-primary;
+
+
 
 // Housing colours (used in repairs management hub):
 
