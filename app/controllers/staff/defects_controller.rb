@@ -57,6 +57,7 @@ class Staff::DefectsController < Staff::BaseController
 
   def defect_params
     params.require(:defect).permit(
+      :title,
       :description,
       :contact_name,
       :contact_email_address,

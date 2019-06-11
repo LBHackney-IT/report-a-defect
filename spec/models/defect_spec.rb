@@ -12,6 +12,7 @@ RSpec.describe Defect, type: :model do
 
     errors = defect.errors.full_messages
 
+    expect(errors).to include("Title can't be blank")
     expect(errors).to include("Description can't be blank")
     expect(errors).to include("Trade can't be blank")
     expect(errors).to include("Priority can't be blank")

@@ -6,6 +6,9 @@
           Reference number
       %th.govuk-table__header
         %h2.govuk-heading-m
+          Title
+      %th.govuk-table__header
+        %h2.govuk-heading-m
           Status
       %th.govuk-table__header
         %h2.govuk-heading-m
@@ -23,6 +26,7 @@
     - defects.each do |defect|
       %tr.govuk-table__row
         %td.govuk-table__cell= defect.reference_number
+        %td.govuk-table__cell= defect.title
         %td.govuk-table__cell= defect.status
         %td.govuk-table__cell= defect.priority.name
         %td.govuk-table__cell= format_date(defect.target_completion_date)

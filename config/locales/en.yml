@@ -53,6 +53,10 @@ en:
       update:
         success:
           'The %{resource} has successfully been updated.'
+  form:
+    defect:
+      title:
+        description: 'This will be how this defect is described to residents in status notifications'
   email:
     defect:
       forward:
