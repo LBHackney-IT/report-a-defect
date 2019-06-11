@@ -1,9 +1,17 @@
 en:
   app:
     title: 'Report a Defect'
+    email: 'newbuild@hackney.gov.uk'
   service:
     name: 'Report a Defect'
   page_title:
+    contractor:
+      defects:
+        accepted:
+          title: 'Defect acceptance recorded'
+          body: 'Thank you for accepting defect %{reference_number}'
+        unprocessable_entity:
+          body: 'This accept link appears to be invalid. This might be because it has already accepted it or it has expired.'
     staff:
       dashboard: 'Dashboard'
       estates:
@@ -27,6 +35,8 @@ en:
       comments:
         create: 'Create Comment'
         edit: 'Update Comment'
+  error_pages:
+    unprocessable_entity: 'Cannot process this request'
   generic:
     link:
       show: 'View'
@@ -62,6 +72,9 @@ en:
             contractor: 'Contractor'
             priority_name: 'Priority'
             target_completion_date: 'Target completion date'
+        accept:
+          link: 'Accept ownership of this defect'
+        # alternate: 'Call us if not'
   activerecord:
     attributes:
       property:

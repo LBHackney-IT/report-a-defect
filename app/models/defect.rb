@@ -72,7 +72,7 @@ class Defect < ApplicationRecord
   def set_completion_date
     return unless priority
 
-    self.target_completion_date = Time.zone.now + priority.days.days
+    self.target_completion_date = Time .zone.now + priority.days.days
   end
 
   def status
@@ -81,5 +81,13 @@ class Defect < ApplicationRecord
 
   def contact_phone_number=(value)
     super(value.tr(' ', ''))
+  end
+
+  def token
+    MessageVerifier.verifier.generate(
+      id,
+      purpose: :accept_defect_ownership,
+      expires_in: 3.months
+    )
   end
 end
