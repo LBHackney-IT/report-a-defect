@@ -11,6 +11,9 @@
 
     = simple_form_for @defect, html: { class: 'new_defect' }, action: :post, url: property_defects_path(@property) do |f|
       .govuk-form-group
+        = f.input :title,
+                  hint: I18n.t('form.defect.title.description'),
+                  label: 'Short title'
         = f.input :description,
                   wrapper: 'textarea',
                   as: :text,

@@ -30,6 +30,7 @@ RSpec.feature 'Anyone can create a defect' do
     end
 
     within('form.new_defect') do
+      fill_in 'defect[title]', with: 'Electrics failed'
       fill_in 'defect[description]', with: 'None of the electrics work'
       fill_in 'defect[contact_name]', with: 'Alex Stone'
       fill_in 'defect[contact_email_address]', with: 'email@example.com'
@@ -43,10 +44,11 @@ RSpec.feature 'Anyone can create a defect' do
     within('table.defects') do
       defect = property.reload.defects.first
 
-      expect(page).to have_content(defect.trade)
-      expect(page).to have_content(defect.priority.name)
-      expect(page).to have_content(defect.target_completion_date)
+      expect(page).to have_content('Electrics failed')
+      expect(page).to have_content('Electrical')
       expect(page).to have_content('Outstanding')
+      expect(page).to have_content(priority.name)
+      expect(page).to have_content(defect.target_completion_date)
       expect(page).to have_content(defect.reference_number)
     end
   end

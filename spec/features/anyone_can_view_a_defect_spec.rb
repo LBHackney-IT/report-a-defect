@@ -23,6 +23,7 @@ RSpec.feature 'Anyone can view a defect' do
 
     within('.defect_information') do
       expect(page).to have_content(defect.reference_number)
+      expect(page).to have_content(defect.title)
       expect(page).to have_content(defect.description)
       expect(page).to have_content(defect.contact_name)
       expect(page).to have_content(defect.contact_phone_number)
