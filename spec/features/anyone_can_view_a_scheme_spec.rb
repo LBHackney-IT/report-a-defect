@@ -16,10 +16,17 @@ RSpec.feature 'Anyone can view a scheme' do
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
-    within('.scheme_information') do
+    within('.scheme_information.scheme_name_and_estate') do
+      expect(page).to have_content(scheme.estate.name)
       expect(page).to have_content(scheme.name)
+    end
+
+    within('.scheme_information.scheme_contractor') do
       expect(page).to have_content(scheme.contractor_name)
       expect(page).to have_content(scheme.contractor_email_address)
+    end
+
+    within('.scheme_information.scheme_agent') do
       expect(page).to have_content(scheme.employer_agent_name)
       expect(page).to have_content(scheme.employer_agent_email_address)
     end
@@ -47,6 +54,15 @@ RSpec.feature 'Anyone can view a scheme' do
         I18n.t('page_title.staff.estates.show', name: scheme.estate.name),
         href: estate_path(scheme.estate)
       )
+    end
+  end
+
+  scenario 'when there are no priorities' do
+    scheme = create(:scheme)
+
+    visit estate_scheme_path(scheme.estate, scheme)
+    within('.scheme-priorities') do
+      expect(page).to have_content('There are no priotities set yet. You need to create them.')
     end
   end
 end
