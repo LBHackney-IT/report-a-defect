@@ -10,6 +10,6 @@
 
     = simple_form_for [@scheme.estate, @scheme, @priority] do |f|
       .govuk-form-group
-        = f.input :name
-        = f.input :days, as: :integer, placeholder: '1'
+        = f.input :name, label: 'Priority code', input_html: { class: 'govuk-input--width-3' }
+        = f.input :days, as: :integer, placeholder: '1', label: 'Duration in days', input_html: { class: 'govuk-input--width-3' }
       = f.button :submit, I18n.t('generic.button.create', resource: 'Priority')

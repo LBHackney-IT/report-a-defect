@@ -1,19 +1,19 @@
-%dl.govuk-summary-list.scheme_information
-  %div.govuk-summary-list__row
-    %dt.govuk-summary-list__key Estate
-    %dd.govuk-summary-list__value= scheme.estate.name
-  %div.govuk-summary-list__row
-    %dt.govuk-summary-list__key Scheme
-    %dd.govuk-summary-list__value= scheme.name
-  %div.govuk-summary-list__row
-    %dt.govuk-summary-list__key Contractor name
-    %dd.govuk-summary-list__value= scheme.contractor_name
-  %div.govuk-summary-list__row
-    %dt.govuk-summary-list__key Contractor email address
-    %dd.govuk-summary-list__value= scheme.contractor_email_address
-  %div.govuk-summary-list__row
-    %dt.govuk-summary-list__key Employer agent name
-    %dd.govuk-summary-list__value= scheme.employer_agent_name
-  %div.govuk-summary-list__row
-    %dt.govuk-summary-list__key Employer agent email address
-    %dd.govuk-summary-list__value= scheme.employer_agent_email_address
+.govuk-grid-column-one-half
+  %h3.govuk-heading-s Contractor details
+  %dl.govuk-summary-list.govuk-summary-list--no-border.scheme_information.no-actions.scheme_contractor
+    %div.govuk-summary-list__row
+      %dt.govuk-summary-list__key Contractor name
+      %dd.govuk-summary-list__value= scheme.contractor_name
+    %div.govuk-summary-list__row
+      %dt.govuk-summary-list__key Contractor email address
+      %dd.govuk-summary-list__value= scheme.contractor_email_address
+
+.govuk-grid-column-one-half
+  %h3.govuk-heading-s Employer agent details
+  %dl.govuk-summary-list.govuk-summary-list--no-border.no-actions.scheme_information.scheme_agent
+    %div.govuk-summary-list__row
+      %dt.govuk-summary-list__key Employer agent name
+      %dd.govuk-summary-list__value= scheme.employer_agent_name
+    %div.govuk-summary-list__row
+      %dt.govuk-summary-list__key Employer agent email address
+      %dd.govuk-summary-list__value= scheme.employer_agent_email_address

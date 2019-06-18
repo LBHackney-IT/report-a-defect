@@ -23,6 +23,10 @@
 
     %h2.govuk-heading-l
       Scheme
+
+    %p.scheme_information.scheme_name_and_estate
+      #{I18n.t('page_title.staff.schemes.show', name: @defect.property.scheme.name)} belongs to #{I18n.t('page_title.staff.estates.show', name: @defect.property.scheme.estate.name)}
+
     = render partial: '/shared/schemes/information', locals: { scheme: @defect.property.scheme }
 
     %h2.govuk-heading-l

@@ -21,3 +21,39 @@ p {
     @include govuk-link-style-no-visited-state;
   }
 }
+
+.govuk-summary-list.no-actions {
+  .govuk-summary-list__row {
+    font-size: 1rem;
+
+    .govuk-summary-list__key {
+      width: 45%;
+    }
+    .govuk-summary-list__value {
+      width: 55%
+    }
+  }
+}
+
+.scheme-info {
+  border-right: 1px solid $lbh-border-colour;
+}
+
+@include govuk-media-query($until: desktop) {
+  .scheme-info {
+    border-right: none;
+    border-bottom: 1px solid $lbh-border-colour;
+    margin-bottom: 1em;
+  }
+}
+
+
+.section-heading {
+  border-bottom: 1px solid $lbh-border-colour;
+  border-bottom: 1px solid $lbh-primary;
+  border-right: 1px solid lighten($lbh-border-colour, 15%);
+  border-top: 1px solid lighten($lbh-border-colour, 15%);
+  border-left: 1px solid lighten($lbh-border-colour, 15%);
+  background-color: lighten($lbh-border-colour, 20%);;
+  padding: 0.5em;
+}
