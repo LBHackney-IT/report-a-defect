@@ -62,7 +62,9 @@ RSpec.feature 'Anyone can view a scheme' do
 
     visit estate_scheme_path(scheme.estate, scheme)
     within('.scheme-priorities') do
-      expect(page).to have_content('There are no priotities set yet. You need to create them.')
+      expect(page).to have_content(
+        I18n.t('page_content.scheme.show.priorities.no_priorities')
+      )
     end
   end
 end
