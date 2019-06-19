@@ -35,6 +35,11 @@ en:
       comments:
         create: 'Create Comment'
         edit: 'Update Comment'
+  page_content:
+    scheme:
+      show:
+        priorities:
+          no_priorities: 'There are no priotities set yet. You need to create them.'
   error_pages:
     unprocessable_entity: 'Cannot process this request'
   generic:
@@ -57,6 +62,13 @@ en:
     defect:
       title:
         description: 'This will be how this defect is described to residents in status notifications'
+    priority:
+      code:
+        label: 'Priority code'
+        hint: 'For example P1.'
+      days:
+        label: 'Duration in days'
+        hint: 'For example 1.'
   email:
     defect:
       forward:

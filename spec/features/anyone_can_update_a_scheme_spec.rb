@@ -8,7 +8,7 @@ RSpec.feature 'Anyone can update a scheme' do
 
     visit estate_scheme_path(scheme.estate, scheme)
 
-    within('.scheme_information') do
+    within('.scheme_contractor') do
       expect(page).to have_content(scheme.contractor_name)
       expect(page).to have_content(scheme.contractor_email_address)
     end
