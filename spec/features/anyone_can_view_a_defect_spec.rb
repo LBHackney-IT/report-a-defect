@@ -52,7 +52,6 @@ RSpec.feature 'Anyone can view a defect' do
     within('.property_information') do
       expect(page).to have_content(defect.property.uprn)
       expect(page).to have_content(defect.property.address)
-      expect(page).to have_content(defect.property.core_name)
       expect(page).to have_content(defect.property.postcode)
     end
   end

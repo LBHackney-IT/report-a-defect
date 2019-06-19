@@ -15,7 +15,6 @@ RSpec.feature 'Anyone can update a property' do
     end
 
     within('form.edit_property') do
-      fill_in 'property[core_name]', with: 'A name for a collection of blocks'
       fill_in 'property[address]', with: 'Flat 1, Hackney Street'
       fill_in 'property[postcode]', with: 'N16NU'
       click_on(I18n.t('generic.button.update', resource: 'Property'))
@@ -34,15 +33,10 @@ RSpec.feature 'Anyone can update a property' do
     end
 
     within('form.edit_property') do
-      fill_in 'property[core_name]', with: ''
       fill_in 'property[address]', with: ''
       fill_in 'property[postcode]', with: ''
 
       click_on(I18n.t('generic.button.update', resource: 'Property'))
-    end
-
-    within('.property_core_name') do
-      expect(page).to have_content("can't be blank")
     end
 
     within('.property_address') do

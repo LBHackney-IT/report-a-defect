@@ -25,7 +25,6 @@ RSpec.feature 'Anyone can create a defect' do
     within('.property_information') do
       expect(page).to have_content(property.uprn)
       expect(page).to have_content(property.address)
-      expect(page).to have_content(property.core_name)
       expect(page).to have_content(property.postcode)
     end
 
