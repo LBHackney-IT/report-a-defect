@@ -9,22 +9,31 @@
 
 .govuk-grid-row
   .govuk-grid-column-full
-    %h1.govuk-heading-xl
+    %h1.govuk-heading-l
       = I18n.t('page_title.staff.properties.show', name: @property.address)
-  .govuk-grid-column-one-half
-    %h2.govuk-heading-l
-      Property
-    = render partial: '/shared/properties/information', locals: { property: @property }
-  .govuk-grid-column-one-half
-    %h2.govuk-heading-l
-      Scheme
-    %p.scheme_information.scheme_name_and_estate
-      #{I18n.t('page_title.staff.schemes.show', name: @property.scheme.name)} belongs to #{I18n.t('page_title.staff.estates.show', name: @property.scheme.estate.name)}
 
-    = render partial: '/shared/schemes/information', locals: { scheme: @property.scheme }
+    %h2.govuk-heading-m.section-heading
+      Property details
+
+  .govuk-grid-column-one-third
+    = render partial: '/shared/properties/information', locals: { property: @property }
+
+  .govuk-grid-column-one-third
+    = render partial: '/shared/schemes/short-information', locals: { scheme: @property.scheme }
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    %h1.govuk-heading-m.section-heading
+      Defects
 
   .govuk-grid-column-full
-    %h1.govuk-heading-xl
-      Defects
     = link_to(I18n.t('generic.button.create', resource: 'Defect'), new_property_defect_path(@property), class: 'govuk-button mb0')
-    = render partial: '/shared/defects/table', locals: { defects: @property.defects }
+
+  .govuk-grid-column-full
+    .govuk-grid-row
+      .govuk-grid-column-one-quarter
+        %aside
+
+      .govuk-grid-column-three-quarters
+        %h2.govuk-heading-m Defects history
+        = render partial: '/shared/defects/table', locals: { defects: @property.defects }

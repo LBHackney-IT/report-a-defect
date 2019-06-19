@@ -17,19 +17,10 @@ RSpec.feature 'Anyone can view a property' do
 
     expect(page).to have_content(I18n.t('page_title.staff.properties.show', name: property.address))
 
-    within('.scheme_information.scheme_name_and_estate') do
-      expect(page).to have_content(property.scheme.estate.name)
+    within('.scheme_short_information') do
       expect(page).to have_content(property.scheme.name)
-    end
-
-    within('.scheme_information.scheme_contractor') do
       expect(page).to have_content(property.scheme.contractor_name)
-      expect(page).to have_content(property.scheme.contractor_email_address)
-    end
-
-    within('.scheme_information.scheme_agent') do
       expect(page).to have_content(property.scheme.employer_agent_name)
-      expect(page).to have_content(property.scheme.employer_agent_email_address)
     end
 
     within('.property_information') do
