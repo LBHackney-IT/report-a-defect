@@ -2,7 +2,7 @@
 
 .govuk-grid-row
   .govuk-grid-column-two-thirds
-    %h1.govuk-heading-xl= I18n.t('page_title.staff.properties.index')
-    %span.govuk-caption-l= "Showing #{@properties.count} out of #{Property.count} properties."
+    %h1.govuk-heading-l= I18n.t('page_title.staff.properties.index')
+    %span.govuk-caption-m= "Showing #{@properties.count} out of #{Property.count} properties."
 
     = render partial: '/shared/properties/table', locals: { properties: @properties }
