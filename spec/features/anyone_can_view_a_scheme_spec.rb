@@ -37,7 +37,6 @@ RSpec.feature 'Anyone can view a scheme' do
     end
 
     within('.properties') do
-      expect(page).to have_content(property.core_name)
       expect(page).to have_content(property.address)
       expect(page).to have_content(property.postcode)
     end

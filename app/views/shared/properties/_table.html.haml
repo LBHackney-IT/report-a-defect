@@ -4,8 +4,6 @@
       %th.govuk-table__header
         UPRN
       %th.govuk-table__header
-        Core name
-      %th.govuk-table__header
         Address
       %th.govuk-table__header
         Postcode
@@ -17,7 +15,6 @@
     - properties.each do |property|
       %tr.govuk-table__row
         %td.govuk-table__cell= property.uprn
-        %td.govuk-table__cell= property.core_name
         %td.govuk-table__cell= property.address
         %td.govuk-table__cell= property.postcode
         %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), property_path(property), class: 'govuk-link')

@@ -21,15 +21,5 @@ RSpec.describe PropertySearch do
       expect(result).to include(interested_property)
       expect(result).not_to include(uninterested_property)
     end
-
-    it 'returns only properties with a matching core name' do
-      interested_property = create(:property, core_name: 'DZ1')
-      uninterested_property = create(:property, core_name: 'DZ2')
-
-      result = described_class.new(address: 'DZ1').call
-
-      expect(result).to include(interested_property)
-      expect(result).not_to include(uninterested_property)
-    end
   end
 end

@@ -12,7 +12,6 @@ RSpec.describe Property, type: :model do
 
     errors = property.errors.full_messages
 
-    expect(errors).to include("Core name can't be blank")
     expect(errors).to include("Address can't be blank")
     expect(errors).to include("Postcode can't be blank")
     expect(errors).to include("UPRN can't be blank")

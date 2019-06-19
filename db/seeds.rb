@@ -24,16 +24,16 @@ priority4 = FactoryBot.create(:priority, scheme: scheme1, name: 'P4', days: 30)
 
 # Priorties
 property1 = FactoryBot.create(
-  :property, scheme: scheme1, core_name: 'DZ1', address: '1 Hackney Street', postcode: 'N16NU'
+  :property, scheme: scheme1, address: '1 Hackney Street', postcode: 'N16NU'
 )
 property2 = FactoryBot.create(
-  :property, scheme: scheme1, core_name: 'DZ1', address: '2 Hackney Street', postcode: 'N16NU'
+  :property, scheme: scheme1, address: '2 Hackney Street', postcode: 'N16NU'
 )
 property3 = FactoryBot.create(
-  :property, scheme: scheme1, core_name: 'DZ2', address: '3 Hackney Street', postcode: 'N16NP'
+  :property, scheme: scheme1, address: '3 Hackney Street', postcode: 'N16NP'
 )
 property4 = FactoryBot.create(
-  :property, scheme: scheme1, core_name: 'DZ2', address: '4 Hackney Street', postcode: 'N16NP'
+  :property, scheme: scheme1, address: '4 Hackney Street', postcode: 'N16NP'
 )
 
 [property1, property2, property3, property4].each do |property|
