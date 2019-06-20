@@ -32,6 +32,11 @@ class Defect < ApplicationRecord
   belongs_to :priority
   has_many :comments, dependent: :destroy
 
+  def scheme
+    return block&.scheme if block
+    return property&.scheme if property
+  end
+
   include PublicActivity::Model
   tracked owner: ->(controller, _) { controller.current_user if controller }
 

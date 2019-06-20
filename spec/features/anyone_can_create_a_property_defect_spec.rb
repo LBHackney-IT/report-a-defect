@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can create a defect' do
+RSpec.feature 'Anyone can create a defect for a property' do
   scenario 'a property can be found and defect can be created' do
     property = create(:property, address: '1 Hackney Street')
     priority = create(:priority, scheme: property.scheme, name: 'P1', days: 1)

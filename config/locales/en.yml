@@ -29,6 +29,8 @@ en:
         edit: 'Update scheme'
       blocks:
         show: '%{name} block'
+        create: 'Create block'
+        edit: 'Update block'
       priorities:
         create: 'Create priority'
       properties:
@@ -69,6 +71,8 @@ en:
     defect:
       title:
         description: 'This will be how this defect is described to residents in status notifications'
+      access_information:
+        description: 'Help the contractor find and access this block'
     priority:
       code:
         label: 'Priority code'

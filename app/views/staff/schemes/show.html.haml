@@ -40,6 +40,7 @@
   .govuk-grid-column-full
     %h2.govuk-heading-m.section-heading
       Blocks
+    = link_to(I18n.t('generic.button.create', resource: 'Block'), new_estate_scheme_block_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
     = render partial: '/shared/blocks/table', locals: { blocks: @scheme.blocks }
 
 .govuk-grid-row

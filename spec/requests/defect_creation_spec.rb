@@ -14,7 +14,7 @@ RSpec.describe 'Defect creation', type: :request do
   let(:property) { create(:property) }
 
   it 'forwards the email to the contractor and employer agent' do
-    defect_attributes = build(:defect).attributes
+    defect_attributes = build(:property_defect).attributes
     defect_attributes.merge!(priority: create(:priority).id)
     params = {
       defect: defect_attributes,
