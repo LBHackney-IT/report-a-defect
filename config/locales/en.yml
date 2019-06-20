@@ -30,6 +30,7 @@ en:
       blocks:
         show: '%{name} block'
         create: 'Create block'
+        edit: 'Update block'
       priorities:
         create: 'Create priority'
       properties:

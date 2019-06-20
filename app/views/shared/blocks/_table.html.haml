@@ -5,9 +5,10 @@
         Name
       %th.govuk-table__header
         Actions
-
+      %th.govuk-table__header
   %tbody.govuk-table__body
     - blocks.each do |block|
       %tr.govuk-table__row
-        %td.govuk-table__cell= block.name
+        %td.govuk-table__cell{ class: 'govuk-!-width-three-quarters' }= block.name
         %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), block_path(block), class: 'govuk-link')
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.edit'), edit_estate_scheme_block_path(block.scheme.estate, block.scheme, block), class: 'govuk-link')

@@ -22,6 +22,25 @@ class Staff::BlocksController < Staff::BaseController
     end
   end
 
+  def edit
+    @scheme = Scheme.find(scheme_id)
+    @block = Block.find(id)
+  end
+
+  def update
+    @scheme = Scheme.find(scheme_id)
+    @block = Block.find(id)
+    @block.assign_attributes(block_params)
+
+    if @block.valid?
+      @block.save
+      flash[:success] = I18n.t('generic.notice.update.success', resource: 'block')
+      redirect_to estate_scheme_path(@scheme.estate, @scheme)
+    else
+      render :edit
+    end
+  end
+
   private
 
   def id
