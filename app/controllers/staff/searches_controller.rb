@@ -1,6 +1,6 @@
 class Staff::SearchesController < Staff::BaseController
   def index
-    @properties = Search.new(query: query).properties
+    @search_results = Search.new(query: query)
   end
 
   private

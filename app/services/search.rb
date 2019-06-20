@@ -6,6 +6,10 @@ class Search
   end
 
   def properties
-    Property.search_by_address(query)
+    @properties ||= Property.search_by_address(query)
+  end
+
+  def blocks
+    @blocks ||= Block.search_by_name(query)
   end
 end

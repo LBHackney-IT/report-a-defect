@@ -17,6 +17,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :blocks, controller: 'staff/blocks', only: %i[show]
+
   resources :defects, controller: 'contractor/defects' do
     get :accept
   end

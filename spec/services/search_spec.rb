@@ -22,4 +22,16 @@ RSpec.describe Search do
       expect(result).not_to include(uninterested_property)
     end
   end
+
+  describe '#blocks' do
+    it 'returns only blocks with a matching street name' do
+      interested_block = create(:block, name: 'Clift House')
+      uninterested_block = create(:block, name: 'Darling House')
+
+      result = described_class.new(query: 'Clift').blocks
+
+      expect(result).to include(interested_block)
+      expect(result).not_to include(uninterested_block)
+    end
+  end
 end
