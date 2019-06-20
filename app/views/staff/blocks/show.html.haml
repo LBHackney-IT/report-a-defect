@@ -27,7 +27,7 @@
         Defects
 
     .govuk-grid-column-full
-    -# TODO: Create link here
+      = link_to(I18n.t('generic.button.create', resource: 'Defect'), new_block_defect_path(@block), class: 'govuk-button mb0')
 
     .govuk-grid-column-full
       = render partial: '/shared/defects/table', locals: { scheme: @block.scheme, defects: @block.defects, parent: @block }

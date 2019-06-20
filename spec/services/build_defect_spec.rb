@@ -2,10 +2,12 @@ require 'rails_helper'
 
 RSpec.describe BuildDefect do
   let(:property) { create(:property) }
+  let(:block) { create(:block) }
   let(:priority) { create(:priority) }
   let(:defect_params) do
     build(:property_defect,
           property: property,
+          block: block,
           priority: priority).attributes
   end
 
@@ -34,6 +36,11 @@ RSpec.describe BuildDefect do
     it 'creates an association to the priority' do
       result = service.call
       expect(result.priority).to eq(priority)
+    end
+
+    it 'creates an association to the block' do
+      result = service.call
+      expect(result.block).to eq(block)
     end
   end
 end
