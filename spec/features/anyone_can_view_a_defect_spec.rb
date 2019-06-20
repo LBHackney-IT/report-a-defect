@@ -2,14 +2,14 @@ require 'rails_helper'
 
 RSpec.feature 'Anyone can view a defect' do
   scenario 'a defect can be found and viewed' do
-    defect = create(:defect)
+    defect = create(:property_defect)
 
     visit root_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
-    within('form.property-search') do
-      fill_in 'address', with: defect.property.address
+    within('form.search') do
+      fill_in 'query', with: defect.property.address
       click_on(I18n.t('generic.button.find'))
     end
 
@@ -57,7 +57,7 @@ RSpec.feature 'Anyone can view a defect' do
   end
 
   scenario 'can use breadcrumbs to navigate' do
-    defect = create(:defect)
+    defect = create(:property_defect)
 
     visit property_defect_path(defect.property, defect)
 
@@ -83,7 +83,7 @@ RSpec.feature 'Anyone can view a defect' do
   end
 
   scenario 'can see comments' do
-    defect = create(:defect)
+    defect = create(:property_defect)
     comment = create(:comment, defect: defect)
 
     visit property_defect_path(defect.property, defect)
@@ -98,7 +98,7 @@ RSpec.feature 'Anyone can view a defect' do
   scenario 'can see events' do
     travel_to Time.zone.parse('2019-05-23')
 
-    defect = create(:defect)
+    defect = create(:property_defect)
 
     visit property_defect_path(defect.property, defect)
 

@@ -1,0 +1,13 @@
+%table.govuk-table.blocks
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        Name
+      %th.govuk-table__header
+        Actions
+
+  %tbody.govuk-table__body
+    - blocks.each do |block|
+      %tr.govuk-table__row
+        %td.govuk-table__cell= block.name
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), block_path(block), class: 'govuk-link')

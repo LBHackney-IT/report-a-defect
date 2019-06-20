@@ -13,7 +13,7 @@
     %h1.govuk-heading-l
       = I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)
     = link_to(I18n.t('generic.button.edit', resource: 'Defect'), edit_property_defect_path(@defect.property, @defect), class: 'govuk-button mb0')
-    = render partial: '/shared/defects/information', locals: { defect: @defect }
+    = render partial: '/shared/defects/property_information', locals: { defect: @defect }
 
     %h2.govuk-heading-m
       Scheme
@@ -26,7 +26,7 @@
   .govuk-grid-column-one-third
     %h2.govuk-heading-m
       Comments
-    = link_to(I18n.t('generic.button.create', resource: 'Comment'), new_property_defect_comment_path(@defect.property, @defect), class: 'govuk-button mb0')
+    = link_to(I18n.t('generic.button.create', resource: 'Comment'), new_defect_comment_path(@defect), class: 'govuk-button mb0')
     = render partial: '/shared/comments/list', locals: { comments: @defect.comments }
 
     %h2.govuk-heading-m

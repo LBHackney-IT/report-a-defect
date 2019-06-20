@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.feature 'Contractor can accept the receipt of a defect' do
   context 'with the correct token' do
     it 'shows a confirmation page' do
-      defect = create(:defect)
+      defect = create(:property_defect)
 
       visit defect_accept_path(defect.token)
 
@@ -13,7 +13,7 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
     it 'stores an accepted at event' do
       travel_to Time.zone.parse('2019-05-23')
 
-      defect = create(:defect)
+      defect = create(:property_defect)
 
       visit defect_accept_path(defect.token)
 
@@ -42,7 +42,7 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
     it 'returns a custom unprocessable_entity error' do
       travel_to Time.zone.parse('2019-01-01')
 
-      defect = create(:defect)
+      defect = create(:property_defect)
       token = defect.token
 
       travel_to Time.zone.parse('2019-04-01')
@@ -57,7 +57,7 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
 
   context 'when the token has already been used' do
     it 'does not store an accept event' do
-      defect = create(:defect)
+      defect = create(:property_defect)
 
       visit defect_accept_path(defect.token)
 

@@ -4,6 +4,7 @@ RSpec.feature 'Anyone can view a scheme' do
   scenario 'a scheme can be found and viewed' do
     scheme = create(:scheme)
     property = create(:property, scheme: scheme)
+    block = create(:block, scheme: scheme)
     priority = create(:priority, scheme: scheme)
 
     visit root_path
@@ -39,6 +40,10 @@ RSpec.feature 'Anyone can view a scheme' do
     within('.properties') do
       expect(page).to have_content(property.address)
       expect(page).to have_content(property.postcode)
+    end
+
+    within('.blocks') do
+      expect(page).to have_content(block.name)
     end
   end
 

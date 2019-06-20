@@ -13,7 +13,7 @@ RSpec.describe SaveDefect do
 
   describe '.initialize' do
     it 'accepts and stores the defect' do
-      defect = create(:defect)
+      defect = create(:property_defect)
 
       result = described_class.new(defect: defect)
 
@@ -22,7 +22,7 @@ RSpec.describe SaveDefect do
   end
 
   describe '#call' do
-    let(:defect) { create(:defect) }
+    let(:defect) { create(:property_defect) }
 
     it 'saves the record' do
       expect(defect).to receive(:save)
@@ -34,7 +34,7 @@ RSpec.describe SaveDefect do
                       contractor_email_address: 'contractor@email.com',
                       employer_agent_email_address: 'employeragent@email.com')
       property = create(:property, scheme: scheme)
-      defect = create(:defect, property: property)
+      defect = create(:property_defect, property: property)
 
       described_class.new(defect: defect).call
 

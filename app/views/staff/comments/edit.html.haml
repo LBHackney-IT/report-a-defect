@@ -1,6 +1,6 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.comments.edit')
 
-= link_to "Back to #{I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)}", property_defect_path(@defect.property, @defect), class: 'govuk-back-link'
+= link_to "Back to #{I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)}", defect_path(@defect), class: 'govuk-back-link'
 
 .govuk-grid-row
   .govuk-grid-column-two-thirds
@@ -8,7 +8,7 @@
       = I18n.t('page_title.staff.comments.edit')
       %span.govuk-caption-l= 'Step 1 of 1'
 
-    = simple_form_for [@defect.property, @defect, @comment] do |f|
+    = simple_form_for [@defect, @comment] do |f|
       .govuk-form-group
         = f.input :message,
                   wrapper: 'textarea',

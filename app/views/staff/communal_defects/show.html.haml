@@ -1,0 +1,38 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)
+
+.govuk-breadcrumbs
+  %ol.govuk-breadcrumbs__list
+    = breadcrumb_link_to('Home', root_path)
+    = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @defect.block.scheme.estate.name), estate_path(@defect.block.scheme.estate))
+    = breadcrumb_link_to(I18n.t('page_title.staff.schemes.show', name: @defect.block.scheme.name), estate_scheme_path(@defect.block.scheme.estate, @defect.block.scheme))
+    = breadcrumb_link_to(I18n.t('page_title.staff.blocks.show', name: @defect.block.name), block_path(@defect.block))
+    = breadcrumb_current(I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number))
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-l
+      = I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)
+    = link_to(I18n.t('generic.button.edit', resource: 'Defect'), edit_block_defect_path(@defect.block, @defect), class: 'govuk-button mb0')
+    = render partial: '/shared/defects/communal_information', locals: { defect: @defect }
+
+    %h2.govuk-heading-m
+      Scheme
+
+    %p.scheme_information.scheme_name_and_estate
+      #{I18n.t('page_title.staff.schemes.show', name: @defect.block.scheme.name)} belongs to #{I18n.t('page_title.staff.estates.show', name: @defect.block.scheme.estate.name)}
+
+    = render partial: '/shared/schemes/information', locals: { scheme: @defect.block.scheme }
+
+  .govuk-grid-column-one-third
+    %h2.govuk-heading-m
+      Comments
+    = link_to(I18n.t('generic.button.create', resource: 'Comment'), new_defect_comment_path(@defect), class: 'govuk-button mb0')
+    = render partial: '/shared/comments/list', locals: { comments: @defect.comments }
+
+    %h2.govuk-heading-m
+      Block
+    = render partial: '/shared/blocks/information', locals: { block: @defect.block }
+
+    %h2.govuk-heading-m
+      Events
+    = render partial: '/shared/events/list', locals: { events: @defect.activities }

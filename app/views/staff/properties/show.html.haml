@@ -30,10 +30,4 @@
     = link_to(I18n.t('generic.button.create', resource: 'Defect'), new_property_defect_path(@property), class: 'govuk-button mb0')
 
   .govuk-grid-column-full
-    .govuk-grid-row
-      .govuk-grid-column-one-quarter
-        %aside
-
-      .govuk-grid-column-three-quarters
-        %h2.govuk-heading-m Defects history
-        = render partial: '/shared/defects/table', locals: { defects: @property.defects }
+    = render partial: '/shared/defects/table', locals: { scheme: @property.scheme, defects: @property.defects, parent: @property }

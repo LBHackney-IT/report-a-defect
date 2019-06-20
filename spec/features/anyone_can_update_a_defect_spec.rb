@@ -5,7 +5,7 @@ RSpec.feature 'Anyone can update a defect' do
   let(:property) { create(:property, scheme: scheme) }
 
   scenario 'a defect can be updated' do
-    defect = create(:defect, property: property)
+    defect = create(:property_defect, property: property)
     priority = defect.property.scheme.priorities.first
 
     visit property_defect_path(defect.property, defect)
@@ -42,7 +42,7 @@ RSpec.feature 'Anyone can update a defect' do
   end
 
   scenario 'a defect status can be updated' do
-    defect = create(:defect, property: property)
+    defect = create(:property_defect, property: property)
 
     visit edit_property_defect_path(defect.property, defect)
 
@@ -56,7 +56,7 @@ RSpec.feature 'Anyone can update a defect' do
   end
 
   scenario 'an invalid defect cannot be updated' do
-    defect = create(:defect, property: property)
+    defect = create(:property_defect, property: property)
 
     visit property_defect_path(defect.property, defect)
 
@@ -81,7 +81,7 @@ RSpec.feature 'Anyone can update a defect' do
   end
 
   scenario 'updating the priority is optional' do
-    defect = create(:defect, property: property)
+    defect = create(:property_defect, property: property)
 
     visit edit_property_defect_path(defect.property, defect)
 

@@ -8,7 +8,7 @@
       = I18n.t('page_title.staff.comments.create')
       %span.govuk-caption-l= 'Step 1 of 1'
 
-    = simple_form_for [@defect.property, @defect, @comment], html: { class: 'new_comment' } do |f|
+    = simple_form_for [@defect, @comment], html: { class: 'new_comment' } do |f|
       .govuk-form-group
         = f.input :message,
                   wrapper: 'textarea',

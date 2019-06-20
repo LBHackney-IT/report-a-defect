@@ -10,8 +10,15 @@ FactoryBot.define do
     status { Defect.statuses.keys.sample }
     reference_number { SecureRandom.hex(3).upcase }
 
-    association :property, factory: :property
     association :priority, factory: :priority
+
+    factory :property_defect do
+      association :property, factory: :property
+    end
+
+    factory :communal_defect do
+      association :block, factory: :block
+    end
 
     trait :with_comments do
       after(:create) do |defect|

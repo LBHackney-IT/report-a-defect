@@ -9,7 +9,7 @@ RSpec.describe DefectMailer, type: :mailer do
   after(:each) { travel_back }
 
   let(:recipient) { 'email@example.com' }
-  let(:defect) { create(:defect) }
+  let(:defect) { create(:property_defect) }
 
   describe('#forward_to_contractor') do
     it 'sends an email to the scheme contractor' do
@@ -32,6 +32,15 @@ RSpec.describe DefectMailer, type: :mailer do
       expect(body_lines[16].strip).to match("#{I18n.t('email.defect.forward.headings.title.target_completion_date')}: #{defect.target_completion_date}")
       expect(body_lines[18]).to match(%r{http:\/\/localhost:3000\/defects\/#{defect.token}\/accept})
     end
+
+    context 'when the name includes a single quote' do
+      let(:defect) { create(:property_defect, contact_name: "Wilda O'Connell") }
+      it 'sends an email to the scheme contractor' do
+        mail = DefectMailer.forward_to_contractor(defect.id)
+        body_lines = mail.body.raw_source.lines
+        expect(body_lines[9].strip).to match("#{I18n.t('email.defect.forward.headings.title.contact_name')}: Wilda O'Connell")
+      end
+    end
   end
 
   describe('#forward_to_employer_agent') do
@@ -53,6 +62,15 @@ RSpec.describe DefectMailer, type: :mailer do
       expect(body_lines[14].strip).to match("#{I18n.t('email.defect.forward.headings.title.contractor')}: #{defect.property.scheme.contractor_name}")
       expect(body_lines[15].strip).to match("#{I18n.t('email.defect.forward.headings.title.priority_name')}: #{defect.priority.name}")
       expect(body_lines[16].strip).to match("#{I18n.t('email.defect.forward.headings.title.target_completion_date')}: #{defect.target_completion_date}")
+    end
+
+    context 'when the name includes a single quote' do
+      let(:defect) { create(:property_defect, contact_name: "Wilda O'Connell") }
+      it 'sends an email to the scheme contractor' do
+        mail = DefectMailer.forward_to_contractor(defect.id)
+        body_lines = mail.body.raw_source.lines
+        expect(body_lines[9].strip).to match("#{I18n.t('email.defect.forward.headings.title.contact_name')}: Wilda O'Connell")
+      end
     end
   end
 end

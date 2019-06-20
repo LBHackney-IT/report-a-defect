@@ -3,6 +3,7 @@ raise if Rails.env.production?
 Comment.delete_all
 Defect.delete_all
 Property.delete_all
+Block.delete_all
 Priority.delete_all
 Scheme.delete_all
 Estate.delete_all
@@ -24,24 +25,37 @@ priority4 = FactoryBot.create(:priority, scheme: scheme1, name: 'P4', days: 30)
 
 # Priorties
 property1 = FactoryBot.create(
-  :property, scheme: scheme1, address: '1 Hackney Street', postcode: 'N16NU'
+  :property, scheme: scheme1, address: 'Flat 1 Chipping Court', postcode: 'N16NU'
 )
 property2 = FactoryBot.create(
-  :property, scheme: scheme1, address: '2 Hackney Street', postcode: 'N16NU'
+  :property, scheme: scheme1, address: 'Flat 2 Chipping Court', postcode: 'N16NU'
 )
 property3 = FactoryBot.create(
-  :property, scheme: scheme1, address: '3 Hackney Street', postcode: 'N16NP'
+  :property, scheme: scheme1, address: 'Flat 3 Chipping Court', postcode: 'N16NP'
 )
 property4 = FactoryBot.create(
-  :property, scheme: scheme1, address: '4 Hackney Street', postcode: 'N16NP'
+  :property, scheme: scheme1, address: 'Flat 4 Chipping Court', postcode: 'N16NP'
 )
 
+# Blocks
+block = FactoryBot.create(:block, name: 'Chipping', scheme: scheme1)
+
+# Property defects
 [property1, property2, property3, property4].each do |property|
   FactoryBot.create_list(
-    :defect,
+    :property_defect,
     10,
     :with_comments,
     property: property,
     priority: [priority1, priority2, priority3, priority4].sample
   )
 end
+
+# Communal defects
+FactoryBot.create_list(
+  :communal_defect,
+  10,
+  :with_comments,
+  block: block,
+  priority: [priority1, priority2, priority3, priority4].sample
+)

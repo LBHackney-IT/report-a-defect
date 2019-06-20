@@ -1,4 +1,4 @@
-class Staff::DefectsController < Staff::BaseController
+class Staff::PropertyDefectsController < Staff::BaseController
   def new
     @property = Property.find(property_id)
     @defect = Defect.new

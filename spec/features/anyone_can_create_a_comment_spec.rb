@@ -2,15 +2,15 @@ require 'rails_helper'
 
 RSpec.feature 'Anyone can create a comment' do
   let!(:property) { create(:property, address: '1 Hackney Street') }
-  let!(:defect) { create(:defect, property: property) }
+  let!(:defect) { create(:property_defect, property: property) }
 
   scenario 'a property can be found and comment can be created' do
     visit root_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
-    within('form.property-search') do
-      fill_in 'address', with: 'Hackney'
+    within('form.search') do
+      fill_in 'query', with: 'Hackney'
       click_on(I18n.t('generic.button.find'))
     end
 
@@ -44,7 +44,7 @@ RSpec.feature 'Anyone can create a comment' do
   end
 
   scenario 'an invalid comment cannot be submitted' do
-    visit new_property_defect_comment_path(property, defect)
+    visit new_defect_comment_path(defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
     within('form.new_comment') do
@@ -58,7 +58,7 @@ RSpec.feature 'Anyone can create a comment' do
   end
 
   scenario 'can use breadcrumbs to navigate' do
-    visit new_property_defect_comment_path(property, defect)
+    visit new_defect_comment_path(defect)
 
     expect(page).to have_link(
       "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",

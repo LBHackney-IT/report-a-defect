@@ -19,9 +19,7 @@
 
   .govuk-grid-column-full.govuk-grid-column-two-thirds-from-desktop.scheme-info
     .govuk-grid-row
-
       = render partial: '/shared/schemes/information', locals: { scheme: @scheme }
-
     .govuk-grid-row
       .govuk-grid-column-full
         = link_to(I18n.t('generic.button.edit', resource: 'Scheme'), edit_estate_scheme_path(@scheme.estate, @scheme), class: 'govuk-button govuk-button--secondary mb0')
@@ -41,7 +39,12 @@
 .govuk-grid-row
   .govuk-grid-column-full
     %h2.govuk-heading-m.section-heading
-      Properties in #{I18n.t('page_title.staff.schemes.show', name: @scheme.name)}
+      Blocks
+    = render partial: '/shared/blocks/table', locals: { blocks: @scheme.blocks }
 
+.govuk-grid-row
+  .govuk-grid-column-full
+    %h2.govuk-heading-m.section-heading
+      Properties
     = link_to(I18n.t('generic.button.create', resource: 'Property'), new_estate_scheme_property_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
     = render partial: '/shared/properties/table', locals: { properties: @scheme.properties }

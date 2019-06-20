@@ -1,0 +1,33 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.blocks.show', name: @block.name)
+
+.govuk-breadcrumbs
+  %ol.govuk-breadcrumbs__list
+    = breadcrumb_link_to('Home', root_path)
+    = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @block.scheme.estate.name), estate_path(@block.scheme.estate))
+    = breadcrumb_link_to(I18n.t('page_title.staff.schemes.show', name: @block.scheme.name), estate_scheme_path(@block.scheme.estate, @block.scheme))
+    = breadcrumb_current(I18n.t('page_title.staff.blocks.show', name: @block.name))
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.blocks.show', name: @block.name)
+  .govuk-grid-column-one-half
+    %h2.govuk-heading-l
+      Block
+    = render partial: '/shared/blocks/information', locals: { block: @block }
+  .govuk-grid-column-one-half
+    %h2.govuk-heading-l
+      Scheme
+    %p.scheme_information.scheme_name_and_estate
+      #{I18n.t('page_title.staff.schemes.show', name: @block.scheme.name)} belongs to #{I18n.t('page_title.staff.estates.show', name: @block.scheme.estate.name)}
+    = render partial: '/shared/schemes/information', locals: { scheme: @block.scheme }
+  .govuk-grid-row
+    .govuk-grid-column-full
+      %h1.govuk-heading-m.section-heading
+        Defects
+
+    .govuk-grid-column-full
+    -# TODO: Create link here
+
+    .govuk-grid-column-full
+      = render partial: '/shared/defects/table', locals: { scheme: @block.scheme, defects: @block.defects, parent: @block }

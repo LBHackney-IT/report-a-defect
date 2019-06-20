@@ -2,6 +2,7 @@ RSpec.shared_examples 'a trackable resource' do |options|
   context "when creating a #{options[:resource]}" do
     let(:resource_key_string) { options[:resource].to_s.downcase }
     let(:resource_key_symbol) { resource_key_string.to_sym }
+    let(:factory_name) { options[:factory_name] }
     let(:resource) { build(resource_key_symbol) }
 
     before(:each) do
