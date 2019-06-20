@@ -20,5 +20,41 @@
       Scheme
     %p.scheme_information.scheme_name_and_estate
       #{I18n.t('page_title.staff.schemes.show', name: @block.scheme.name)} belongs to #{I18n.t('page_title.staff.estates.show', name: @block.scheme.estate.name)}
-
     = render partial: '/shared/schemes/information', locals: { scheme: @block.scheme }
+  .govuk-grid-column-full
+    %h1.govuk-heading-xl
+      Defects
+    %table.govuk-table.defects
+      %thead.govuk-table__head
+        %tr.govuk-table__row
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Reference number
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Title
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Status
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Priority
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Target completion date
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Trade
+          %th.govuk-table__header
+            %h2.govuk-heading-m
+              Actions
+      %tbody.govuk-table__body
+        - @block.defects.each do |defect|
+          %tr.govuk-table__row
+            %td.govuk-table__cell= defect.reference_number
+            %td.govuk-table__cell= defect.title
+            %td.govuk-table__cell= defect.status
+            %td.govuk-table__cell= defect.priority.name
+            %td.govuk-table__cell= format_date(defect.target_completion_date)
+            %td.govuk-table__cell= defect.trade
+            %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), block_defect_path(defect.block, defect), class: 'govuk-link')

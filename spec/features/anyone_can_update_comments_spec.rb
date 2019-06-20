@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.feature 'anyone can update comments' do
   let(:property) { create(:property) }
-  let(:defect) { create(:defect, property: property) }
+  let(:defect) { create(:property_defect, property: property) }
 
   scenario 'a comment can be edited' do
     create(:comment, defect: defect)

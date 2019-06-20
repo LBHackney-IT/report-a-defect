@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.feature 'Anyone can create a comment' do
   let!(:property) { create(:property, address: '1 Hackney Street') }
-  let!(:defect) { create(:defect, property: property) }
+  let!(:defect) { create(:property_defect, property: property) }
 
   scenario 'a property can be found and comment can be created' do
     visit root_path

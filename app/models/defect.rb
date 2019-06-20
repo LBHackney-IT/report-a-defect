@@ -27,7 +27,8 @@ class Defect < ApplicationRecord
     rejected
   ]
 
-  belongs_to :property
+  belongs_to :property, optional: true
+  belongs_to :block, optional: true
   belongs_to :priority
   has_many :comments, dependent: :destroy
 

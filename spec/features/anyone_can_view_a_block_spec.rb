@@ -1,58 +1,41 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can view a property' do
-  scenario 'a property can be found and viewed' do
-    property = create(:property, address: '1 Hackney Street')
+RSpec.feature 'Anyone can view a block' do
+  scenario 'a block can be found and viewed' do
+    block = create(:block, name: 'Chipping')
 
     visit root_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
     within('form.search') do
-      fill_in 'query', with: 'Hackney'
+      fill_in 'query', with: 'Chipping'
       click_on(I18n.t('generic.button.find'))
     end
 
     click_on(I18n.t('generic.link.show'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.properties.show', name: property.address))
+    expect(page).to have_content(I18n.t('page_title.staff.blocks.show', name: block.name))
 
-    within('.scheme_information.scheme_name_and_estate') do
-      expect(page).to have_content(property.scheme.estate.name)
-      expect(page).to have_content(property.scheme.name)
-    end
-
-    within('.scheme_information.scheme_contractor') do
-      expect(page).to have_content(property.scheme.contractor_name)
-      expect(page).to have_content(property.scheme.contractor_email_address)
-    end
-
-    within('.scheme_information.scheme_agent') do
-      expect(page).to have_content(property.scheme.employer_agent_name)
-      expect(page).to have_content(property.scheme.employer_agent_email_address)
-    end
-
-    within('.property_information') do
-      expect(page).to have_content(property.uprn)
-      expect(page).to have_content(property.address)
-      expect(page).to have_content(property.postcode)
+    within('.block_information') do
+      expect(page).to have_content(block.name)
     end
   end
 
   scenario 'can use breadcrumbs to navigate' do
-    property = create(:property)
+    block = create(:block)
 
-    visit property_path(property)
+    visit block_path(block)
 
     within('.govuk-breadcrumbs') do
       expect(page).to have_link('Home', href: '/')
       expect(page).to have_link(
-        I18n.t('page_title.staff.estates.show', name: property.scheme.estate.name),
-        href: estate_path(property.scheme.estate)
+        I18n.t('page_title.staff.estates.show', name: block.scheme.estate.name),
+        href: estate_path(block.scheme.estate)
       )
       expect(page).to have_link(
-        I18n.t('page_title.staff.schemes.show', name: property.scheme.name),
-        href: estate_scheme_path(property.scheme.estate, property.scheme)
+        I18n.t('page_title.staff.schemes.show', name: block.scheme.name),
+        href: estate_scheme_path(block.scheme.estate, block.scheme)
       )
     end
   end

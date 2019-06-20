@@ -38,15 +38,24 @@ property4 = FactoryBot.create(
 )
 
 # Blocks
-FactoryBot.create(:block, name: 'Chipping', scheme: scheme1)
+block = FactoryBot.create(:block, name: 'Chipping', scheme: scheme1)
 
-# Defects
+# Property defects
 [property1, property2, property3, property4].each do |property|
   FactoryBot.create_list(
-    :defect,
+    :property_defect,
     10,
     :with_comments,
     property: property,
     priority: [priority1, priority2, priority3, priority4].sample
   )
 end
+
+# Communal defects
+FactoryBot.create_list(
+  :communal_defect,
+  10,
+  :with_comments,
+  block: block,
+  priority: [priority1, priority2, priority3, priority4].sample
+)

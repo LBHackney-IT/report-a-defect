@@ -21,6 +21,6 @@ RSpec.feature 'Anyone can find a block' do
       click_on(I18n.t('generic.link.show'))
     end
 
-    expect(page).to have_content(I18n.t('page_title.staff.blocks.show'))
+    expect(page).to have_content(I18n.t('page_title.staff.blocks.show', name: interested_block.name))
   end
 end

@@ -4,7 +4,7 @@ RSpec.describe Defect, type: :model do
   it { should belong_to(:property) }
   it { should have_many(:comments) }
 
-  it_behaves_like 'a trackable resource', resource: described_class
+  it_behaves_like 'a trackable resource', resource: described_class, factory_name: :property_defect
 
   it 'validates presence of required fields' do
     defect = described_class.new
@@ -74,7 +74,7 @@ RSpec.describe Defect, type: :model do
       previous_priority = create(:priority, days: 2)
       new_priority = create(:priority, days: 3)
 
-      defect = create(:defect, priority: previous_priority)
+      defect = create(:property_defect, priority: previous_priority)
       defect.reload.priority = new_priority
 
       defect.set_completion_date
@@ -87,7 +87,7 @@ RSpec.describe Defect, type: :model do
 
   describe '#token' do
     it 'generates a secret token from the ID' do
-      defect = create(:defect)
+      defect = create(:property_defect)
 
       verifier_double = instance_double(ActiveSupport::MessageVerifier)
       expect(ActiveSupport::MessageVerifier).to receive(:new).and_return(verifier_double)

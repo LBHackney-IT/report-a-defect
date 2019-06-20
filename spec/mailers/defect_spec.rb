@@ -9,7 +9,7 @@ RSpec.describe DefectMailer, type: :mailer do
   after(:each) { travel_back }
 
   let(:recipient) { 'email@example.com' }
-  let(:defect) { create(:defect) }
+  let(:defect) { create(:property_defect) }
 
   describe('#forward_to_contractor') do
     it 'sends an email to the scheme contractor' do
@@ -34,7 +34,7 @@ RSpec.describe DefectMailer, type: :mailer do
     end
 
     context 'when the name includes a single quote' do
-      let(:defect) { create(:defect, contact_name: "Wilda O'Connell") }
+      let(:defect) { create(:property_defect, contact_name: "Wilda O'Connell") }
       it 'sends an email to the scheme contractor' do
         mail = DefectMailer.forward_to_contractor(defect.id)
         body_lines = mail.body.raw_source.lines
@@ -65,7 +65,7 @@ RSpec.describe DefectMailer, type: :mailer do
     end
 
     context 'when the name includes a single quote' do
-      let(:defect) { create(:defect, contact_name: "Wilda O'Connell") }
+      let(:defect) { create(:property_defect, contact_name: "Wilda O'Connell") }
       it 'sends an email to the scheme contractor' do
         mail = DefectMailer.forward_to_contractor(defect.id)
         body_lines = mail.body.raw_source.lines
