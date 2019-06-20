@@ -36,4 +36,25 @@ RSpec.describe DefectHelper, type: :helper do
       expect(result).to eql('End of year')
     end
   end
+
+  describe '#view_path_for' do
+    let(:property) { create(:property) }
+    let(:block) { create(:block) }
+    let(:defect) { create(:defect) }
+
+    it 'returns a view path when the parent is a property' do
+      result = helper.view_path_for(parent: property, defect: defect)
+      expect(result).to eq(property_defect_path(property, defect))
+    end
+
+    it 'returns a view path when the parent is a block' do
+      result = helper.view_path_for(parent: block, defect: defect)
+      expect(result).to eq(block_defect_path(block, defect))
+    end
+
+    it 'returns nothing if the parent isn\'t expected' do
+      result = helper.view_path_for(parent: double, defect: defect)
+      expect(result).to eq(nil)
+    end
+  end
 end
