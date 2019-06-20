@@ -28,6 +28,7 @@ RSpec.feature 'Anyone can create a defect for a block' do
 
     within('form.new_defect') do
       fill_in 'defect[title]', with: 'Electrics failed'
+      fill_in 'defect[access_information]', with: '33-50 Hackney Street, communal entrance'
       fill_in 'defect[description]', with: 'None of the electrics work'
       fill_in 'defect[contact_name]', with: 'Alex Stone'
       fill_in 'defect[contact_email_address]', with: 'email@example.com'
@@ -47,6 +48,12 @@ RSpec.feature 'Anyone can create a defect for a block' do
       expect(page).to have_content(priority.name)
       expect(page).to have_content(defect.target_completion_date)
       expect(page).to have_content(defect.reference_number)
+    end
+
+    click_on(I18n.t('generic.link.show'))
+
+    within('.defect_information') do
+      expect(page).to have_content('33-50 Hackney Street, communal entrance')
     end
   end
 

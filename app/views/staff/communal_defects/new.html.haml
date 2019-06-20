@@ -14,6 +14,12 @@
         = f.input :title,
                   hint: I18n.t('form.defect.title.description'),
                   label: 'Short title'
+        = f.input :access_information,
+                  hint: I18n.t('form.defect.access_information.description'),
+                  wrapper: 'textarea',
+                  as: :text,
+                  input_html: { rows: 5 },
+                  required: true
         = f.input :description,
                   wrapper: 'textarea',
                   as: :text,
