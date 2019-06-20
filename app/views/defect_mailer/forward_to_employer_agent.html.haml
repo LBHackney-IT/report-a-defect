@@ -1,0 +1,18 @@
+\# #{t('app.title')}
+\
+= "#{I18n.t('email.defect.forward.headings.title.reference_number')} : #{@presenter.reference_number}"
+= "#{I18n.t('email.defect.forward.headings.title.created_at')}: #{@presenter.created_at.to_s(:default)}"
+= "#{I18n.t('email.defect.forward.headings.title.reporting_officer')}: Hackney New Build team"
+\
+= "#{I18n.t('email.defect.forward.headings.title.address')}: #{@presenter.address}"
+= "#{I18n.t('email.defect.forward.headings.title.location')}: #{@presenter.location}"
+\
+= "#{I18n.t('email.defect.forward.headings.title.contact_name')}: #{@presenter.contact_name}"
+= "#{I18n.t('email.defect.forward.headings.title.contact_phone_number')}: #{@presenter.contact_phone_number}"
+= "#{I18n.t('email.defect.forward.headings.title.contractor_email_address')}: #{@presenter.contact_email_address}"
+\
+= "#{I18n.t('email.defect.forward.headings.title.description_of_defect')}: #{@presenter.description}"
+= "#{I18n.t('email.defect.forward.headings.title.contractor')}: #{@presenter.scheme.contractor_name}"
+= "#{I18n.t('email.defect.forward.headings.title.priority_name')}: #{@presenter.priority.name}"
+= "#{I18n.t('email.defect.forward.headings.title.target_completion_date')}: #{@presenter.target_completion_date}"
+\---

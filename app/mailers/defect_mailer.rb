@@ -1,6 +1,7 @@
 class DefectMailer < ApplicationMailer
   def forward_to_contractor(defect_id)
     @defect = Defect.find(defect_id)
+    @presenter = DefectMailPresenter.new(@defect)
 
     view_mail(
       NOTIFY_FORWARD_DEFECT_TEMPLATE,
@@ -11,6 +12,7 @@ class DefectMailer < ApplicationMailer
 
   def forward_to_employer_agent(defect_id)
     @defect = Defect.find(defect_id)
+    @presenter = DefectMailPresenter.new(@defect)
 
     view_mail(
       NOTIFY_FORWARD_DEFECT_TEMPLATE,
