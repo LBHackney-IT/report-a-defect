@@ -29,6 +29,7 @@ en:
         edit: 'Update scheme'
       blocks:
         show: '%{name} block'
+        create: 'Create block'
       priorities:
         create: 'Create priority'
       properties:
