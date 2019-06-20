@@ -17,7 +17,7 @@ en:
       search:
         index:
           headers:
-            main: 'Results'
+            main: 'Search results for "%{query}"'
             properties: 'Properties %{count}'
       estates:
         show: '%{name} estate'

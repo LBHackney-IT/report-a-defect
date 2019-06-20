@@ -1,8 +1,11 @@
-- content_for :page_title_prefix, I18n.t('page_title.staff.search.index.headers.main')
+- content_for :page_title_prefix, I18n.t('page_title.staff.search.index.headers.main', query: @search_results.query)
 
 .govuk-grid-row
-  .govuk-grid-column-two-thirds
-    %h1.govuk-heading-xl= I18n.t('page_title.staff.search.index.headers.main')
+  .govuk-grid-column-full
+    %h1.govuk-heading-xl= I18n.t('page_title.staff.search.index.headers.main', query: @search_results.query)
 
-    %h2.govuk-heading-m.section-heading= I18n.t('page_title.staff.search.index.headers.properties', count: "#{@properties.count}/#{Property.count}")
-    = render partial: '/shared/properties/table', locals: { properties: @properties }
+    %h2.govuk-heading-m.section-heading= I18n.t('page_title.staff.search.index.headers.blocks', count: "#{@search_results.blocks.count}/#{Block.count}")
+    = render partial: '/shared/blocks/table', locals: { blocks: @search_results.blocks }
+
+    %h2.govuk-heading-m.section-heading= I18n.t('page_title.staff.search.index.headers.properties', count: "#{@search_results.properties.count}/#{Property.count}")
+    = render partial: '/shared/properties/table', locals: { properties: @search_results.properties }
