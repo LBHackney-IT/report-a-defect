@@ -44,7 +44,7 @@ RSpec.feature 'Anyone can create a comment' do
   end
 
   scenario 'an invalid comment cannot be submitted' do
-    visit new_property_defect_comment_path(property, defect)
+    visit new_defect_comment_path(defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
     within('form.new_comment') do
@@ -58,7 +58,7 @@ RSpec.feature 'Anyone can create a comment' do
   end
 
   scenario 'can use breadcrumbs to navigate' do
-    visit new_property_defect_comment_path(property, defect)
+    visit new_defect_comment_path(defect)
 
     expect(page).to have_link(
       "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",

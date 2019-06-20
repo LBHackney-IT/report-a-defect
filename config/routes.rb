@@ -12,14 +12,15 @@ Rails.application.routes.draw do
 
   get 'search' => 'staff/searches#index'
   resources :properties, controller: 'staff/properties', only: %i[show] do
-    resources :defects, controller: 'staff/defects', only: %i[new create show edit update] do
-      resources :comments, controller: 'staff/comments', only: %i[new create edit update]
-    end
+    resources :defects, controller: 'staff/defects', only: %i[new create show edit update]
   end
 
-  resources :blocks, controller: 'staff/blocks', only: %i[show]
+  resources :blocks, controller: 'staff/blocks', only: %i[show] do
+    resources :defects, controller: 'staff/communal_defects', only: %i[new create show edit update]
+  end
 
   resources :defects, controller: 'contractor/defects' do
+    resources :comments, controller: 'staff/comments', only: %i[new create edit update]
     get :accept
   end
 end
