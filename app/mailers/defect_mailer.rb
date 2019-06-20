@@ -4,7 +4,7 @@ class DefectMailer < ApplicationMailer
 
     view_mail(
       NOTIFY_FORWARD_DEFECT_TEMPLATE,
-      to: @defect.property.scheme.contractor_email_address,
+      to: @defect.scheme.contractor_email_address,
       subject: I18n.t('email.defect.forward.subject', reference: @defect.reference_number),
     )
   end
@@ -14,7 +14,7 @@ class DefectMailer < ApplicationMailer
 
     view_mail(
       NOTIFY_FORWARD_DEFECT_TEMPLATE,
-      to: @defect.property.scheme.employer_agent_email_address,
+      to: @defect.scheme.employer_agent_email_address,
       subject: I18n.t('email.defect.forward.subject', reference: @defect.reference_number),
     )
   end

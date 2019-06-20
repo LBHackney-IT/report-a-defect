@@ -4,7 +4,7 @@ RSpec.describe BuildDefect do
   let(:property) { create(:property) }
   let(:priority) { create(:priority) }
   let(:defect_params) do
-    build(:defect,
+    build(:property_defect,
           property: property,
           priority: priority).attributes
   end

@@ -97,4 +97,20 @@ RSpec.describe Defect, type: :model do
       defect.token
     end
   end
+
+  describe '#scheme' do
+    context 'when the defect has a property' do
+      it 'returns the property scheme' do
+        defect = create(:property_defect)
+        expect(defect.scheme).to eq(defect.property.scheme)
+      end
+    end
+
+    context 'when the defect has a block' do
+      it 'returns the block scheme' do
+        defect = create(:communal_defect)
+        expect(defect.scheme).to eq(defect.block.scheme)
+      end
+    end
+  end
 end
