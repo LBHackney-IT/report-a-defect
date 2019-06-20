@@ -1,6 +1,6 @@
 class Staff::DashboardController < Staff::BaseController
   def index
     @estates = Estate.all
-    @property_search = PropertySearch.new
+    @search = Search.new
   end
 end

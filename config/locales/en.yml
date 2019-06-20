@@ -14,6 +14,11 @@ en:
           body: 'This accept link appears to be invalid. This might be because it has already accepted it or it has expired.'
     staff:
       dashboard: 'Dashboard'
+      search:
+        index:
+          headers:
+            main: 'Results'
+            properties: 'Properties %{count}'
       estates:
         show: '%{name} estate'
         create: 'Create estate'
@@ -26,7 +31,6 @@ en:
       properties:
         create: 'Create property'
         edit: 'Update property'
-        index: 'Properties'
         show: '%{name}'
       defects:
         create: 'Create Defect'

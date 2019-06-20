@@ -41,10 +41,6 @@ class Staff::PropertiesController < Staff::BaseController
     end
   end
 
-  def index
-    @properties = PropertySearch.new(address: address).call
-  end
-
   private
 
   def id

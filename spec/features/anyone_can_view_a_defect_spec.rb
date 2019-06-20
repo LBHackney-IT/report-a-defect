@@ -8,8 +8,8 @@ RSpec.feature 'Anyone can view a defect' do
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
-    within('form.property-search') do
-      fill_in 'address', with: defect.property.address
+    within('form.search') do
+      fill_in 'query', with: defect.property.address
       click_on(I18n.t('generic.button.find'))
     end
 

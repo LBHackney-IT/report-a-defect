@@ -8,8 +8,8 @@ RSpec.feature 'Anyone can view a property' do
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
-    within('form.property-search') do
-      fill_in 'address', with: 'Hackney'
+    within('form.search') do
+      fill_in 'query', with: 'Hackney'
       click_on(I18n.t('generic.button.find'))
     end
 
