@@ -1,5 +1,6 @@
 class Scheme < ApplicationRecord
   has_many :priorities, dependent: :destroy
+  has_many :blocks, dependent: :destroy
   has_many :properties, dependent: :destroy
   belongs_to :estate, dependent: :destroy
 
