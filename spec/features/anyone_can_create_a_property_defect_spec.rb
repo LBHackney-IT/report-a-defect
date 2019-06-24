@@ -50,6 +50,7 @@ RSpec.feature 'Anyone can create a defect for a property' do
       expect(page).to have_content(defect.target_completion_date)
       expect(page).to have_content(defect.reference_number)
     end
+      expect(page).to have_content('Property')
   end
 
   scenario 'an invalid defect cannot be submitted' do

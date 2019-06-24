@@ -1,0 +1,9 @@
+%h3.govuk-heading-s.section-heading--s
+  Location
+%dl.govuk-summary-list.govuk-summary-list--no-border.no-actions
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Type
+    %dd.govuk-summary-list__value= defect_type_for(defect: defect)
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Access information
+    %dd.govuk-summary-list__value= defect.access_information

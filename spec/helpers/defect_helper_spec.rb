@@ -57,4 +57,16 @@ RSpec.describe DefectHelper, type: :helper do
       expect(result).to eq(nil)
     end
   end
+
+  describe '#defect_type_for' do
+    it 'returns the string Property' do
+      result = helper.defect_type_for(defect: build(:property_defect))
+      expect(result).to eql('Property')
+    end
+    
+    it 'returns the string Block' do
+      result = helper.defect_type_for(defect: build(:communal_defect))
+      expect(result).to eql('Block')
+    end
+  end
 end

@@ -19,4 +19,8 @@ module DefectHelper
       property_defect_path(defect.property, defect.id)
     end
   end
+
+  def defect_type_for(defect:)
+    defect.communal? ? 'Block' : 'Property'
+  end
 end

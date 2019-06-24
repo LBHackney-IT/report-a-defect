@@ -1,0 +1,12 @@
+%h3.govuk-heading-s.section-heading--s
+  Location
+%dl.govuk-summary-list.govuk-summary-list--no-border.no-actions.defect_contact
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Type
+    %dd.govuk-summary-list__value= defect_type_for(defect: defect)
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Address
+    %dd.govuk-summary-list__value= defect.property.address
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Postcode
+    %dd.govuk-summary-list__value= defect.property.postcode

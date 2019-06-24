@@ -53,6 +53,7 @@ RSpec.feature 'Anyone can create a defect for a block' do
     click_on(I18n.t('generic.link.show'))
 
     within('.defect_information') do
+      expect(page).to have_content('Block')
       expect(page).to have_content('33-50 Hackney Street, communal entrance')
     end
   end
