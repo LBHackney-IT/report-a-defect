@@ -1,4 +1,6 @@
 class Staff::CommentsController < Staff::BaseController
+  include DefectHelper
+
   def new
     @defect = Defect.find(defect_id)
     @comment = Comment.new
@@ -31,13 +33,5 @@ class Staff::CommentsController < Staff::BaseController
 
   def comment_params
     params.require(:comment).permit(:message)
-  end
-
-  def defect_path_for(defect:)
-    if defect.communal?
-      block_defect_path(defect.block, defect.id)
-    else
-      property_defect_path(defect.property, defect.id)
-    end
   end
 end

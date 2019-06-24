@@ -11,4 +11,12 @@ module DefectHelper
     return property_defect_path(parent, defect) if parent.is_a?(Property)
     return block_defect_path(parent, defect) if parent.is_a?(Block)
   end
+
+  def defect_path_for(defect:)
+    if defect.communal?
+      block_defect_path(defect.block, defect.id)
+    else
+      property_defect_path(defect.property, defect.id)
+    end
+  end
 end
