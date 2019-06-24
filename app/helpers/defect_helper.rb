@@ -27,10 +27,11 @@ module DefectHelper
   def event_description_for(event:)
     case event.key
     when 'defect.create' then
-      I18n.t(
-        'events.defect.created',
-        name: event.owner.name
-      )
+      if event.owner
+        I18n.t('events.defect.created', name: event.owner.name)
+      else
+        event.key
+      end
     when 'defect.forwarded_to_contractor' then
       I18n.t(
         'events.defect.forwarded_to_contractor',
