@@ -15,12 +15,18 @@ class SaveDefect
   private
 
   def send_to_contractor
-    DefectMailer.forward_to_contractor(defect.id).deliver_now
-    defect.create_activity key: 'defect.forwarded_to_contractor', owner: nil
+    DefectMailer.forward(
+      'contractor',
+      defect.scheme.contractor_email_address,
+      defect.id
+    ).deliver_later
   end
 
   def send_to_employer_agent
-    DefectMailer.forward_to_employer_agent(defect.id).deliver_now
-    defect.create_activity key: 'defect.forwarded_to_employer_agent', owner: nil
+    DefectMailer.forward(
+      'employer_agent',
+      defect.scheme.employer_agent_email_address,
+      defect.id
+    ).deliver_later
   end
 end

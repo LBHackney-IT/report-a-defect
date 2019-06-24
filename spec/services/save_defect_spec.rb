@@ -29,52 +29,20 @@ RSpec.describe SaveDefect do
       described_class.new(defect: defect).call
     end
 
-    it 'emails a copy of the defect to the contractor and employer agent' do
-      scheme = create(:scheme,
-                      contractor_email_address: 'contractor@email.com',
-                      employer_agent_email_address: 'employeragent@email.com')
-      property = create(:property, scheme: scheme)
-      defect = create(:property_defect, property: property)
+    it 'sends the email asynchronously' do
+      contractor_message_delivery = instance_double(ActionMailer::MessageDelivery)
+      expect(DefectMailer).to receive(:forward)
+        .with('contractor', defect.scheme.contractor_email_address, defect.id)
+        .and_return(contractor_message_delivery)
+      expect(contractor_message_delivery).to receive(:deliver_later)
+
+      employer_agent_message_delivery = instance_double(ActionMailer::MessageDelivery)
+      expect(DefectMailer).to receive(:forward)
+        .with('employer_agent', defect.scheme.employer_agent_email_address, defect.id)
+        .and_return(employer_agent_message_delivery)
+      expect(employer_agent_message_delivery).to receive(:deliver_later)
 
       described_class.new(defect: defect).call
-
-      first_delivery = ActionMailer::Base.deliveries[0]
-      expect(first_delivery.to).to eq([defect.property.scheme.contractor_email_address])
-      expect(first_delivery.subject).to eq(I18n.t('email.defect.forward.subject', reference: defect.reference_number))
-
-      second_delivery = ActionMailer::Base.deliveries[1]
-      expect(second_delivery.to).to eq([defect.property.scheme.employer_agent_email_address])
-      expect(second_delivery.subject).to eq(I18n.t('email.defect.forward.subject', reference: defect.reference_number))
-    end
-
-    it 'stores sending of an email to the contractor in a custom activity record' do
-      travel_to Time.zone.parse('2019-05-23')
-
-      described_class.new(defect: defect).call
-
-      result = PublicActivity::Activity.find_by(
-        trackable_id: defect.id, trackable_type: Defect.to_s, key: 'defect.forwarded_to_contractor'
-      )
-      expect(result).to be_kind_of(PublicActivity::Activity)
-      expect(result.trackable).to be_kind_of(Defect)
-      expect(result.created_at).to eq(Time.zone.now)
-
-      travel_back
-    end
-
-    it 'stores sending of an email to the employer agent in a custom activity record' do
-      travel_to Time.zone.parse('2019-05-23')
-
-      described_class.new(defect: defect).call
-
-      result = PublicActivity::Activity.find_by(
-        trackable_id: defect.id, trackable_type: Defect.to_s, key: 'defect.forwarded_to_employer_agent'
-      )
-      expect(result).to be_kind_of(PublicActivity::Activity)
-      expect(result.trackable).to be_kind_of(Defect)
-      expect(result.created_at).to eq(Time.zone.now)
-
-      travel_back
     end
   end
 end
