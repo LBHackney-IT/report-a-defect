@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_20_173252) do
+ActiveRecord::Schema.define(version: 2019_06_24_093428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 2019_06_20_173252) do
     t.string "title"
     t.uuid "block_id"
     t.string "access_information"
+    t.boolean "communal", default: false
     t.index ["block_id"], name: "index_defects_on_block_id"
     t.index ["priority_id"], name: "index_defects_on_priority_id"
     t.index ["property_id"], name: "index_defects_on_property_id"
