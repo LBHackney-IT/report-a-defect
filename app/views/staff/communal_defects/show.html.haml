@@ -3,32 +3,38 @@
 = link_to "Back to #{I18n.t('page_title.staff.blocks.show', name: @defect.block.name)}", block_path(@defect.block), class: 'govuk-back-link'
 
 .govuk-grid-row
-  .govuk-grid-column-two-thirds
+  .govuk-grid-column-full
     %h1.govuk-heading-l
       = I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)
-    = link_to(I18n.t('generic.button.edit', resource: 'Defect'), edit_block_defect_path(@defect.block, @defect), class: 'govuk-button mb0')
+.govuk-grid-row
+  .govuk-grid-column-one-half
+    %h2.govuk-heading-m= @defect.title
+    = link_to(I18n.t('generic.button.edit', resource: 'Defect'), edit_block_defect_path(@defect.block, @defect), class: 'govuk-button govuk-button--secondary mb0')
 
-    %h2.govuk-heading-m
-      Scheme
+.govuk-grid-row
+  .govuk-grid-column-one-half.summary
+    = render partial: '/shared/defects/summary_information', locals: { defect: @defect }
+  .govuk-grid-column-one-half.description
+    %h3.govuk-heading-s.section-heading--s
+      Defect description
+    %p.govuk-body= @defect.description
 
-    %p.scheme_information.scheme_name_and_estate
-      #{I18n.t('page_title.staff.schemes.show', name: @defect.block.scheme.name)} belongs to #{I18n.t('page_title.staff.estates.show', name: @defect.block.scheme.estate.name)}
 .govuk-grid-row
   .govuk-grid-column-one-half.communal-location
     = render partial: '/shared/defects/communal_location_information', locals: { defect: @defect }
 
-    = render partial: '/shared/schemes/information', locals: { scheme: @defect.block.scheme }
+  .govuk-grid-column-one-half.contact-information
+    = render partial: '/shared/defects/contact_information', locals: { defect: @defect }
 
-  .govuk-grid-column-one-third
+.govuk-grid-row
+  %hr{class: 'govuk-section-break govuk-section-break--xs govuk-section-break--visible govuk-!-margin-bottom-4'}
+  .govuk-grid-column-one-half.comments
     %h2.govuk-heading-m
       Comments
     = link_to(I18n.t('generic.button.create', resource: 'Comment'), new_defect_comment_path(@defect), class: 'govuk-button mb0')
     = render partial: '/shared/comments/list', locals: { comments: @defect.comments }
 
-    %h2.govuk-heading-m
-      Block
-    = render partial: '/shared/blocks/information', locals: { block: @defect.block }
-
-    %h2.govuk-heading-m
+  .govuk-grid-column-one-half.events
+    %h3.govuk-heading-s
       Events
     = render partial: '/shared/events/list', locals: { events: @defect.activities }
