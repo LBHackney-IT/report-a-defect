@@ -5,6 +5,7 @@ services:
       context: .
       args:
         RAILS_ENV: "development"
+    image: local/report_a_defect
     ports: ["3000:3000"]
     container_name: report-a-defect_dev_web_1
     environment:
@@ -28,6 +29,27 @@ services:
       - pg_data:/var/lib/postgresql/data/:cached
     restart: on-failure
 
+  redis_queue:
+    image: redis:latest
+    command: redis-server
+    restart: on-failure
+
+  sidekiq:
+    image: local/report_a_defect
+    build:
+      context: .
+      args:
+        RAILS_ENV: "development"
+    environment:
+      RAILS_ENV: "development"
+      DATABASE_URL: "postgres://postgres@db:5432/tvs_development?template=template0&pool=5&encoding=unicode"
+    env_file:
+      - docker-compose.env
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      - redis_queue
+    restart: on-failure
+    
 volumes:
   pg_data: {}
   node_modules:
