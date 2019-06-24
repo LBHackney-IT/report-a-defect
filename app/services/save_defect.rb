@@ -24,3 +24,16 @@ class SaveDefect
     defect.create_activity key: 'defect.forwarded_to_employer_agent', owner: nil
   end
 end
+
+class SavePropertyDefect < SaveDefect
+  def call
+    super
+  end
+end
+
+class SaveCommunalDefect < SaveDefect
+  def call
+    defect.communal = true
+    super
+  end
+end

@@ -78,3 +78,25 @@ RSpec.describe SaveDefect do
     end
   end
 end
+
+RSpec.describe SavePropertyDefect do
+  describe '#call' do
+    let(:defect) { create(:property_defect) }
+
+    it 'leaves communal as false' do
+      described_class.new(defect: defect).call
+      expect(defect.communal).to eq(false)
+    end
+  end
+end
+
+RSpec.describe SaveCommunalDefect do
+  describe '#call' do
+    let(:defect) { create(:communal_defect) }
+
+    it 'sets communal to true' do
+      described_class.new(defect: defect).call
+      expect(defect.communal).to eq(true)
+    end
+  end
+end

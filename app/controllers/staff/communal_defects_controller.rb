@@ -11,7 +11,7 @@ class Staff::CommunalDefectsController < Staff::BaseController
     @defect = BuildDefect.new(defect_params: defect_params, options: options).call
 
     if @defect.valid?
-      SaveDefect.new(defect: @defect).call
+      SaveCommunalDefect.new(defect: @defect).call
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'defect')
       redirect_to block_path(@block)
     else
