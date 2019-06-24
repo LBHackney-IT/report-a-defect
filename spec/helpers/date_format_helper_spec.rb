@@ -12,5 +12,13 @@ RSpec.describe DatetimeHelper, type: :helper do
       expect(helper.format_time(Time.zone.local(2017, 10, 7, 9, 45)))
         .to eq 'at 09:45am on 7 October 2017'
     end
+
+    context 'when the time zone is BST' do
+      it 'renders the time +1 hour on top of UTC' do
+        time = Time.utc(2017, 10, 7, 9, 45)
+        expect(helper.format_time(time))
+          .to eq 'at 10:45am on 7 October 2017'
+      end
+    end
   end
 end

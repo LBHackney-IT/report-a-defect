@@ -8,6 +8,6 @@ module DatetimeHelper
   end
 
   def format_time(time)
-    time.strftime('at %H:%M%P on %-d %B %Y')
+    time.in_time_zone.strftime('at %H:%M%P on %-d %B %Y')
   end
 end
