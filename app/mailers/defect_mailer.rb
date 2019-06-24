@@ -1,23 +1,24 @@
 class DefectMailer < ApplicationMailer
-  def forward_to_contractor(defect_id)
+  def forward(recipient_type, recipient_email_address, defect_id)
     @defect = Defect.find(defect_id)
     @presenter = DefectMailPresenter.new(@defect)
 
     view_mail(
       NOTIFY_FORWARD_DEFECT_TEMPLATE,
-      to: @defect.scheme.contractor_email_address,
+      to: recipient_email_address,
       subject: I18n.t('email.defect.forward.subject', reference: @defect.reference_number),
+      template_name: template_for(recipient_type),
     )
+
+    @defect.create_activity key: "defect.forwarded_to_#{recipient_type}", owner: nil
   end
 
-  def forward_to_employer_agent(defect_id)
-    @defect = Defect.find(defect_id)
-    @presenter = DefectMailPresenter.new(@defect)
+  private
 
-    view_mail(
-      NOTIFY_FORWARD_DEFECT_TEMPLATE,
-      to: @defect.scheme.employer_agent_email_address,
-      subject: I18n.t('email.defect.forward.subject', reference: @defect.reference_number),
-    )
+  def template_for(template_key)
+    case template_key.to_sym
+    when :contractor then 'forward_to_contractor'
+    when :employer_agent then 'forward_to_employer_agent'
+    end
   end
 end

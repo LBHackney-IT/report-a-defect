@@ -8,16 +8,15 @@ RSpec.describe DefectMailer, type: :mailer do
 
   after(:each) { travel_back }
 
-  let(:recipient) { 'email@example.com' }
   let(:defect) { create(:property_defect, contact_name: 'Bilbo') }
   let(:presenter) { DefectMailPresenter.new(defect) }
 
-  describe('#forward_to_contractor') do
-    it 'sends an email to the scheme contractor' do
-      mail = DefectMailer.forward_to_contractor(defect.id)
+  describe('#forward') do
+    it 'sends an email to the recipient' do
+      mail = DefectMailer.forward('contractor', defect.scheme.contractor_email_address, defect.id)
       body_lines = mail.body.raw_source.lines
       expect(mail.subject).to eq(I18n.t('email.defect.forward.subject', reference: defect.reference_number))
-      expect(mail.to).to eq([defect.property.scheme.contractor_email_address])
+      expect(mail.to).to eq([defect.scheme.contractor_email_address])
       expect(body_lines[0].strip).to match(/# #{I18n.t('app.title')}/)
       expect(body_lines[2].strip).to match("#{I18n.t('email.defect.forward.headings.title.reference_number')} : #{presenter.reference_number}")
       expect(body_lines[3].strip).to match("#{I18n.t('email.defect.forward.headings.title.created_at')}: #{presenter.created_at.to_s(:default)}")
@@ -37,41 +36,40 @@ RSpec.describe DefectMailer, type: :mailer do
     context 'when the name includes a single quote' do
       let(:defect) { create(:property_defect, contact_name: "Wilda O'Connell") }
       it 'escapes the value' do
-        mail = DefectMailer.forward_to_contractor(defect.id)
+        mail = DefectMailer.forward('contractor', defect.scheme.contractor_email_address, defect.id)
         body_lines = mail.body.raw_source.lines
         expect(body_lines[9].strip).to match("#{I18n.t('email.defect.forward.headings.title.contact_name')}: Wilda O&#39;Connell")
       end
     end
-  end
 
-  describe('#forward_to_employer_agent') do
-    it 'sends an email to the scheme employer_agent' do
-      mail = DefectMailer.forward_to_employer_agent(defect.id)
-      body_lines = mail.body.raw_source.lines
-      expect(mail.subject).to eq(I18n.t('email.defect.forward.subject', reference: defect.reference_number))
-      expect(mail.to).to eq([defect.property.scheme.employer_agent_email_address])
-      expect(body_lines[0].strip).to match(/# #{I18n.t('app.title')}/)
-      expect(body_lines[2].strip).to match("#{I18n.t('email.defect.forward.headings.title.reference_number')} : #{presenter.reference_number}")
-      expect(body_lines[3].strip).to match("#{I18n.t('email.defect.forward.headings.title.created_at')}: #{presenter.created_at.to_s(:default)}")
-      expect(body_lines[4].strip).to match("#{I18n.t('email.defect.forward.headings.title.reporting_officer')}: #{presenter.reporting_officer}")
-      expect(body_lines[6].strip).to match("#{I18n.t('email.defect.forward.headings.title.address')}: #{presenter.address}")
-      expect(body_lines[7].strip).to match("#{I18n.t('email.defect.forward.headings.title.location')}: #{presenter.location}")
-      expect(body_lines[9].strip).to match("#{I18n.t('email.defect.forward.headings.title.contact_name')}: #{presenter.contact_name}")
-      expect(body_lines[10].strip).to match("#{I18n.t('email.defect.forward.headings.title.contact_phone_number')}: #{presenter.contact_phone_number}")
-      expect(body_lines[11].strip).to match("#{I18n.t('email.defect.forward.headings.title.contractor_email_address')}: #{presenter.contact_email_address}")
-      expect(body_lines[13].strip).to match("#{I18n.t('email.defect.forward.headings.title.description_of_defect')}: #{presenter.description}")
-      expect(body_lines[14].strip).to match("#{I18n.t('email.defect.forward.headings.title.contractor')}: #{presenter.contractor_name}")
-      expect(body_lines[15].strip).to match("#{I18n.t('email.defect.forward.headings.title.priority_name')}: #{presenter.priority_name}")
-      expect(body_lines[16].strip).to match("#{I18n.t('email.defect.forward.headings.title.target_completion_date')}: #{presenter.target_completion_date}")
+    it 'stores sending of an email to the contractor in a custom activity record' do
+      travel_to Time.zone.parse('2019-05-23')
+
+      DefectMailer.forward('contractor', defect.scheme.contractor_email_address, defect.id).deliver_now
+
+      result = PublicActivity::Activity.find_by(
+        trackable_id: defect.id, trackable_type: Defect.to_s, key: 'defect.forwarded_to_contractor'
+      )
+      expect(result).to be_kind_of(PublicActivity::Activity)
+      expect(result.trackable).to be_kind_of(Defect)
+      expect(result.created_at).to eq(Time.zone.now)
+
+      travel_back
     end
 
-    context 'when the name includes a single quote' do
-      let(:defect) { create(:property_defect, contact_name: "Wilda O'Connell") }
-      it 'escapes the value' do
-        mail = DefectMailer.forward_to_contractor(defect.id)
-        body_lines = mail.body.raw_source.lines
-        expect(body_lines[9].strip).to match("#{I18n.t('email.defect.forward.headings.title.contact_name')}: Wilda O&#39;Connell")
-      end
+    it 'stores sending of an email to the employer agent in a custom activity record' do
+      travel_to Time.zone.parse('2019-05-23')
+
+      DefectMailer.forward('employer_agent', defect.scheme.employer_agent_email_address, defect.id).deliver_now
+
+      result = PublicActivity::Activity.find_by(
+        trackable_id: defect.id, trackable_type: Defect.to_s, key: 'defect.forwarded_to_employer_agent'
+      )
+      expect(result).to be_kind_of(PublicActivity::Activity)
+      expect(result.trackable).to be_kind_of(Defect)
+      expect(result.created_at).to eq(Time.zone.now)
+
+      travel_back
     end
   end
 end

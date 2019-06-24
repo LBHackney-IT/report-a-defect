@@ -20,20 +20,18 @@ RSpec.describe 'Defect creation', type: :request do
       defect: defect_attributes,
     }
 
+    contractor_message_delivery = instance_double(ActionMailer::MessageDelivery)
+    expect(DefectMailer).to receive(:forward)
+      .with('contractor', property.scheme.contractor_email_address, anything)
+      .and_return(contractor_message_delivery)
+    expect(contractor_message_delivery).to receive(:deliver_later)
+
+    employer_agent_message_delivery = instance_double(ActionMailer::MessageDelivery)
+    expect(DefectMailer).to receive(:forward)
+      .with('employer_agent', property.scheme.employer_agent_email_address, anything)
+      .and_return(employer_agent_message_delivery)
+    expect(employer_agent_message_delivery).to receive(:deliver_later)
+
     post property_defects_path(property), params: params
-
-    created_defect = Defect.last
-
-    first_delivery = ActionMailer::Base.deliveries[0]
-
-    expect(first_delivery.to).to eq([property.scheme.contractor_email_address])
-    expect(first_delivery.subject)
-      .to eq(I18n.t('email.defect.forward.subject', reference: created_defect.reference_number))
-
-    second_delivery = ActionMailer::Base.deliveries[1]
-
-    expect(second_delivery.to).to eq([property.scheme.employer_agent_email_address])
-    expect(second_delivery.subject)
-      .to eq(I18n.t('email.defect.forward.subject', reference: created_defect.reference_number))
   end
 end

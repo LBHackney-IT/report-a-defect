@@ -31,44 +31,18 @@ RSpec.describe SaveDefect do
 
     it 'sends the email asynchronously' do
       contractor_message_delivery = instance_double(ActionMailer::MessageDelivery)
-      expect(DefectMailer).to receive(:forward_to_contractor).with(defect.id).and_return(contractor_message_delivery)
+      expect(DefectMailer).to receive(:forward)
+        .with('contractor', defect.scheme.contractor_email_address, defect.id)
+        .and_return(contractor_message_delivery)
       expect(contractor_message_delivery).to receive(:deliver_later)
 
       employer_agent_message_delivery = instance_double(ActionMailer::MessageDelivery)
-      expect(DefectMailer).to receive(:forward_to_employer_agent).with(defect.id).and_return(employer_agent_message_delivery)
+      expect(DefectMailer).to receive(:forward)
+        .with('employer_agent', defect.scheme.employer_agent_email_address, defect.id)
+        .and_return(employer_agent_message_delivery)
       expect(employer_agent_message_delivery).to receive(:deliver_later)
 
       described_class.new(defect: defect).call
-    end
-
-    it 'stores sending of an email to the contractor in a custom activity record' do
-      travel_to Time.zone.parse('2019-05-23')
-
-      described_class.new(defect: defect).call
-
-      result = PublicActivity::Activity.find_by(
-        trackable_id: defect.id, trackable_type: Defect.to_s, key: 'defect.forwarded_to_contractor'
-      )
-      expect(result).to be_kind_of(PublicActivity::Activity)
-      expect(result.trackable).to be_kind_of(Defect)
-      expect(result.created_at).to eq(Time.zone.now)
-
-      travel_back
-    end
-
-    it 'stores sending of an email to the employer agent in a custom activity record' do
-      travel_to Time.zone.parse('2019-05-23')
-
-      described_class.new(defect: defect).call
-
-      result = PublicActivity::Activity.find_by(
-        trackable_id: defect.id, trackable_type: Defect.to_s, key: 'defect.forwarded_to_employer_agent'
-      )
-      expect(result).to be_kind_of(PublicActivity::Activity)
-      expect(result.trackable).to be_kind_of(Defect)
-      expect(result.created_at).to eq(Time.zone.now)
-
-      travel_back
     end
   end
 end
