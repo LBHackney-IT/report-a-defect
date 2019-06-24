@@ -47,30 +47,20 @@ RSpec.feature 'Anyone can view a defect' do
     end
   end
 
-  scenario 'can use breadcrumbs to navigate' do
+  scenario 'can use breadcrumbs to navigate back to a property' do
     defect = create(:property_defect)
 
     visit property_defect_path(defect.property, defect)
 
-    within('.govuk-breadcrumbs') do
-      expect(page).to have_link('Home', href: '/')
+    expect(page).to have_link("Back to #{defect.property.address}", href: property_path(defect.property))
+  end
 
-      expect(page).to have_link(
-        I18n.t('page_title.staff.estates.show', name: defect.property.scheme.estate.name),
-        href: estate_path(defect.property.scheme.estate)
-      )
-      expect(page).to have_link(
-        I18n.t('page_title.staff.schemes.show', name: defect.property.scheme.name),
-        href: estate_scheme_path(defect.property.scheme.estate, defect.property.scheme)
-      )
-      expect(page).to have_link(
-        I18n.t('page_title.staff.properties.show', name: defect.property.address),
-        href: property_path(defect.property)
-      )
-      expect(page).to have_content(
-        I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)
-      )
-    end
+  scenario 'can use breadcrumbs to navigate back to a block' do
+    defect = create(:communal_defect)
+
+    visit block_defect_path(defect.block, defect)
+
+    expect(page).to have_link("Back to #{defect.block.name}", href: block_path(defect.block))
   end
 
   scenario 'can see comments' do
