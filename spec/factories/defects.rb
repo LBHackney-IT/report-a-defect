@@ -14,10 +14,12 @@ FactoryBot.define do
     association :priority, factory: :priority
 
     factory :property_defect do
+      communal { false }
       association :property, factory: :property
     end
 
     factory :communal_defect do
+      communal { true }
       association :block, factory: :block
     end
 

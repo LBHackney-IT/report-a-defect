@@ -50,6 +50,13 @@ RSpec.feature 'Anyone can create a defect for a property' do
       expect(page).to have_content(defect.target_completion_date)
       expect(page).to have_content(defect.reference_number)
     end
+
+    click_on(I18n.t('generic.link.show'))
+
+    within('.property-location') do
+      expect(page).to have_content('Property')
+      expect(page).to have_content(property.address)
+    end
   end
 
   scenario 'an invalid defect cannot be submitted' do

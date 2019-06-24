@@ -45,7 +45,7 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
       defect = create(:property_defect)
       token = defect.token
 
-      travel_to Time.zone.parse('2019-04-01')
+      travel_to Time.zone.parse('2019-04-02')
 
       visit defect_accept_path(token)
       expect(page.status_code).to eq(422)

@@ -1,0 +1,18 @@
+%h3.govuk-heading-s.section-heading--s
+  Defect information
+%dl.govuk-summary-list.no-actions
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Priority
+    %dd.govuk-summary-list__value= defect.priority.name
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Status
+    %dd.govuk-summary-list__value= defect.status
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Target date
+    %dd.govuk-summary-list__value= format_date(defect.target_completion_date)
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Accepted by #{defect.scheme.contractor_name} on
+    %dd.govuk-summary-list__value= '22 Nov 2018'
+  %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key Trade
+    %dd.govuk-summary-list__value= defect.trade

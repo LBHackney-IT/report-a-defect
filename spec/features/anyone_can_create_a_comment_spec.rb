@@ -1,49 +1,122 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a comment' do
-  let!(:property) { create(:property, address: '1 Hackney Street') }
-  let!(:defect) { create(:property_defect, property: property) }
+  before(:each) do
+    travel_to Time.zone.parse('2019-05-23')
+  end
 
-  scenario 'a property can be found and comment can be created' do
-    visit root_path
+  after(:each) do
+    travel_back
+  end
 
-    expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
+  context 'when the defect is for a property' do
+    let!(:property) { create(:property, address: '1 Hackney Street') }
+    let!(:defect) { create(:property_defect, property: property) }
 
-    within('form.search') do
-      fill_in 'query', with: 'Hackney'
-      click_on(I18n.t('generic.button.find'))
-    end
+    scenario 'a property can be found and comment can be created' do
+      visit root_path
 
-    within('.properties') do
-      click_on(I18n.t('generic.link.show'))
-    end
+      expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.properties.show', name: property.address))
+      within('form.search') do
+        fill_in 'query', with: 'Hackney'
+        click_on(I18n.t('generic.button.find'))
+      end
 
-    within('.defects') do
-      click_on(I18n.t('generic.link.show'))
-    end
+      within('.properties') do
+        click_on(I18n.t('generic.link.show'))
+      end
 
-    expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
+      expect(page).to have_content(I18n.t('page_title.staff.properties.show', name: property.address))
 
-    click_on(I18n.t('generic.button.create', resource: 'Comment'))
+      within('.defects') do
+        click_on(I18n.t('generic.link.show'))
+      end
 
-    within('form.new_comment') do
-      fill_in 'comment[message]', with: 'None of the electrics work'
+      expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
+
       click_on(I18n.t('generic.button.create', resource: 'Comment'))
+
+      within('form.new_comment') do
+        fill_in 'comment[message]', with: 'None of the electrics work'
+        click_on(I18n.t('generic.button.create', resource: 'Comment'))
+      end
+
+      expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'comment'))
+
+      within('.comments') do
+        comment = Comment.first
+        expect(page).to have_content('Comment left by Generic team user posted at 00:00am on 23 May 2019')
+        expect(page).to have_content(comment.message)
+      end
     end
 
-    expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'comment'))
+    scenario 'can use breadcrumbs to navigate' do
+      visit new_defect_comment_path(defect)
 
-    within('.comments') do
-      comment = Comment.first
-      expect(page).to have_content(comment.message)
-      expect(page).to have_content(comment.created_at)
-      expect(page).to have_content(comment.message)
+      expect(page).to have_link(
+        "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",
+        href: property_defect_path(property, defect)
+      )
+    end
+  end
+
+  context 'when the defect is for a communal block' do
+    let!(:block) { create(:block, name: 'Hackney Street') }
+    let!(:defect) { create(:communal_defect, block: block) }
+
+    scenario 'a block can be found and comment can be created' do
+      visit root_path
+
+      expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
+
+      within('form.search') do
+        fill_in 'query', with: 'Hackney'
+        click_on(I18n.t('generic.button.find'))
+      end
+
+      within('.blocks') do
+        click_on(I18n.t('generic.link.show'))
+      end
+
+      expect(page).to have_content(I18n.t('page_title.staff.blocks.show', name: block.name))
+
+      within('.defects') do
+        click_on(I18n.t('generic.link.show'))
+      end
+
+      expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
+
+      click_on(I18n.t('generic.button.create', resource: 'Comment'))
+
+      within('form.new_comment') do
+        fill_in 'comment[message]', with: 'None of the electrics work'
+        click_on(I18n.t('generic.button.create', resource: 'Comment'))
+      end
+
+      expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'comment'))
+
+      within('.comments') do
+        comment = Comment.first
+        expect(page).to have_content('Comment left by Generic team user posted at 00:00am on 23 May 2019')
+        expect(page).to have_content(comment.message)
+      end
+    end
+
+    scenario 'can use breadcrumbs to navigate' do
+      visit new_defect_comment_path(defect)
+
+      expect(page).to have_link(
+        "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",
+        href: block_defect_path(block, defect)
+      )
     end
   end
 
   scenario 'an invalid comment cannot be submitted' do
+    property = create(:property, address: '1 Hackney Street')
+    defect = create(:property_defect, property: property)
+
     visit new_defect_comment_path(defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
@@ -55,14 +128,5 @@ RSpec.feature 'Anyone can create a comment' do
     within('.comment_message') do
       expect(page).to have_content("can't be blank")
     end
-  end
-
-  scenario 'can use breadcrumbs to navigate' do
-    visit new_defect_comment_path(defect)
-
-    expect(page).to have_link(
-      "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",
-      href: property_defect_path(property, defect)
-    )
   end
 end

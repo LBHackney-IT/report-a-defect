@@ -1,4 +1,6 @@
 class Staff::CommentsController < Staff::BaseController
+  include DefectHelper
+
   def new
     @defect = Defect.find(defect_id)
     @comment = Comment.new
@@ -13,28 +15,9 @@ class Staff::CommentsController < Staff::BaseController
     if @comment.valid?
       @comment.save
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'comment')
-      redirect_to property_defect_path(@defect.property, @defect)
+      redirect_to defect_path_for(defect: @defect)
     else
       render :new
-    end
-  end
-
-  def edit
-    @defect = Defect.find(defect_id)
-    @comment = Comment.find(id)
-  end
-
-  def update
-    @defect = Defect.find(defect_id)
-    @comment = Comment.find(id)
-    @comment.assign_attributes(comment_params)
-
-    if @comment.valid?
-      @comment.save
-      flash[:success] = I18n.t('generic.notice.update.success', resource: 'comment')
-      redirect_to property_defect_path(@defect.property, @defect)
-    else
-      render :edit
     end
   end
 

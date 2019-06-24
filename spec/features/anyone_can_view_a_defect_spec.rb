@@ -21,78 +21,62 @@ RSpec.feature 'Anyone can view a defect' do
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
 
-    within('.defect_information') do
-      expect(page).to have_content(defect.reference_number)
-      expect(page).to have_content(defect.title)
-      expect(page).to have_content(defect.description)
-      expect(page).to have_content(defect.contact_name)
-      expect(page).to have_content(defect.contact_phone_number)
-      expect(page).to have_content(defect.contact_email_address)
-      expect(page).to have_content(defect.trade)
+    expect(page).to have_content(defect.reference_number)
+    expect(page).to have_content(defect.title)
+
+    within('.summary') do
       expect(page).to have_content(defect.priority.name)
-      expect(page).to have_content(defect.target_completion_date)
       expect(page).to have_content(defect.status)
+      expect(page).to have_content(defect.target_completion_date)
+      expect(page).to have_content(defect.trade)
     end
 
-    within('.scheme_information.scheme_name_and_estate') do
-      expect(page).to have_content(defect.property.scheme.name)
-      expect(page).to have_content(defect.property.scheme.estate.name)
+    within('.description') do
+      expect(page).to have_content(defect.description)
     end
 
-    within('.scheme_information.scheme_contractor') do
-      expect(page).to have_content(defect.property.scheme.contractor_name)
-      expect(page).to have_content(defect.property.scheme.contractor_email_address)
-    end
-
-    within('.scheme_information.scheme_agent') do
-      expect(page).to have_content(defect.property.scheme.employer_agent_name)
-      expect(page).to have_content(defect.property.scheme.employer_agent_email_address)
-    end
-
-    within('.property_information') do
-      expect(page).to have_content(defect.property.uprn)
+    within('.property-location') do
       expect(page).to have_content(defect.property.address)
       expect(page).to have_content(defect.property.postcode)
     end
+
+    within('.contact-information') do
+      expect(page).to have_content(defect.contact_name)
+      expect(page).to have_content(defect.contact_phone_number)
+      expect(page).to have_content(defect.contact_email_address)
+    end
   end
 
-  scenario 'can use breadcrumbs to navigate' do
+  scenario 'can use breadcrumbs to navigate back to a property' do
     defect = create(:property_defect)
 
     visit property_defect_path(defect.property, defect)
 
-    within('.govuk-breadcrumbs') do
-      expect(page).to have_link('Home', href: '/')
+    expect(page).to have_link("Back to #{defect.property.address}", href: property_path(defect.property))
+  end
 
-      expect(page).to have_link(
-        I18n.t('page_title.staff.estates.show', name: defect.property.scheme.estate.name),
-        href: estate_path(defect.property.scheme.estate)
-      )
-      expect(page).to have_link(
-        I18n.t('page_title.staff.schemes.show', name: defect.property.scheme.name),
-        href: estate_scheme_path(defect.property.scheme.estate, defect.property.scheme)
-      )
-      expect(page).to have_link(
-        I18n.t('page_title.staff.properties.show', name: defect.property.address),
-        href: property_path(defect.property)
-      )
-      expect(page).to have_content(
-        I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)
-      )
-    end
+  scenario 'can use breadcrumbs to navigate back to a block' do
+    defect = create(:communal_defect)
+
+    visit block_defect_path(defect.block, defect)
+
+    expect(page).to have_link("Back to #{defect.block.name}", href: block_path(defect.block))
   end
 
   scenario 'can see comments' do
+    travel_to Time.zone.parse('2019-05-23')
+
     defect = create(:property_defect)
     comment = create(:comment, defect: defect)
 
     visit property_defect_path(defect.property, defect)
 
     within('.comments') do
+      expect(page).to have_content("Comment left by #{comment.user.name} posted at 00:00am on 23 May 2019")
       expect(page).to have_content(comment.message)
-      expect(page).to have_content(comment.user.name)
-      expect(page).to have_content(comment.created_at)
     end
+
+    travel_back
   end
 
   scenario 'can see events' do
@@ -103,7 +87,7 @@ RSpec.feature 'Anyone can view a defect' do
     visit property_defect_path(defect.property, defect)
 
     within('.events') do
-      expect(page).to have_content('defect.create 2019-05-23 00:00:00 UTC')
+      expect(page).to have_content('defect.create at 00:00am on 23 May 2019')
     end
 
     travel_back

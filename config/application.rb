@@ -8,6 +8,8 @@ Bundler.require(*Rails.groups)
 
 module RequestARepair
   class Application < Rails::Application
+    config.time_zone = 'Europe/London'
+
     config.generators do |g|
       g.test_framework :rspec,
                        fixtures: true,

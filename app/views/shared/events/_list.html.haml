@@ -1,5 +1,8 @@
-.events
-  - events.each do |event|
-    %div.govuk-inset-text.event
-      %p= event.key
-      %p= event.created_at
+%ol.govuk-list.media-list
+  - events.includes(:owner).each do |event|
+    %li.lbh-event
+      .media-body
+        %p.govuk-body.media-heading
+          %span{class: 'author govuk-body-s govuk-!-font-weight-bold'}
+            = event_description_for(event: event)
+          %time.govuk-body-s= format_time(event.created_at)
