@@ -87,7 +87,7 @@ RSpec.feature 'Anyone can view a defect' do
     visit property_defect_path(defect.property, defect)
 
     within('.events') do
-      expect(page).to have_content('defect.create 2019-05-23 00:00:00 UTC')
+      expect(page).to have_content('defect.create at 00:00am on 23 May 2019')
     end
 
     travel_back

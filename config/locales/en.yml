@@ -100,6 +100,12 @@ en:
         accept:
           link: 'Accept ownership of this defect'
         # alternate: 'Call us if not'
+  events:
+    defect:
+      created: 'Defect was created by %{name}'
+      forwarded_to_contractor: 'An email was sent to the contractor (%{email})'
+      forwarded_to_employer_agent: 'An email was sent to the employer agent (%{email})'
+      accepted: 'Defect was accepted by %{email}'
   activerecord:
     attributes:
       property:
