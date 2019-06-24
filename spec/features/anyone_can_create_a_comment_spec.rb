@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a comment' do
+  before(:each) do
+    travel_to Time.zone.parse('2019-05-23')
+  end
+
+  after(:each) do
+    travel_back
+  end
+
   context 'when the defect is for a property' do
     let!(:property) { create(:property, address: '1 Hackney Street') }
     let!(:defect) { create(:property_defect, property: property) }
@@ -38,6 +46,7 @@ RSpec.feature 'Anyone can create a comment' do
 
       within('.comments') do
         comment = Comment.first
+        expect(page).to have_content('Comment left by Generic team user posted at 00:00am on 23 May 2019')
         expect(page).to have_content(comment.message)
       end
     end
@@ -89,6 +98,7 @@ RSpec.feature 'Anyone can create a comment' do
 
       within('.comments') do
         comment = Comment.first
+        expect(page).to have_content('Comment left by Generic team user posted at 00:00am on 23 May 2019')
         expect(page).to have_content(comment.message)
       end
     end

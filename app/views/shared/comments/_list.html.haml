@@ -1,18 +1,17 @@
-.comments
-  - if comments.empty?
-    %p Add the first comment by clicking the 'Create comment' link.
-  - else
-    %ol.govuk-list.media-list
-    - comments.each do |comment|
-      %li.lbh-comment
-        .media-body
-          %p.govuk-body.media-heading
-            %span.visually-hidden
-              Comment left by
-            %span{class: 'author govuk-body-s govuk-!-font-weight-bold'}
-              #{comment.user.name}
-            %span.visually-hidden
-              posted
-            %time.govuk-body-s= format_time(comment.created_at)
-        .comment-body.comment
-          %p.govuk-body= comment.message
+- if comments.empty?
+  %p Add the first comment by clicking the 'Create comment' link.
+- else
+  %ol.govuk-list.media-list
+  - comments.each do |comment|
+    %li.lbh-comment
+      .media-body
+        %p.govuk-body.media-heading
+          %span.visually-hidden
+            Comment left by
+          %span{class: 'author govuk-body-s govuk-!-font-weight-bold'}
+            #{comment.user.name}
+          %span.visually-hidden
+            posted
+          %time.govuk-body-s= format_time(comment.created_at)
+      .comment-body.comment
+        %p.govuk-body= comment.message

@@ -64,16 +64,19 @@ RSpec.feature 'Anyone can view a defect' do
   end
 
   scenario 'can see comments' do
+    travel_to Time.zone.parse('2019-05-23')
+
     defect = create(:property_defect)
     comment = create(:comment, defect: defect)
 
     visit property_defect_path(defect.property, defect)
 
     within('.comments') do
+      expect(page).to have_content("Comment left by #{comment.user.name} posted at 00:00am on 23 May 2019")
       expect(page).to have_content(comment.message)
-      expect(page).to have_content(comment.user.name)
-      expect(page).to have_content(comment.created_at)
     end
+
+    travel_back
   end
 
   scenario 'can see events' do
