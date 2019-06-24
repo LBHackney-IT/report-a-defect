@@ -19,25 +19,6 @@ class Staff::CommentsController < Staff::BaseController
     end
   end
 
-  def edit
-    @defect = Defect.find(defect_id)
-    @comment = Comment.find(id)
-  end
-
-  def update
-    @defect = Defect.find(defect_id)
-    @comment = Comment.find(id)
-    @comment.assign_attributes(comment_params)
-
-    if @comment.valid?
-      @comment.save
-      flash[:success] = I18n.t('generic.notice.update.success', resource: 'comment')
-      redirect_to property_defect_path(@defect.property, @defect)
-    else
-      render :edit
-    end
-  end
-
   private
 
   def id

@@ -43,7 +43,6 @@ en:
         edit: 'Update defect'
       comments:
         create: 'Create Comment'
-        edit: 'Update Comment'
   page_content:
     scheme:
       show:
