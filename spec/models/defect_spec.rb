@@ -113,4 +113,29 @@ RSpec.describe Defect, type: :model do
       end
     end
   end
+
+  describe '#accepted_on' do
+    before(:each) do
+      travel_to Time.zone.parse('2019-05-23')
+    end
+
+    after(:each) do
+      travel_back
+    end
+
+    context 'when the defect has been accepted' do
+      it 'returns the time of acceptance' do
+        defect = create(:property_defect)
+        PublicActivity::Activity.create(trackable: defect, key: 'defect.accepted')
+        expect(defect.accepted_on).to eq('00:00am, 23 May 2019')
+      end
+    end
+
+    context 'when the defect has NOT been accepted' do
+      it 'returns an explanation' do
+        defect = create(:property_defect)
+        expect(defect.accepted_on).to eq(I18n.t('page_content.defect.show.not_accepted_yet'))
+      end
+    end
+  end
 end

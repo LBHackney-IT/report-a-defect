@@ -48,6 +48,9 @@ en:
       show:
         priorities:
           no_priorities: 'There are no priotities set yet. You need to create them.'
+    defect:
+      show:
+        not_accepted_yet: 'Waiting on the contractor to accept'
   error_pages:
     unprocessable_entity: 'Cannot process this request'
   generic:
