@@ -19,7 +19,7 @@ RSpec.describe DefectMailer, type: :mailer do
       expect(mail.to).to eq([defect.scheme.contractor_email_address])
       expect(body_lines[0].strip).to match(/# #{I18n.t('app.title')}/)
       expect(body_lines[2].strip).to match("#{I18n.t('email.defect.forward.headings.title.reference_number')} : #{presenter.reference_number}")
-      expect(body_lines[3].strip).to match("#{I18n.t('email.defect.forward.headings.title.created_at')}: #{presenter.created_at.to_s(:default)}")
+      expect(body_lines[3].strip).to match("#{I18n.t('email.defect.forward.headings.title.created_at')}: #{presenter.created_time}")
       expect(body_lines[4].strip).to match("#{I18n.t('email.defect.forward.headings.title.reporting_officer')}: #{presenter.reporting_officer}")
       expect(body_lines[6].strip).to match("#{I18n.t('email.defect.forward.headings.title.address')}: #{presenter.address}")
       expect(body_lines[7].strip).to match("#{I18n.t('email.defect.forward.headings.title.location')}: #{presenter.location}")

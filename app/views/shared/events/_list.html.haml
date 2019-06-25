@@ -5,4 +5,4 @@
         %p.govuk-body.media-heading
           %span{class: 'author govuk-body-s govuk-!-font-weight-bold'}
             = event_description_for(event: event)
-          %time.govuk-body-s= format_time(event.created_at)
+          %time.govuk-body-s= format_time_in_sentence(event.created_at)

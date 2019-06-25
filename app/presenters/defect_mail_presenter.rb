@@ -1,4 +1,6 @@
 class DefectMailPresenter < SimpleDelegator
+  include DatetimeHelper
+
   delegate :contractor_name, to: :scheme
   delegate :contractor_email_address, to: :scheme
   delegate :name, to: :priority, prefix: :priority
@@ -13,5 +15,9 @@ class DefectMailPresenter < SimpleDelegator
 
   def location
     property.present? ? 'Property' : 'Communal'
+  end
+
+  def created_time
+    format_time(created_at)
   end
 end
