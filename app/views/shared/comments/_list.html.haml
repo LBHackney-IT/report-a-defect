@@ -12,6 +12,6 @@
             #{comment.user.name}
           %span.visually-hidden
             posted
-          %time.govuk-body-s= format_time(comment.created_at)
+          %time.govuk-body-s= format_time_in_sentence(comment.created_at)
       .comment-body.comment
         %p.govuk-body= comment.message

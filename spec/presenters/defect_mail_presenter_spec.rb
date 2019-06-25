@@ -12,10 +12,24 @@ RSpec.describe DefectMailPresenter do
     end
   end
 
-  describe '#created_at' do
+  describe '#created_time' do
     it 'returns the created at timestamp' do
       result = described_class.new(property_defect).created_at
       expect(result).to eq(property_defect.created_at)
+    end
+
+    context 'when the time is UTC' do
+      it 'returns the time in GMT' do
+        # rubocop:disable Rails/TimeZone
+        utc_time = Time.new(2017, 10, 30, 13)
+        # rubocop:enable Rails/TimeZone
+
+        property_defect.update(created_at: utc_time)
+
+        result = described_class.new(property_defect).created_time
+
+        expect(result).to eql('13:00pm, 30 October 2017')
+      end
     end
   end
 
