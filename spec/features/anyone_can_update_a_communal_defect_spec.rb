@@ -6,7 +6,7 @@ RSpec.feature 'Anyone can update a communal_area defect' do
 
   scenario 'a defect can be updated' do
     defect = create(:communal_defect, communal_area: communal_area)
-    priority = defect.communal_area.scheme.priorities.first
+    new_priority = create(:priority, scheme: communal_area.scheme, days: 999)
 
     visit communal_area_defect_path(defect.communal_area, defect)
 
@@ -24,7 +24,7 @@ RSpec.feature 'Anyone can update a communal_area defect' do
 
       expect(page).to have_content(defect.target_completion_date)
 
-      choose "#{priority.name} - #{priority.days} days from now"
+      choose "#{new_priority.name} - #{new_priority.days} days from now"
       click_on(I18n.t('generic.button.update', resource: 'Defect'))
     end
 
@@ -36,9 +36,9 @@ RSpec.feature 'Anyone can update a communal_area defect' do
     expect(page).to have_content('email@foo.com')
     expect(page).to have_content('0123456789')
     expect(page).to have_content('Brickwork')
-    expect(page).to have_content(priority.name)
+    expect(page).to have_content(new_priority.name)
 
-    expect(page).to have_content((Time.zone.now + priority.days.days).to_date)
+    expect(page).to have_content((Time.zone.now + new_priority.days.days).to_date)
   end
 
   scenario 'a defect status can be updated' do
