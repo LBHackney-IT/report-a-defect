@@ -80,6 +80,8 @@ en:
   form:
     communal_area:
       explanation: 'A communal area can be used to report defects that are not within an individual property.'
+      location:
+        hint: 'A single or group of addresses that will help the contractor arrive at the right location'
     defect:
       title:
         description: 'This will be how this defect is described to residents in status notifications'
