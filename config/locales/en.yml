@@ -78,6 +78,8 @@ en:
         success:
           'The %{resource} has successfully been updated.'
   form:
+    communal_area:
+      explanation: 'Any defect that is in a communal area and outside of a property can be raised against a communal area to help the contractor find the location of the defect.'
     defect:
       title:
         description: 'This will be how this defect is described to residents in status notifications'

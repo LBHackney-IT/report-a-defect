@@ -11,6 +11,7 @@ RSpec.feature 'Anyone can create a communal_area' do
     click_on(I18n.t('generic.button.create', resource: 'Communal Area'))
 
     expect(page).to have_content(I18n.t('page_title.staff.communal_areas.create'))
+    expect(page).to have_content(I18n.t('form.communal_area.explanation'))
     within('form.new_communal_area') do
       fill_in 'communal_area[name]', with: 'Chipping'
       click_on(I18n.t('generic.button.create', resource: 'Communal Area'))
