@@ -14,12 +14,14 @@ RSpec.feature 'Anyone can create a communal_area' do
     expect(page).to have_content(I18n.t('form.communal_area.explanation'))
     within('form.new_communal_area') do
       fill_in 'communal_area[name]', with: 'Chipping'
+      fill_in 'communal_area[location]', with: '22-25 Chipping Road'
       click_on(I18n.t('generic.button.create', resource: 'Communal Area'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'Communal Area'))
     within('table.communal_areas') do
       expect(page).to have_content('Chipping')
+      expect(page).to have_content('22-25 Chipping Road')
     end
   end
 
@@ -37,6 +39,10 @@ RSpec.feature 'Anyone can create a communal_area' do
     end
 
     within('.communal_area_name') do
+      expect(page).to have_content("can't be blank")
+    end
+
+    within('.communal_area_location') do
       expect(page).to have_content("can't be blank")
     end
   end

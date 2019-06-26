@@ -53,7 +53,8 @@ class Staff::CommunalAreasController < Staff::BaseController
 
   def communal_area_params
     params.require(:communal_area).permit(
-      :name
+      :name,
+      :location
     )
   end
 end

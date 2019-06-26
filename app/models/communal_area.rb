@@ -3,6 +3,7 @@ class CommunalArea < ApplicationRecord
   has_many :defects, dependent: :restrict_with_error
 
   validates :name,
+            :location,
             presence: true
 
   include PgSearch

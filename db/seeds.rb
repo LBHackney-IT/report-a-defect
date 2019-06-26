@@ -38,7 +38,8 @@ property4 = FactoryBot.create(
 )
 
 # Blocks
-communal_area = FactoryBot.create(:communal_area, name: 'Chipping', scheme: scheme1)
+communal_area = FactoryBot.create(:communal_area, name: 'Chipping Court', scheme: scheme1)
+FactoryBot.create(:communal_area, scheme: scheme1)
 
 # Property defects
 [property1, property2, property3, property4].each do |property|
