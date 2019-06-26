@@ -3,7 +3,7 @@ raise if Rails.env.production?
 Comment.delete_all
 Defect.delete_all
 Property.delete_all
-Block.delete_all
+CommunalArea.delete_all
 Priority.delete_all
 Scheme.delete_all
 Estate.delete_all

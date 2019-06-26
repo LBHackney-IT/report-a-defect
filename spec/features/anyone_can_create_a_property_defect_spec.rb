@@ -18,9 +18,9 @@ RSpec.feature 'Anyone can create a defect for a property' do
 
     expect(page).to have_content(I18n.t('page_title.staff.properties.show', name: property.address))
 
-    click_on(I18n.t('generic.button.create', resource: 'Defect'))
+    click_on(I18n.t('generic.button.create', resource: 'property defect'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.defects.create'))
+    expect(page).to have_content(I18n.t('page_title.staff.defects.create.property'))
 
     within('.property_information') do
       expect(page).to have_content(property.uprn)
@@ -36,7 +36,7 @@ RSpec.feature 'Anyone can create a defect for a property' do
       fill_in 'defect[contact_phone_number]', with: '07123456789'
       select 'Electrical', from: 'defect[trade]'
       choose priority.name
-      click_on(I18n.t('generic.button.create', resource: 'Defect'))
+      click_on(I18n.t('generic.button.create', resource: 'property defect'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'defect'))
@@ -64,12 +64,12 @@ RSpec.feature 'Anyone can create a defect for a property' do
 
     visit property_path(property)
 
-    click_on(I18n.t('generic.button.create', resource: 'Defect'))
+    click_on(I18n.t('generic.button.create', resource: 'property defect'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.defects.create'))
+    expect(page).to have_content(I18n.t('page_title.staff.defects.create.property'))
     within('form.new_defect') do
       # Deliberately forget to fill out the required name field
-      click_on(I18n.t('generic.button.create', resource: 'Defect'))
+      click_on(I18n.t('generic.button.create', resource: 'property defect'))
     end
 
     within('.defect_description') do
