@@ -20,7 +20,7 @@ FactoryBot.define do
 
     factory :communal_defect do
       communal { true }
-      association :block, factory: :block
+      association :communal_area, factory: :communal_area
     end
 
     trait :with_comments do

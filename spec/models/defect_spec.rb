@@ -106,10 +106,10 @@ RSpec.describe Defect, type: :model do
       end
     end
 
-    context 'when the defect has a block' do
-      it 'returns the block scheme' do
+    context 'when the defect has a communal_area' do
+      it 'returns the communal_area scheme' do
         defect = create(:communal_defect)
-        expect(defect.scheme).to eq(defect.block.scheme)
+        expect(defect.scheme).to eq(defect.communal_area.scheme)
       end
     end
   end

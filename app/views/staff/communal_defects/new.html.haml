@@ -7,9 +7,9 @@
       %span.govuk-caption-l= 'Step 1 of 1'
 
 
-    = render partial: '/shared/blocks/information', locals: { block: @block }
+    = render partial: '/shared/communal_areas/information', locals: { communal_area: @communal_area }
 
-    = simple_form_for @defect, html: { class: 'new_defect' }, action: :post, url: block_defects_path(@block) do |f|
+    = simple_form_for @defect, html: { class: 'new_defect' }, action: :post, url: communal_area_defects_path(@communal_area) do |f|
       .govuk-form-group
         = f.input :title,
                   hint: I18n.t('form.defect.title.description'),
@@ -39,7 +39,7 @@
                   item_wrapper_class: 'govuk-radios__item',
                   item_label_class: 'govuk-label',
                   input_html: { class: 'priorities' },
-                  collection: @block.scheme.priorities,
+                  collection: @communal_area.scheme.priorities,
                   required: true,
                   selected: @defect.priority,
                   label_method: ->(obj){ priority_form_label(priority: obj) }

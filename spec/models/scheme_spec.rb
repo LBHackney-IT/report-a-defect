@@ -4,7 +4,7 @@ RSpec.describe Scheme, type: :model do
   it { should belong_to(:estate) }
   it { should have_many(:priorities) }
   it { should have_many(:properties) }
-  it { should have_many(:blocks) }
+  it { should have_many(:communal_areas) }
 
   it_behaves_like 'a trackable resource', resource: described_class
 

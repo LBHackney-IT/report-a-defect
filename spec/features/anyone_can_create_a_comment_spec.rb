@@ -61,11 +61,11 @@ RSpec.feature 'Anyone can create a comment' do
     end
   end
 
-  context 'when the defect is for a communal block' do
-    let!(:block) { create(:block, name: 'Hackney Street') }
-    let!(:defect) { create(:communal_defect, block: block) }
+  context 'when the defect is for a communal communal_area' do
+    let!(:communal_area) { create(:communal_area, name: 'Hackney Street') }
+    let!(:defect) { create(:communal_defect, communal_area: communal_area) }
 
-    scenario 'a block can be found and comment can be created' do
+    scenario 'a communal_area can be found and comment can be created' do
       visit root_path
 
       expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
@@ -75,11 +75,11 @@ RSpec.feature 'Anyone can create a comment' do
         click_on(I18n.t('generic.button.find'))
       end
 
-      within('.blocks') do
+      within('.communal_areas') do
         click_on(I18n.t('generic.link.show'))
       end
 
-      expect(page).to have_content(I18n.t('page_title.staff.blocks.show', name: block.name))
+      expect(page).to have_content(I18n.t('page_title.staff.communal_areas.show', name: communal_area.name))
 
       within('.defects') do
         click_on(I18n.t('generic.link.show'))
@@ -108,7 +108,7 @@ RSpec.feature 'Anyone can create a comment' do
 
       expect(page).to have_link(
         "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",
-        href: block_defect_path(block, defect)
+        href: communal_area_defect_path(communal_area, defect)
       )
     end
   end

@@ -1,0 +1,33 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.communal_areas.show', name: @communal_area.name)
+
+.govuk-breadcrumbs
+  %ol.govuk-breadcrumbs__list
+    = breadcrumb_link_to('Home', root_path)
+    = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @communal_area.scheme.estate.name), estate_path(@communal_area.scheme.estate))
+    = breadcrumb_link_to(I18n.t('page_title.staff.schemes.show', name: @communal_area.scheme.name), estate_scheme_path(@communal_area.scheme.estate, @communal_area.scheme))
+    = breadcrumb_current(I18n.t('page_title.staff.communal_areas.show', name: @communal_area.name))
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.communal_areas.show', name: @communal_area.name)
+  .govuk-grid-column-one-half
+    %h2.govuk-heading-l
+      Communal Area
+    = render partial: '/shared/communal_areas/information', locals: { communal_area: @communal_area }
+  .govuk-grid-column-one-half
+    %h2.govuk-heading-l
+      Scheme
+    %p.scheme_information.scheme_name_and_estate
+      #{I18n.t('page_title.staff.schemes.show', name: @communal_area.scheme.name)} belongs to #{I18n.t('page_title.staff.estates.show', name: @communal_area.scheme.estate.name)}
+    = render partial: '/shared/schemes/information', locals: { scheme: @communal_area.scheme }
+  .govuk-grid-row
+    .govuk-grid-column-full
+      %h1.govuk-heading-m.section-heading
+        Defects
+
+    .govuk-grid-column-full
+      = link_to(I18n.t('generic.button.create', resource: 'Defect'), new_communal_area_defect_path(@communal_area), class: 'govuk-button mb0')
+
+    .govuk-grid-column-full
+      = render partial: '/shared/defects/table', locals: { scheme: @communal_area.scheme, defects: @communal_area.defects, parent: @communal_area }

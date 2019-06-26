@@ -1,19 +1,19 @@
 class Staff::CommunalDefectsController < Staff::BaseController
   def new
-    @block = Block.find(block_id)
+    @communal_area = CommunalArea.find(communal_area_id)
     @defect = Defect.new
   end
 
   def create
-    @block = Block.find(block_id)
+    @communal_area = CommunalArea.find(communal_area_id)
 
-    options = { block_id: block_id, priority_id: priority_id }
+    options = { communal_area_id: communal_area_id, priority_id: priority_id }
     @defect = BuildDefect.new(defect_params: defect_params, options: options).call
 
     if @defect.valid?
       SaveCommunalDefect.new(defect: @defect).call
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'defect')
-      redirect_to block_path(@block)
+      redirect_to communal_area_path(@communal_area)
     else
       render :new
     end
@@ -35,7 +35,7 @@ class Staff::CommunalDefectsController < Staff::BaseController
     if @defect.valid?
       @defect.save
       flash[:success] = I18n.t('generic.notice.update.success', resource: 'defect')
-      redirect_to block_defect_path(@defect.block, @defect)
+      redirect_to communal_area_defect_path(@defect.communal_area, @defect)
     else
       render :edit
     end
@@ -47,8 +47,8 @@ class Staff::CommunalDefectsController < Staff::BaseController
     params[:id]
   end
 
-  def block_id
-    params[:block_id]
+  def communal_area_id
+    params[:communal_area_id]
   end
 
   def priority_id

@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can update a block defect' do
+RSpec.feature 'Anyone can update a communal_area defect' do
   let(:scheme) { create(:scheme, :with_priorities) }
-  let(:block) { create(:block, scheme: scheme) }
+  let(:communal_area) { create(:communal_area, scheme: scheme) }
 
   scenario 'a defect can be updated' do
-    defect = create(:communal_defect, block: block)
-    priority = defect.block.scheme.priorities.first
+    defect = create(:communal_defect, communal_area: communal_area)
+    priority = defect.communal_area.scheme.priorities.first
 
-    visit block_defect_path(defect.block, defect)
+    visit communal_area_defect_path(defect.communal_area, defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
 
@@ -42,9 +42,9 @@ RSpec.feature 'Anyone can update a block defect' do
   end
 
   scenario 'a defect status can be updated' do
-    defect = create(:communal_defect, block: block)
+    defect = create(:communal_defect, communal_area: communal_area)
 
-    visit edit_block_defect_path(defect.block, defect)
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     within('form.edit_defect') do
       select 'Completed', from: 'defect[status]'
@@ -56,9 +56,9 @@ RSpec.feature 'Anyone can update a block defect' do
   end
 
   scenario 'an invalid defect cannot be updated' do
-    defect = create(:communal_defect, block: block)
+    defect = create(:communal_defect, communal_area: communal_area)
 
-    visit block_defect_path(defect.block, defect)
+    visit communal_area_defect_path(defect.communal_area, defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
 
@@ -81,9 +81,9 @@ RSpec.feature 'Anyone can update a block defect' do
   end
 
   scenario 'updating the priority is optional' do
-    defect = create(:communal_defect, block: block)
+    defect = create(:communal_defect, communal_area: communal_area)
 
-    visit edit_block_defect_path(defect.block, defect)
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     within('.existing-priority-information') do
       expect(page).to have_content('Priority status')

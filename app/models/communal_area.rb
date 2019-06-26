@@ -1,4 +1,4 @@
-class Block < ApplicationRecord
+class CommunalArea < ApplicationRecord
   belongs_to :scheme, dependent: :destroy
   has_many :defects, dependent: :restrict_with_error
 

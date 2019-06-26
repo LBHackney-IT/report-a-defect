@@ -5,7 +5,9 @@ Rails.application.routes.draw do
     resources :schemes, controller: 'staff/schemes', only: %i[new create show edit update] do
       resources :priorities, controller: 'staff/priorities', only: %i[new create]
       resources :properties, controller: 'staff/properties', only: %i[new create edit update]
-      resources :blocks, controller: 'staff/blocks', only: %i[new create edit update]
+      resources :communal_areas,
+                controller: 'staff/communal_areas',
+                only: %i[new create edit update]
     end
   end
 
@@ -14,7 +16,7 @@ Rails.application.routes.draw do
     resources :defects, controller: 'staff/property_defects', only: %i[new create show edit update]
   end
 
-  resources :blocks, controller: 'staff/blocks', only: %i[show] do
+  resources :communal_areas, controller: 'staff/communal_areas', only: %i[show] do
     resources :defects, controller: 'staff/communal_defects', only: %i[new create show edit update]
   end
 

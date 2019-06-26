@@ -1,0 +1,14 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.communal_areas.edit', name: @scheme.name)
+
+= link_to "Back to #{I18n.t('page_title.staff.schemes.show', name: @scheme.name)}", estate_scheme_path(@scheme.estate, @scheme), class: 'govuk-back-link'
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.communal_areas.edit', name: @scheme.name)
+      %span.govuk-caption-l= 'Step 1 of 1'
+
+    = simple_form_for [@scheme.estate, @scheme, @communal_area] do |f|
+      .govuk-form-group
+        = f.input :name
+      = f.button :submit, I18n.t('generic.button.update', resource: 'Communal Area')

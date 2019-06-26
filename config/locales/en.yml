@@ -19,7 +19,7 @@ en:
           headers:
             main: 'Search results for "%{query}"'
             properties: 'Properties %{count}'
-            blocks: 'Blocks %{count}'
+            communal_areas: 'Blocks %{count}'
       estates:
         show: '%{name} estate'
         create: 'Create estate'
@@ -27,10 +27,10 @@ en:
         show: '%{name} scheme'
         create: 'Create scheme'
         edit: 'Update scheme'
-      blocks:
-        show: '%{name} block'
-        create: 'Create block'
-        edit: 'Update block'
+      communal_areas:
+        show: '%{name} Communal Area'
+        create: 'Create Communal Area'
+        edit: 'Update Communal Area'
       priorities:
         create: 'Create priority'
       properties:
@@ -74,7 +74,7 @@ en:
       title:
         description: 'This will be how this defect is described to residents in status notifications'
       access_information:
-        description: 'Help the contractor find and access this block'
+        description: 'Help the contractor find and access this communal area'
     priority:
       code:
         label: 'Priority code'
