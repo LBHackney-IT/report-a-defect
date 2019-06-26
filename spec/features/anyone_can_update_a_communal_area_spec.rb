@@ -16,6 +16,7 @@ RSpec.feature 'Anyone can update a communal_area' do
 
     within('form.edit_communal_area') do
       fill_in 'communal_area[name]', with: 'Darling'
+      fill_in 'communal_area[location]', with: 'Darling Estate'
       click_on(I18n.t('generic.button.update', resource: 'Communal Area'))
     end
   end
@@ -33,6 +34,7 @@ RSpec.feature 'Anyone can update a communal_area' do
 
     within('form.edit_communal_area') do
       fill_in 'communal_area[name]', with: ''
+      fill_in 'communal_area[location]', with: ''
 
       click_on(I18n.t('generic.button.update', resource: 'Communal Area'))
     end
