@@ -21,13 +21,13 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
-    click_on(I18n.t('generic.button.create', resource: 'Priority'))
+    click_on(I18n.t('button.create.priority'))
     expect(page).to have_content(I18n.t('page_title.staff.priorities.create'))
 
     within('form.new_priority') do
       fill_in 'priority[name]', with: 'P1'
       fill_in 'priority[days]', with: 1
-      click_on(I18n.t('generic.button.create', resource: 'Priority'))
+      click_on(I18n.t('button.create.priority'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'priority'))
@@ -45,7 +45,7 @@ RSpec.feature 'Anyone can create a priority for a scheme' do
 
     within('form.new_priority') do
       # Deliberately forget to fill out the required name fields
-      click_on(I18n.t('generic.button.create', resource: 'Priority'))
+      click_on(I18n.t('button.create.priority'))
     end
 
     within('.priority_name') do

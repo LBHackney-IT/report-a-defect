@@ -33,13 +33,13 @@ RSpec.feature 'Anyone can create a comment' do
         click_on(I18n.t('generic.link.show'))
       end
 
-      expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
+      expect(page).to have_content(I18n.t('button.create.comment'))
 
-      click_on(I18n.t('generic.button.create', resource: 'Comment'))
+      click_on(I18n.t('button.create.comment'))
 
       within('form.new_comment') do
         fill_in 'comment[message]', with: 'None of the electrics work'
-        click_on(I18n.t('generic.button.create', resource: 'Comment'))
+        click_on(I18n.t('button.create.comment'))
       end
 
       expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'comment'))
@@ -85,13 +85,11 @@ RSpec.feature 'Anyone can create a comment' do
         click_on(I18n.t('generic.link.show'))
       end
 
-      expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
-
-      click_on(I18n.t('generic.button.create', resource: 'Comment'))
+      click_on(I18n.t('button.create.comment'))
 
       within('form.new_comment') do
         fill_in 'comment[message]', with: 'None of the electrics work'
-        click_on(I18n.t('generic.button.create', resource: 'Comment'))
+        click_on(I18n.t('button.create.comment'))
       end
 
       expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'comment'))
@@ -122,7 +120,7 @@ RSpec.feature 'Anyone can create a comment' do
     expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
     within('form.new_comment') do
       # Deliberately forget to fill out the required name field
-      click_on(I18n.t('generic.button.create', resource: 'Comment'))
+      click_on(I18n.t('button.create.comment'))
     end
 
     within('.comment_message') do

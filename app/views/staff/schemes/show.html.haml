@@ -22,7 +22,7 @@
       = render partial: '/shared/schemes/information', locals: { scheme: @scheme }
     .govuk-grid-row
       .govuk-grid-column-full
-        = link_to(I18n.t('generic.button.edit', resource: 'Scheme'), edit_estate_scheme_path(@scheme.estate, @scheme), class: 'govuk-button govuk-button--secondary mb0')
+        = link_to(I18n.t('button.edit.scheme'), edit_estate_scheme_path(@scheme.estate, @scheme), class: 'govuk-button govuk-button--secondary mb0')
 
   .govuk-grid-column-full.govuk-grid-column-one-third-from-desktop.scheme-priorities
     %h3.govuk-heading-s
@@ -34,18 +34,18 @@
       %p.govuk-body
         = I18n.t('page_content.scheme.show.priorities.no_priorities')
 
-    = link_to(I18n.t('generic.button.create', resource: 'Priority'), new_estate_scheme_priority_path(@scheme.estate, @scheme), class: 'govuk-button govuk-button--secondary mb0')
+    = link_to(I18n.t('button.create.priority'), new_estate_scheme_priority_path(@scheme.estate, @scheme), class: 'govuk-button govuk-button--secondary mb0')
 
 .govuk-grid-row
   .govuk-grid-column-full
-    %h2.govuk-heading-m.section-heading
+    %h2.govuk-heading-m.section-heading#communal-areas
       Communal Areas
-    = link_to(I18n.t('generic.button.create', resource: 'Communal Area'), new_estate_scheme_communal_area_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
+    = link_to(I18n.t('button.create.communal_area'), new_estate_scheme_communal_area_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
     = render partial: '/shared/communal_areas/table', locals: { communal_areas: @scheme.communal_areas }
 
 .govuk-grid-row
   .govuk-grid-column-full
-    %h2.govuk-heading-m.section-heading
+    %h2.govuk-heading-m.section-heading#properties
       Properties
-    = link_to(I18n.t('generic.button.create', resource: 'Property'), new_estate_scheme_property_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
+    = link_to(I18n.t('button.create.property'), new_estate_scheme_property_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
     = render partial: '/shared/properties/table', locals: { properties: @scheme.properties }

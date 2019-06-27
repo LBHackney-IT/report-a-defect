@@ -18,7 +18,7 @@ RSpec.feature 'Anyone can create a defect for a property' do
 
     expect(page).to have_content(I18n.t('page_title.staff.properties.show', name: property.address))
 
-    click_on(I18n.t('generic.button.create', resource: 'property defect'))
+    click_on(I18n.t('button.create.property_defect'))
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.create.property'))
 
@@ -36,7 +36,7 @@ RSpec.feature 'Anyone can create a defect for a property' do
       fill_in 'defect[contact_phone_number]', with: '07123456789'
       select 'Electrical', from: 'defect[trade]'
       choose priority.name
-      click_on(I18n.t('generic.button.create', resource: 'property defect'))
+      click_on(I18n.t('button.create.property_defect'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'defect'))
@@ -64,12 +64,12 @@ RSpec.feature 'Anyone can create a defect for a property' do
 
     visit property_path(property)
 
-    click_on(I18n.t('generic.button.create', resource: 'property defect'))
+    click_on(I18n.t('button.create.property_defect'))
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.create.property'))
     within('form.new_defect') do
       # Deliberately forget to fill out the required name field
-      click_on(I18n.t('generic.button.create', resource: 'property defect'))
+      click_on(I18n.t('button.create.property_defect'))
     end
 
     within('.defect_description') do
@@ -83,5 +83,20 @@ RSpec.feature 'Anyone can create a defect for a property' do
     within('.defect_priority') do
       expect(page).to have_content("can't be blank")
     end
+  end
+
+  scenario 'a communal defect can be created after finishing the creation of a property defect' do
+    property_defect = create(:property_defect)
+
+    # Skip a manual defect creation when it's not the part under test
+    visit property_path(property_defect.property)
+
+    expect(page).to have_link(
+      I18n.t('button.create.communal_defect'),
+      href: estate_scheme_path(property_defect.scheme.estate, property_defect.scheme, anchor: 'communal-areas')
+    )
+    click_on(I18n.t('button.create.communal_defect'))
+
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: property_defect.scheme.name))
   end
 end

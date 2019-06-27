@@ -8,7 +8,7 @@ RSpec.feature 'Anyone can create a scheme' do
 
     expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name))
 
-    click_on(I18n.t('generic.button.create', resource: 'Scheme'))
+    click_on(I18n.t('button.create.scheme'))
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.create'))
     within('form.new_scheme') do
@@ -17,7 +17,7 @@ RSpec.feature 'Anyone can create a scheme' do
       fill_in 'scheme[contractor_email_address]', with: 'email@example.com'
       fill_in 'scheme[employer_agent_name]', with: 'Alex'
       fill_in 'scheme[employer_agent_email_address]', with: 'alex@example.com'
-      click_on(I18n.t('generic.button.create', resource: 'Scheme'))
+      click_on(I18n.t('button.create.scheme'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'scheme'))
@@ -40,12 +40,12 @@ RSpec.feature 'Anyone can create a scheme' do
 
     expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name))
 
-    click_on(I18n.t('generic.button.create', resource: 'Scheme'))
+    click_on(I18n.t('button.create.scheme'))
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.create'))
     within('form.new_scheme') do
       # Deliberately forget to fill out the required name field
-      click_on(I18n.t('generic.button.create', resource: 'Scheme'))
+      click_on(I18n.t('button.create.scheme'))
     end
 
     within('.scheme_name') do

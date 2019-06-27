@@ -30,7 +30,7 @@ RSpec.feature 'Anyone can update a communal_area defect' do
       expect(page).to have_content(defect.target_completion_date)
 
       choose "#{new_priority.name} - #{new_priority.days} days from now"
-      click_on(I18n.t('generic.button.update', resource: 'Defect'))
+      click_on(I18n.t('button.update.defect'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
@@ -53,7 +53,7 @@ RSpec.feature 'Anyone can update a communal_area defect' do
 
     within('form.edit_defect') do
       select 'Completed', from: 'defect[status]'
-      click_on(I18n.t('generic.button.update', resource: 'Defect'))
+      click_on(I18n.t('button.update.defect'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
@@ -73,7 +73,7 @@ RSpec.feature 'Anyone can update a communal_area defect' do
       fill_in 'defect[description]', with: ''
       select '', from: 'defect[trade]'
 
-      click_on(I18n.t('generic.button.update', resource: 'Defect'))
+      click_on(I18n.t('button.update.defect'))
     end
 
     within('.defect_description') do
@@ -99,7 +99,7 @@ RSpec.feature 'Anyone can update a communal_area defect' do
 
     within('form.edit_defect') do
       # Do not choose a new priority
-      click_on(I18n.t('generic.button.update', resource: 'Defect'))
+      click_on(I18n.t('button.update.defect'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))

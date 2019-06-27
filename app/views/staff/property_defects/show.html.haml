@@ -9,7 +9,7 @@
 .govuk-grid-row
   .govuk-grid-column-one-half
     %h2.govuk-heading-m= @defect.title
-    = link_to(I18n.t('generic.button.edit', resource: 'Defect'), edit_property_defect_path(@defect.property, @defect), class: 'govuk-button govuk-button--secondary mb0')
+    = link_to(I18n.t('button.edit.defect'), edit_property_defect_path(@defect.property, @defect), class: 'govuk-button govuk-button--secondary mb0')
 
 .govuk-grid-row
   .govuk-grid-column-one-half.summary
@@ -31,7 +31,7 @@
   .govuk-grid-column-one-half.comments
     %h2.govuk-heading-m
       Comments
-    = link_to(I18n.t('generic.button.create', resource: 'Comment'), new_defect_comment_path(@defect), class: 'govuk-button mb0')
+    = link_to(I18n.t('button.create.comment'), new_defect_comment_path(@defect), class: 'govuk-button mb0')
     = render partial: '/shared/comments/list', locals: { comments: @defect.comments }
 
   .govuk-grid-column-one-half.events

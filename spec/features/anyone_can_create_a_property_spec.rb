@@ -8,14 +8,14 @@ RSpec.feature 'Anyone can create a property' do
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
-    click_on(I18n.t('generic.button.create', resource: 'Property'))
+    click_on(I18n.t('button.create.property'))
 
     expect(page).to have_content(I18n.t('page_title.staff.properties.create'))
     within('form.new_property') do
       fill_in 'property[address]', with: 'Flat 1, Hackney Street'
       fill_in 'property[postcode]', with: 'N16NU'
       fill_in 'property[uprn]', with: '100081272892'
-      click_on(I18n.t('generic.button.create', resource: 'Property'))
+      click_on(I18n.t('button.create.property'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'property'))
@@ -31,12 +31,12 @@ RSpec.feature 'Anyone can create a property' do
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
-    click_on(I18n.t('generic.button.create', resource: 'Property'))
+    click_on(I18n.t('button.create.property'))
 
     expect(page).to have_content(I18n.t('page_title.staff.properties.create'))
     within('form.new_property') do
       # Deliberately forget to fill out the required name field
-      click_on(I18n.t('generic.button.create', resource: 'Property'))
+      click_on(I18n.t('button.create.property'))
     end
 
     within('.property_address') do
