@@ -66,7 +66,6 @@ en:
       show: 'View'
       edit: 'Edit'
     button:
-      create: 'Create %{resource}'
       update: 'Update %{resource}'
       edit: 'Edit %{resource}'
       find: 'Search'
@@ -77,6 +76,16 @@ en:
       update:
         success:
           'The %{resource} has successfully been updated.'
+  button:
+    create:
+      estate: 'Create estate'
+      scheme: 'Create scheme'
+      communal_area: 'Create communal area'
+      property: 'Create property'
+      priority: 'Create priority'
+      property_defect: 'Create property defect'
+      communal_defect: 'Create communal defect'
+      comment: 'Create comment'
   form:
     communal_area:
       explanation: 'A communal area can be used to report and manage defects that are in a shared location rather than within an individual property.'

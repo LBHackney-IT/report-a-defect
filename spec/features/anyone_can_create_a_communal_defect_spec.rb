@@ -18,7 +18,7 @@ RSpec.feature 'Anyone can create a defect for a communal_area' do
 
     expect(page).to have_content(I18n.t('page_title.staff.communal_areas.show', name: communal_area.name))
 
-    click_on(I18n.t('generic.button.create', resource: 'communal defect'))
+    click_on(I18n.t('button.create.communal_defect'))
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.create.communal_area'))
 
@@ -36,7 +36,7 @@ RSpec.feature 'Anyone can create a defect for a communal_area' do
       fill_in 'defect[contact_phone_number]', with: '07123456789'
       select 'Electrical', from: 'defect[trade]'
       choose priority.name
-      click_on(I18n.t('generic.button.create', resource: 'communal defect'))
+      click_on(I18n.t('button.create.communal_defect'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'defect'))
@@ -64,12 +64,12 @@ RSpec.feature 'Anyone can create a defect for a communal_area' do
 
     visit communal_area_path(communal_area)
 
-    click_on(I18n.t('generic.button.create', resource: 'communal defect'))
+    click_on(I18n.t('button.create.communal_defect'))
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.create.communal_area'))
     within('form.new_defect') do
       # Deliberately forget to fill out the required name field
-      click_on(I18n.t('generic.button.create', resource: 'communal defect'))
+      click_on(I18n.t('button.create.communal_defect'))
     end
 
     within('.defect_description') do

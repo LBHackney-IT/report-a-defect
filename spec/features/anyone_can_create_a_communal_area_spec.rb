@@ -8,14 +8,14 @@ RSpec.feature 'Anyone can create a communal_area' do
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
-    click_on(I18n.t('generic.button.create', resource: 'Communal Area'))
+    click_on(I18n.t('button.create.communal_area'))
 
     expect(page).to have_content(I18n.t('page_title.staff.communal_areas.create'))
     expect(page).to have_content(I18n.t('form.communal_area.explanation'))
     within('form.new_communal_area') do
       fill_in 'communal_area[name]', with: 'Chipping'
       fill_in 'communal_area[location]', with: '22-25 Chipping Road'
-      click_on(I18n.t('generic.button.create', resource: 'Communal Area'))
+      click_on(I18n.t('button.create.communal_area'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'Communal Area'))
@@ -30,12 +30,12 @@ RSpec.feature 'Anyone can create a communal_area' do
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
-    click_on(I18n.t('generic.button.create', resource: 'Communal Area'))
+    click_on(I18n.t('button.create.communal_area'))
 
     expect(page).to have_content(I18n.t('page_title.staff.communal_areas.create'))
     within('form.new_communal_area') do
       # Deliberately forget to fill out the required name field
-      click_on(I18n.t('generic.button.create', resource: 'Communal Area'))
+      click_on(I18n.t('button.create.communal_area'))
     end
 
     within('.communal_area_name') do

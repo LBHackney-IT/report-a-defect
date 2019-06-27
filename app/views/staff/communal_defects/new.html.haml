@@ -41,4 +41,4 @@
                   required: true,
                   selected: @defect.priority,
                   label_method: ->(obj){ priority_form_label(priority: obj) }
-      = f.button :submit, I18n.t('generic.button.create', resource: 'communal defect')
+      = f.button :submit, I18n.t('button.create.communal_defect')
