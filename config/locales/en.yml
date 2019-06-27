@@ -79,9 +79,13 @@ en:
           'The %{resource} has successfully been updated.'
   form:
     communal_area:
-      explanation: 'A communal area can be used to report defects that are not within an individual property.'
+      explanation: 'A communal area can be used to report and manage defects that are in a shared location rather than within an individual property.'
+      name:
+        hint: 'A short identifier for the space that the New Build Team will use'
+        placeholder: 'Block DZ1 or Core 2'
       location:
         hint: 'A single or group of addresses that will help the contractor arrive at the right location'
+        placeholder: '22-50 Hackney Street'
     defect:
       title:
         description: 'This will be how this defect is described to residents in status notifications'

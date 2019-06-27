@@ -8,9 +8,14 @@
       = I18n.t('page_title.staff.communal_areas.edit', name: @scheme.name)
       %span.govuk-caption-l= 'Step 1 of 1'
 
+    %p.gov-uk-body= I18n.t('form.communal_area.explanation')
+
     = simple_form_for [@scheme.estate, @scheme, @communal_area] do |f|
       .govuk-form-group
-        = f.input :name
+        = f.input :name,
+                  hint: I18n.t('form.communal_area.name.hint'),
+                  placeholder: I18n.t('form.communal_area.name.placeholder')
         = f.input :location,
-                  hint: I18n.t('form.communal_area.location.hint')
+                  hint: I18n.t('form.communal_area.location.hint'),
+                  placeholder: I18n.t('form.communal_area.location.placeholder')
       = f.button :submit, I18n.t('generic.button.update', resource: 'Communal Area')

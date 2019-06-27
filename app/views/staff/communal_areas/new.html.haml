@@ -12,8 +12,10 @@
 
     = simple_form_for [@scheme.estate, @scheme, @communal_area] do |f|
       .govuk-form-group
-        = f.input :name
+        = f.input :name,
+                  hint: I18n.t('form.communal_area.name.hint'),
+                  placeholder: I18n.t('form.communal_area.name.placeholder')
         = f.input :location,
                   hint: I18n.t('form.communal_area.location.hint'),
-                  placeholder: '22-50 Hackney Street'
+                  placeholder: I18n.t('form.communal_area.location.placeholder')
       = f.button :submit, I18n.t('generic.button.create', resource: 'Communal Area')
