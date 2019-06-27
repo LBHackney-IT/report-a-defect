@@ -24,6 +24,7 @@ RSpec.feature 'Anyone can create a defect for a communal_area' do
 
     within('.communal_area_information') do
       expect(page).to have_content(communal_area.name)
+      expect(page).to have_content(communal_area.location)
     end
 
     within('form.new_defect') do

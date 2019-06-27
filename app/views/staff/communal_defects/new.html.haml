@@ -6,7 +6,6 @@
       = I18n.t('page_title.staff.defects.create.communal_area')
       %span.govuk-caption-l= 'Step 1 of 1'
 
-
     = render partial: '/shared/communal_areas/information', locals: { communal_area: @communal_area }
 
     = simple_form_for @defect, html: { class: 'new_defect' }, action: :post, url: communal_area_defects_path(@communal_area) do |f|
