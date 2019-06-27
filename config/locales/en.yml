@@ -104,6 +104,7 @@ en:
             created_at: 'Date of submission'
             reporting_officer: 'Reporting officer'
             address: 'Address'
+            access_information: 'Access information'
             defect_type: 'Type'
             contact_name: 'Name of contact'
             contact_phone_number: 'Contact phone number'
