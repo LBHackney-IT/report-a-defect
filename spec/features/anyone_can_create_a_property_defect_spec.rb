@@ -94,7 +94,7 @@ RSpec.feature 'Anyone can create a defect for a property' do
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.create.property'))
 
-    expected_statues = %w[outstanding completed closed raised_in_error follow_on end_of_year_defect referral rejected dispute]
+    expected_statues = %w[outstanding completed closed raised_in_error follow_on end_of_year referral rejected dispute]
 
     within('form.new_defect') do
       expected_statues.each do |status|

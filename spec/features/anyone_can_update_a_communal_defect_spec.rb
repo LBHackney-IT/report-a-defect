@@ -51,7 +51,7 @@ RSpec.feature 'Anyone can update a communal_area defect' do
 
     visit edit_communal_area_defect_path(defect.communal_area, defect)
 
-    expected_statues = %w[outstanding completed closed raised_in_error follow_on end_of_year_defect referral rejected dispute]
+    expected_statues = %w[outstanding completed closed raised_in_error follow_on end_of_year referral rejected dispute]
 
     within('form.edit_defect') do
       expected_statues.each do |status|
