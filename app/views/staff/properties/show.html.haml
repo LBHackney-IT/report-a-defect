@@ -15,10 +15,10 @@
     %h2.govuk-heading-m.section-heading
       Property details
 
-  .govuk-grid-column-one-third
+  .govuk-grid-column-one-half
     = render partial: '/shared/properties/information', locals: { property: @property }
 
-  .govuk-grid-column-one-third
+  .govuk-grid-column-one-half
     = render partial: '/shared/schemes/short-information', locals: { scheme: @property.scheme }
 
 .govuk-grid-row
