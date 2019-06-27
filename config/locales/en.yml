@@ -86,7 +86,7 @@ en:
       title:
         description: 'This will be how this defect is described to residents in status notifications'
       access_information:
-        description: 'Help the contractor find and access this communal area'
+        description: 'Help the contractor gain access to this communal area'
     priority:
       code:
         label: 'Priority code'
