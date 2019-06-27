@@ -14,6 +14,11 @@ RSpec.feature 'Anyone can update a communal_area defect' do
 
     click_on(I18n.t('generic.link.edit'))
 
+    within('.communal_area_information') do
+      expect(page).to have_content(communal_area.name)
+      expect(page).to have_content(communal_area.location)
+    end
+
     within('form.edit_defect') do
       fill_in 'defect[title]', with: 'New title'
       fill_in 'defect[description]', with: 'New description'

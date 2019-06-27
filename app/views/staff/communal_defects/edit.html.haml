@@ -8,6 +8,8 @@
       = I18n.t('page_title.staff.defects.edit', reference_number: @defect.reference_number)
       %span.govuk-caption-l= 'Step 1 of 1'
 
+    = render partial: '/shared/communal_areas/information', locals: { communal_area: @defect.communal_area }
+
     = simple_form_for [@defect.communal_area, @defect] do |f|
       .govuk-form-group
         = f.input :title,
