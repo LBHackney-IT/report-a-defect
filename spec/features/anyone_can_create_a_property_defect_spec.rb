@@ -85,6 +85,25 @@ RSpec.feature 'Anyone can create a defect for a property' do
     end
   end
 
+  scenario 'any status can be given' do
+    property = create(:property)
+
+    visit property_path(property)
+
+    click_on(I18n.t('button.create.property_defect'))
+
+    expect(page).to have_content(I18n.t('page_title.staff.defects.create.property'))
+
+    expected_statues = %w[outstanding completed closed follow_on end_of_year_defect referral rejected dispute]
+
+    within('form.new_defect') do
+      expected_statues.each do |status|
+        select status.capitalize.tr('_', ' '), from: 'defect[status]'
+      end
+      click_on(I18n.t('button.create.property_defect'))
+    end
+  end
+
   scenario 'a communal defect can be created after finishing the creation of a property defect' do
     property_defect = create(:property_defect)
 

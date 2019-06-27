@@ -99,4 +99,23 @@ RSpec.feature 'Anyone can create a defect for a communal_area' do
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: communal_defect.scheme.name))
   end
+
+  scenario 'any status can be given' do
+    communal_area = create(:communal_area)
+
+    visit communal_area_path(communal_area)
+
+    click_on(I18n.t('button.create.communal_defect'))
+
+    expect(page).to have_content(I18n.t('page_title.staff.defects.create.communal_area'))
+
+    expected_statues = %w[outstanding completed closed follow_on end_of_year_defect referral rejected dispute]
+
+    within('form.new_defect') do
+      expected_statues.each do |status|
+        select status.capitalize.tr('_', ' '), from: 'defect[status]'
+      end
+      click_on(I18n.t('button.create.communal_defect'))
+    end
+  end
 end

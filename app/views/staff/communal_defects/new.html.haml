@@ -31,6 +31,14 @@
                   input_html: { class: 'trades' },
                   collection: Defect::TRADES,
                   required: true
+        = f.input :status,
+                  wrapper: 'select',
+                  input_html: { class: 'status' },
+                  collection: Defect.statuses,
+                  selected: @defect.status,
+                  required: true,
+                  label_method: ->(obj){ status_form_label(option_array: obj) },
+                  value_method: :first
         = f.input :priority,
                   as: :radio_buttons,
                   wrapper: :radio_buttons,
