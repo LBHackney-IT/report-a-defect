@@ -9,7 +9,7 @@
 .govuk-grid-row
   .govuk-grid-column-one-half
     %h2.govuk-heading-m= @defect.title
-    = link_to(I18n.t('generic.button.edit', resource: 'Defect'), edit_communal_area_defect_path(@defect.communal_area, @defect), class: 'govuk-button govuk-button--secondary mb0')
+    = link_to(I18n.t('button.edit.defect'), edit_communal_area_defect_path(@defect.communal_area, @defect), class: 'govuk-button govuk-button--secondary mb0')
 
 .govuk-grid-row
   .govuk-grid-column-one-half.summary

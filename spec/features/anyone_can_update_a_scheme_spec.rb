@@ -13,7 +13,7 @@ RSpec.feature 'Anyone can update a scheme' do
       expect(page).to have_content(scheme.contractor_email_address)
     end
 
-    click_on(I18n.t('generic.button.edit', resource: 'Scheme'))
+    click_on(I18n.t('button.edit.scheme'))
 
     within('form.edit_scheme') do
       fill_in 'scheme[name]', with: '1'
@@ -30,7 +30,7 @@ RSpec.feature 'Anyone can update a scheme' do
 
     visit estate_scheme_path(scheme.estate, scheme)
 
-    click_on(I18n.t('generic.button.edit', resource: 'Scheme'))
+    click_on(I18n.t('button.edit.scheme'))
 
     within('form.edit_scheme') do
       fill_in 'scheme[name]', with: ''
