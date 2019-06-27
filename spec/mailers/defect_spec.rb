@@ -22,7 +22,7 @@ RSpec.describe DefectMailer, type: :mailer do
       expect(body_lines[3].strip).to match("#{I18n.t('email.defect.forward.headings.title.created_at')}: #{presenter.created_time}")
       expect(body_lines[4].strip).to match("#{I18n.t('email.defect.forward.headings.title.reporting_officer')}: #{presenter.reporting_officer}")
       expect(body_lines[6].strip).to match("#{I18n.t('email.defect.forward.headings.title.address')}: #{presenter.address}")
-      expect(body_lines[7].strip).to match("#{I18n.t('email.defect.forward.headings.title.location')}: #{presenter.location}")
+      expect(body_lines[7].strip).to match("#{I18n.t('email.defect.forward.headings.title.defect_type')}: #{presenter.defect_type}")
       expect(body_lines[9].strip).to match("#{I18n.t('email.defect.forward.headings.title.contact_name')}: #{presenter.contact_name}")
       expect(body_lines[10].strip).to match("#{I18n.t('email.defect.forward.headings.title.contact_phone_number')}: #{presenter.contact_phone_number}")
       expect(body_lines[11].strip).to match("#{I18n.t('email.defect.forward.headings.title.contractor_email_address')}: #{presenter.contact_email_address}")

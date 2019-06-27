@@ -50,14 +50,14 @@ RSpec.describe DefectMailPresenter do
       it 'returns the defects access information' do
         communal_defect = create(:communal_defect)
         result = described_class.new(communal_defect).address
-        expect(result).to eq(communal_defect.access_information)
+        expect(result).to eq(communal_defect.communal_area.location)
       end
     end
   end
 
-  describe '#location' do
+  describe '#defect_type' do
     it 'returns the location' do
-      result = described_class.new(property_defect).location
+      result = described_class.new(property_defect).defect_type
       expect(result).to eq('Property')
     end
   end
