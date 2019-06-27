@@ -28,6 +28,7 @@
 
   .govuk-grid-column-full
     = link_to(I18n.t('button.create.property_defect'), new_property_defect_path(@property), class: 'govuk-button mb0')
+    = link_to(I18n.t('button.create.communal_defect'), estate_scheme_path(@property.scheme.estate, @property.scheme, anchor: 'communal-areas'), class: 'govuk-button govuk-button--secondary mb0')
 
   .govuk-grid-column-full
     = render partial: '/shared/defects/table', locals: { scheme: @property.scheme, defects: @property.defects, parent: @property }

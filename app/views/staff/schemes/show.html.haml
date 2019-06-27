@@ -45,7 +45,7 @@
 
 .govuk-grid-row
   .govuk-grid-column-full
-    %h2.govuk-heading-m.section-heading
+    %h2.govuk-heading-m.section-heading#properties
       Properties
     = link_to(I18n.t('button.create.property'), new_estate_scheme_property_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
     = render partial: '/shared/properties/table', locals: { properties: @scheme.properties }

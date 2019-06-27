@@ -84,4 +84,19 @@ RSpec.feature 'Anyone can create a defect for a property' do
       expect(page).to have_content("can't be blank")
     end
   end
+
+  scenario 'a communal defect can be created after finishing the creation of a property defect' do
+    property_defect = create(:property_defect)
+
+    # Skip a manual defect creation when it's not the part under test
+    visit property_path(property_defect.property)
+
+    expect(page).to have_link(
+      I18n.t('button.create.communal_defect'),
+      href: estate_scheme_path(property_defect.scheme.estate, property_defect.scheme, anchor: 'communal-areas')
+    )
+    click_on(I18n.t('button.create.communal_defect'))
+
+    expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: property_defect.scheme.name))
+  end
 end
