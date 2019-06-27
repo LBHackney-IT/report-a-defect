@@ -10,10 +10,10 @@ class DefectMailPresenter < SimpleDelegator
   end
 
   def address
-    property.present? ? property.address : access_information
+    communal? ? communal_area.location : property.address
   end
 
-  def location
+  def defect_type
     property.present? ? 'Property' : 'Communal'
   end
 

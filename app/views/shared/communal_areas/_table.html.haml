@@ -1,0 +1,17 @@
+%table.govuk-table.communal_areas
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        Name
+      %th.govuk-table__header
+        Location
+      %th.govuk-table__header
+        Actions
+      %th.govuk-table__header
+  %tbody.govuk-table__body
+    - communal_areas.each do |communal_area|
+      %tr.govuk-table__row
+        %td.govuk-table__cell= communal_area.name
+        %td.govuk-table__cell{ class: 'govuk-!-width-one-third' }= communal_area.location
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), communal_area_path(communal_area), class: 'govuk-link')
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.edit'), edit_estate_scheme_communal_area_path(communal_area.scheme.estate, communal_area.scheme, communal_area), class: 'govuk-link')

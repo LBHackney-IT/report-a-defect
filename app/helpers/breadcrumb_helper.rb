@@ -13,7 +13,7 @@ module BreadcrumbHelper
     content_tag(:li,
                 title,
                 class: 'govuk-breadcrumbs__list-item', 'aria-current' => 'page') do
-      title.nil? && block_given? ? content_tag(:span, &blk) : content_tag(:span, title)
+      title.nil? && communal_area_given? ? content_tag(:span, &blk) : content_tag(:span, title)
     end
   end
 end

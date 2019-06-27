@@ -19,7 +19,7 @@ en:
           headers:
             main: 'Search results for "%{query}"'
             properties: 'Properties %{count}'
-            blocks: 'Blocks %{count}'
+            communal_areas: 'Blocks %{count}'
       estates:
         show: '%{name} estate'
         create: 'Create estate'
@@ -27,10 +27,10 @@ en:
         show: '%{name} scheme'
         create: 'Create scheme'
         edit: 'Update scheme'
-      blocks:
-        show: '%{name} block'
-        create: 'Create block'
-        edit: 'Update block'
+      communal_areas:
+        show: '%{name} Communal Area'
+        create: 'Create Communal Area'
+        edit: 'Update Communal Area'
       priorities:
         create: 'Create priority'
       properties:
@@ -38,7 +38,9 @@ en:
         edit: 'Update property'
         show: '%{name}'
       defects:
-        create: 'Create Defect'
+        create:
+          property: 'Create property defect'
+          communal_area: 'Create communal defect'
         show: 'Defect %{reference_number}'
         edit: 'Update defect'
       comments:
@@ -51,6 +53,12 @@ en:
     defect:
       show:
         not_accepted_yet: 'Waiting on the contractor to accept'
+    property:
+      table:
+        header: 'Property defects'
+    communal_area:
+      table:
+        header: 'Communal defects'
   error_pages:
     unprocessable_entity: 'Cannot process this request'
   generic:
@@ -70,11 +78,19 @@ en:
         success:
           'The %{resource} has successfully been updated.'
   form:
+    communal_area:
+      explanation: 'A communal area can be used to report and manage defects that are in a shared location rather than within an individual property.'
+      name:
+        hint: 'A short identifier for the space that the New Build Team will use'
+        placeholder: 'Block DZ1 or Core 2'
+      location:
+        hint: 'A single or group of addresses that will help the contractor arrive at the right location'
+        placeholder: '22-50 Hackney Street'
     defect:
       title:
         description: 'This will be how this defect is described to residents in status notifications'
       access_information:
-        description: 'Help the contractor find and access this block'
+        description: 'Help the contractor gain access to this communal area'
     priority:
       code:
         label: 'Priority code'
@@ -92,7 +108,8 @@ en:
             created_at: 'Date of submission'
             reporting_officer: 'Reporting officer'
             address: 'Address'
-            location: 'Location'
+            access_information: 'Access information'
+            defect_type: 'Type'
             contact_name: 'Name of contact'
             contact_phone_number: 'Contact phone number'
             contractor_email_address: 'Contact email address'

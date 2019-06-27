@@ -55,12 +55,12 @@ RSpec.feature 'Anyone can view a defect' do
     expect(page).to have_link("Back to #{defect.property.address}", href: property_path(defect.property))
   end
 
-  scenario 'can use breadcrumbs to navigate back to a block' do
+  scenario 'can use breadcrumbs to navigate back to a communal_area' do
     defect = create(:communal_defect)
 
-    visit block_defect_path(defect.block, defect)
+    visit communal_area_defect_path(defect.communal_area, defect)
 
-    expect(page).to have_link("Back to #{defect.block.name}", href: block_path(defect.block))
+    expect(page).to have_link("Back to #{defect.communal_area.name}", href: communal_area_path(defect.communal_area))
   end
 
   scenario 'can see comments' do

@@ -39,7 +39,7 @@ RSpec.describe DefectHelper, type: :helper do
 
   describe '#view_path_for' do
     let(:property) { create(:property) }
-    let(:block) { create(:block) }
+    let(:communal_area) { create(:communal_area) }
     let(:defect) { create(:defect) }
 
     it 'returns a view path when the parent is a property' do
@@ -47,9 +47,9 @@ RSpec.describe DefectHelper, type: :helper do
       expect(result).to eq(property_defect_path(property, defect))
     end
 
-    it 'returns a view path when the parent is a block' do
-      result = helper.view_path_for(parent: block, defect: defect)
-      expect(result).to eq(block_defect_path(block, defect))
+    it 'returns a view path when the parent is a communal_area' do
+      result = helper.view_path_for(parent: communal_area, defect: defect)
+      expect(result).to eq(communal_area_defect_path(communal_area, defect))
     end
 
     it 'returns nothing if the parent isn\'t expected' do
@@ -64,9 +64,9 @@ RSpec.describe DefectHelper, type: :helper do
       expect(result).to eql('Property')
     end
 
-    it 'returns the string Block' do
+    it 'returns the string Communal Area' do
       result = helper.defect_type_for(defect: build(:communal_defect))
-      expect(result).to eql('Block')
+      expect(result).to eql('Communal Area')
     end
   end
 

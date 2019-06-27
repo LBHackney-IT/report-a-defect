@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can view a block' do
-  scenario 'a block can be found and viewed' do
-    block = create(:block, name: 'Chipping')
+RSpec.feature 'Anyone can view a communal_area' do
+  scenario 'a communal_area can be found and viewed' do
+    communal_area = create(:communal_area, name: 'Chipping')
 
     visit root_path
 
@@ -15,27 +15,27 @@ RSpec.feature 'Anyone can view a block' do
 
     click_on(I18n.t('generic.link.show'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.blocks.show', name: block.name))
+    expect(page).to have_content(I18n.t('page_title.staff.communal_areas.show', name: communal_area.name))
 
-    within('.block_information') do
-      expect(page).to have_content(block.name)
+    within('.communal_area_information') do
+      expect(page).to have_content(communal_area.name)
     end
   end
 
   scenario 'can use breadcrumbs to navigate' do
-    block = create(:block)
+    communal_area = create(:communal_area)
 
-    visit block_path(block)
+    visit communal_area_path(communal_area)
 
     within('.govuk-breadcrumbs') do
       expect(page).to have_link('Home', href: '/')
       expect(page).to have_link(
-        I18n.t('page_title.staff.estates.show', name: block.scheme.estate.name),
-        href: estate_path(block.scheme.estate)
+        I18n.t('page_title.staff.estates.show', name: communal_area.scheme.estate.name),
+        href: estate_path(communal_area.scheme.estate)
       )
       expect(page).to have_link(
-        I18n.t('page_title.staff.schemes.show', name: block.scheme.name),
-        href: estate_scheme_path(block.scheme.estate, block.scheme)
+        I18n.t('page_title.staff.schemes.show', name: communal_area.scheme.name),
+        href: estate_scheme_path(communal_area.scheme.estate, communal_area.scheme)
       )
     end
   end

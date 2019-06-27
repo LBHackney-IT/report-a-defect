@@ -29,12 +29,12 @@ class Defect < ApplicationRecord
   ]
 
   belongs_to :property, optional: true
-  belongs_to :block, optional: true
+  belongs_to :communal_area, optional: true
   belongs_to :priority
   has_many :comments, dependent: :destroy
 
   def scheme
-    return block&.scheme if block
+    return communal_area&.scheme if communal_area
     return property&.scheme if property
   end
 

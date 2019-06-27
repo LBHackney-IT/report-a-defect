@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_24_093428) do
+ActiveRecord::Schema.define(version: 2019_06_26_160126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -35,14 +35,6 @@ ActiveRecord::Schema.define(version: 2019_06_24_093428) do
     t.index ["trackable_type", "trackable_id"], name: "index_activities_on_trackable_type_and_trackable_id"
   end
 
-  create_table "blocks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
-    t.uuid "scheme_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["scheme_id"], name: "index_blocks_on_scheme_id"
-  end
-
   create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "message"
     t.uuid "user_id"
@@ -51,6 +43,15 @@ ActiveRecord::Schema.define(version: 2019_06_24_093428) do
     t.datetime "updated_at", null: false
     t.index ["defect_id"], name: "index_comments_on_defect_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "communal_areas", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "scheme_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "location"
+    t.index ["scheme_id"], name: "index_communal_areas_on_scheme_id"
   end
 
   create_table "defects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -67,10 +68,10 @@ ActiveRecord::Schema.define(version: 2019_06_24_093428) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "title"
-    t.uuid "block_id"
     t.string "access_information"
     t.boolean "communal", default: false
-    t.index ["block_id"], name: "index_defects_on_block_id"
+    t.uuid "communal_area_id"
+    t.index ["communal_area_id"], name: "index_defects_on_communal_area_id"
     t.index ["priority_id"], name: "index_defects_on_priority_id"
     t.index ["property_id"], name: "index_defects_on_property_id"
   end
@@ -120,9 +121,9 @@ ActiveRecord::Schema.define(version: 2019_06_24_093428) do
     t.string "name"
   end
 
-  add_foreign_key "blocks", "schemes"
   add_foreign_key "comments", "defects"
   add_foreign_key "comments", "users"
+  add_foreign_key "communal_areas", "schemes"
   add_foreign_key "defects", "priorities"
   add_foreign_key "defects", "properties"
   add_foreign_key "priorities", "schemes"

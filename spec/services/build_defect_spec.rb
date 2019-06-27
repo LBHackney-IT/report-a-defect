@@ -2,12 +2,12 @@ require 'rails_helper'
 
 RSpec.describe BuildDefect do
   let(:property) { create(:property) }
-  let(:block) { create(:block) }
+  let(:communal_area) { create(:communal_area) }
   let(:priority) { create(:priority) }
   let(:defect_params) do
     build(:property_defect,
           property: property,
-          block: block,
+          communal_area: communal_area,
           priority: priority).attributes
   end
 
@@ -38,9 +38,9 @@ RSpec.describe BuildDefect do
       expect(result.priority).to eq(priority)
     end
 
-    it 'creates an association to the block' do
+    it 'creates an association to the communal_area' do
       result = service.call
-      expect(result.block).to eq(block)
+      expect(result.communal_area).to eq(communal_area)
     end
   end
 end

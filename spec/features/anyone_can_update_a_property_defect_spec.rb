@@ -14,6 +14,12 @@ RSpec.feature 'Anyone can update a defect' do
 
     click_on(I18n.t('generic.link.edit'))
 
+    within('.property_information') do
+      expect(page).to have_content(property.uprn)
+      expect(page).to have_content(property.address)
+      expect(page).to have_content(property.postcode)
+    end
+
     within('form.edit_defect') do
       fill_in 'defect[title]', with: 'New title'
       fill_in 'defect[description]', with: 'New description'

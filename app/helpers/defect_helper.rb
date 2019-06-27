@@ -9,19 +9,19 @@ module DefectHelper
 
   def view_path_for(parent:, defect:)
     return property_defect_path(parent, defect) if parent.is_a?(Property)
-    return block_defect_path(parent, defect) if parent.is_a?(Block)
+    return communal_area_defect_path(parent, defect) if parent.is_a?(CommunalArea)
   end
 
   def defect_path_for(defect:)
     if defect.communal?
-      block_defect_path(defect.block, defect.id)
+      communal_area_defect_path(defect.communal_area, defect.id)
     else
       property_defect_path(defect.property, defect.id)
     end
   end
 
   def defect_type_for(defect:)
-    defect.communal? ? 'Block' : 'Property'
+    defect.communal? ? 'Communal Area' : 'Property'
   end
 
   def event_description_for(event:)

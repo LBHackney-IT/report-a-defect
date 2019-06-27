@@ -24,10 +24,10 @@
 .govuk-grid-row
   .govuk-grid-column-full
     %h1.govuk-heading-m.section-heading
-      Defects
+      = I18n.t('page_content.property.table.header')
 
   .govuk-grid-column-full
-    = link_to(I18n.t('generic.button.create', resource: 'Defect'), new_property_defect_path(@property), class: 'govuk-button mb0')
+    = link_to(I18n.t('generic.button.create', resource: 'property defect'), new_property_defect_path(@property), class: 'govuk-button mb0')
 
   .govuk-grid-column-full
     = render partial: '/shared/defects/table', locals: { scheme: @property.scheme, defects: @property.defects, parent: @property }

@@ -7,11 +7,11 @@
     %h3.govuk-heading-m
       Find a defect
     %p.govuk-body-s
-      Search for an individual property or block to create or update defects.
+      Search for an individual property or communal_area to create or update defects.
     = form_tag search_path, method: :get, class: 'search' do |f|
       .govuk-form-group
-        = label_tag 'query', 'Address or block name', class: 'govuk-label'
-        = search_field_tag :query, @search.query, class: 'govuk-input form-control form-control-block govuk-!-width-three-quarters', placeholder: '1 Hackney Street or Clift House'
+        = label_tag 'query', 'Address or communal_area name', class: 'govuk-label'
+        = search_field_tag :query, @search.query, class: 'govuk-input form-control form-control-communal_area govuk-!-width-three-quarters', placeholder: '1 Hackney Street or Clift House'
       = submit_tag I18n.t('generic.button.find'), class: 'govuk-button mb0'
 
       %hr.govuk-section-break.govuk-section-break--l.govuk-section-break--visible

@@ -1,11 +1,10 @@
-- content_for :page_title_prefix, I18n.t('page_title.staff.defects.create')
+- content_for :page_title_prefix, I18n.t('page_title.staff.defects.create.property')
 
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl
-      = I18n.t('page_title.staff.defects.create')
+      = I18n.t('page_title.staff.defects.create.property')
       %span.govuk-caption-l= 'Step 1 of 1'
-
 
     = render partial: '/shared/properties/information', locals: { property: @property }
 
@@ -37,4 +36,4 @@
                   required: true,
                   selected: @defect.priority,
                   label_method: ->(obj){ priority_form_label(priority: obj) }
-      = f.button :submit, I18n.t('generic.button.create', resource: 'Defect')
+      = f.button :submit, I18n.t('generic.button.create', resource: 'property defect')

@@ -23,15 +23,15 @@ RSpec.describe Search do
     end
   end
 
-  describe '#blocks' do
-    it 'returns only blocks with a matching street name' do
-      interested_block = create(:block, name: 'Clift House')
-      uninterested_block = create(:block, name: 'Darling House')
+  describe '#communal_areas' do
+    it 'returns only communal_areas with a matching street name' do
+      interested_communal_area = create(:communal_area, name: 'Clift House')
+      uninterested_communal_area = create(:communal_area, name: 'Darling House')
 
-      result = described_class.new(query: 'Clift').blocks
+      result = described_class.new(query: 'Clift').communal_areas
 
-      expect(result).to include(interested_block)
-      expect(result).not_to include(uninterested_block)
+      expect(result).to include(interested_communal_area)
+      expect(result).not_to include(uninterested_communal_area)
     end
   end
 end

@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can create a defect for a block' do
-  scenario 'a block can be found and defect can be created' do
-    block = create(:block, name: 'Chipping')
-    priority = create(:priority, scheme: block.scheme, name: 'P1', days: 1)
+RSpec.feature 'Anyone can create a defect for a communal_area' do
+  scenario 'a communal_area can be found and defect can be created' do
+    communal_area = create(:communal_area, name: 'Chipping')
+    priority = create(:priority, scheme: communal_area.scheme, name: 'P1', days: 1)
 
     visit root_path
 
@@ -16,14 +16,15 @@ RSpec.feature 'Anyone can create a defect for a block' do
 
     click_on(I18n.t('generic.link.show'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.blocks.show', name: block.name))
+    expect(page).to have_content(I18n.t('page_title.staff.communal_areas.show', name: communal_area.name))
 
-    click_on(I18n.t('generic.button.create', resource: 'Defect'))
+    click_on(I18n.t('generic.button.create', resource: 'communal defect'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.defects.create'))
+    expect(page).to have_content(I18n.t('page_title.staff.defects.create.communal_area'))
 
-    within('.block_information') do
-      expect(page).to have_content(block.name)
+    within('.communal_area_information') do
+      expect(page).to have_content(communal_area.name)
+      expect(page).to have_content(communal_area.location)
     end
 
     within('form.new_defect') do
@@ -35,12 +36,12 @@ RSpec.feature 'Anyone can create a defect for a block' do
       fill_in 'defect[contact_phone_number]', with: '07123456789'
       select 'Electrical', from: 'defect[trade]'
       choose priority.name
-      click_on(I18n.t('generic.button.create', resource: 'Defect'))
+      click_on(I18n.t('generic.button.create', resource: 'communal defect'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.create.success', resource: 'defect'))
     within('table.defects') do
-      defect = block.reload.defects.first
+      defect = communal_area.reload.defects.first
 
       expect(page).to have_content('Electrics failed')
       expect(page).to have_content('Electrical')
@@ -53,22 +54,22 @@ RSpec.feature 'Anyone can create a defect for a block' do
     click_on(I18n.t('generic.link.show'))
 
     within('.communal-location') do
-      expect(page).to have_content('Block')
+      expect(page).to have_content('Communal Area')
       expect(page).to have_content('33-50 Hackney Street, communal entrance')
     end
   end
 
   scenario 'an invalid defect cannot be submitted' do
-    block = create(:block)
+    communal_area = create(:communal_area)
 
-    visit block_path(block)
+    visit communal_area_path(communal_area)
 
-    click_on(I18n.t('generic.button.create', resource: 'Defect'))
+    click_on(I18n.t('generic.button.create', resource: 'communal defect'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.defects.create'))
+    expect(page).to have_content(I18n.t('page_title.staff.defects.create.communal_area'))
     within('form.new_defect') do
       # Deliberately forget to fill out the required name field
-      click_on(I18n.t('generic.button.create', resource: 'Defect'))
+      click_on(I18n.t('generic.button.create', resource: 'communal defect'))
     end
 
     within('.defect_description') do

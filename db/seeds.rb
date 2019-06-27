@@ -3,7 +3,7 @@ raise if Rails.env.production?
 Comment.delete_all
 Defect.delete_all
 Property.delete_all
-Block.delete_all
+CommunalArea.delete_all
 Priority.delete_all
 Scheme.delete_all
 Estate.delete_all
@@ -38,7 +38,8 @@ property4 = FactoryBot.create(
 )
 
 # Blocks
-block = FactoryBot.create(:block, name: 'Chipping', scheme: scheme1)
+communal_area = FactoryBot.create(:communal_area, name: 'Chipping Court', scheme: scheme1)
+FactoryBot.create(:communal_area, scheme: scheme1)
 
 # Property defects
 [property1, property2, property3, property4].each do |property|
@@ -56,6 +57,6 @@ FactoryBot.create_list(
   :communal_defect,
   10,
   :with_comments,
-  block: block,
+  communal_area: communal_area,
   priority: [priority1, priority2, priority3, priority4].sample
 )
