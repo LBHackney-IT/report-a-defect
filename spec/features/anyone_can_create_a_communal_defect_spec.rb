@@ -109,7 +109,7 @@ RSpec.feature 'Anyone can create a defect for a communal_area' do
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.create.communal_area'))
 
-    expected_statues = %w[outstanding completed closed follow_on end_of_year_defect referral rejected dispute]
+    expected_statues = %w[outstanding completed closed raised_in_error follow_on end_of_year_defect referral rejected dispute]
 
     within('form.new_defect') do
       expected_statues.each do |status|

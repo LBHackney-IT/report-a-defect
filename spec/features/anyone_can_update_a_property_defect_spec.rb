@@ -66,7 +66,7 @@ RSpec.feature 'Anyone can update a defect' do
 
     visit edit_property_defect_path(defect.property, defect)
 
-    expected_statues = %w[outstanding completed closed follow_on end_of_year_defect referral rejected dispute]
+    expected_statues = %w[outstanding completed closed raised_in_error follow_on end_of_year_defect referral rejected dispute]
 
     within('form.edit_defect') do
       expected_statues.each do |status|
