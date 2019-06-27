@@ -21,8 +21,9 @@ class Defect < ApplicationRecord
     outstanding
     completed
     closed
+    raised_in_error
     follow_on
-    end_of_year_defect
+    end_of_year
     dispute
     referral
     rejected
