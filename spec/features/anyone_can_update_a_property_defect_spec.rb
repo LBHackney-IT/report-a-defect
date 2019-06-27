@@ -61,6 +61,24 @@ RSpec.feature 'Anyone can update a defect' do
     expect(page).to have_content('Completed')
   end
 
+  scenario 'any defect status can be chosen' do
+    defect = create(:property_defect, property: property)
+
+    visit edit_property_defect_path(defect.property, defect)
+
+    expected_statues = %w[outstanding completed closed follow_on end_of_year_defect referral rejected dispute]
+
+    within('form.edit_defect') do
+      expected_statues.each do |status|
+        select status.capitalize.tr('_', ' '), from: 'defect[status]'
+      end
+      click_on(I18n.t('button.update.defect'))
+    end
+
+    expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
+    expect(page).to have_content(expected_statues.last.capitalize)
+  end
+
   scenario 'an invalid defect cannot be updated' do
     defect = create(:property_defect, property: property)
 

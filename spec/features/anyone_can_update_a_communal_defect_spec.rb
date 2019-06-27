@@ -46,18 +46,22 @@ RSpec.feature 'Anyone can update a communal_area defect' do
     expect(page).to have_content((Time.zone.now + new_priority.days.days).to_date)
   end
 
-  scenario 'a defect status can be updated' do
+  scenario 'any defect status can be chosen' do
     defect = create(:communal_defect, communal_area: communal_area)
 
     visit edit_communal_area_defect_path(defect.communal_area, defect)
 
+    expected_statues = %w[outstanding completed closed follow_on end_of_year_defect referral rejected dispute]
+
     within('form.edit_defect') do
-      select 'Completed', from: 'defect[status]'
+      expected_statues.each do |status|
+        select status.capitalize.tr('_', ' '), from: 'defect[status]'
+      end
       click_on(I18n.t('button.update.defect'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
-    expect(page).to have_content('Completed')
+    expect(page).to have_content(expected_statues.last.capitalize)
   end
 
   scenario 'an invalid defect cannot be updated' do
