@@ -2,7 +2,6 @@ require 'csv'
 
 # rubocop:disable Metrics/ClassLength
 class Defect < ApplicationRecord
-  include DatetimeHelper
   before_validation :set_completion_date
   validates :title,
             :description,
@@ -106,7 +105,7 @@ class Defect < ApplicationRecord
     acceptance_event = activities.find_by(key: 'defect.accepted')
     return I18n.t('page_content.defect.show.not_accepted_yet') unless acceptance_event
 
-    format_time(acceptance_event.created_at)
+    acceptance_event.created_at.to_s
   end
 
   def self.to_csv
@@ -143,7 +142,7 @@ class Defect < ApplicationRecord
   def to_row
     [
       reference_number,
-      format_time(created_at),
+      created_at.to_s,
       title,
       communal? ? 'Communal' : 'Property',
       status,

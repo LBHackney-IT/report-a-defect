@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can download defect data' do
-  include DatetimeHelper
-
   scenario 'download all defects' do
     property_defect = create(:property_defect)
     communal_defect = create(:communal_defect)
@@ -38,7 +36,7 @@ RSpec.feature 'Anyone can download defect data' do
 
     # Property defect
     expect(page).to have_content(property_defect.reference_number)
-    expect(page).to have_content(format_time(property_defect.created_at))
+    expect(page).to have_content(property_defect.created_at.to_s)
     expect(page).to have_content(property_defect.title)
     expect(page).to have_content('Property')
     expect(page).to have_content(property_defect.status)
@@ -52,7 +50,7 @@ RSpec.feature 'Anyone can download defect data' do
 
     # Communal defect
     expect(page).to have_content(communal_defect.reference_number)
-    expect(page).to have_content(format_time(property_defect.created_at))
+    expect(page).to have_content(property_defect.created_at.to_s)
     expect(page).to have_content(communal_defect.title)
     expect(page).to have_content('Communal')
     expect(page).to have_content(communal_defect.status)

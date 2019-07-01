@@ -72,7 +72,7 @@ RSpec.feature 'Anyone can view a defect' do
     visit property_defect_path(defect.property, defect)
 
     within('.comments') do
-      expect(page).to have_content("Comment left by #{comment.user.name} posted at 00:00am on 23 May 2019")
+      expect(page).to have_content("Comment left by #{comment.user.name} posted on 23 May 2019 at 00:00")
       expect(page).to have_content(comment.message)
     end
 
@@ -87,7 +87,7 @@ RSpec.feature 'Anyone can view a defect' do
     visit property_defect_path(defect.property, defect)
 
     within('.events') do
-      expect(page).to have_content('defect.create at 00:00am on 23 May 2019')
+      expect(page).to have_content('defect.create on 23 May 2019 at 00:00')
     end
 
     travel_back
