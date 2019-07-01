@@ -46,6 +46,14 @@ en:
       comments:
         create: 'Create Comment'
   page_content:
+    dashboard:
+      header:
+        find_defect: 'Find a defect'
+        reporting: 'Reporting'
+        manage: 'Manage estates'
+      description:
+        find_defect: 'Search for an individual property or communal area to create or update defects.'
+        defect_overview: 'View and manage all defects across all schemes.'
     scheme:
       show:
         priorities:
