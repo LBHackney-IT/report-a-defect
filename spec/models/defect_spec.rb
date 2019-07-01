@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Defect, type: :model do
+  include DatetimeHelper
+
   it { should belong_to(:property) }
   it { should have_many(:comments) }
 
@@ -127,7 +129,7 @@ RSpec.describe Defect, type: :model do
       it 'returns the time of acceptance' do
         defect = create(:property_defect)
         PublicActivity::Activity.create(trackable: defect, key: 'defect.accepted')
-        expect(defect.accepted_on).to eq('00:00am, 23 May 2019')
+        expect(defect.accepted_on).to eq('00:00am 23 May 2019')
       end
     end
 
@@ -135,6 +137,122 @@ RSpec.describe Defect, type: :model do
       it 'returns an explanation' do
         defect = create(:property_defect)
         expect(defect.accepted_on).to eq(I18n.t('page_content.defect.show.not_accepted_yet'))
+      end
+    end
+  end
+
+  describe '.to_csv' do
+    let(:property) { create(:property, address: '1 Hackney Street') }
+    let(:priority) { create(:priority, name: 'P1', days: 1) }
+    let!(:property_defect) do
+      create(:property_defect,
+             property: property,
+             priority: priority,
+             reference_number: '123ABC',
+             title: 'a short title',
+             status: :outstanding,
+             trade: 'Electrical',
+             target_completion_date: Date.new(2020, 10, 1),
+             description: 'a long description',
+             access_information: 'The key is under the garden pot',
+             created_at: Time.utc(2018, 10, 1, 12, 13, 55))
+    end
+
+    let(:communal_area) { create(:communal_area, name: 'Pine Creek', location: '1-100 Hackney Street') }
+    let!(:communal_defect) do
+      create(:communal_defect,
+             communal_area: communal_area,
+             priority: priority,
+             reference_number: '456ABC',
+             title: 'a shorter title',
+             status: :outstanding,
+             trade: 'Electrical',
+             target_completion_date: Date.new(2019, 10, 1),
+             description: 'a longer description',
+             access_information: 'The communal door will be unlocked',
+             created_at: Time.utc(2017, 10, 1, 12, 13, 55))
+    end
+
+    it 'returns a CSV of all defects ordered by created_at' do
+      # The ordering of the contents of this fixture implicitly tests that ordering by created_at
+      expected_csv = File.read('spec/fixtures/download_defects.csv')
+      generated_csv = Defect.to_csv
+
+      expect(generated_csv).to eq(expected_csv)
+    end
+  end
+
+  describe '.csv_headers' do
+    it 'returns all defects' do
+      expect(described_class.csv_headers).to eq(
+        %w[
+          reference_number
+          created_at
+          title
+          type
+          status
+          trade
+          priority_name
+          priority_duration
+          target_completion_date
+          property_address
+          communal_area_name
+          communal_area_location
+          description
+          access_information
+        ]
+      )
+    end
+  end
+
+  describe '.to_row' do
+    context 'when the defect is for a property' do
+      it 'returns an array of values as they should appear in a CSV row' do
+        defect = create(:property_defect)
+        result = defect.to_row
+        expect(result).to eq(
+          [
+            defect.reference_number,
+            format_time(defect.created_at),
+            defect.title,
+            'Property',
+            defect.status,
+            defect.trade,
+            defect.priority.name,
+            defect.priority.days,
+            defect.target_completion_date,
+            defect.property.address,
+            nil,
+            nil,
+            defect.description,
+            defect.access_information,
+          ]
+        )
+      end
+    end
+
+    context 'when the defect is for a communal area' do
+      it 'returns an array of values as they should appear in a CSV row' do
+        defect = create(:communal_defect)
+        result = defect.to_row
+        expect(result).to eq(
+          [
+            defect.reference_number,
+            format_time(defect.created_at),
+            defect.title,
+            'Communal',
+            defect.status,
+            defect.trade,
+            defect.priority.name,
+            defect.priority.days,
+            defect.target_completion_date,
+            nil,
+            defect.communal_area.name,
+            defect.communal_area.location,
+            defect.description,
+            defect.access_information,
+          ]
+        )
       end
     end
   end

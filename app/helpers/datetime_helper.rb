@@ -8,7 +8,7 @@ module DatetimeHelper
   end
 
   def format_time(time)
-    time.in_time_zone.strftime('%H:%M%P, %-d %B %Y')
+    time.in_time_zone.strftime('%H:%M%P %-d %B %Y')
   end
 
   def format_time_in_sentence(time)

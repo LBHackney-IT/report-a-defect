@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   end
 
   get 'search' => 'staff/searches#index'
+  get 'report' => 'staff/report#index'
+
   resources :properties, controller: 'staff/properties', only: %i[show] do
     resources :defects, controller: 'staff/property_defects', only: %i[new create show edit update]
   end

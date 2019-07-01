@@ -28,7 +28,7 @@ RSpec.describe DefectMailPresenter do
 
         result = described_class.new(property_defect).created_time
 
-        expect(result).to eql('13:00pm, 30 October 2017')
+        expect(result).to eql('13:00pm 30 October 2017')
       end
     end
   end
