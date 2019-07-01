@@ -67,6 +67,7 @@ en:
       edit: 'Edit'
     button:
       find: 'Search'
+      download: 'Download'
     notice:
       create:
         success:
@@ -75,6 +76,8 @@ en:
         success:
           'The %{resource} has successfully been updated.'
   button:
+    report:
+      download_all: Download CSV
     create:
       estate: 'Create estate'
       scheme: 'Create scheme'

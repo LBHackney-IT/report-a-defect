@@ -138,4 +138,117 @@ RSpec.describe Defect, type: :model do
       end
     end
   end
+
+  describe '.to_csv' do
+    let(:property) { create(:property, address: '1 Hackney Street') }
+    let(:priority) { create(:priority, name: 'P1', days: 1) }
+    let!(:property_defect) do
+      create(:property_defect,
+             property: property,
+             priority: priority,
+             reference_number: '123ABC',
+             title: 'a short title',
+             status: :outstanding,
+             trade: 'Electrical',
+             target_completion_date: Date.new(2020, 10, 1),
+             description: 'a long description',
+             access_information: 'The key is under the garden pot',
+             created_at: 2.days.ago)
+    end
+
+    let(:communal_area) { create(:communal_area, name: 'Pine Creek', location: '1-100 Hackney Street') }
+    let!(:communal_defect) do
+      create(:communal_defect,
+             communal_area: communal_area,
+             priority: priority,
+             reference_number: '456ABC',
+             title: 'a shorter title',
+             status: :outstanding,
+             trade: 'Electrical',
+             target_completion_date: Date.new(2019, 10, 1),
+             description: 'a longer description',
+             access_information: 'The communal door will be unlocked',
+             created_at: 5.days.ago)
+    end
+
+    it 'returns a CSV of all defects ordered by created_at' do
+      # The ordering of the contents of this fixture implicitly tests that ordering by created_at
+      expected_csv = File.read('spec/fixtures/download_defects.csv')
+      generated_csv = Defect.to_csv
+
+      expect(generated_csv).to eq(expected_csv)
+    end
+  end
+
+  describe '.csv_headers' do
+    it 'returns all defects' do
+      expect(described_class.csv_headers).to eq(
+        %w[
+          reference_number
+          title
+          type
+          status
+          trade
+          priority_name
+          priority_duration
+          target_completion_date
+          property_address
+          communal_area_name
+          communal_area_location
+          description
+          access_information
+        ]
+      )
+    end
+  end
+
+  describe '.to_row' do
+    context 'when the defect is for a property' do
+      it 'returns an array of values as they should appear in a CSV row' do
+        defect = create(:property_defect)
+        result = defect.to_row
+        expect(result).to eq(
+          [
+            defect.reference_number,
+            defect.title,
+            'Property',
+            defect.status,
+            defect.trade,
+            defect.priority.name,
+            defect.priority.days,
+            defect.target_completion_date,
+            defect.property.address,
+            nil,
+            nil,
+            defect.description,
+            defect.access_information,
+          ]
+        )
+      end
+    end
+
+    context 'when the defect is for a communal area' do
+      it 'returns an array of values as they should appear in a CSV row' do
+        defect = create(:communal_defect)
+        result = defect.to_row
+        expect(result).to eq(
+          [
+            defect.reference_number,
+            defect.title,
+            'Communal',
+            defect.status,
+            defect.trade,
+            defect.priority.name,
+            defect.priority.days,
+            defect.target_completion_date,
+            nil,
+            defect.communal_area.name,
+            defect.communal_area.location,
+            defect.description,
+            defect.access_information,
+          ]
+        )
+      end
+    end
+  end
 end

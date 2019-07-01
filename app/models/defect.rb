@@ -108,5 +108,53 @@ class Defect < ApplicationRecord
 
     format_time(acceptance_event.created_at)
   end
+
+  def self.to_csv
+    all_defects = all.includes(:priority, :property, :communal_area)
+
+    CSV.generate(headers: true) do |csv|
+      csv << csv_headers
+
+      all_defects.order(:created_at).each do |defect|
+        csv << defect.to_row
+      end
+    end
+  end
+
+  def self.csv_headers
+    %w[
+      reference_number
+      title
+      type
+      status
+      trade
+      priority_name
+      priority_duration
+      target_completion_date
+      property_address
+      communal_area_name
+      communal_area_location
+      description
+      access_information
+    ]
+  end
+
+  def to_row
+    [
+      reference_number,
+      title,
+      communal? ? 'Communal' : 'Property',
+      status,
+      trade,
+      priority.name,
+      priority.days,
+      target_completion_date,
+      property&.address,
+      communal_area&.name,
+      communal_area&.location,
+      description,
+      access_information,
+    ]
+  end
 end
 # rubocop:enable Metrics/ClassLength
