@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Defect, type: :model do
-  include DatetimeHelper
-
   it { should belong_to(:property) }
   it { should have_many(:comments) }
 
@@ -129,7 +127,7 @@ RSpec.describe Defect, type: :model do
       it 'returns the time of acceptance' do
         defect = create(:property_defect)
         PublicActivity::Activity.create(trackable: defect, key: 'defect.accepted')
-        expect(defect.accepted_on).to eq('00:00am 23 May 2019')
+        expect(defect.accepted_on).to eq('23rd May 2019, 00:00')
       end
     end
 
@@ -213,7 +211,7 @@ RSpec.describe Defect, type: :model do
         expect(result).to eq(
           [
             defect.reference_number,
-            format_time(defect.created_at),
+            defect.created_at.to_s,
             defect.title,
             'Property',
             defect.status,
@@ -238,7 +236,7 @@ RSpec.describe Defect, type: :model do
         expect(result).to eq(
           [
             defect.reference_number,
-            format_time(defect.created_at),
+            defect.created_at.to_s,
             defect.title,
             'Communal',
             defect.status,

@@ -46,7 +46,7 @@ RSpec.feature 'Anyone can create a comment' do
 
       within('.comments') do
         comment = Comment.first
-        expect(page).to have_content('Comment left by Generic team user posted at 00:00am on 23 May 2019')
+        expect(page).to have_content('Comment left by Generic team user posted on 23 May 2019 at 00:00')
         expect(page).to have_content(comment.message)
       end
     end
@@ -96,7 +96,7 @@ RSpec.feature 'Anyone can create a comment' do
 
       within('.comments') do
         comment = Comment.first
-        expect(page).to have_content('Comment left by Generic team user posted at 00:00am on 23 May 2019')
+        expect(page).to have_content('Comment left by Generic team user posted on 23 May 2019 at 00:00')
         expect(page).to have_content(comment.message)
       end
     end
