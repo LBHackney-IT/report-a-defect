@@ -100,13 +100,6 @@ class Defect < ApplicationRecord
     )
   end
 
-  def accepted_on
-    acceptance_event = activities.find_by(key: 'defect.accepted')
-    return I18n.t('page_content.defect.show.not_accepted_yet') unless acceptance_event
-
-    acceptance_event.created_at.to_s
-  end
-
   def self.to_csv
     all_defects = all.includes(:priority, :property, :communal_area)
 

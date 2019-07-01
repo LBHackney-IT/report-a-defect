@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DefectMailPresenter do
+RSpec.describe DefectPresenter do
   let(:property_defect) do
     create(:property_defect)
   end
@@ -108,6 +108,33 @@ RSpec.describe DefectMailPresenter do
     it 'returns the targetted completion date' do
       result = described_class.new(property_defect).target_completion_date
       expect(result).to eq(property_defect.target_completion_date)
+    end
+  end
+
+  describe '#accepted_on' do
+    before(:each) do
+      travel_to Time.zone.parse('2019-05-23')
+    end
+
+    after(:each) do
+      travel_back
+    end
+
+    context 'when the defect has been accepted' do
+      it 'returns the time of acceptance' do
+        defect = create(:property_defect)
+        PublicActivity::Activity.create(trackable: defect, key: 'defect.accepted')
+        expect(described_class.new(defect).accepted_on)
+          .to eq('23rd May 2019, 00:00')
+      end
+    end
+
+    context 'when the defect has NOT been accepted' do
+      it 'returns an explanation' do
+        defect = create(:property_defect)
+        expect(described_class.new(defect).accepted_on)
+          .to eq(I18n.t('page_content.defect.show.not_accepted_yet'))
+      end
     end
   end
 end

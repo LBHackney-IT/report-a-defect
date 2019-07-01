@@ -20,7 +20,7 @@ class Staff::CommunalDefectsController < Staff::BaseController
   end
 
   def show
-    @defect = Defect.find(id)
+    @defect = DefectPresenter.new(Defect.find(id))
   end
 
   def edit

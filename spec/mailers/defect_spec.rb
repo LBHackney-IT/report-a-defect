@@ -9,7 +9,7 @@ RSpec.describe DefectMailer, type: :mailer do
   after(:each) { travel_back }
 
   let(:defect) { create(:property_defect, contact_name: 'Bilbo') }
-  let(:presenter) { DefectMailPresenter.new(defect) }
+  let(:presenter) { DefectPresenter.new(defect) }
 
   describe('#forward') do
     it 'sends an email to contractors' do
