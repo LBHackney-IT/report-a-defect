@@ -104,13 +104,6 @@ RSpec.describe DefectPresenter do
     end
   end
 
-  describe '#target_completion_date' do
-    it 'returns the targetted completion date' do
-      result = described_class.new(property_defect).target_completion_date
-      expect(result).to eq(property_defect.target_completion_date)
-    end
-  end
-
   describe '#accepted_on' do
     before(:each) do
       travel_to Time.zone.parse('2019-05-23')
@@ -135,6 +128,15 @@ RSpec.describe DefectPresenter do
         expect(described_class.new(defect).accepted_on)
           .to eq(I18n.t('page_content.defect.show.not_accepted_yet'))
       end
+    end
+  end
+
+  describe '#target_completion_date' do
+    it 'returns a formatted date' do
+      defect = create(:property_defect)
+      expected_date = defect.target_completion_date.to_s
+      expect(described_class.new(defect).target_completion_date)
+        .to eq(expected_date)
     end
   end
 end

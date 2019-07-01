@@ -25,4 +25,8 @@ class DefectPresenter < SimpleDelegator
 
     acceptance_event.created_at.to_s
   end
+
+  def target_completion_date
+    super.to_s
+  end
 end
