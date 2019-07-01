@@ -1,3 +1,6 @@
+require 'csv'
+
+# rubocop:disable Metrics/ClassLength
 class Defect < ApplicationRecord
   include DatetimeHelper
   before_validation :set_completion_date
@@ -106,3 +109,4 @@ class Defect < ApplicationRecord
     format_time(acceptance_event.created_at)
   end
 end
+# rubocop:enable Metrics/ClassLength
