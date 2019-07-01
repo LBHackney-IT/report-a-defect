@@ -25,14 +25,14 @@ RSpec.describe DatetimeHelper, type: :helper do
   describe '#format_time' do
     it 'returns the time and date in the default format' do
       expect(helper.format_time(Time.zone.local(2017, 10, 7, 9, 45)))
-        .to eq '09:45am, 7 October 2017'
+        .to eq '09:45am 7 October 2017'
     end
 
     context 'when the time zone is BST' do
       it 'renders the time +1 hour on top of UTC' do
         time = Time.utc(2017, 10, 7, 9, 45)
         expect(helper.format_time(time))
-          .to eq '10:45am, 7 October 2017'
+          .to eq '10:45am 7 October 2017'
       end
     end
   end
