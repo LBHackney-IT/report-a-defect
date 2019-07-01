@@ -24,7 +24,7 @@ class Staff::PropertyDefectsController < Staff::BaseController
   end
 
   def edit
-    @defect = Defect.find(id)
+    @defect = DefectPresenter.new(Defect.find(id))
   end
 
   def update

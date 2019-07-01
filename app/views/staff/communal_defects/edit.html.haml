@@ -48,7 +48,7 @@
         %label.govuk-label
           %span Target date for completion
           %p.govuk-inset-text
-            = format_date(@defect.target_completion_date) if @defect.target_completion_date?
+            = @defect.target_completion_date
 
       = f.input :priority,
                 as: :radio_buttons,
