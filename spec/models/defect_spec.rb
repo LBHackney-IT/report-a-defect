@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Defect, type: :model do
+  include DatetimeHelper
+
   it { should belong_to(:property) }
   it { should have_many(:comments) }
 
@@ -127,7 +129,7 @@ RSpec.describe Defect, type: :model do
       it 'returns the time of acceptance' do
         defect = create(:property_defect)
         PublicActivity::Activity.create(trackable: defect, key: 'defect.accepted')
-        expect(defect.accepted_on).to eq('00:00am, 23 May 2019')
+        expect(defect.accepted_on).to eq('00:00am 23 May 2019')
       end
     end
 
@@ -153,7 +155,7 @@ RSpec.describe Defect, type: :model do
              target_completion_date: Date.new(2020, 10, 1),
              description: 'a long description',
              access_information: 'The key is under the garden pot',
-             created_at: 2.days.ago)
+             created_at: Time.utc(2018, 10, 1, 12, 13, 55))
     end
 
     let(:communal_area) { create(:communal_area, name: 'Pine Creek', location: '1-100 Hackney Street') }
@@ -168,7 +170,7 @@ RSpec.describe Defect, type: :model do
              target_completion_date: Date.new(2019, 10, 1),
              description: 'a longer description',
              access_information: 'The communal door will be unlocked',
-             created_at: 5.days.ago)
+             created_at: Time.utc(2017, 10, 1, 12, 13, 55))
     end
 
     it 'returns a CSV of all defects ordered by created_at' do
@@ -185,6 +187,7 @@ RSpec.describe Defect, type: :model do
       expect(described_class.csv_headers).to eq(
         %w[
           reference_number
+          created_at
           title
           type
           status
@@ -210,6 +213,7 @@ RSpec.describe Defect, type: :model do
         expect(result).to eq(
           [
             defect.reference_number,
+            format_time(defect.created_at),
             defect.title,
             'Property',
             defect.status,
@@ -234,6 +238,7 @@ RSpec.describe Defect, type: :model do
         expect(result).to eq(
           [
             defect.reference_number,
+            format_time(defect.created_at),
             defect.title,
             'Communal',
             defect.status,

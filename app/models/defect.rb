@@ -124,6 +124,7 @@ class Defect < ApplicationRecord
   def self.csv_headers
     %w[
       reference_number
+      created_at
       title
       type
       status
@@ -142,6 +143,7 @@ class Defect < ApplicationRecord
   def to_row
     [
       reference_number,
+      format_time(created_at),
       title,
       communal? ? 'Communal' : 'Property',
       status,
