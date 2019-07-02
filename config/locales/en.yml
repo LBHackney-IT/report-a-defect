@@ -38,6 +38,7 @@ en:
         edit: 'Update property'
         show: '%{name}'
       defects:
+        index: 'Defect overview'
         create:
           property: 'Create property defect'
           communal_area: 'Create communal defect'
@@ -49,6 +50,7 @@ en:
     dashboard:
       header:
         find_defect: 'Find a defect'
+        defect_overview: 'Defect overview'
         reporting: 'Reporting'
         manage: 'Manage estates'
       description:
