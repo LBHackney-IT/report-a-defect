@@ -40,6 +40,21 @@ RSpec.describe DefectFinder do
       expect(result).not_to include(raised_in_error_defect)
       expect(result).not_to include(rejected_defect)
     end
+
+    it 'sorts the list by target_completion_date' do
+      defect_two = create(:property_defect, status: :outstanding, target_completion_date: 1.day.from_now)
+      defect_one = create(:property_defect, status: :outstanding, target_completion_date: 2.days.from_now)
+      defect_five = create(:property_defect, status: :outstanding, target_completion_date: 2.days.ago)
+      defect_four = create(:property_defect, status: :outstanding, target_completion_date: 1.day.ago)
+      defect_three = create(:property_defect, status: :outstanding, target_completion_date: 0.days.from_now)
+
+      result = service.call
+
+      expect(result[0]).to eq(defect_five)
+      expect(result[1]).to eq(defect_four)
+      expect(result[2]).to eq(defect_three)
+      expect(result[3]).to eq(defect_two)
+      expect(result[4]).to eq(defect_one)
     end
   end
 end
