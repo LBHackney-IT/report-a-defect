@@ -16,11 +16,13 @@
           %th.govuk-table__header
             Title
           %th.govuk-table__header
+            Scheme
+          %th.govuk-table__header
             Type
           %th.govuk-table__header
-            Status
-          %th.govuk-table__header
             Address
+          %th.govuk-table__header
+            Status
           %th.govuk-table__header
             Priority
           %th.govuk-table__header
@@ -34,6 +36,7 @@
           %tr.govuk-table__row
             %td.govuk-table__cell= defect.reference_number
             %td.govuk-table__cell= defect.title
+            %td.govuk-table__cell= defect.scheme.name
             %td.govuk-table__cell= defect.defect_type
             %td.govuk-table__cell= defect.status
             %td.govuk-table__cell= defect.address

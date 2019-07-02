@@ -12,6 +12,7 @@ RSpec.feature 'Anyone can view all defects' do
     within('.defects') do
       expect(page).to have_content(property_defect.reference_number)
       expect(page).to have_content(property_defect.title)
+      expect(page).to have_content(property_defect.scheme.name)
       expect(page).to have_content(property_defect.defect_type)
       expect(page).to have_content(property_defect.status)
       expect(page).to have_content(property_defect.address)
@@ -24,6 +25,7 @@ RSpec.feature 'Anyone can view all defects' do
       )
       expect(page).to have_content(communal_defect.reference_number)
       expect(page).to have_content(communal_defect.title)
+      expect(page).to have_content(property_defect.scheme.name)
       expect(page).to have_content(communal_defect.defect_type)
       expect(page).to have_content(communal_defect.status)
       expect(page).to have_content(communal_defect.address)
