@@ -6,7 +6,7 @@ RSpec.feature 'Anyone can update a defect' do
 
   scenario 'a defect can be updated' do
     defect = create(:property_defect, property: property)
-    priority = defect.property.scheme.priorities.first
+    new_priority = create(:priority, scheme: property.scheme, days: 999)
 
     visit property_defect_path(defect.property, defect)
 
@@ -30,7 +30,7 @@ RSpec.feature 'Anyone can update a defect' do
 
       expect(page).to have_content(defect.target_completion_date)
 
-      choose "#{priority.name} - #{priority.days} days from now"
+      choose "#{new_priority.name} - #{new_priority.days} days from now"
       click_on(I18n.t('button.update.defect'))
     end
 
@@ -42,7 +42,7 @@ RSpec.feature 'Anyone can update a defect' do
     expect(page).to have_content('email@foo.com')
     expect(page).to have_content('0123456789')
     expect(page).to have_content('Brickwork')
-    expect(page).to have_content(priority.name)
+    expect(page).to have_content(new_priority.name)
 
     expect(page).to have_content((Time.zone.now + priority.days.days).to_date)
   end
