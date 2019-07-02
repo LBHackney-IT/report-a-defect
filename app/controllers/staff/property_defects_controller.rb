@@ -28,10 +28,12 @@ class Staff::PropertyDefectsController < Staff::BaseController
   end
 
   def update
-    @defect = Defect.find(id)
-    @defect.assign_attributes(defect_params)
-    @defect.priority = Priority.find(priority_id) if priority_id.present?
-    @defect.set_completion_date
+    defect = Defect.find(id)
+    @defect = EditDefect.new(
+      defect: defect,
+      defect_params: defect_params,
+      options: { priority_id: priority_id }
+    ).call
 
     if @defect.valid?
       @defect.save
