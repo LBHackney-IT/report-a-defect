@@ -2,7 +2,6 @@ require 'csv'
 
 # rubocop:disable Metrics/ClassLength
 class Defect < ApplicationRecord
-  before_validation :set_completion_date
   validates :title,
             :description,
             :trade,
@@ -82,7 +81,7 @@ class Defect < ApplicationRecord
   def set_completion_date
     return unless priority
 
-    self.target_completion_date = Time .zone.now + priority.days.days
+    self.target_completion_date = Date.current + priority.days.days
   end
 
   def status

@@ -79,7 +79,7 @@ RSpec.describe Defect, type: :model do
 
       defect.set_completion_date
 
-      expect(defect.reload.target_completion_date).to eq(Date.new(2019, 5, 25))
+      expect(defect.target_completion_date).to eq(Date.new(2019, 5, 26))
 
       travel_back
     end
