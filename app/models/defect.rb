@@ -30,6 +30,8 @@ class Defect < ApplicationRecord
     rejected
   ]
 
+  scope :open, (-> { where(status: %i[outstanding follow_on end_of_year dispute referral]) })
+
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
   belongs_to :priority
