@@ -2,7 +2,6 @@ require 'csv'
 
 # rubocop:disable Metrics/ClassLength
 class Defect < ApplicationRecord
-  before_validation :set_completion_date
   validates :title,
             :description,
             :trade,

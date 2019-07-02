@@ -31,6 +31,7 @@ class Staff::PropertyDefectsController < Staff::BaseController
     @defect = Defect.find(id)
     @defect.assign_attributes(defect_params)
     @defect.priority = Priority.find(priority_id) if priority_id.present?
+    @defect.set_completion_date
 
     if @defect.valid?
       @defect.save

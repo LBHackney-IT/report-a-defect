@@ -7,7 +7,7 @@ FactoryBot.define do
     contact_email_address { Faker::Internet.email }
     contact_phone_number { Faker::Base.numerify('###########') }
     trade { Defect::TRADES.sample }
-    target_completion_date { (1..10).to_a.sample.days.from_now }
+    target_completion_date { Faker::Date.between(1.day.from_now, 5.days.from_now) }
     status { Defect.statuses.keys.sample }
     reference_number { SecureRandom.hex(3).upcase }
 

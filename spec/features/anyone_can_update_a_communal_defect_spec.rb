@@ -43,7 +43,7 @@ RSpec.feature 'Anyone can update a communal_area defect' do
     expect(page).to have_content('Brickwork')
     expect(page).to have_content(new_priority.name)
 
-    expect(page).to have_content((Time.zone.now + new_priority.days.days).to_date)
+    expect(page).to have_content((Date.current + new_priority.days.days).to_date)
   end
 
   scenario 'any defect status can be chosen' do

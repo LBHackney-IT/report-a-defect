@@ -44,7 +44,7 @@ RSpec.feature 'Anyone can update a defect' do
     expect(page).to have_content('Brickwork')
     expect(page).to have_content(new_priority.name)
 
-    expect(page).to have_content((Time.zone.now + priority.days.days).to_date)
+    expect(page).to have_content((Date.current + new_priority.days).to_date)
   end
 
   scenario 'a defect status can be updated' do
