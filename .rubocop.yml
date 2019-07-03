@@ -7,8 +7,15 @@ Metrics/AbcSize:
   Exclude:
     - 'spec/**/*'
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'config/routes.rb'
+    - 'config/environments/*'
+    - 'config/initializers/devise.rb'
+
 Metrics/MethodLength:
   Max: 25
-  
+
 Style/ClassAndModuleChildren:
   Enabled: false

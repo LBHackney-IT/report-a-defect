@@ -30,6 +30,8 @@ class Defect < ApplicationRecord
     rejected
   ]
 
+  scope :open, (-> { where(status: %i[outstanding follow_on end_of_year dispute referral]) })
+
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
   belongs_to :priority
@@ -98,13 +100,6 @@ class Defect < ApplicationRecord
       purpose: :accept_defect_ownership,
       expires_in: 3.months
     )
-  end
-
-  def accepted_on
-    acceptance_event = activities.find_by(key: 'defect.accepted')
-    return I18n.t('page_content.defect.show.not_accepted_yet') unless acceptance_event
-
-    acceptance_event.created_at.to_s
   end
 
   def self.to_csv

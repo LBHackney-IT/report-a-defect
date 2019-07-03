@@ -1,0 +1,46 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.defects.index')
+= link_to 'Back', root_path, class: 'govuk-back-link'
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    %h1.govuk-heading-l
+      = I18n.t('page_title.staff.defects.index')
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    %table.govuk-table.defects
+      %thead.govuk-table__head
+        %tr.govuk-table__row
+          %th.govuk-table__header
+            Reference number
+          %th.govuk-table__header
+            Title
+          %th.govuk-table__header
+            Scheme
+          %th.govuk-table__header
+            Type
+          %th.govuk-table__header
+            Address
+          %th.govuk-table__header
+            Status
+          %th.govuk-table__header
+            Priority
+          %th.govuk-table__header
+            Trade
+          %th.govuk-table__header
+            Target completion
+          %th.govuk-table__header
+            Actions
+      %tbody.govuk-table__body
+        - @defects.each do |defect|
+          %tr.govuk-table__row
+            %td.govuk-table__cell= defect.reference_number
+            %td.govuk-table__cell= defect.title
+            %td.govuk-table__cell= defect.scheme.name
+            %td.govuk-table__cell= defect.defect_type
+            %td.govuk-table__cell= defect.status
+            %td.govuk-table__cell= defect.address
+            %td.govuk-table__cell= defect.priority.name
+            %td.govuk-table__cell= defect.trade
+            %td.govuk-table__cell= defect.target_completion_date
+            %td.govuk-table__cell= link_to I18n.t('generic.link.show'), defect_path_for(defect: defect), class: 'govuk-link'
