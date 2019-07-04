@@ -29,4 +29,25 @@ class DefectPresenter < SimpleDelegator
   def target_completion_date
     super.to_s
   end
+
+  def to_row
+    [
+      reference_number,
+      created_at.to_s,
+      title,
+      defect_type,
+      status,
+      trade,
+      priority.name,
+      priority.days,
+      target_completion_date,
+      scheme.estate.name,
+      scheme.name,
+      property&.address,
+      communal_area&.name,
+      communal_area&.location,
+      description,
+      access_information,
+    ]
+  end
 end

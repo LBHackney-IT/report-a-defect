@@ -2,16 +2,11 @@ require 'rails_helper'
 
 RSpec.describe DefectFinder do
   describe '#call' do
-    let(:filter) do
-      double('DefectFilter', scope: :all)
-    end
-
     it 'returns an array of DefectPresenters for open Defects' do
       defect_one = create(:property_defect, status: :outstanding)
 
-      result = described_class.new(filter: filter).call
+      result = described_class.new.call
 
-      expect(result).to be_a(Array)
       expect(result.first).to eq(defect_one)
     end
 
@@ -22,7 +17,7 @@ RSpec.describe DefectFinder do
       defect_four = create(:property_defect, status: :outstanding, target_completion_date: 1.day.ago)
       defect_three = create(:property_defect, status: :outstanding, target_completion_date: 0.days.from_now)
 
-      result = described_class.new(filter: filter).call
+      result = described_class.new(order: :target_completion_date).call
 
       expect(result[0]).to eq(defect_five)
       expect(result[1]).to eq(defect_four)
@@ -34,7 +29,7 @@ RSpec.describe DefectFinder do
     it 'eager loads associated records' do
       create(:property_defect)
 
-      result = described_class.new(filter: filter).call
+      result = described_class.new.call
 
       defect = result.first
 

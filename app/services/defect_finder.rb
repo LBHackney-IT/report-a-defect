@@ -1,7 +1,8 @@
 class DefectFinder
-  attr_accessor :filter
+  attr_accessor :order, :filter
 
-  def initialize(filter: {})
+  def initialize(order: :created_at, filter: NullDefectFilter.new)
+    self.order = order
     self.filter = filter
   end
 
@@ -11,8 +12,7 @@ class DefectFinder
                      :priority,
                      property: :scheme,
                      communal_area: :scheme)
-           .order(:target_completion_date)
-           .map { |defect| DefectPresenter.new(defect) }
+           .order(order)
   end
 
   def defects

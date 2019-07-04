@@ -1,7 +1,9 @@
 class Staff::DefectsController < Staff::BaseController
   def index
     @defect_filter = DefectFilter.new(statuses: statuses)
-    @defects = DefectFinder.new(filter: @defect_filter).call
+    @defects = DefectFinder.new(order: :target_completion_date, filter: @defect_filter)
+                           .call
+                           .map { |defect| DefectPresenter.new(defect) }
   end
 
   private
