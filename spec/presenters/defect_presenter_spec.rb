@@ -139,4 +139,56 @@ RSpec.describe DefectPresenter do
         .to eq(expected_date)
     end
   end
+
+  describe '.to_row' do
+    context 'when the defect is for a property' do
+      it 'returns an array of values as they should appear in a CSV row' do
+        defect = create(:property_defect)
+        result = described_class.new(defect).to_row
+        expect(result).to eq(
+          [
+            defect.reference_number,
+            defect.created_at.to_s,
+            defect.title,
+            'Property',
+            defect.status,
+            defect.trade,
+            defect.priority.name,
+            defect.priority.days,
+            defect.target_completion_date.to_s,
+            defect.property.address,
+            nil,
+            nil,
+            defect.description,
+            defect.access_information,
+          ]
+        )
+      end
+    end
+
+    context 'when the defect is for a communal area' do
+      it 'returns an array of values as they should appear in a CSV row' do
+        defect = create(:communal_defect)
+        result = described_class.new(defect).to_row
+        expect(result).to eq(
+          [
+            defect.reference_number,
+            defect.created_at.to_s,
+            defect.title,
+            'Communal',
+            defect.status,
+            defect.trade,
+            defect.priority.name,
+            defect.priority.days,
+            defect.target_completion_date.to_s,
+            nil,
+            defect.communal_area.name,
+            defect.communal_area.location,
+            defect.description,
+            defect.access_information,
+          ]
+        )
+      end
+    end
+  end
 end

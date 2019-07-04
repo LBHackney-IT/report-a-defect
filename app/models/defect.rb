@@ -110,7 +110,7 @@ class Defect < ApplicationRecord
       csv << csv_headers
 
       all_defects.order(:created_at).each do |defect|
-        csv << defect.to_row
+        csv << DefectPresenter.new(defect).to_row
       end
     end
   end
@@ -131,25 +131,6 @@ class Defect < ApplicationRecord
       communal_area_location
       description
       access_information
-    ]
-  end
-
-  def to_row
-    [
-      reference_number,
-      created_at.to_s,
-      title,
-      communal? ? 'Communal' : 'Property',
-      status,
-      trade,
-      priority.name,
-      priority.days,
-      target_completion_date,
-      property&.address,
-      communal_area&.name,
-      communal_area&.location,
-      description,
-      access_information,
     ]
   end
 end
