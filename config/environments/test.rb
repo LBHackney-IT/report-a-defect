@@ -58,5 +58,11 @@ Rails.application.configure do
     Bullet.add_whitelist type: :unused_eager_loading,
                          class_name: 'Defect',
                          association: :priority
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'Property',
+                         association: :scheme
+    Bullet.add_whitelist type: :unused_eager_loading,
+                         class_name: 'CommunalArea',
+                         association: :scheme
   end
 end

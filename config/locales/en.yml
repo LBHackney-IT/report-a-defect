@@ -78,6 +78,7 @@ en:
     button:
       find: 'Search'
       download: 'Download'
+      filter: 'Filter'
     notice:
       create:
         success:
