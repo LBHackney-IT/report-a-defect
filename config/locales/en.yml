@@ -19,7 +19,7 @@ en:
           headers:
             main: 'Search results for "%{query}"'
             properties: 'Properties %{count}'
-            communal_areas: 'Blocks %{count}'
+            communal_areas: 'Communal areas %{count}'
       estates:
         show: '%{name} estate'
         create: 'Create estate'
