@@ -23,19 +23,25 @@ jobs:
           name: Run the tests
           command: |
             bin/dtest-server ci
-            docker ps
             bin/dspec
+      - run:
+          name: Make a cache
+          command: mkdir -p /cache
       - run:
           name: Save the tested Docker image for deployment
           command: |
-            mkdir -p docker-cache
             docker tag reportadefect_test:latest reportadefect:$CIRCLE_SHA1
-            docker image save -o docker-cache/built-image.tar reportadefect:$CIRCLE_SHA1
-            docker image load --input docker-cache/built-image.tar
+            docker image save -o /cache/built-image.tar reportadefect:$CIRCLE_SHA1
+            docker image load --input /cache/built-image.tar
+      - run:
+          name: Save the application for deployment
+          command: |
+            cp -rT . /cache/report-a-defect
       - save_cache:
           key: docker-images-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - docker-cache/built-image.tar
+            - /cache/report-a-defect
+            - /cache/built-image.tar
 
   deploy_staging:
     working_directory: ~/report_a_defect
@@ -56,11 +62,20 @@ jobs:
           name: Login to Docker
           command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
       - run:
+          name: Setup Heroku
+          command: |
+            cp -rT /cache/report-a-defect .
+            git init
+            git remote add heroku https://git.heroku.com/$HEROKU_APP_NAME_STAGING.git
+            chmod +x /cache/report_a_defect/.circlici/setup-heroku.sh
+            /cache/report_a_defect/.circlici/setup-heroku.sh
+      - run:
           name: Deploy the Docker image to Heroku Staging
           command: |
-            docker image load --input /root/report_a_defect/docker-cache/built-image.tar
+            docker image load --input /cache/built-image.tar
             docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
             docker push registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
+            heroku container:release web --app $HEROKU_APP_NAME_STAGING
 
   deploy_production:
     working_directory: ~/report_a_defect
@@ -81,11 +96,20 @@ jobs:
           name: Login to Docker
           command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
       - run:
+          name: Setup Heroku
+          command: |
+            cp -rT /cache/report-a-defect .
+            git init
+            git remote add heroku https://git.heroku.com/$HEROKU_APP_NAME_PRODUCTION.git
+            chmod +x /cache/report-a-defect/.circleci/setup-heroku.sh
+            /cache/report-a-defect/.circleci/setup-heroku.sh
+      - run:
           name: Deploy the Docker image to Heroku Production
           command: |
-            docker image load --input /root/report_a_defect/docker-cache/built-image.tar
+            docker image load --input /cache/built-image.tar
             docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
             docker push registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
+            heroku container:release web --app $HEROKU_APP_NAME_PRODUCTION
 
 workflows:
   version: 2
