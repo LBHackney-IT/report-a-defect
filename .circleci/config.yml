@@ -66,7 +66,6 @@ jobs:
           command: |
             cd /cache/report-a-defect
             git init
-            ls -la
             git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_STAGING.git develop:master
             chmod +x .circleci/setup-heroku.sh
             .circleci/setup-heroku.sh
