@@ -37,7 +37,7 @@ property4 = FactoryBot.create(
   :property, scheme: scheme1, address: 'Flat 4 Chipping Court', postcode: 'N16NP'
 )
 
-# Blocks
+# Communal areas
 communal_area = FactoryBot.create(:communal_area, name: 'Chipping Court', scheme: scheme1)
 FactoryBot.create(:communal_area, scheme: scheme1)
 
