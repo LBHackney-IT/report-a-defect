@@ -124,6 +124,8 @@ class Defect < ApplicationRecord
       priority_name
       priority_duration
       target_completion_date
+      estate
+      scheme
       property_address
       communal_area_name
       communal_area_location

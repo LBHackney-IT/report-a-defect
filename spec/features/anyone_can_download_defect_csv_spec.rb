@@ -23,6 +23,8 @@ RSpec.feature 'Anyone can download defect data' do
       priority_name
       priority_duration
       target_completion_date
+      estate
+      scheme
       property_address
       communal_area_name
       communal_area_location
@@ -44,6 +46,8 @@ RSpec.feature 'Anyone can download defect data' do
     expect(page).to have_content(property_defect.priority.name)
     expect(page).to have_content(property_defect.priority.days)
     expect(page).to have_content(property_defect.target_completion_date)
+    expect(page).to have_content(property_defect.scheme.estate.name)
+    expect(page).to have_content(property_defect.scheme.name)
     expect(page).to have_content(property_defect.property.address)
     expect(page).to have_content(property_defect.description)
     expect(page).to have_content(property_defect.access_information)
@@ -58,6 +62,8 @@ RSpec.feature 'Anyone can download defect data' do
     expect(page).to have_content(communal_defect.priority.name)
     expect(page).to have_content(communal_defect.priority.days)
     expect(page).to have_content(communal_defect.target_completion_date)
+    expect(page).to have_content(communal_defect.scheme.estate.name)
+    expect(page).to have_content(communal_defect.scheme.name)
     expect(page).to have_content(communal_defect.communal_area.name)
     expect(page).to have_content(communal_defect.communal_area.location)
     expect(page).to have_content(communal_defect.description)

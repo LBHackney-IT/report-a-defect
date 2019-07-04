@@ -115,7 +115,9 @@ RSpec.describe Defect, type: :model do
   end
 
   describe '.to_csv' do
-    let(:property) { create(:property, address: '1 Hackney Street') }
+    let(:estate) { create(:estate, name: 'estate') }
+    let(:scheme) { create(:scheme, name: 'scheme', estate: estate) }
+    let(:property) { create(:property, address: '1 Hackney Street', scheme: scheme) }
     let(:priority) { create(:priority, name: 'P1', days: 1) }
     let!(:property_defect) do
       create(:property_defect,
@@ -131,7 +133,7 @@ RSpec.describe Defect, type: :model do
              created_at: Time.utc(2018, 10, 1, 12, 13, 55))
     end
 
-    let(:communal_area) { create(:communal_area, name: 'Pine Creek', location: '1-100 Hackney Street') }
+    let(:communal_area) { create(:communal_area, name: 'Pine Creek', location: '1-100 Hackney Street', scheme: scheme) }
     let!(:communal_defect) do
       create(:communal_defect,
              communal_area: communal_area,
@@ -147,9 +149,8 @@ RSpec.describe Defect, type: :model do
     end
 
     it 'returns a CSV of all defects ordered by created_at' do
-      # The ordering of the contents of this fixture implicitly tests that ordering by created_at
       expected_csv = File.read('spec/fixtures/download_defects.csv')
-      generated_csv = Defect.to_csv
+      generated_csv = Defect.to_csv(defects: [communal_defect, property_defect])
 
       expect(generated_csv).to eq(expected_csv)
     end
@@ -168,6 +169,8 @@ RSpec.describe Defect, type: :model do
           priority_name
           priority_duration
           target_completion_date
+          estate
+          scheme
           property_address
           communal_area_name
           communal_area_location

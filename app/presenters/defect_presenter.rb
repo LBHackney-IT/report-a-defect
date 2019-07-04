@@ -41,6 +41,8 @@ class DefectPresenter < SimpleDelegator
       priority.name,
       priority.days,
       target_completion_date,
+      scheme.estate.name,
+      scheme.name,
       property&.address,
       communal_area&.name,
       communal_area&.location,
