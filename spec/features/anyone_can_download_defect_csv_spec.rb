@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.feature 'Anyone can download defect data' do
   scenario 'download all defects' do
-    property_defect = create(:property_defect)
-    communal_defect = create(:communal_defect)
+    property_defect = DefectPresenter.new(create(:property_defect))
+    communal_defect = DefectPresenter.new(create(:communal_defect))
 
     visit root_path
 
@@ -38,7 +38,7 @@ RSpec.feature 'Anyone can download defect data' do
     expect(page).to have_content(property_defect.reference_number)
     expect(page).to have_content(property_defect.created_at.to_s)
     expect(page).to have_content(property_defect.title)
-    expect(page).to have_content('Property')
+    expect(page).to have_content(property_defect.defect_type)
     expect(page).to have_content(property_defect.status)
     expect(page).to have_content(property_defect.trade)
     expect(page).to have_content(property_defect.priority.name)
@@ -52,7 +52,7 @@ RSpec.feature 'Anyone can download defect data' do
     expect(page).to have_content(communal_defect.reference_number)
     expect(page).to have_content(communal_defect.created_at.to_s)
     expect(page).to have_content(communal_defect.title)
-    expect(page).to have_content('Communal')
+    expect(page).to have_content(communal_defect.defect_type)
     expect(page).to have_content(communal_defect.status)
     expect(page).to have_content(communal_defect.trade)
     expect(page).to have_content(communal_defect.priority.name)
