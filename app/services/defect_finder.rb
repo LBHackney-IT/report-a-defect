@@ -1,7 +1,7 @@
 class DefectFinder
   attr_accessor :filter
 
-  def initialize(filter: {})
+  def initialize(filter: NullDefectFilter.new)
     self.filter = filter
   end
 
