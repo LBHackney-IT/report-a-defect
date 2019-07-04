@@ -2,10 +2,12 @@ require 'csv'
 
 class Staff::ReportController < Staff::BaseController
   def index
-    @defects = Defect.all
+    filter = DefectFilter.new(statuses: %i[open closed])
+    @defects = DefectFinder.new(filter: filter).call
+
     respond_to do |format|
       format.html
-      format.csv { send_data @defects.to_csv }
+      format.csv { send_data Defect.to_csv(defects: @defects) }
     end
   end
 end

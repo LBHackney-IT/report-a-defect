@@ -103,13 +103,11 @@ class Defect < ApplicationRecord
     )
   end
 
-  def self.to_csv
-    all_defects = all.includes(:priority, :property, :communal_area)
-
+  def self.to_csv(defects:)
     CSV.generate(headers: true) do |csv|
       csv << csv_headers
 
-      all_defects.order(:created_at).each do |defect|
+      defects.reorder(:created_at).each do |defect|
         csv << DefectPresenter.new(defect).to_row
       end
     end
