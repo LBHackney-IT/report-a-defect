@@ -31,6 +31,7 @@ class Defect < ApplicationRecord
   ]
 
   scope :open, (-> { where(status: %i[outstanding follow_on end_of_year dispute referral]) })
+  scope :closed, (-> { where(status: %i[completed closed raised_in_error rejected]) })
 
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
