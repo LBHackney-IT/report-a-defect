@@ -38,4 +38,23 @@ RSpec.feature 'Anyone can view all defects' do
       )
     end
   end
+
+  scenario 'closed defects can shown using a filter' do
+    _open_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
+    closed_defect = DefectPresenter.new(create(:property_defect, status: :completed))
+
+    visit root_path
+
+    click_on('View all defects')
+
+    within('.filter-defects') do
+      check 'Closed', name: 'statuses[]'
+      click_on(I18n.t('generic.button.filter'))
+    end
+
+    within '.defects' do
+      expect(page).to have_content(closed_defect.reference_number)
+      expect(page).to have_content(closed_defect.status)
+    end
+  end
 end

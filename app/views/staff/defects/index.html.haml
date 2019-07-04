@@ -5,6 +5,24 @@
   .govuk-grid-column-full
     %h1.govuk-heading-l
       = I18n.t('page_title.staff.defects.index')
+      %span.govuk-caption-l= "Showing #{@defects.count} of #{Defect.count} defects"
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    %h2.govuk-heading-m Filters
+
+    = form_tag defects_path, class: 'filter-defects', method: :get do
+      .govuk-form-group
+        %fieldset.govuk-fieldset
+          = label_tag 'statuses', 'Status', class: 'govuk-label'
+          .govuk-checkboxes.checkbox-group
+            .govuk-checkboxes__item
+              = check_box_tag 'statuses[]', 'Open', open_status?, id: 'statuses_open', class: 'govuk-checkboxes__input'
+              = label_tag 'statuses[]', 'Open', for: 'statuses_open', class: 'govuk-label govuk-checkboxes__label'
+            .govuk-checkboxes__item
+              = check_box_tag 'statuses[]', 'Closed', closed_status?, id: 'statuses_closed', class: 'govuk-checkboxes__input'
+              = label_tag 'statuses[]', 'Closed', for: 'statuses_closed', class: 'govuk-label govuk-checkboxes__label'
+      = submit_tag I18n.t('generic.button.filter'), class: 'govuk-button mb0'
 
 .govuk-grid-row
   .govuk-grid-column-full
@@ -20,9 +38,9 @@
           %th.govuk-table__header
             Type
           %th.govuk-table__header
-            Address
-          %th.govuk-table__header
             Status
+          %th.govuk-table__header
+            Address
           %th.govuk-table__header
             Priority
           %th.govuk-table__header

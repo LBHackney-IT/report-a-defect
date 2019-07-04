@@ -15,20 +15,22 @@
         = search_field_tag :query, @search.query, class: 'govuk-input form-control form-control-communal_area govuk-!-width-three-quarters', placeholder: '1 Hackney Street or Clift House'
       = submit_tag I18n.t('generic.button.find'), class: 'govuk-button mb0'
 
-      %hr.govuk-section-break.govuk-section-break--l.govuk-section-break--visible
+    %hr.govuk-section-break.govuk-section-break--l.govuk-section-break--visible
 
-      %h3.govuk-heading-m
-        = I18n.t('page_content.dashboard.header.defect_overview')
-      %p.govuk-body-s
-        = I18n.t('page_content.dashboard.description.defect_overview')
+    %h3.govuk-heading-m
+      = I18n.t('page_content.dashboard.header.defect_overview')
+    %p.govuk-body-s
+      = I18n.t('page_content.dashboard.description.defect_overview')
 
-      = link_to('View all defects', defects_path, class: 'govuk-button mb0')
+    = form_tag defects_path, method: :get do
+      = hidden_field_tag 'statuses[]', 'Open'
+      = submit_tag 'View all defects', class: 'govuk-button mb0'
 
-      %hr.govuk-section-break.govuk-section-break--l.govuk-section-break--visible
+    %hr.govuk-section-break.govuk-section-break--l.govuk-section-break--visible
 
-      %h3.govuk-heading-m
-        = I18n.t('page_content.dashboard.header.reporting')
-      = link_to(I18n.t('button.report.download_all'), report_path(format: :csv), class: 'govuk-button govuk-button--secondary mb0')
+    %h3.govuk-heading-m
+      = I18n.t('page_content.dashboard.header.reporting')
+    = link_to(I18n.t('button.report.download_all'), report_path(format: :csv), class: 'govuk-button govuk-button--secondary mb0')
 
   .govuk-grid-column-one-third
     %h2.govuk-heading-m
