@@ -107,7 +107,7 @@ class Defect < ApplicationRecord
     CSV.generate(headers: true) do |csv|
       csv << csv_headers
 
-      defects.reorder(:created_at).each do |defect|
+      defects.each do |defect|
         csv << DefectPresenter.new(defect).to_row
       end
     end

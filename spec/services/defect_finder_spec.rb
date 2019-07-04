@@ -17,7 +17,7 @@ RSpec.describe DefectFinder do
       defect_four = create(:property_defect, status: :outstanding, target_completion_date: 1.day.ago)
       defect_three = create(:property_defect, status: :outstanding, target_completion_date: 0.days.from_now)
 
-      result = described_class.new.call
+      result = described_class.new(order: :target_completion_date).call
 
       expect(result[0]).to eq(defect_five)
       expect(result[1]).to eq(defect_four)
