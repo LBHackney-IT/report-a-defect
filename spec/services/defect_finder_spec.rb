@@ -56,5 +56,16 @@ RSpec.describe DefectFinder do
       expect(result[3]).to eq(defect_two)
       expect(result[4]).to eq(defect_one)
     end
+    it 'eager loads associated records' do
+      create(:property_defect)
+
+      result = described_class.new(filter: filter).call
+
+      defect = result.first
+
+      expect(defect.association(:property).loaded?).to eq(true)
+      expect(defect.association(:communal_area).loaded?).to eq(true)
+      expect(defect.association(:priority).loaded?).to eq(true)
+    end
   end
 end
