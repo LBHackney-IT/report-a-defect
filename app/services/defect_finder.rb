@@ -12,7 +12,6 @@ class DefectFinder
                      property: :scheme,
                      communal_area: :scheme)
            .order(:target_completion_date)
-           .map { |defect| DefectPresenter.new(defect) }
   end
 
   def defects
