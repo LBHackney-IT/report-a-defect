@@ -50,7 +50,7 @@ RSpec.feature 'Anyone can download defect data' do
 
     # Communal defect
     expect(page).to have_content(communal_defect.reference_number)
-    expect(page).to have_content(property_defect.created_at.to_s)
+    expect(page).to have_content(communal_defect.created_at.to_s)
     expect(page).to have_content(communal_defect.title)
     expect(page).to have_content('Communal')
     expect(page).to have_content(communal_defect.status)
