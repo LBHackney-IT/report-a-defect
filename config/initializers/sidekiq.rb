@@ -1,9 +1,21 @@
 redis_url = "#{ENV['REDIS_URL']}/0"
 
+options = {
+  concurrency: Integer(ENV.fetch('RAILS_MAX_THREADS') { 5 }),
+}
+
 Sidekiq.configure_server do |config|
-  config.redis = { url: redis_url, namespace: "report_a_defect_#{Rails.env}" }
+  config.options.merge!(options)
+  config.redis = {
+    url: redis_url,
+    size: config.options[:concurrency] + 5,
+  }
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = { url: redis_url, namespace: "report_a_defect_#{Rails.env}" }
+  config.options.merge!(options)
+  config.redis = {
+    url: redis_url,
+    size: config.options[:concurrency] + 5,
+  }
 end
