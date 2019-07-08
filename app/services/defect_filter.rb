@@ -5,11 +5,17 @@ class DefectFilter
     self.statuses = statuses
   end
 
-  def scope
-    return :all if open? && closed?
+  def scopes
+    [status_scope].compact
+  end
+
+  private
+
+  def status_scope
+    return :open_and_closed if open? && closed?
     return :open if open?
     return :closed if closed?
-    :none
+  end
   end
 
   def none?

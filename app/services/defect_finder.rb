@@ -16,6 +16,6 @@ class DefectFinder
   end
 
   def defects
-    Defect.send(filter.scope)
+    Defect.send_chain(filter.scopes)
   end
 end
