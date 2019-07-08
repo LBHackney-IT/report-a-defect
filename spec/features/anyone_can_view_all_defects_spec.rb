@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can view all defects' do
-  scenario 'open defects are shown by default' do
+  scenario 'all open defects are shown by default' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
