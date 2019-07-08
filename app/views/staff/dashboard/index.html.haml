@@ -24,6 +24,8 @@
 
     = form_tag defects_path, method: :get do
       = hidden_field_tag 'statuses[]', 'Open'
+      = hidden_field_tag 'types[]', 'Property'
+      = hidden_field_tag 'types[]', 'Communal'
       = submit_tag 'View all defects', class: 'govuk-button mb0'
 
     %hr.govuk-section-break.govuk-section-break--l.govuk-section-break--visible
