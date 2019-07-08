@@ -30,8 +30,13 @@ class Defect < ApplicationRecord
     rejected
   ]
 
+  scope :open_and_closed, (-> { open.or(closed) })
   scope :open, (-> { where(status: %i[outstanding follow_on end_of_year dispute referral]) })
   scope :closed, (-> { where(status: %i[completed closed raised_in_error rejected]) })
+
+  scope :property_and_communal, (-> { property.or(communal) })
+  scope :property, (-> { where(communal: false) })
+  scope :communal, (-> { where(communal: true) })
 
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
@@ -80,6 +85,10 @@ class Defect < ApplicationRecord
     'Plumbing',
     'Electrical/Mechanical',
   ].freeze
+
+  def self.send_chain(methods)
+    methods.inject(self, :send)
+  end
 
   def set_completion_date
     return unless priority

@@ -13,7 +13,7 @@
 
     = form_tag defects_path, class: 'filter-defects', method: :get do
       .govuk-form-group
-        %fieldset.govuk-fieldset
+        %fieldset.govuk-fieldset.lbh-fieldset
           = label_tag 'statuses', 'Status', class: 'govuk-label'
           .govuk-checkboxes.checkbox-group
             .govuk-checkboxes__item
@@ -22,6 +22,16 @@
             .govuk-checkboxes__item
               = check_box_tag 'statuses[]', 'Closed', closed_status?, id: 'statuses_closed', class: 'govuk-checkboxes__input'
               = label_tag 'statuses[]', 'Closed', for: 'statuses_closed', class: 'govuk-label govuk-checkboxes__label'
+        %fieldset.govuk-fieldset.lbh-fieldset
+          = label_tag 'types', 'Type', class: 'govuk-label'
+          .govuk-checkboxes.checkbox-group
+            .govuk-checkboxes__item
+              = check_box_tag 'types[]', 'Property', type_property?, id: 'types_property', class: 'govuk-checkboxes__input'
+              = label_tag 'types[]', 'Property', for: 'types_property', class: 'govuk-label govuk-checkboxes__label'
+            .govuk-checkboxes__item
+              = check_box_tag 'types[]', 'Communal', type_communal?, id: 'types_communal', class: 'govuk-checkboxes__input'
+              = label_tag 'types[]', 'Communal', for: 'types_communal', class: 'govuk-label govuk-checkboxes__label'
+
       = submit_tag I18n.t('generic.button.filter'), class: 'govuk-button mb0'
 
 .govuk-grid-row
