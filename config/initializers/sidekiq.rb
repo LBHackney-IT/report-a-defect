@@ -19,3 +19,5 @@ Sidekiq.configure_client do |config|
     size: config.options[:concurrency] + 5,
   }
 end
+
+Sidekiq::Logging.logger.level = Logger::WARN if Rails.env.production?
