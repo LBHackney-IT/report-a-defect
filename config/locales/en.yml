@@ -87,7 +87,7 @@ en:
           'The %{resource} has successfully been updated.'
   button:
     report:
-      download_all: Download CSV
+      download_all: Download all defect data
     create:
       estate: 'Create estate'
       scheme: 'Create scheme'
