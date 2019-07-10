@@ -180,4 +180,11 @@ RSpec.describe Defect, type: :model do
       )
     end
   end
+
+  describe '.send_chain' do
+    it 'sends each symbol as a method to Defect' do
+      expect(described_class).to receive(:all)
+      described_class.send_chain([:all])
+    end
+  end
 end
