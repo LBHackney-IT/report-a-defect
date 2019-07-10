@@ -31,7 +31,13 @@
             .govuk-checkboxes__item
               = check_box_tag 'types[]', 'Communal', type_communal?, id: 'types_communal', class: 'govuk-checkboxes__input'
               = label_tag 'types[]', 'Communal', for: 'types_communal', class: 'govuk-label govuk-checkboxes__label'
-
+        %fieldset.govuk-fieldset.lbh-fieldset
+          = label_tag 'schemes', 'Scheme', class: 'govuk-label'
+          .govuk-checkboxes.checkbox-group
+            - Scheme.all.each do |scheme|
+              .govuk-checkboxes__item
+                = check_box_tag 'scheme_ids[]', scheme.id, selected_scheme?(scheme.id), id: scheme.id, class: 'govuk-checkboxes__input'
+                = label_tag 'scheme_ids[]', scheme.name, for: scheme.id, class: 'govuk-label govuk-checkboxes__label'
       = submit_tag I18n.t('generic.button.filter'), class: 'govuk-button mb0'
 
 .govuk-grid-row

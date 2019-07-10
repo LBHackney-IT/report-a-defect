@@ -6,12 +6,14 @@ RSpec.describe DefectFilter do
       it 'returns an array of all required Defect scopes' do
         result = described_class.new(
           statuses: %i[open closed],
-          types: %i[property communal]
+          types: %i[property communal],
+          schemes: ['Blue Scheme']
         )
         expect(result.scopes).to eq(
-          %i[
-            open_and_closed
-            property_and_communal
+          [
+            :open_and_closed,
+            :property_and_communal,
+            [:for_scheme, ['Blue Scheme']],
           ]
         )
       end

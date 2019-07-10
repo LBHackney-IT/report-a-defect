@@ -1,6 +1,10 @@
 class Staff::DefectsController < Staff::BaseController
   def index
-    @defect_filter = DefectFilter.new(statuses: statuses, types: types)
+    @defect_filter = DefectFilter.new(
+      statuses: statuses,
+      types: types,
+      schemes: scheme_ids,
+    )
     @defects = DefectFinder.new(order: :target_completion_date, filter: @defect_filter)
                            .call
                            .map { |defect| DefectPresenter.new(defect) }
@@ -40,5 +44,15 @@ class Staff::DefectsController < Staff::BaseController
   def type_communal?
     return false if types.blank?
     types.include?(:communal)
+  end
+
+  def scheme_ids
+    params.fetch(:scheme_ids, [])
+  end
+
+  helper_method :selected_scheme?
+  def selected_scheme?(scheme_id)
+    return false if scheme_id.blank?
+    scheme_ids.include?(scheme_id)
   end
 end

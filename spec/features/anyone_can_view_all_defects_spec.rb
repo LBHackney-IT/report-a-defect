@@ -119,6 +119,46 @@ RSpec.feature 'Anyone can view all defects' do
     end
   end
 
+  scenario 'property and communal area defects can be filtered by scheme name' do
+    interested_scheme = create(:scheme, name: 'Blue')
+    distracting_scheme = create(:scheme, name: 'Red')
+
+    property = create(:property, scheme: interested_scheme)
+    communal_area = create(:communal_area, scheme: interested_scheme)
+    distracting_property = create(:property, scheme: distracting_scheme)
+    distracting_communal_area = create(:communal_area, scheme: distracting_scheme)
+
+    interested_property_defect = DefectPresenter.new(
+      create(:property_defect, property: property, status: :outstanding)
+    )
+    interesting_communal_area_defect = DefectPresenter.new(
+      create(:communal_defect, communal_area: communal_area, status: :outstanding)
+    )
+    distracting_property_defect = DefectPresenter.new(
+      create(:property_defect, property: distracting_property, status: :outstanding)
+    )
+    distracting_communal_area_defect = DefectPresenter.new(
+      create(:communal_defect, communal_area: distracting_communal_area, status: :outstanding)
+    )
+
+    visit root_path
+
+    click_on('View all defects')
+
+    within('.filter-defects') do
+      uncheck_all_filters
+      check interested_scheme.name, name: 'scheme_ids[]'
+      click_on(I18n.t('generic.button.filter'))
+    end
+
+    within '.defects' do
+      expect(page).to have_content(interested_property_defect.reference_number)
+      expect(page).to have_content(interesting_communal_area_defect.reference_number)
+      expect(page).not_to have_content(distracting_property_defect.reference_number)
+      expect(page).not_to have_content(distracting_communal_area_defect.reference_number)
+    end
+  end
+
   def uncheck_all_filters
     all('input[type=checkbox]').each do |checkbox|
       checkbox.click if checkbox.checked?
