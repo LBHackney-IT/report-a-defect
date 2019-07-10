@@ -107,10 +107,7 @@ RSpec.feature 'Anyone can view all defects' do
     click_on('View all defects')
 
     within('.filter-defects') do
-      uncheck 'Open', name: 'statuses[]'
-      uncheck 'Closed', name: 'statuses[]'
-      uncheck 'Property', name: 'types[]'
-      uncheck 'Communal', name: 'types[]'
+      uncheck_all_filters
       click_on(I18n.t('generic.button.filter'))
     end
 
@@ -119,6 +116,12 @@ RSpec.feature 'Anyone can view all defects' do
       expect(page).to have_content(closed_property_defect.reference_number)
       expect(page).to have_content(open_communal_defect.reference_number)
       expect(page).to have_content(closed_communal_defect.reference_number)
+    end
+  end
+
+  def uncheck_all_filters
+    all('input[type=checkbox]').each do |checkbox|
+      checkbox.click if checkbox.checked?
     end
   end
 end
