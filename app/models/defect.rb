@@ -87,7 +87,7 @@ class Defect < ApplicationRecord
   ].freeze
 
   def self.send_chain(methods)
-    methods.inject(self, :send)
+    methods.inject(self) { |s, method| s.send(*method) }
   end
 
   def set_completion_date

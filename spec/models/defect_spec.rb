@@ -186,5 +186,15 @@ RSpec.describe Defect, type: :model do
       expect(described_class).to receive(:all)
       described_class.send_chain([:all])
     end
+
+    context 'when there is an nested array of parameters' do
+      it 'sends the symbol as a method, with the parameters' do
+        class TestDefect < Defect
+          scope :any_scope, (->(args) { where(id: args) })
+        end
+        expect(TestDefect).to receive(:any_scope).with(%w[foo bar])
+        TestDefect.send_chain([:all, [:any_scope, %w[foo bar]]])
+      end
+    end
   end
 end
