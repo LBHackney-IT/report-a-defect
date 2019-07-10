@@ -107,6 +107,23 @@ RSpec.describe Defect, type: :model do
     end
   end
 
+  describe '.for_scheme' do
+    it 'returns a list of defects that belong to provided schemes' do
+      interested_scheme = create(:scheme)
+      interested_property = create(:property, scheme: interested_scheme)
+      interested_defect = create(:property_defect, property: interested_property)
+
+      distracting_defect_with_different_scheme = create(:property_defect)
+
+      result = described_class.for_scheme(
+        [interested_scheme.id]
+      )
+
+      expect(result).to include(interested_defect)
+      expect(result).not_to include(distracting_defect_with_different_scheme)
+    end
+  end
+
   describe '#status' do
     it 'returns the capitalized status' do
       defect = build(:defect, status: 'outstanding')
