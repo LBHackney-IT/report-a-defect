@@ -117,8 +117,12 @@ class Defect < ApplicationRecord
     self.target_completion_date = Date.current + priority.days.days
   end
 
+  def self.format_status(status)
+    status.tr('_', ' ').capitalize
+  end
+
   def status
-    super.tr('_', ' ').capitalize
+    Defect.format_status(super)
   end
 
   def contact_phone_number=(value)

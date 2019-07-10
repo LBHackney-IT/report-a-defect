@@ -83,6 +83,31 @@ RSpec.describe DefectHelper, type: :helper do
       end
     end
 
+    context 'when the key is defect.update' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(trackable: defect, owner: user, key: 'defect.update')
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.updated',
+                                     name: event.owner.name))
+      end
+    end
+
+    context 'when the event describes a status change' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(
+          trackable: defect,
+          owner: user,
+          key: 'defect.update',
+          parameters: { changes: { status: %w[outstanding follow_on] } }
+        )
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.status_changed',
+                                     name: event.owner.name,
+                                     old: 'Outstanding',
+                                     new: 'Follow on'))
+      end
+    end
+
     context 'when the key is defect.forwarded_to_contractor' do
       it 'returns the event description' do
         event = PublicActivity::Activity.new(trackable: defect, owner: user, key: 'defect.forwarded_to_contractor')
