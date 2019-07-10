@@ -8,7 +8,9 @@ class DefectFilter
   end
 
   def scopes
-    [status_scope, type_scope].compact
+    scopes = [status_scope, type_scope].compact
+    return [:all] if scopes.empty?
+    scopes
   end
 
   private
