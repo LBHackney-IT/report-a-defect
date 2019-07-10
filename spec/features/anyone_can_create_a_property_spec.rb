@@ -11,6 +11,9 @@ RSpec.feature 'Anyone can create a property' do
     click_on(I18n.t('button.create.property'))
 
     expect(page).to have_content(I18n.t('page_title.staff.properties.create'))
+    expect(page).to have_content(I18n.t('form.property.guidance', link: "Hackney's property lookup service"))
+    expect(page).to have_link("Hackney's property lookup service", href: 'http://lbhgisnetp01/SinglePoint/SimpleSearch.aspx')
+
     within('form.new_property') do
       fill_in 'property[address]', with: 'Flat 1, Hackney Street'
       fill_in 'property[postcode]', with: 'N16NU'

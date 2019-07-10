@@ -8,6 +8,8 @@
       = I18n.t('page_title.staff.properties.create', name: @scheme.name)
       %span.govuk-caption-l= 'Step 1 of 1'
 
+    = render partial: 'data_guidance'
+
     = simple_form_for [@scheme.estate, @scheme, @property] do |f|
       .govuk-form-group
         = f.input :address
