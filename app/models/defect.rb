@@ -60,7 +60,17 @@ class Defect < ApplicationRecord
   end
 
   include PublicActivity::Model
-  tracked owner: ->(controller, _) { controller.current_user if controller }
+  tracked \
+    owner: ->(controller, _) { controller.current_user if controller },
+    params: { changes: ->(_, model) { model.tracked_changes } }
+
+  before_save :remember_changes_for_activity
+  attr_reader :tracked_changes
+
+  def remember_changes_for_activity
+    selected_changes = changes.slice(:status)
+    @tracked_changes = selected_changes unless selected_changes.empty?
+  end
 
   TRADES = [
     'Blinds',
