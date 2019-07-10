@@ -55,6 +55,58 @@ RSpec.describe Defect, type: :model do
     end
   end
 
+  describe '.for_properties' do
+    it 'returns a list of defects for a given property ID' do
+      interested_property = create(:property)
+      interested_property_defect = create(:property_defect, property: interested_property)
+      distracting_property = create(:property)
+      distracting_property_defect = create(:property_defect, property: distracting_property)
+
+      result = described_class.for_properties([interested_property.id])
+
+      expect(result).to include(interested_property_defect)
+      expect(result).not_to include(distracting_property_defect)
+    end
+  end
+
+  describe '.for_communal_areas' do
+    it 'returns a list of defects for a given communal area ID' do
+      interested_communal_area = create(:communal_area)
+      interested_communal_defect = create(:communal_defect, communal_area: interested_communal_area)
+      distracting_communal_area = create(:communal_area)
+      distracting_communal_defect = create(:communal_defect, communal_area: distracting_communal_area)
+
+      result = described_class.for_communal_areas([interested_communal_area.id])
+
+      expect(result).to include(interested_communal_defect)
+      expect(result).not_to include(distracting_communal_defect)
+    end
+  end
+
+  describe '.for_properties_or_communal_areas' do
+    it 'returns a list of defects that match either a list of property_ids or communal_area_ids' do
+      interested_property = create(:property)
+      interested_property_defect = create(:property_defect, property: interested_property)
+      distracting_property = create(:property)
+      distracting_property_defect = create(:property_defect, property: distracting_property)
+
+      interested_communal_area = create(:communal_area)
+      interested_communal_defect = create(:communal_defect, communal_area: interested_communal_area)
+      distracting_communal_area = create(:communal_area)
+      distracting_communal_defect = create(:communal_defect, communal_area: distracting_communal_area)
+
+      result = described_class.for_properties_or_communal_areas(
+        [interested_property.id],
+        [interested_communal_area.id]
+      )
+
+      expect(result).to include(interested_property_defect)
+      expect(result).to include(interested_communal_defect)
+      expect(result).not_to include(distracting_property_defect)
+      expect(result).not_to include(distracting_communal_defect)
+    end
+  end
+
   describe '#status' do
     it 'returns the capitalized status' do
       defect = build(:defect, status: 'outstanding')

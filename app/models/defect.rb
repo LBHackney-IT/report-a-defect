@@ -38,6 +38,12 @@ class Defect < ApplicationRecord
   scope :property, (-> { where(communal: false) })
   scope :communal, (-> { where(communal: true) })
 
+  scope :for_properties, (->(property_ids) { where(property_id: property_ids) })
+  scope :for_communal_areas, (->(communal_area_ids) { where(communal_area_id: communal_area_ids) })
+  scope :for_properties_or_communal_areas, lambda { |property_ids, communal_area_ids|
+    for_properties(property_ids).or(for_communal_areas(communal_area_ids))
+  }
+
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
   belongs_to :priority
