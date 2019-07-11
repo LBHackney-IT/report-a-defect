@@ -124,6 +124,20 @@ RSpec.describe Defect, type: :model do
     end
   end
 
+  describe '#reference_number' do
+    it 'returns a formatted identifier code' do
+      defect = create(:defect, sequence_number: 42)
+      expect(defect.reference_number).to eq('NB-000-042')
+    end
+
+    it 'uses sequential identifiers' do
+      defects = create_list(:defect, 5)
+      ids = defects.map { |d| d.reference_number.scan(/\d/).join('').to_i }
+      first = ids.first
+      expect(ids).to eq((0..4).map { |i| first + i })
+    end
+  end
+
   describe '#status' do
     it 'returns the capitalized status' do
       defect = build(:defect, status: 'outstanding')
@@ -200,7 +214,7 @@ RSpec.describe Defect, type: :model do
       create(:property_defect,
              property: property,
              priority: priority,
-             reference_number: '123ABC',
+             sequence_number: 1,
              title: 'a short title',
              status: :outstanding,
              trade: 'Electrical',
@@ -215,7 +229,7 @@ RSpec.describe Defect, type: :model do
       create(:communal_defect,
              communal_area: communal_area,
              priority: priority,
-             reference_number: '456ABC',
+             sequence_number: 2,
              title: 'a shorter title',
              status: :outstanding,
              trade: 'Electrical',
