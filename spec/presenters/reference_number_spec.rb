@@ -5,6 +5,11 @@ RSpec.describe ReferenceNumber do
       expect(number.to_i).to eq(123_456)
     end
 
+    it 'matches a reference number string with non-canonical formatting' do
+      number = ReferenceNumber.parse('NB12---34')
+      expect(number.to_i).to eq(1234)
+    end
+
     it 'does not match any other string' do
       number = ReferenceNumber.parse('not a reference number')
       expect(number).to be_nil

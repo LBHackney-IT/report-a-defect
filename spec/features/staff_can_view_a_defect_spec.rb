@@ -67,6 +67,22 @@ RSpec.feature 'Anyone can view a defect' do
     expect(page).to have_content(defect.title)
   end
 
+  scenario 'a defect can be found by reformatted reference number' do
+    defect = create(:property_defect)
+
+    visit dashboard_path
+
+    within('form.search') do
+      fill_in 'query', with: defect.reference_number.gsub('-', '')
+      click_on(I18n.t('generic.button.find'))
+    end
+
+    expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
+
+    expect(page).to have_content(defect.reference_number)
+    expect(page).to have_content(defect.title)
+  end
+
   scenario 'entering an unknown reference number' do
     visit dashboard_path
 

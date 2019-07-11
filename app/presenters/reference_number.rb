@@ -1,11 +1,11 @@
 class ReferenceNumber
-  FORMAT = /^ *NB-(\d+)-(\d+) *$/i.freeze
+  FORMAT = /^ *NB([0-9-]+) *$/i.freeze
 
   def self.parse(string)
     match = FORMAT.match(string)
     return nil unless match
 
-    number = (match[1] + match[2]).to_i
+    number = match[1].scan(/\d/).join('').to_i
     new(number)
   end
 
