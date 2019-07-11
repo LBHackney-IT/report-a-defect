@@ -65,6 +65,7 @@ en:
         priorities:
           no_priorities: 'There are no priotities set yet. You need to create them.'
     defect:
+      not_found: 'No defect could be found with reference number %{reference_number}'
       show:
         not_accepted_yet: 'Waiting on the contractor to accept'
       property:

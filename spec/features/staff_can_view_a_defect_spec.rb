@@ -51,6 +51,36 @@ RSpec.feature 'Anyone can view a defect' do
     end
   end
 
+  scenario 'a defect can be found by reference number' do
+    defect = create(:property_defect)
+
+    visit dashboard_path
+
+    within('form.search') do
+      fill_in 'query', with: defect.reference_number
+      click_on(I18n.t('generic.button.find'))
+    end
+
+    expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
+
+    expect(page).to have_content(defect.reference_number)
+    expect(page).to have_content(defect.title)
+  end
+
+  scenario 'entering an unknown reference number' do
+    visit dashboard_path
+
+    reference_number = ReferenceNumber.new(0)
+
+    within('form.search') do
+      fill_in 'query', with: reference_number.to_s
+      click_on(I18n.t('generic.button.find'))
+    end
+
+    expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
+    expect(page).to have_content(I18n.t('page_content.defect.not_found', reference_number: reference_number.to_s))
+  end
+
   scenario 'can use breadcrumbs to navigate back to a property' do
     defect = create(:property_defect)
 
