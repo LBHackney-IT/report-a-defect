@@ -15,7 +15,6 @@ class Defect < ApplicationRecord
   validates :contact_phone_number, numericality: true,
                                    length: { minimum: 10, maximum: 15 },
                                    allow_blank: true
-  attribute :reference_number, :string, default: -> { SecureRandom.hex(3).upcase }
 
   enum status: %i[
     outstanding
