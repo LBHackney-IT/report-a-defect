@@ -14,4 +14,8 @@ class SchemeReportPresenter
   def date_range
     "From #{scheme.created_at} to #{Time.current}"
   end
+
+  def defects_by_status(text:)
+    defects.send(text)
+  end
 end
