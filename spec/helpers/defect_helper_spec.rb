@@ -135,4 +135,16 @@ RSpec.describe DefectHelper, type: :helper do
       end
     end
   end
+
+  describe '#format_status' do
+    it 'upcases the first word' do
+      result = helper.format_status('outstanding')
+      expect(result).to eql('Outstanding')
+    end
+
+    it 'replaces all underscores with empty spaces' do
+      result = helper.format_status('raised_in_error')
+      expect(result).to eql('Raised in error')
+    end
+  end
 end
