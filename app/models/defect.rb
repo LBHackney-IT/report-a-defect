@@ -163,7 +163,7 @@ class Defect < ApplicationRecord
     return nil if new_record?
 
     reload if sequence_number.blank?
-    format('NB-%06d', sequence_number).gsub(/-(\d{3})/, '-\1-')
+    ReferenceNumber.new(sequence_number).to_s
   end
 
   def set_completion_date
