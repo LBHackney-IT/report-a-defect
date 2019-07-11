@@ -134,6 +134,14 @@ RSpec.describe Defect, type: :model do
       defect = build(:defect, status: 'follow_on')
       expect(defect.status).to eq('Follow on')
     end
+
+    it 'records changes in the activity log' do
+      defect = build(:defect, status: 'outstanding')
+      defect.follow_on!
+
+      event = defect.activities.last
+      expect(event.parameters[:changes]).to eq('status' => %w[outstanding follow_on])
+    end
   end
 
   describe '#set_completion_date' do
