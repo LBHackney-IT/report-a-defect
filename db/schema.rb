@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_10_143416) do
+ActiveRecord::Schema.define(version: 2019_07_11_110803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 2019_07_10_143416) do
     t.string "trade"
     t.date "target_completion_date"
     t.integer "status", default: 0
-    t.string "reference_number", null: false
+    t.string "reference_number"
     t.uuid "property_id"
     t.uuid "priority_id"
     t.datetime "created_at", null: false
