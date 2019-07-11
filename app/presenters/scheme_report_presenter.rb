@@ -10,4 +10,8 @@ class SchemeReportPresenter
   def defects
     @defects ||= Defect.for_scheme([scheme.id])
   end
+
+  def date_range
+    "From #{scheme.created_at} to #{Time.current}"
+  end
 end

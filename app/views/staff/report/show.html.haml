@@ -9,5 +9,6 @@
     %h1.govuk-heading-l
       = I18n.t('page_title.staff.reports.scheme.show', name: @presenter.scheme.name)
       %span.govuk-caption-l= @presenter.scheme.contractor_name
+      %span.govuk-caption-l= @presenter.date_range
 
     = render partial: 'summary', locals: { presenter: @presenter }

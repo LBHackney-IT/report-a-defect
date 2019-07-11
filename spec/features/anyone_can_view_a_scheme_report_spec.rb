@@ -17,6 +17,7 @@ RSpec.feature 'Anyone can view a report for a scheme' do
     end
 
     expect(page).to have_content(I18n.t('page_title.staff.reports.scheme.show', name: scheme.name))
+    expect(page).to have_content("From #{scheme.created_at} to #{Time.current}")
 
     within('.summary') do
       %w[Title Property Communal Total].each do |column_header|
