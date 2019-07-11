@@ -63,7 +63,6 @@ en:
     defect:
       show:
         not_accepted_yet: 'Waiting on the contractor to accept'
-    property:
       table:
         header: 'Property defects'
     communal_area:
@@ -107,6 +106,13 @@ en:
       scheme: Edit scheme
       defect: Edit defect
   form:
+    property:
+      guidance: 'Find address information (Address, Postcode, UPRN) from %{link}.'
+      steps:
+        - 'Go to advanced search'
+        - "Select 'provisional' for property type"
+        - 'Use a postcode to find a property'
+        - 'Copy and paste the relevant data into the fields below'
     communal_area:
       explanation: 'A communal area can be used to report and manage defects that are in a shared location rather than within an individual property.'
       name:
