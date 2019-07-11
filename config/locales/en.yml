@@ -14,6 +14,9 @@ en:
           body: 'This accept link appears to be invalid. This might be because it has already accepted it or it has expired.'
     staff:
       dashboard: 'Dashboard'
+      reports:
+        scheme:
+          show: 'Scheme report for %{name}'
       search:
         index:
           headers:

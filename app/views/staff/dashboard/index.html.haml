@@ -36,6 +36,19 @@
       = I18n.t('page_content.dashboard.header.reporting')
     = link_to(I18n.t('button.report.download_all'), report_path(format: :csv), class: 'govuk-button govuk-button--secondary mb0')
 
+    %table.govuk-table.scheme-reports
+      %thead.govuk-table__head
+        %tr.govuk-table__row
+          %th.govuk-table__header
+            Name
+          %th.govuk-table__header
+            Actions
+      %tbody.govuk-table__body
+        - Scheme.all.each do |scheme|
+          %tr.govuk-table__row
+            %td.govuk-table__cell= scheme.name
+            %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), report_scheme_path(scheme), class: 'govuk-link')
+
   .govuk-grid-column-one-third
     %h2.govuk-heading-m
       = I18n.t('page_content.dashboard.header.manage')
