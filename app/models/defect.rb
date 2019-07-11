@@ -38,6 +38,17 @@ class Defect < ApplicationRecord
   scope :property, (-> { where(communal: false) })
   scope :communal, (-> { where(communal: true) })
 
+  scope :for_properties, (->(property_ids) { where(property_id: property_ids) })
+  scope :for_communal_areas, (->(communal_area_ids) { where(communal_area_id: communal_area_ids) })
+  scope :for_properties_or_communal_areas, lambda { |property_ids, communal_area_ids|
+    for_properties(property_ids).or(for_communal_areas(communal_area_ids))
+  }
+  scope :for_scheme, (lambda { |scheme_ids|
+    property_ids = Property.joins(:scheme).where(schemes: { id: scheme_ids }).pluck(:id)
+    communal_area_ids = CommunalArea.joins(:scheme).where(schemes: { id: scheme_ids }).pluck(:id)
+    for_properties_or_communal_areas(property_ids, communal_area_ids)
+  })
+
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
   belongs_to :priority
@@ -87,7 +98,7 @@ class Defect < ApplicationRecord
   ].freeze
 
   def self.send_chain(methods)
-    methods.inject(self, :send)
+    methods.inject(self) { |s, method| s.send(*method) }
   end
 
   def set_completion_date

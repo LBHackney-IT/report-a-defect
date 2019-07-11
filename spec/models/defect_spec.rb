@@ -55,6 +55,75 @@ RSpec.describe Defect, type: :model do
     end
   end
 
+  describe '.for_properties' do
+    it 'returns a list of defects for a given property ID' do
+      interested_property = create(:property)
+      interested_property_defect = create(:property_defect, property: interested_property)
+      distracting_property = create(:property)
+      distracting_property_defect = create(:property_defect, property: distracting_property)
+
+      result = described_class.for_properties([interested_property.id])
+
+      expect(result).to include(interested_property_defect)
+      expect(result).not_to include(distracting_property_defect)
+    end
+  end
+
+  describe '.for_communal_areas' do
+    it 'returns a list of defects for a given communal area ID' do
+      interested_communal_area = create(:communal_area)
+      interested_communal_defect = create(:communal_defect, communal_area: interested_communal_area)
+      distracting_communal_area = create(:communal_area)
+      distracting_communal_defect = create(:communal_defect, communal_area: distracting_communal_area)
+
+      result = described_class.for_communal_areas([interested_communal_area.id])
+
+      expect(result).to include(interested_communal_defect)
+      expect(result).not_to include(distracting_communal_defect)
+    end
+  end
+
+  describe '.for_properties_or_communal_areas' do
+    it 'returns a list of defects that match either a list of property_ids or communal_area_ids' do
+      interested_property = create(:property)
+      interested_property_defect = create(:property_defect, property: interested_property)
+      distracting_property = create(:property)
+      distracting_property_defect = create(:property_defect, property: distracting_property)
+
+      interested_communal_area = create(:communal_area)
+      interested_communal_defect = create(:communal_defect, communal_area: interested_communal_area)
+      distracting_communal_area = create(:communal_area)
+      distracting_communal_defect = create(:communal_defect, communal_area: distracting_communal_area)
+
+      result = described_class.for_properties_or_communal_areas(
+        [interested_property.id],
+        [interested_communal_area.id]
+      )
+
+      expect(result).to include(interested_property_defect)
+      expect(result).to include(interested_communal_defect)
+      expect(result).not_to include(distracting_property_defect)
+      expect(result).not_to include(distracting_communal_defect)
+    end
+  end
+
+  describe '.for_scheme' do
+    it 'returns a list of defects that belong to provided schemes' do
+      interested_scheme = create(:scheme)
+      interested_property = create(:property, scheme: interested_scheme)
+      interested_defect = create(:property_defect, property: interested_property)
+
+      distracting_defect_with_different_scheme = create(:property_defect)
+
+      result = described_class.for_scheme(
+        [interested_scheme.id]
+      )
+
+      expect(result).to include(interested_defect)
+      expect(result).not_to include(distracting_defect_with_different_scheme)
+    end
+  end
+
   describe '#status' do
     it 'returns the capitalized status' do
       defect = build(:defect, status: 'outstanding')
@@ -178,6 +247,23 @@ RSpec.describe Defect, type: :model do
           access_information
         ]
       )
+    end
+  end
+
+  describe '.send_chain' do
+    it 'sends each symbol as a method to Defect' do
+      expect(described_class).to receive(:all)
+      described_class.send_chain([:all])
+    end
+
+    context 'when there is an nested array of parameters' do
+      it 'sends the symbol as a method, with the parameters' do
+        class TestDefect < Defect
+          scope :any_scope, (->(args) { where(id: args) })
+        end
+        expect(TestDefect).to receive(:any_scope).with(%w[foo bar])
+        TestDefect.send_chain([:all, [:any_scope, %w[foo bar]]])
+      end
     end
   end
 end

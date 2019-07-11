@@ -6,12 +6,14 @@ RSpec.describe DefectFilter do
       it 'returns an array of all required Defect scopes' do
         result = described_class.new(
           statuses: %i[open closed],
-          types: %i[property communal]
+          types: %i[property communal],
+          schemes: ['Blue Scheme']
         )
         expect(result.scopes).to eq(
-          %i[
-            open_and_closed
-            property_and_communal
+          [
+            :open_and_closed,
+            :property_and_communal,
+            [:for_scheme, ['Blue Scheme']],
           ]
         )
       end
@@ -42,14 +44,14 @@ RSpec.describe DefectFilter do
       context 'when the status is neither' do
         it 'returns an empty array' do
           result = described_class.new(statuses: %i[foo])
-          expect(result.scopes).to eq([])
+          expect(result.scopes).to eq([:all])
         end
       end
 
       context 'when there are no statuses' do
         it 'returns an empty array' do
           result = described_class.new(statuses: %i[])
-          expect(result.scopes).to eq([])
+          expect(result.scopes).to eq([:all])
         end
       end
     end
@@ -79,14 +81,14 @@ RSpec.describe DefectFilter do
       context 'when the type is unknown' do
         it 'returns an empty array' do
           result = described_class.new(types: %i[foo])
-          expect(result.scopes).to eq([])
+          expect(result.scopes).to eq([:all])
         end
       end
 
       context 'when there are no types' do
         it 'returns an empty array' do
           result = described_class.new(types: %i[])
-          expect(result.scopes).to eq([])
+          expect(result.scopes).to eq([:all])
         end
       end
     end

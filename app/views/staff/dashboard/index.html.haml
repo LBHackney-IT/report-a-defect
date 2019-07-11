@@ -26,6 +26,8 @@
       = hidden_field_tag 'statuses[]', 'Open'
       = hidden_field_tag 'types[]', 'Property'
       = hidden_field_tag 'types[]', 'Communal'
+      - Scheme.all.each do |scheme|
+        = hidden_field_tag 'scheme_ids[]', scheme.id
       = submit_tag 'View all defects', class: 'govuk-button mb0'
 
     %hr.govuk-section-break.govuk-section-break--l.govuk-section-break--visible
