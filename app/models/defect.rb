@@ -159,6 +159,10 @@ class Defect < ApplicationRecord
     methods.inject(self) { |s, method| s.send(*method) }
   end
 
+  def self.by_reference_number(number)
+    find_by(sequence_number: number.to_i)
+  end
+
   def reference_number
     return nil if new_record?
 

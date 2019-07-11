@@ -16,7 +16,7 @@ class Staff::SearchesController < Staff::BaseController
   end
 
   def search_by_reference_number(number)
-    defect = Defect.find_by(sequence_number: number.to_i)
+    defect = Defect.by_reference_number(number)
 
     if defect
       redirect_to property_defect_path(defect.property_id, defect)
