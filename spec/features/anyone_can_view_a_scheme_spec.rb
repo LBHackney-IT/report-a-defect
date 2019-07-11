@@ -10,7 +10,9 @@ RSpec.feature 'Anyone can view a scheme' do
     visit root_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
-    click_on(I18n.t('generic.link.show'))
+    within('.estates') do
+      click_on(I18n.t('generic.link.show'))
+    end
 
     expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: scheme.estate.name))
     click_on(I18n.t('generic.link.show'))
