@@ -24,12 +24,17 @@ class SchemeReportPresenter
   end
 
   def trade_percentage(text:)
-    total = Float(defects.count)
-    trade_total = Float(defects_by_trade(text: text).count)
+    percentage_for(
+      number: Float(defects_by_trade(text: text).count),
+      total: Float(defects.count)
+    )
+  end
 
-    return '0.0%' if total.zero? || trade_total.zero?
+  private
 
-    percentage = (trade_total / total) * 100
+  def percentage_for(number:, total:)
+    return '0.0%' if number.zero? || total.zero?
+    percentage = (number / total) * 100
     "#{percentage}%"
   end
 end
