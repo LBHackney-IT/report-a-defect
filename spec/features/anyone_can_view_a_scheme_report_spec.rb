@@ -31,4 +31,32 @@ RSpec.feature 'Anyone can view a report for a scheme' do
       end
     end
   end
+
+  scenario 'defect information by status belonging to the scheme' do
+    outstanding_property_defects = create_list(:property_defect, 1, property: property, status: :outstanding)
+    outstanding_communal_defects = create_list(:communal_defect, 2, communal_area: communal_area, status: :outstanding)
+
+    closed_property_defects = create_list(:property_defect, 3, property: property, status: :closed)
+    closed_communal_defects = create_list(:communal_defect, 4, communal_area: communal_area, status: :closed)
+
+    visit report_scheme_path(scheme)
+
+    within('.statuses') do
+      %w[Name Property Communal Total].each do |header|
+        expect(page).to have_content(header)
+      end
+
+      Defect.statuses.each do |text, _integer|
+        expect(page).to have_content(format_status(text))
+      end
+
+      expect(page).to have_content(outstanding_property_defects.count)
+      expect(page).to have_content(outstanding_communal_defects.count)
+      expect(page).to have_content(outstanding_property_defects.count + outstanding_communal_defects.count)
+
+      expect(page).to have_content(closed_property_defects.count)
+      expect(page).to have_content(closed_communal_defects.count)
+      expect(page).to have_content(closed_property_defects.count + closed_communal_defects.count)
+    end
+  end
 end
