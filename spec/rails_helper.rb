@@ -60,6 +60,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include AuthHelpers
+  config.include DefectHelper, type: :feature
 
   if Bullet.enable?
     config.before(:each) do

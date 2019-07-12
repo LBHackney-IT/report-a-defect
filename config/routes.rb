@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   get 'search' => 'staff/searches#index'
   get 'report' => 'staff/report#index'
+  get 'report/scheme/:id' => 'staff/report#show', as: :report_scheme
 
   resources :defects, controller: 'staff/defects'
 

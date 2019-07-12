@@ -3,8 +3,12 @@ module DefectHelper
     "#{priority.name} - #{pluralize(priority.days, 'day')} from now"
   end
 
+  def format_status(text)
+    text.capitalize.tr('_', ' ')
+  end
+
   def status_form_label(option_array:)
-    option_array.first.capitalize.tr('_', ' ')
+    format_status(option_array.first)
   end
 
   def view_path_for(parent:, defect:)

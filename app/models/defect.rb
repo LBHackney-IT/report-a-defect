@@ -38,6 +38,7 @@ class Defect < ApplicationRecord
   scope :property, (-> { where(communal: false) })
   scope :communal, (-> { where(communal: true) })
 
+  scope :for_priorities, (->(priority_ids) { where(priority_id: priority_ids) })
   scope :for_properties, (->(property_ids) { where(property_id: property_ids) })
   scope :for_communal_areas, (->(communal_area_ids) { where(communal_area_id: communal_area_ids) })
   scope :for_properties_or_communal_areas, lambda { |property_ids, communal_area_ids|
@@ -48,6 +49,8 @@ class Defect < ApplicationRecord
     communal_area_ids = CommunalArea.joins(:scheme).where(schemes: { id: scheme_ids }).pluck(:id)
     for_properties_or_communal_areas(property_ids, communal_area_ids)
   })
+
+  scope :for_trade, (->(trade) { where(trade: trade) })
 
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true

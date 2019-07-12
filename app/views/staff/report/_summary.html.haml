@@ -1,0 +1,18 @@
+%h1.govuk-heading-m.section-heading Summary
+%table.govuk-table.summary
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        Title
+      %th.govuk-table__header
+        Property
+      %th.govuk-table__header
+        Communal
+      %th.govuk-table__header
+        Total
+  %tbody.govuk-table__body
+    %tr.govuk-table__row
+      %td.govuk-table__cell= 'Total defects'
+      %td.govuk-table__cell= presenter.defects.property.count
+      %td.govuk-table__cell= presenter.defects.communal.count
+      %td.govuk-table__cell= presenter.defects.count
