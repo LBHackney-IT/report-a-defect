@@ -16,7 +16,7 @@ class SchemeReportPresenter
   end
 
   def defects_by_status(text:)
-    defects.send(text)
+    defects.where(status: text)
   end
 
   def defects_by_trade(text:)

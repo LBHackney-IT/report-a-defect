@@ -31,6 +31,17 @@ RSpec.describe SchemeReportPresenter do
       expect(result).to include(outstanding_defect)
       expect(result).not_to include(closed_defect)
     end
+
+    context 'when the status is closed' do
+      it 'does not return an inflated number' do
+        create(:property_defect, property: property, priority: priority, status: :outstanding)
+        create(:property_defect, property: property, priority: priority, status: :completed)
+        create(:property_defect, property: property, priority: priority, status: :closed)
+        create(:property_defect, property: property, priority: priority, status: :closed)
+        result = described_class.new(scheme: scheme).defects_by_status(text: 'closed')
+        expect(result.count).to eql(2)
+      end
+    end
   end
 
   describe '#defects_by_trade' do
