@@ -12,8 +12,9 @@
         Total
   %tbody.govuk-table__body
     - Defect.statuses.each do |text, integer|
+      - defects_of_status = presenter.defects_by_status(text: text)
       %tr.govuk-table__row
         %td.govuk-table__cell= format_status(text)
-        %td.govuk-table__cell= presenter.defects_by_status(text: text).property.count
-        %td.govuk-table__cell= presenter.defects_by_status(text: text).communal.count
-        %td.govuk-table__cell= presenter.defects_by_status(text: text).count
+        %td.govuk-table__cell= defects_of_status.property.count
+        %td.govuk-table__cell= defects_of_status.communal.count
+        %td.govuk-table__cell= defects_of_status.count

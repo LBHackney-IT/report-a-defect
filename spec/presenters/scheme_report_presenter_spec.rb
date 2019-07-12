@@ -31,6 +31,17 @@ RSpec.describe SchemeReportPresenter do
       expect(result).to include(outstanding_defect)
       expect(result).not_to include(closed_defect)
     end
+
+    context 'when the status is closed' do
+      it 'does not return an inflated number' do
+        create(:property_defect, property: property, priority: priority, status: :outstanding)
+        create(:property_defect, property: property, priority: priority, status: :completed)
+        create(:property_defect, property: property, priority: priority, status: :closed)
+        create(:property_defect, property: property, priority: priority, status: :closed)
+        result = described_class.new(scheme: scheme).defects_by_status(text: 'closed')
+        expect(result.count).to eql(2)
+      end
+    end
   end
 
   describe '#defects_by_trade' do
@@ -51,6 +62,16 @@ RSpec.describe SchemeReportPresenter do
       create(:property_defect, property: property, trade: 'Electrical')
       result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
       expect(result).to eql('50.0%')
+    end
+
+    context 'when there the total defect count is odd' do
+      it 'returns a rounded percentage%' do
+        create(:property_defect, property: property, trade: 'Electrical')
+        create(:property_defect, property: property, trade: 'Plumbing')
+        create(:property_defect, property: property, trade: 'Plumbing')
+        result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+        expect(result).to eql('33.33%')
+      end
     end
 
     context 'when there are no defects with that trade' do

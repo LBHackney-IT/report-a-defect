@@ -16,7 +16,7 @@ class SchemeReportPresenter
   end
 
   def defects_by_status(text:)
-    defects.send(text)
+    defects.where(status: text)
   end
 
   def defects_by_trade(text:)
@@ -46,6 +46,6 @@ class SchemeReportPresenter
   def percentage_for(number:, total:)
     return '0.0%' if number.zero? || total.zero?
     percentage = (number / total) * 100
-    "#{percentage}%"
+    "#{percentage.round(2)}%"
   end
 end
