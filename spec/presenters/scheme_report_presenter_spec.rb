@@ -53,6 +53,16 @@ RSpec.describe SchemeReportPresenter do
       expect(result).to eql('50.0%')
     end
 
+    context 'when there the total defect count is odd' do
+      it 'returns a rounded percentage%' do
+        create(:property_defect, property: property, trade: 'Electrical')
+        create(:property_defect, property: property, trade: 'Plumbing')
+        create(:property_defect, property: property, trade: 'Plumbing')
+        result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+        expect(result).to eql('33.33%')
+      end
+    end
+
     context 'when there are no defects with that trade' do
       it 'returns 0.0%' do
         result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
