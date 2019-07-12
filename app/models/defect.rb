@@ -80,6 +80,7 @@ class Defect < ApplicationRecord
     'Boiler work',
     'Brickwork',
     'Carpentry',
+    'Carpentry/Doors',
     'Connectivity',
     'Cosmetic',
     'Damp',
@@ -87,6 +88,7 @@ class Defect < ApplicationRecord
     'Door work',
     'Drainage',
     'Electrical',
+    'Electrical/Mechanical',
     'Fan/Ventilation',
     'Filters',
     'Fire Safety',
@@ -104,10 +106,6 @@ class Defect < ApplicationRecord
     'Tile work',
     'Water Temperature/Supply',
     'Window Work',
-    'Cosmetic',
-    'Carpentry/Doors',
-    'Plumbing',
-    'Electrical/Mechanical',
   ].freeze
 
   def self.send_chain(methods)
