@@ -32,4 +32,33 @@ RSpec.describe SchemeReportPresenter do
       expect(result).not_to include(closed_defect)
     end
   end
+
+  describe '#defects_by_trade' do
+    it 'returns a count for all defects for the given trade' do
+      electrical_defect = create(:property_defect, property: property, trade: 'Electrical')
+      plumbing_defect = create(:property_defect, property: property, trade: 'Plumbing')
+
+      result = described_class.new(scheme: scheme).defects_by_trade(text: 'Plumbing')
+
+      expect(result).to include(plumbing_defect)
+      expect(result).not_to include(electrical_defect)
+    end
+  end
+
+
+  describe '#trade_percentage' do
+    it 'returns the percentage of defects with this trade ' do
+      create(:property_defect, property: property, trade: 'Plumbing')
+      create(:property_defect, property: property, trade: 'Electrical')
+      result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+      expect(result).to eql('50.0%')
+    end
+
+    context 'when there are no defects with that trade' do
+      it 'returns 0.0%' do
+        result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+        expect(result).to eql('0.0%')
+      end
+    end
+  end
 end

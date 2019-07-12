@@ -49,6 +49,8 @@ class Defect < ApplicationRecord
     for_properties_or_communal_areas(property_ids, communal_area_ids)
   })
 
+  scope :for_trade, (->(trade) { where(trade: trade) })
+
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
   belongs_to :priority
