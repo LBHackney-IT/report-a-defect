@@ -85,4 +85,24 @@ RSpec.feature 'Anyone can view a report for a scheme' do
       expect(page).to have_content(plumbing_property_defects.count + plumbing_communal_defects.count)
     end
   end
+
+  scenario 'defect information by scheme priority' do
+    create(:property_defect, property: property, priority: priority)
+
+    visit report_scheme_path(scheme)
+
+    within('.priorities') do
+      %w[Code Days Total Due Overdue Completed on time].each do |header|
+        expect(page).to have_content(header)
+      end
+
+      scheme.priorities.each do |priority|
+        expect(page).to have_content(priority.name)
+        expect(page).to have_content(priority.days)
+      end
+
+      expect(page).to have_content('100.0%')
+      expect(page).to have_content('1')
+    end
+  end
 end

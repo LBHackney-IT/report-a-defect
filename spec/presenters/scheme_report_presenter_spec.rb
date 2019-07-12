@@ -45,7 +45,6 @@ RSpec.describe SchemeReportPresenter do
     end
   end
 
-
   describe '#trade_percentage' do
     it 'returns the percentage of defects with this trade ' do
       create(:property_defect, property: property, trade: 'Plumbing')
@@ -57,6 +56,35 @@ RSpec.describe SchemeReportPresenter do
     context 'when there are no defects with that trade' do
       it 'returns 0.0%' do
         result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+        expect(result).to eql('0.0%')
+      end
+    end
+  end
+
+  describe '#defects_by_priority' do
+    let(:second_priority) { create(:priority, scheme: scheme) }
+
+    it 'returns a count for all defects for the given priority' do
+      first_priority_defect = create(:property_defect, property: property, priority: priority)
+      second_priority_defect = create(:property_defect, property: property, priority: second_priority)
+
+      result = described_class.new(scheme: scheme).defects_by_priority(priority: priority)
+
+      expect(result).to include(first_priority_defect)
+      expect(result).not_to include(second_priority_defect)
+    end
+  end
+
+  describe '#priority_percentage' do
+    it 'returns the percentage of defects with this priority ' do
+      create(:property_defect, property: property, priority: priority)
+      result = described_class.new(scheme: scheme).priority_percentage(priority: priority)
+      expect(result).to eql('100.0%')
+    end
+
+    context 'when there are no defects with that priority' do
+      it 'returns 0.0%' do
+        result = described_class.new(scheme: scheme).priority_percentage(priority: priority)
         expect(result).to eql('0.0%')
       end
     end

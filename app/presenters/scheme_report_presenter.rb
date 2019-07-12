@@ -30,6 +30,17 @@ class SchemeReportPresenter
     )
   end
 
+  def defects_by_priority(priority:)
+    defects.for_priorities([priority.id])
+  end
+
+  def priority_percentage(priority:)
+    percentage_for(
+      number: Float(defects_by_priority(priority: priority).count),
+      total: Float(defects.count)
+    )
+  end
+
   private
 
   def percentage_for(number:, total:)
