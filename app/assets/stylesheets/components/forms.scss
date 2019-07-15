@@ -1,6 +1,10 @@
-.filter-defects {
+.lbh-filter-form {
   border: 4px solid $lbh-panel-light;
   padding: 0.75rem;
+}
+
+.filter-defects {
+  @extend .lbh-filter-form;
 
   .lbh-checkboxes {
     border-top: 1px solid $lbh-panel-light;
@@ -10,5 +14,13 @@
 
   .lbh-fieldset {
     display: inline;
+  }
+}
+
+.date-filter {
+  @extend .lbh-filter-form;
+  margin-bottom: 10px;
+  .date-form {
+    display: inline-block;
   }
 }

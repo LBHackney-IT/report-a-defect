@@ -7,7 +7,7 @@ $govuk-image-url-function: 'image-url';
 @import 'components/lbh-header';
 @import 'components/lbh-buttons';
 @import 'components/flashes';
-@import 'components/filters';
+@import 'components/forms';
 
 p {
   @include govuk-font(19);
