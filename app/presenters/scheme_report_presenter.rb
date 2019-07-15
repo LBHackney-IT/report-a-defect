@@ -51,11 +51,32 @@ class SchemeReportPresenter
     defects.where('target_completion_date < ?', Date.current)
   end
 
+  def defects_completed_on_time(priority:)
+    completed_defects(priority: priority).select do |completed_defect|
+      updates_before_target_completion = completed_defect.activities.where(
+        [
+          'key = ? and created_at < ?',
+          'defect.update',
+          completed_defect.target_completion_date,
+        ]
+      )
+
+      # TODO: Query parameter JSON at database level rather than in Ruby
+      true if updates_before_target_completion.detect do |updated_event|
+        updated_event.parameters[:changes][:status].last == 'completed'
+      end
+    end
+  end
+
   private
 
   def percentage_for(number:, total:)
     return '0.0%' if number.zero? || total.zero?
     percentage = (number / total) * 100
     "#{percentage.round(2)}%"
+  end
+
+  def completed_defects(priority:)
+    defects_by_priority(priority: priority).completed
   end
 end

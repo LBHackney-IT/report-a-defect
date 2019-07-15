@@ -119,4 +119,36 @@ RSpec.feature 'Anyone can view a report for a scheme' do
 
     travel_back
   end
+
+  scenario 'defects completed on or before their target date' do
+    travel_to Time.zone.parse('2019-05-23')
+
+    completed_early_defect = create(:property_defect,
+                                    property: property,
+                                    priority: priority,
+                                    target_completion_date: Date.new(2019, 5, 22))
+    completed_on_time_defect = create(:property_defect,
+                                      property: property,
+                                      priority: priority,
+                                      target_completion_date: Date.new(2019, 5, 23))
+    completed_later_defect = create(:property_defect,
+                                    property: property,
+                                    priority: priority,
+                                    target_completion_date: Date.new(2019, 5, 24))
+
+    # Update the records status so that PublicActivity creates the required defect.update events
+    [
+      completed_early_defect,
+      completed_on_time_defect,
+      completed_later_defect,
+    ].each(&:completed!)
+
+    visit report_scheme_path(scheme)
+
+    within('.priorities') do
+      expect(page).to have_content('2')
+    end
+
+    travel_back
+  end
 end

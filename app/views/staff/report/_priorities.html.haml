@@ -25,4 +25,4 @@
         %td.govuk-table__cell= presenter.due_defects_by_priority(priority: priority).count
         %td.govuk-table__cell= presenter.overdue_defects_by_priority(priority: priority).count
         %td.govuk-table__cell= presenter.defects_by_priority(priority: priority).count
-        %td.govuk-table__cell= '-'
+        %td.govuk-table__cell= presenter.defects_completed_on_time(priority: priority).count
