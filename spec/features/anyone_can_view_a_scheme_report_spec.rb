@@ -87,7 +87,17 @@ RSpec.feature 'Anyone can view a report for a scheme' do
   end
 
   scenario 'defect information by scheme priority' do
-    create(:property_defect, property: property, priority: priority)
+    travel_to Time.zone.parse('2019-05-23')
+
+    _due_priority = create(:property_defect,
+                           property: property,
+                           priority: priority,
+                           target_completion_date: Date.new(2019, 5, 24))
+    _overdue_priorities = create_list(:property_defect,
+                                      2,
+                                      property: property,
+                                      priority: priority,
+                                      target_completion_date: Date.new(2019, 5, 22))
 
     visit report_scheme_path(scheme)
 
@@ -103,6 +113,10 @@ RSpec.feature 'Anyone can view a report for a scheme' do
 
       expect(page).to have_content('100.0%')
       expect(page).to have_content('1')
+      expect(page).to have_content('2')
+      expect(page).to have_content('3')
     end
+
+    travel_back
   end
 end

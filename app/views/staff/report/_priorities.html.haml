@@ -9,11 +9,11 @@
       %th.govuk-table__header
         Percentage
       %th.govuk-table__header
-        Total
-      %th.govuk-table__header
         Due
       %th.govuk-table__header
         Overdue
+      %th.govuk-table__header
+        Total
       %th.govuk-table__header
         Completed on time
   %tbody.govuk-table__body
@@ -22,7 +22,7 @@
         %td.govuk-table__cell= priority.name
         %td.govuk-table__cell= priority.days
         %td.govuk-table__cell= presenter.priority_percentage(priority: priority)
+        %td.govuk-table__cell= presenter.due_defects_by_priority(priority: priority).count
+        %td.govuk-table__cell= presenter.overdue_defects_by_priority(priority: priority).count
         %td.govuk-table__cell= presenter.defects_by_priority(priority: priority).count
-        %td.govuk-table__cell= '-'
-        %td.govuk-table__cell= '-'
         %td.govuk-table__cell= '-'
