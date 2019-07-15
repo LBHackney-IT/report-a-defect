@@ -6,19 +6,55 @@ RSpec.describe SchemeReportPresenter do
   let(:priority) { create(:priority, scheme: scheme) }
 
   describe '#defects' do
-    let(:defect) { create(:property_defect, property: property, priority: priority) }
     it 'returns all defects for the given scheme' do
+      defect = create(:property_defect, property: property, priority: priority)
       result = described_class.new(scheme: defect.scheme).defects
       expect(result).to include(defect)
+    end
+
+    context 'a ReportForm is injected with a date range' do
+      it 'returns on defects created within that range' do
+        from_date = Date.new(2019, 1, 1)
+        to_date = Date.new(2019, 12, 1)
+        report_form = double(from_date: from_date, to_date: to_date)
+
+        before_range_defect = create(:property_defect, created_at: Time.utc(2018, 1, 1), property: property, priority: priority)
+        in_range_defect = create(:property_defect, created_at: Time.utc(2019, 2, 1), property: property, priority: priority)
+        after_range_defect = create(:property_defect, created_at: Time.utc(2020, 1, 1), property: property, priority: priority)
+
+        result = described_class.new(scheme: scheme, report_form: report_form).defects
+
+        expect(result).to include(in_range_defect)
+        expect(result).not_to include(before_range_defect)
+        expect(result).not_to include(after_range_defect)
+      end
+    end
+
+    it 'includes defects on an individual day' do
+      from_date = Date.new(2019, 1, 1)
+      to_date = Date.new(2019, 1, 1)
+      report_form = double(from_date: from_date, to_date: to_date)
+
+      in_range_defect = create(:property_defect, created_at: Time.utc(2019, 1, 1), property: property, priority: priority)
+
+      result = described_class.new(scheme: scheme, report_form: report_form).defects
+
+      expect(result).to include(in_range_defect)
     end
   end
 
   describe '#date_range' do
     it 'returns a time range for all the data being viewed in a string format' do
-      start_time = Time.utc(2018, 1, 1, 13)
-      scheme = create(:scheme, created_at: start_time)
-      result = described_class.new(scheme: scheme).date_range
-      expect(result).to eq("From #{start_time} to #{Time.current}")
+      travel_to Time.zone.parse('2019-07-16')
+
+      from_date = Date.new(2019, 1, 10)
+      to_date = Date.current
+
+      report_form = double(from_date: from_date, to_date: to_date)
+      result = described_class.new(scheme: scheme, report_form: report_form).date_range
+      expect(result).to eq('From 10 January 2019 to 16 July 2019')
+
+      travel_back
     end
   end
 
