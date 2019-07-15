@@ -164,4 +164,84 @@ RSpec.describe SchemeReportPresenter do
       travel_back
     end
   end
+
+  describe '#defects_completed_on_time' do
+    it 'returns a count for all defects completed before or on their target date' do
+      travel_to Time.zone.parse('2019-05-23')
+      completed_early_defect = create(:property_defect,
+                                      property: property,
+                                      priority: priority,
+                                      target_completion_date: Date.new(2019, 5, 23))
+      completed_on_time_defect = create(:property_defect,
+                                        property: property,
+                                        priority: priority,
+                                        target_completion_date: Date.new(2019, 5, 23))
+      completed_later_defect = create(:property_defect,
+                                      property: property,
+                                      priority: priority,
+                                      target_completion_date: Date.new(2019, 5, 23))
+
+      # This test depends on the PublicActivity gem working in the background to
+      # create the event records which we use to track status changes.
+      # We cannot use FactoryBot with `status: :completed` as the model callbacks
+      # aren't triggered and no Activity records are created as they would be.
+      travel_to Time.zone.parse('2019-05-22')
+      completed_early_defect.completed!
+
+      travel_to Time.zone.parse('2019-05-23')
+      completed_on_time_defect.completed!
+
+      travel_to Time.zone.parse('2019-05-24')
+      completed_later_defect.completed!
+
+      travel_to Time.zone.parse('2019-05-23')
+
+      result = described_class.new(scheme: scheme).defects_completed_on_time(priority: priority)
+
+      expect(result).to include(completed_early_defect)
+      expect(result).to include(completed_on_time_defect)
+      expect(result).not_to include(completed_later_defect)
+
+      travel_back
+    end
+
+    it 'returns only completed defects' do
+      travel_to Time.zone.parse('2019-05-23')
+
+      rejected_defect = create(:property_defect,
+                               property: property,
+                               priority: priority,
+                               target_completion_date: Date.current)
+      rejected_defect.rejected!
+      completed_defect = create(:property_defect,
+                                property: property,
+                                priority: priority,
+                                target_completion_date: Date.current)
+      completed_defect.completed!
+
+      result = described_class.new(scheme: scheme).defects_completed_on_time(priority: priority)
+
+      expect(result).to include(completed_defect)
+      expect(result).not_to include(rejected_defect)
+
+      travel_back
+    end
+
+    # TODO: Commit why this might happen
+    context 'when the defect has flipped back from completed to in progress' do
+      it 'does not include that defect in the count' do
+        completed_on_time_defect = create(:property_defect,
+                                          property: property,
+                                          priority: priority,
+                                          target_completion_date: Date.new(2019, 5, 23))
+
+        completed_on_time_defect.completed!
+        completed_on_time_defect.outstanding!
+
+        result = described_class.new(scheme: scheme).defects_completed_on_time(priority: priority)
+
+        expect(result).not_to include(completed_on_time_defect)
+      end
+    end
+  end
 end
