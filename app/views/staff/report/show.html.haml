@@ -11,6 +11,44 @@
       %span.govuk-caption-l= @presenter.scheme.contractor_name
       %span.govuk-caption-l= @presenter.date_range
 
+    = form_tag report_scheme_path(scheme: @presenter.scheme.id), class: 'date-filter', method: :get do
+      .govuk-form-group.date-form
+        %h2.govuk-heading-m From
+        .govuk-fieldset
+          .govuk-date-input__item
+            .govuk-form-group
+              = label_tag 'from_day', 'Day', class: 'govuk-label govuk-date-input__label'
+              = text_field_tag 'from_day', @report_form.from_day, class: 'govuk-input govuk-date-input__input govuk-input--width-2', type: :number, pattern: "[0-9]*"
+          .govuk-date-input__item
+            .govuk-form-group
+              = label_tag 'from_month', 'Month', class: 'govuk-label govuk-date-input__label'
+              = text_field_tag 'from_month', @report_form.from_month, class: 'govuk-input govuk-date-input__input govuk-input--width-2', type: :number, pattern: "[0-9]*"
+          .govuk-date-input__item
+            .govuk-form-group
+              = label_tag 'from_year', 'Year', class: 'govuk-label govuk-date-input__label'
+              = text_field_tag 'from_year', @report_form.from_year, class: 'govuk-input govuk-date-input__input govuk-input--width-4', type: :number, pattern: "[0-9]*"
+
+      .govuk-form-group.date-form
+        %h2.govuk-heading-m To
+        .govuk-fieldset
+          .govuk-date-input__item
+            .govuk-form-group
+              = label_tag 'to_day', 'Day', class: 'govuk-label govuk-date-input__label'
+              = text_field_tag 'to_day', @report_form.to_day, class: 'govuk-input govuk-date-input__input govuk-input--width-2', type: :number, pattern: "[0-9]*"
+          .govuk-date-input__item
+            .govuk-form-group
+              = label_tag 'to_month', 'Month', class: 'govuk-label govuk-date-input__label'
+              = text_field_tag 'to_month', @report_form.to_month, class: 'govuk-input govuk-date-input__input govuk-input--width-2', type: :number, pattern: "[0-9]*"
+          .govuk-date-input__item
+            .govuk-form-group
+              = label_tag 'to_year', 'Year', class: 'govuk-label govuk-date-input__label'
+              = text_field_tag 'to_year', @report_form.to_year, class: 'govuk-input govuk-date-input__input govuk-input--width-4', type: :number, pattern: "[0-9]*"
+
+      %br
+      = submit_tag 'Apply dates', class: 'govuk-button mb0'
+
+.govuk-grid-row
+  .govuk-grid-column-full
     = render partial: 'summary', locals: { presenter: @presenter }
     = render partial: 'statuses', locals: { presenter: @presenter }
     = render partial: 'trades', locals: { presenter: @presenter }
