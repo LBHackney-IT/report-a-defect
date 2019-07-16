@@ -9,8 +9,8 @@
       %th.govuk-table__header
         Total
   %tbody.govuk-table__body
-    - Defect::TRADES.each do |trade|
+    - Defect::CATEGORIES.each do |category, trades|
       %tr.govuk-table__row
-        %td.govuk-table__cell= trade
-        %td.govuk-table__cell= presenter.trade_percentage(text: trade)
-        %td.govuk-table__cell= presenter.defects_by_trade(text: trade).count
+        %td.govuk-table__cell= category
+        %td.govuk-table__cell= presenter.category_percentage(category: category)
+        %td.govuk-table__cell= presenter.defects_by_category(category: category).count

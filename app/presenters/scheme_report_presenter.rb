@@ -25,13 +25,14 @@ class SchemeReportPresenter
     defects.where(status: text)
   end
 
-  def defects_by_trade(text:)
-    defects.for_trade(text)
+  def defects_by_category(category:)
+    trade_names = Defect::CATEGORIES[category]
+    defects.for_trades(trade_names)
   end
 
-  def trade_percentage(text:)
+  def category_percentage(category:)
     percentage_for(
-      number: Float(defects_by_trade(text: text).count),
+      number: Float(defects_by_category(category: category).count),
       total: Float(defects.count)
     )
   end

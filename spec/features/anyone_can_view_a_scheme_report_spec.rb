@@ -74,8 +74,8 @@ RSpec.feature 'Anyone can view a report for a scheme' do
         expect(page).to have_content(header)
       end
 
-      Defect::TRADES.each do |trade|
-        expect(page).to have_content(trade)
+      Defect::CATEGORIES.each do |category, _trades|
+        expect(page).to have_content(category)
       end
 
       expect(page).to have_content('30.0%')
