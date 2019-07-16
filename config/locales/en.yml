@@ -82,7 +82,7 @@ en:
     button:
       find: 'Search'
       download: 'Download'
-      filter: 'Filter'
+      filter: 'Apply filters'
       sign_in: 'Sign in'
     notice:
       create:
