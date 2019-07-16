@@ -243,6 +243,7 @@ RSpec.describe Defect, type: :model do
           type
           status
           trade
+          category
           priority_name
           priority_duration
           target_completion_date

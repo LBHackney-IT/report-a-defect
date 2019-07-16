@@ -30,6 +30,15 @@ class DefectPresenter < SimpleDelegator
     super.to_s
   end
 
+  def category
+    return 'Plumbing' if Defect::PLUMBING_TRADES.include?(trade)
+    return 'Electrical/Mechanical' if Defect::ELECTRICAL_TRADES.include?(trade)
+    return 'Carpentry/Doors' if Defect::CARPENTRY_TRADES.include?(trade)
+    return 'Cosmetic' if Defect::COSMETIC_TRADES.include?(trade)
+    trade
+  end
+
+  # rubocop:disable Metrics/AbcSize
   def to_row
     [
       reference_number,
@@ -38,6 +47,7 @@ class DefectPresenter < SimpleDelegator
       defect_type,
       status,
       trade,
+      category,
       priority.name,
       priority.days,
       target_completion_date,
@@ -50,4 +60,5 @@ class DefectPresenter < SimpleDelegator
       access_information,
     ]
   end
+  # rubocop:enable Metrics/AbcSize
 end

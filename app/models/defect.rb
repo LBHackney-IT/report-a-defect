@@ -75,6 +75,55 @@ class Defect < ApplicationRecord
     @tracked_changes = selected_changes unless selected_changes.empty?
   end
 
+  CATEGORIES = [
+    'Plumbing',
+    'Electrical/Mechanical',
+    'Carpentry/Doors',
+    'Cosmetic',
+  ].freeze
+
+  PLUMBING_TRADES = [
+    'Plumbing',
+    'Drainage',
+    'Water temp / supply',
+  ].freeze
+
+  ELECTRICAL_TRADES = [
+    'Electrical',
+    'Connectivity',
+    'Lighting',
+    'Boiler work',
+    'MVHR',
+    'Fan / Ventilation',
+    'Fire safety',
+    'Lifts',
+    'Heating',
+    'Intercoms / Entry Phones',
+    'Filters',
+  ].freeze
+
+  CARPENTRY_TRADES = [
+    'Carpentry',
+    'Door work',
+    'Window work',
+    'Metal work',
+    'Locks',
+    'Adapted bathrooms',
+  ].freeze
+
+  COSMETIC_TRADES = [
+    'Cosmetic',
+    'Damp',
+    'Floor work',
+    'Mastic',
+    'Decoration',
+    'Tile work',
+    'Plastering',
+    'Blinds',
+    'Brickwork',
+    'Roof',
+  ].freeze
+
   TRADES = [
     'Blinds',
     'Boiler work',
@@ -156,6 +205,7 @@ class Defect < ApplicationRecord
       type
       status
       trade
+      category
       priority_name
       priority_duration
       target_completion_date
