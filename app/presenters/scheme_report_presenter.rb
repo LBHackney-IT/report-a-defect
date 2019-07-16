@@ -1,31 +1,38 @@
 class SchemeReportPresenter
   delegate :name, to: :scheme
 
-  attr_accessor :scheme
+  attr_accessor :scheme, :report_form
 
-  def initialize(scheme:)
+  def initialize(scheme:,
+                 report_form: ReportForm.new(from_date: scheme.created_at, to_date: Date.current))
     self.scheme = scheme
+    self.report_form = report_form
   end
 
   def defects
     @defects ||= Defect.for_scheme([scheme.id])
+                       .where(
+                         'created_at >= ? and created_at <= ?',
+                         report_form.from_date.beginning_of_day, report_form.to_date.end_of_day
+                       )
   end
 
   def date_range
-    "From #{scheme.created_at} to #{Time.current}"
+    "From #{report_form.from_date} to #{report_form.to_date}"
   end
 
   def defects_by_status(text:)
     defects.where(status: text)
   end
 
-  def defects_by_trade(text:)
-    defects.for_trade(text)
+  def defects_by_category(category:)
+    trade_names = Defect::CATEGORIES[category]
+    defects.for_trades(trade_names)
   end
 
-  def trade_percentage(text:)
+  def category_percentage(category:)
     percentage_for(
-      number: Float(defects_by_trade(text: text).count),
+      number: Float(defects_by_category(category: category).count),
       total: Float(defects.count)
     )
   end

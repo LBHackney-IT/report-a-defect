@@ -50,7 +50,7 @@ class Defect < ApplicationRecord
     for_properties_or_communal_areas(property_ids, communal_area_ids)
   })
 
-  scope :for_trade, (->(trade) { where(trade: trade) })
+  scope :for_trades, (->(trade_names) { where(trade: trade_names) })
 
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
@@ -74,6 +74,48 @@ class Defect < ApplicationRecord
     selected_changes = changes.slice(:status)
     @tracked_changes = selected_changes unless selected_changes.empty?
   end
+
+  PLUMBING_TRADES = [
+    'Plumbing',
+    'Drainage',
+    'Water temp / supply',
+  ].freeze
+
+  ELECTRICAL_TRADES = [
+    'Electrical',
+    'Connectivity',
+    'Lighting',
+    'Boiler work',
+    'MVHR',
+    'Fan / Ventilation',
+    'Fire safety',
+    'Lifts',
+    'Heating',
+    'Intercoms / Entry Phones',
+    'Filters',
+  ].freeze
+
+  CARPENTRY_TRADES = [
+    'Carpentry',
+    'Door work',
+    'Window work',
+    'Metal work',
+    'Locks',
+    'Adapted bathrooms',
+  ].freeze
+
+  COSMETIC_TRADES = [
+    'Cosmetic',
+    'Damp',
+    'Floor work',
+    'Mastic',
+    'Decoration',
+    'Tile work',
+    'Plastering',
+    'Blinds',
+    'Brickwork',
+    'Roof',
+  ].freeze
 
   TRADES = [
     'Blinds',
@@ -107,6 +149,13 @@ class Defect < ApplicationRecord
     'Water Temperature/Supply',
     'Window Work',
   ].freeze
+
+  CATEGORIES = {
+    'Plumbing' => PLUMBING_TRADES,
+    'Electrical/Mechanical' => ELECTRICAL_TRADES,
+    'Carpentry/Doors' => CARPENTRY_TRADES,
+    'Cosmetic' => COSMETIC_TRADES,
+  }.freeze
 
   def self.send_chain(methods)
     methods.inject(self) { |s, method| s.send(*method) }
@@ -156,6 +205,7 @@ class Defect < ApplicationRecord
       type
       status
       trade
+      category
       priority_name
       priority_duration
       target_completion_date

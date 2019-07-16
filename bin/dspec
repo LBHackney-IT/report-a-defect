@@ -7,5 +7,5 @@ then
   docker exec -it report-a-defect_test_web_1 rake default $@
 else
   echo "Testing: $@"
-  docker exec -it report-a-defect_test_web_1 rspec "$@"
+  docker exec -it report-a-defect_test_web_1 rspec --order random "$@"
 fi

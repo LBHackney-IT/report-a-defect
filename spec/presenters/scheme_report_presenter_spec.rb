@@ -6,19 +6,55 @@ RSpec.describe SchemeReportPresenter do
   let(:priority) { create(:priority, scheme: scheme) }
 
   describe '#defects' do
-    let(:defect) { create(:property_defect, property: property, priority: priority) }
     it 'returns all defects for the given scheme' do
+      defect = create(:property_defect, property: property, priority: priority)
       result = described_class.new(scheme: defect.scheme).defects
       expect(result).to include(defect)
+    end
+
+    context 'a ReportForm is injected with a date range' do
+      it 'returns on defects created within that range' do
+        from_date = Date.new(2019, 1, 1)
+        to_date = Date.new(2019, 12, 1)
+        report_form = double(from_date: from_date, to_date: to_date)
+
+        before_range_defect = create(:property_defect, created_at: Time.utc(2018, 1, 1), property: property, priority: priority)
+        in_range_defect = create(:property_defect, created_at: Time.utc(2019, 2, 1), property: property, priority: priority)
+        after_range_defect = create(:property_defect, created_at: Time.utc(2020, 1, 1), property: property, priority: priority)
+
+        result = described_class.new(scheme: scheme, report_form: report_form).defects
+
+        expect(result).to include(in_range_defect)
+        expect(result).not_to include(before_range_defect)
+        expect(result).not_to include(after_range_defect)
+      end
+    end
+
+    it 'includes defects on an individual day' do
+      from_date = Date.new(2019, 1, 1)
+      to_date = Date.new(2019, 1, 1)
+      report_form = double(from_date: from_date, to_date: to_date)
+
+      in_range_defect = create(:property_defect, created_at: Time.utc(2019, 1, 1), property: property, priority: priority)
+
+      result = described_class.new(scheme: scheme, report_form: report_form).defects
+
+      expect(result).to include(in_range_defect)
     end
   end
 
   describe '#date_range' do
     it 'returns a time range for all the data being viewed in a string format' do
-      start_time = Time.utc(2018, 1, 1, 13)
-      scheme = create(:scheme, created_at: start_time)
-      result = described_class.new(scheme: scheme).date_range
-      expect(result).to eq("From #{start_time} to #{Time.current}")
+      travel_to Time.zone.parse('2019-07-16')
+
+      from_date = Date.new(2019, 1, 10)
+      to_date = Date.current
+
+      report_form = double(from_date: from_date, to_date: to_date)
+      result = described_class.new(scheme: scheme, report_form: report_form).date_range
+      expect(result).to eq('From 10 January 2019 to 16 July 2019')
+
+      travel_back
     end
   end
 
@@ -44,23 +80,23 @@ RSpec.describe SchemeReportPresenter do
     end
   end
 
-  describe '#defects_by_trade' do
-    it 'returns a count for all defects for the given trade' do
+  describe '#defects_by_category' do
+    it 'returns a count for all defects where the trade matches the category' do
       electrical_defect = create(:property_defect, property: property, trade: 'Electrical')
-      plumbing_defect = create(:property_defect, property: property, trade: 'Plumbing')
+      plumbing_defect = create(:property_defect, property: property, trade: 'Drainage')
 
-      result = described_class.new(scheme: scheme).defects_by_trade(text: 'Plumbing')
+      result = described_class.new(scheme: scheme).defects_by_category(category: 'Plumbing')
 
       expect(result).to include(plumbing_defect)
       expect(result).not_to include(electrical_defect)
     end
   end
 
-  describe '#trade_percentage' do
-    it 'returns the percentage of defects with this trade ' do
+  describe '#category_percentage' do
+    it 'returns the percentage of defects with this category ' do
       create(:property_defect, property: property, trade: 'Plumbing')
       create(:property_defect, property: property, trade: 'Electrical')
-      result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+      result = described_class.new(scheme: scheme).category_percentage(category: 'Electrical/Mechanical')
       expect(result).to eql('50.0%')
     end
 
@@ -69,14 +105,14 @@ RSpec.describe SchemeReportPresenter do
         create(:property_defect, property: property, trade: 'Electrical')
         create(:property_defect, property: property, trade: 'Plumbing')
         create(:property_defect, property: property, trade: 'Plumbing')
-        result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+        result = described_class.new(scheme: scheme).category_percentage(category: 'Electrical/Mechanical')
         expect(result).to eql('33.33%')
       end
     end
 
     context 'when there are no defects with that trade' do
       it 'returns 0.0%' do
-        result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+        result = described_class.new(scheme: scheme).category_percentage(category: 'Electrical/Mechanical')
         expect(result).to eql('0.0%')
       end
     end

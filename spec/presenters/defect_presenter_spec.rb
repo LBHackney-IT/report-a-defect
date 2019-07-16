@@ -143,8 +143,8 @@ RSpec.describe DefectPresenter do
   describe '.to_row' do
     context 'when the defect is for a property' do
       it 'returns an array of values as they should appear in a CSV row' do
-        defect = create(:property_defect)
-        result = described_class.new(defect).to_row
+        defect = described_class.new(create(:property_defect))
+        result = defect.to_row
         expect(result).to eq(
           [
             defect.reference_number,
@@ -153,6 +153,7 @@ RSpec.describe DefectPresenter do
             'Property',
             defect.status,
             defect.trade,
+            defect.category,
             defect.priority.name,
             defect.priority.days,
             defect.target_completion_date.to_s,
@@ -170,8 +171,8 @@ RSpec.describe DefectPresenter do
 
     context 'when the defect is for a communal area' do
       it 'returns an array of values as they should appear in a CSV row' do
-        defect = create(:communal_defect)
-        result = described_class.new(defect).to_row
+        defect = described_class.new(create(:communal_defect))
+        result = defect.to_row
         expect(result).to eq(
           [
             defect.reference_number,
@@ -180,6 +181,7 @@ RSpec.describe DefectPresenter do
             'Communal',
             defect.status,
             defect.trade,
+            defect.category,
             defect.priority.name,
             defect.priority.days,
             defect.target_completion_date.to_s,
@@ -192,6 +194,72 @@ RSpec.describe DefectPresenter do
             defect.access_information,
           ]
         )
+      end
+    end
+  end
+
+  describe '#category' do
+    context 'when the trade belongs to the Plumbing category' do
+      it 'returns "Plumbing"' do
+        defect = create(:property_defect, trade: 'Drainage')
+        result = described_class.new(defect).category
+        expect(result).to eql('Plumbing')
+      end
+
+      context 'when the trade is the same as a category' do
+        it 'returns "Plumbing"' do
+          defect = create(:property_defect, trade: 'Plumbing')
+          result = described_class.new(defect).category
+          expect(result).to eql('Plumbing')
+        end
+      end
+    end
+
+    context 'when the trade belongs to the Electrical category' do
+      it 'returns "Electrical/Mechanical"' do
+        defect = create(:property_defect, trade: 'Lighting')
+        result = described_class.new(defect).category
+        expect(result).to eql('Electrical/Mechanical')
+      end
+
+      context 'when the trade is the same as a category' do
+        it 'returns "Electrical/Mechanical"' do
+          defect = create(:property_defect, trade: 'Electrical/Mechanical')
+          result = described_class.new(defect).category
+          expect(result).to eql('Electrical/Mechanical')
+        end
+      end
+    end
+
+    context 'when the trade belongs to the Carpentry category' do
+      it 'returns "Carpentry/Doors"' do
+        defect = create(:property_defect, trade: 'Door work')
+        result = described_class.new(defect).category
+        expect(result).to eql('Carpentry/Doors')
+      end
+
+      context 'when the trade is the same as a category' do
+        it 'returns "Carpentry / Doors"' do
+          defect = create(:property_defect, trade: 'Carpentry/Doors')
+          result = described_class.new(defect).category
+          expect(result).to eql('Carpentry/Doors')
+        end
+      end
+    end
+
+    context 'when the trade belongs to the Cosmetic category' do
+      it 'returns "Cosmetic"' do
+        defect = create(:property_defect, trade: 'Damp')
+        result = described_class.new(defect).category
+        expect(result).to eql('Cosmetic')
+      end
+
+      context 'when the trade is the same as a category' do
+        it 'returns "Cosmetic"' do
+          defect = create(:property_defect, trade: 'Cosmetic')
+          result = described_class.new(defect).category
+          expect(result).to eql('Cosmetic')
+        end
       end
     end
   end

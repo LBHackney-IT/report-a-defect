@@ -14,7 +14,7 @@ User.delete_all
 estate = FactoryBot.create(:estate, name: 'Kings Cresent')
 
 # Schemes
-scheme1 = FactoryBot.create(:scheme, estate: estate, name: '1')
+scheme1 = FactoryBot.create(:scheme, estate: estate, name: '1', created_at: 5.days.ago)
 FactoryBot.create(:scheme, estate: estate, name: '2')
 
 # Priorties
@@ -48,7 +48,8 @@ FactoryBot.create(:communal_area, scheme: scheme1)
     10,
     :with_comments,
     property: property,
-    priority: [priority1, priority2, priority3, priority4].sample
+    priority: [priority1, priority2, priority3, priority4].sample,
+    created_at: 2.days.ago
   )
 end
 

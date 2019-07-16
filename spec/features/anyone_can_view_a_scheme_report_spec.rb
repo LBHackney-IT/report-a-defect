@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can view a report for a scheme' do
-  let(:scheme) { create(:scheme) }
+  let(:scheme) { create(:scheme, created_at: 5.days.ago) }
   let(:priority) { create(:priority, scheme: scheme) }
   let(:property) { create(:property, scheme: scheme) }
   let(:communal_area) { create(:communal_area, scheme: scheme) }
@@ -17,7 +17,7 @@ RSpec.feature 'Anyone can view a report for a scheme' do
     end
 
     expect(page).to have_content(I18n.t('page_title.staff.reports.scheme.show', name: scheme.name))
-    expect(page).to have_content("From #{scheme.created_at} to #{Time.current}")
+    expect(page).to have_content("From #{scheme.created_at.to_date} to #{Date.current}")
 
     within('.summary') do
       %w[Title Property Communal Total].each do |column_header|
@@ -74,8 +74,8 @@ RSpec.feature 'Anyone can view a report for a scheme' do
         expect(page).to have_content(header)
       end
 
-      Defect::TRADES.each do |trade|
-        expect(page).to have_content(trade)
+      Defect::CATEGORIES.each do |category, _trades|
+        expect(page).to have_content(category)
       end
 
       expect(page).to have_content('30.0%')
@@ -147,6 +147,38 @@ RSpec.feature 'Anyone can view a report for a scheme' do
 
     within('.priorities') do
       expect(page).to have_content('2')
+    end
+
+    travel_back
+  end
+
+  scenario 'filter defects' do
+    travel_to Time.zone.parse('2019-05-25')
+
+    defect_one = create(:property_defect, created_at: Time.utc(2019, 5, 23), property: property)
+    defect_two = create(:property_defect, created_at: Time.utc(2019, 5, 24), property: property)
+    defect_three = create(:communal_defect, created_at: Time.utc(2019, 5, 24), communal_area: communal_area)
+    defect_four = create(:property_defect, created_at: Time.utc(2019, 5, 25), property: property)
+
+    defects = [defect_one, defect_two, defect_three, defect_four]
+
+    visit report_scheme_path(scheme)
+
+    within('.summary') do
+      expect(page).to have_content(defects.count)
+    end
+
+    within('.date-filter') do
+      fill_in 'from_day', with: '5'
+      fill_in 'from_month', with: '23'
+      fill_in 'from_year', with: '2019'
+      fill_in 'to_day', with: '24'
+      fill_in 'to_month', with: '5'
+      fill_in 'to_year', with: '2019'
+    end
+
+    within('.summary') do
+      expect(page).to have_content('3')
     end
 
     travel_back

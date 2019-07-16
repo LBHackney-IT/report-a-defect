@@ -20,6 +20,7 @@ RSpec.feature 'Anyone can download defect data' do
       type
       status
       trade
+      category
       priority_name
       priority_duration
       target_completion_date
@@ -43,6 +44,7 @@ RSpec.feature 'Anyone can download defect data' do
     expect(page).to have_content(property_defect.defect_type)
     expect(page).to have_content(property_defect.status)
     expect(page).to have_content(property_defect.trade)
+    expect(page).to have_content(property_defect.category)
     expect(page).to have_content(property_defect.priority.name)
     expect(page).to have_content(property_defect.priority.days)
     expect(page).to have_content(property_defect.target_completion_date)
