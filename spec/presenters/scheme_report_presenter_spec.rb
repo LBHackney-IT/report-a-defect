@@ -80,23 +80,23 @@ RSpec.describe SchemeReportPresenter do
     end
   end
 
-  describe '#defects_by_trade' do
-    it 'returns a count for all defects for the given trade' do
+  describe '#defects_by_category' do
+    it 'returns a count for all defects where the trade matches the category' do
       electrical_defect = create(:property_defect, property: property, trade: 'Electrical')
-      plumbing_defect = create(:property_defect, property: property, trade: 'Plumbing')
+      plumbing_defect = create(:property_defect, property: property, trade: 'Drainage')
 
-      result = described_class.new(scheme: scheme).defects_by_trade(text: 'Plumbing')
+      result = described_class.new(scheme: scheme).defects_by_category(category: 'Plumbing')
 
       expect(result).to include(plumbing_defect)
       expect(result).not_to include(electrical_defect)
     end
   end
 
-  describe '#trade_percentage' do
-    it 'returns the percentage of defects with this trade ' do
+  describe '#category_percentage' do
+    it 'returns the percentage of defects with this category ' do
       create(:property_defect, property: property, trade: 'Plumbing')
       create(:property_defect, property: property, trade: 'Electrical')
-      result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+      result = described_class.new(scheme: scheme).category_percentage(category: 'Electrical/Mechanical')
       expect(result).to eql('50.0%')
     end
 
@@ -105,14 +105,14 @@ RSpec.describe SchemeReportPresenter do
         create(:property_defect, property: property, trade: 'Electrical')
         create(:property_defect, property: property, trade: 'Plumbing')
         create(:property_defect, property: property, trade: 'Plumbing')
-        result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+        result = described_class.new(scheme: scheme).category_percentage(category: 'Electrical/Mechanical')
         expect(result).to eql('33.33%')
       end
     end
 
     context 'when there are no defects with that trade' do
       it 'returns 0.0%' do
-        result = described_class.new(scheme: scheme).trade_percentage(text: 'Electrical')
+        result = described_class.new(scheme: scheme).category_percentage(category: 'Electrical/Mechanical')
         expect(result).to eql('0.0%')
       end
     end
