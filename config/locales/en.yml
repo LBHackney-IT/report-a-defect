@@ -14,6 +14,9 @@ en:
           body: 'This accept link appears to be invalid. This might be because it has already accepted it or it has expired.'
     staff:
       dashboard: 'Dashboard'
+      reports:
+        scheme:
+          show: 'Scheme report for %{name}'
       search:
         index:
           headers:
@@ -63,7 +66,6 @@ en:
     defect:
       show:
         not_accepted_yet: 'Waiting on the contractor to accept'
-    property:
       table:
         header: 'Property defects'
     communal_area:
@@ -88,7 +90,7 @@ en:
           'The %{resource} has successfully been updated.'
   button:
     report:
-      download_all: Download CSV
+      download_all: Download all defect data
     create:
       estate: 'Create estate'
       scheme: 'Create scheme'
@@ -107,6 +109,13 @@ en:
       scheme: Edit scheme
       defect: Edit defect
   form:
+    property:
+      guidance: 'Find address information (Address, Postcode, UPRN) from %{link}.'
+      steps:
+        - 'Go to advanced search'
+        - "Select 'provisional' for property type"
+        - 'Use a postcode to find a property'
+        - 'Copy and paste the relevant data into the fields below'
     communal_area:
       explanation: 'A communal area can be used to report and manage defects that are in a shared location rather than within an individual property.'
       name:
@@ -152,6 +161,8 @@ en:
   events:
     defect:
       created: 'Defect was created by %{name}'
+      updated: 'Defect was updated by %{name}'
+      status_changed: 'Status was changed from %{old} to %{new} by %{name}'
       forwarded_to_contractor: 'An email was sent to the contractor (%{email})'
       forwarded_to_employer_agent: 'An email was sent to the employer agent (%{email})'
       accepted: 'Defect was accepted by %{email}'

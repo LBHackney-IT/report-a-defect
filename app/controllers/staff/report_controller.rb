@@ -10,4 +10,15 @@ class Staff::ReportController < Staff::BaseController
       format.csv { send_data Defect.to_csv(defects: @defects) }
     end
   end
+
+  def show
+    @scheme = Scheme.find(scheme_id)
+    @presenter = SchemeReportPresenter.new(scheme: @scheme)
+  end
+
+  private
+
+  def scheme_id
+    params[:id]
+  end
 end

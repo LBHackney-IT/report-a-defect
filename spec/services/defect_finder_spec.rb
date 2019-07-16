@@ -51,8 +51,8 @@ RSpec.describe DefectFinder do
         raised_in_error_defect = create(:property_defect, status: :raised_in_error)
         rejected_defect = create(:property_defect, status: :rejected)
 
-        filter = double('DefectFilter', scope: :open)
-        expect(filter).to receive(:scope).and_return(:open)
+        filter = double('DefectFilter', scopes: [:open])
+        expect(filter).to receive(:scopes).and_return([:open])
 
         result = described_class.new(filter: filter).call
 

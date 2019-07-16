@@ -1,0 +1,28 @@
+%h1.govuk-heading-m.section-heading Priorities
+%table.govuk-table.priorities
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        Code
+      %th.govuk-table__header
+        Days
+      %th.govuk-table__header
+        Percentage
+      %th.govuk-table__header
+        Due
+      %th.govuk-table__header
+        Overdue
+      %th.govuk-table__header
+        Total
+      %th.govuk-table__header
+        Completed on time
+  %tbody.govuk-table__body
+    - presenter.scheme.priorities.each do |priority|
+      %tr.govuk-table__row
+        %td.govuk-table__cell= priority.name
+        %td.govuk-table__cell= priority.days
+        %td.govuk-table__cell= presenter.priority_percentage(priority: priority)
+        %td.govuk-table__cell= presenter.due_defects_by_priority(priority: priority).count
+        %td.govuk-table__cell= presenter.overdue_defects_by_priority(priority: priority).count
+        %td.govuk-table__cell= presenter.defects_by_priority(priority: priority).count
+        %td.govuk-table__cell= presenter.defects_completed_on_time(priority: priority).count

@@ -1,0 +1,20 @@
+%h1.govuk-heading-m.section-heading Status
+%table.govuk-table.statuses
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        Name
+      %th.govuk-table__header
+        Property
+      %th.govuk-table__header
+        Communal
+      %th.govuk-table__header
+        Total
+  %tbody.govuk-table__body
+    - Defect.statuses.each do |text, integer|
+      - defects_of_status = presenter.defects_by_status(text: text)
+      %tr.govuk-table__row
+        %td.govuk-table__cell= format_status(text)
+        %td.govuk-table__cell= defects_of_status.property.count
+        %td.govuk-table__cell= defects_of_status.communal.count
+        %td.govuk-table__cell= defects_of_status.count

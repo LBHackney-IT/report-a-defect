@@ -1,0 +1,6 @@
+%p.govuk-body
+  = I18n.t('form.property.guidance', link: link_to("Hackney's property lookup service", 'http://lbhgisnetp01/SinglePoint/SimpleSearch.aspx')).html_safe
+
+%ul.govuk-list.govuk-list--bullet
+  - I18n.t('form.property.steps').each do |step|
+    %li= step

@@ -1,0 +1,16 @@
+%h1.govuk-heading-m.section-heading Trades
+%table.govuk-table.trades
+  %thead.govuk-table__head
+    %tr.govuk-table__row
+      %th.govuk-table__header
+        Name
+      %th.govuk-table__header
+        Percentage
+      %th.govuk-table__header
+        Total
+  %tbody.govuk-table__body
+    - Defect::TRADES.each do |trade|
+      %tr.govuk-table__row
+        %td.govuk-table__cell= trade
+        %td.govuk-table__cell= presenter.trade_percentage(text: trade)
+        %td.govuk-table__cell= presenter.defects_by_trade(text: trade).count

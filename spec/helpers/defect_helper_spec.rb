@@ -83,6 +83,31 @@ RSpec.describe DefectHelper, type: :helper do
       end
     end
 
+    context 'when the key is defect.update' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(trackable: defect, owner: user, key: 'defect.update')
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.updated',
+                                     name: event.owner.name))
+      end
+    end
+
+    context 'when the event describes a status change' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(
+          trackable: defect,
+          owner: user,
+          key: 'defect.update',
+          parameters: { changes: { status: %w[outstanding follow_on] } }
+        )
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.status_changed',
+                                     name: event.owner.name,
+                                     old: 'Outstanding',
+                                     new: 'Follow on'))
+      end
+    end
+
     context 'when the key is defect.forwarded_to_contractor' do
       it 'returns the event description' do
         event = PublicActivity::Activity.new(trackable: defect, owner: user, key: 'defect.forwarded_to_contractor')
@@ -108,6 +133,18 @@ RSpec.describe DefectHelper, type: :helper do
         expect(result).to eql(I18n.t('events.defect.accepted',
                                      email: event.trackable.scheme.contractor_email_address))
       end
+    end
+  end
+
+  describe '#format_status' do
+    it 'upcases the first word' do
+      result = helper.format_status('outstanding')
+      expect(result).to eql('Outstanding')
+    end
+
+    it 'replaces all underscores with empty spaces' do
+      result = helper.format_status('raised_in_error')
+      expect(result).to eql('Raised in error')
     end
   end
 end
