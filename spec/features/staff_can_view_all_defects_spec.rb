@@ -24,7 +24,6 @@ RSpec.feature 'Anyone can view all defects' do
       expect(page).to have_content(property_defect.trade)
       expect(page).to have_content(property_defect.target_completion_date)
       expect(page).to have_link(
-        I18n.t('generic.link.show'),
         href: property_defect_path(property_defect.property, property_defect)
       )
       expect(page).to have_content(communal_defect.reference_number)
@@ -37,7 +36,6 @@ RSpec.feature 'Anyone can view all defects' do
       expect(page).to have_content(communal_defect.trade)
       expect(page).to have_content(communal_defect.target_completion_date)
       expect(page).to have_link(
-        I18n.t('generic.link.show'),
         href: communal_area_defect_path(communal_defect.communal_area, communal_defect)
       )
     end

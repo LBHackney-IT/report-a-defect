@@ -9,6 +9,7 @@ $govuk-font-family: 'Arial', sans-serif;
 @import 'components/lbh-buttons';
 @import 'components/flashes';
 @import 'components/forms';
+@import 'components/filters';
 
 p {
   @include govuk-font(19);
@@ -131,3 +132,72 @@ p {
   float: right;
   margin-right: 20px;
 }
+
+.lbh-table {
+  td.govuk-table__cell {
+    vertical-align: top;
+  }
+  .lbh-table-cell {
+    background: transparent;
+
+    span {
+      display: block;
+    }
+
+    a {
+      &:link,
+      &:visited {
+        text-decoration: none;
+      }
+
+      &:focus,
+      &:hover {
+        .cell-defect-ref,
+        .cell-defect-name {
+          color: $lbh-link-hover-colour;
+          text-decoration: underline;
+        }
+      }
+
+      &:visited {
+        color: $lbh-link-colour;
+      }
+
+      .cell-defect-ref {
+        color: $lbh-link-colour;
+        text-decoration: underline;
+        padding-bottom: 0.5em;
+      }
+
+      .cell-defect-name {
+        color: $lbh-text-colour;
+        text-decoration: none;
+        padding-bottom: 0.5em;
+      }
+
+      .cell-trade-label {
+        color: $lbh-text-colour;
+        font-weight: normal;
+        font-size: 1rem;
+      }
+    }
+
+    .cell-status-label {
+      padding: 4px;
+      border-radius: 2px;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      text-align: center;
+      background-color: $lbh-panel-light;
+      color: $lbh-text-colour;
+
+      &.outstanding {
+        background-color: $lbh-housing-1;
+        color: $lbh-text-white-colour;
+      }
+
+    }
+  }
+}
+// TODO Ideally we would have different colours, especially to indicate the overdue ones
+// statuses Outstanding, Completed, Closed, Raised in Error, Follow on, End of Year, Dispute, Refferal, Rejected
