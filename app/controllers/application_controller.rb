@@ -16,11 +16,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # rubocop:disable Rails/UnknownEnv
   def authenticate?
-    Rails.env.staging? || (Figaro.env.http_user && Figaro.env.http_pass)
+    Figaro.env.http_user && Figaro.env.http_pass
   end
-  # rubocop:enable Rails/UnknownEnv
 
   def current_user
     User.find_or_create_by(identifier: 'dxw', name: 'Generic team user')
