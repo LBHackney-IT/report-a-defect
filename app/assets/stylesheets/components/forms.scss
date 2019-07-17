@@ -24,3 +24,7 @@
     display: inline-block;
   }
 }
+
+.collection_radio_buttons {
+  @extend .govuk-radios__label;
+}

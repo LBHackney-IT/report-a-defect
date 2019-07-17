@@ -1,0 +1,19 @@
+.comments {
+  li.lbh-comment {
+    margin: 20px 0px 25px 0px;
+    list-style: none;
+    border-bottom: 1px solid $lbh-border-colour;
+
+    .media-heading {
+      margin-bottom: 15px;
+
+      time {
+        color: $lbh-dark-grey;
+
+        &.govuk-body-s {
+          display: inline;
+        }
+      }
+    }
+  }
+}
