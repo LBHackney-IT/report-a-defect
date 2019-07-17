@@ -32,6 +32,8 @@ RSpec.feature 'Anyone can view a property' do
       expect(page).to have_content(property.address)
       expect(page).to have_content(property.postcode)
     end
+
+    expect(page).to have_content(I18n.t('page_content.defect.property.table.header'))
   end
 
   scenario 'can use breadcrumbs to navigate' do

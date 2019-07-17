@@ -24,6 +24,8 @@ RSpec.feature 'Anyone can view a communal_area' do
     within('.communal_area_information') do
       expect(page).to have_content(communal_area.name)
     end
+
+    expect(page).to have_content(I18n.t('page_content.defect.communal_area.table.header'))
   end
 
   scenario 'can use breadcrumbs to navigate' do
