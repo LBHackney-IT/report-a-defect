@@ -10,44 +10,13 @@ $govuk-font-family: 'Arial', sans-serif;
 @import 'components/flashes';
 @import 'components/forms';
 @import 'components/filters';
+@import 'components/comments';
+@import 'components/links';
+@import 'components/lists';
+@import 'components/tables';
 
 p {
   @include govuk-font(19);
-}
-
-.collection_radio_buttons {
-  @extend .govuk-radios__label;
-}
-
-.govuk-list {
-  a.govuk-link--no-visited-state {
-    @include govuk-link-style-no-visited-state;
-  }
-}
-
-.govuk-summary-list.no-actions {
-  .govuk-summary-list__row {
-    font-size: 1rem;
-
-    .govuk-summary-list__key {
-      width: 45%;
-    }
-    @include govuk-media-query($until: tablet) {
-      .govuk-summary-list__key {
-        width: 100%;
-      }
-    }
-
-    .govuk-summary-list__value {
-      width: 55%
-    }
-
-    @include govuk-media-query($until: tablet) {
-      .govuk-summary-list__value {
-        width: 100%
-      }
-    }
-  }
 }
 
 .scheme-info {
@@ -61,7 +30,6 @@ p {
     margin-bottom: 1em;
   }
 }
-
 
 .section-heading {
   border-bottom: 1px solid $lbh-border-colour;
@@ -92,6 +60,7 @@ p {
     margin-right: -1em;
   }
 }
+
 .visually-hidden {
   border: 0;
   clip: rect(0 0 0 0);
@@ -103,101 +72,3 @@ p {
   width: 1px;
   white-space: nowrap;
 }
-.govuk-list.media-list {
-  margin: 0;
-  padding-left: 0;
-}
-
-.comments {
-  li.lbh-comment {
-    margin: 20px 0px 25px 0px;
-    list-style: none;
-    border-bottom: 1px solid $lbh-border-colour;
-
-    .media-heading {
-      margin-bottom: 15px;
-
-      time {
-        color: $lbh-dark-grey;
-
-        &.govuk-body-s {
-          display: inline;
-        }
-      }
-    }
-  }
-}
-
-.sign-out-link {
-  float: right;
-  margin-right: 20px;
-}
-
-.lbh-table {
-  td.govuk-table__cell {
-    vertical-align: top;
-  }
-  .lbh-table-cell {
-    background: transparent;
-
-    span {
-      display: block;
-    }
-
-    a {
-      &:link,
-      &:visited {
-        text-decoration: none;
-      }
-
-      &:focus,
-      &:hover {
-        .cell-defect-ref,
-        .cell-defect-name {
-          color: $lbh-link-hover-colour;
-          text-decoration: underline;
-        }
-      }
-
-      &:visited {
-        color: $lbh-link-colour;
-      }
-
-      .cell-defect-ref {
-        color: $lbh-link-colour;
-        text-decoration: underline;
-        padding-bottom: 0.5em;
-      }
-
-      .cell-defect-name {
-        color: $lbh-text-colour;
-        text-decoration: none;
-        padding-bottom: 0.5em;
-      }
-
-      .cell-trade-label {
-        color: $lbh-text-colour;
-        font-weight: normal;
-        font-size: 1rem;
-      }
-    }
-
-    .cell-status-label {
-      padding: 4px;
-      border-radius: 2px;
-      font-weight: bold;
-      margin-bottom: 0.5em;
-      text-align: center;
-      background-color: $lbh-panel-light;
-      color: $lbh-text-colour;
-
-      &.outstanding {
-        background-color: $lbh-housing-1;
-        color: $lbh-text-white-colour;
-      }
-
-    }
-  }
-}
-// TODO Ideally we would have different colours, especially to indicate the overdue ones
-// statuses Outstanding, Completed, Closed, Raised in Error, Follow on, End of Year, Dispute, Refferal, Rejected
