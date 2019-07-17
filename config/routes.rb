@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
-  root to: 'staff/dashboard#index'
   get 'check' => 'application#check'
   get 'auth/oauth2/callback' => 'auth0#callback'
   get 'auth/failure' => 'auth0#failure'
   get 'sign_out' => 'application#sign_out'
+
+  root to: 'application#welcome'
+
+  get '/dashboard' => 'staff/dashboard#index'
   resources :estates, controller: 'staff/estates', only: %i[new create show] do
     resources :schemes, controller: 'staff/schemes', only: %i[new create show edit update] do
       resources :priorities, controller: 'staff/priorities', only: %i[new create]

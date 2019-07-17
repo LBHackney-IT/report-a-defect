@@ -1,11 +1,15 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can download defect data' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'download all defects' do
     property_defect = DefectPresenter.new(create(:property_defect))
     communal_defect = DefectPresenter.new(create(:communal_defect))
 
-    visit root_path
+    visit dashboard_path
 
     click_on(I18n.t('button.report.download_all'))
 

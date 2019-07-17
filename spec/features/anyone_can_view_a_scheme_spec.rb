@@ -1,13 +1,17 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can view a scheme' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'a scheme can be found and viewed' do
     scheme = create(:scheme)
     property = create(:property, scheme: scheme)
     communal_area = create(:communal_area, scheme: scheme)
     priority = create(:priority, scheme: scheme)
 
-    visit root_path
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
     within('.estates') do
@@ -55,7 +59,7 @@ RSpec.feature 'Anyone can view a scheme' do
     visit estate_scheme_path(scheme.estate, scheme)
 
     within('.govuk-breadcrumbs') do
-      expect(page).to have_link('Home', href: '/')
+      expect(page).to have_link('Home', href: '/dashboard')
       expect(page).to have_link(
         I18n.t('page_title.staff.estates.show', name: scheme.estate.name),
         href: estate_path(scheme.estate)

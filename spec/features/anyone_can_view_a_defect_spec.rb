@@ -1,10 +1,14 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can view a defect' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'a defect can be found and viewed' do
     defect = create(:property_defect)
 
-    visit root_path
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 

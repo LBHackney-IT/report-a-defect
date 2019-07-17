@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a estate' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'a estate can be created' do
-    visit root_path
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -21,7 +25,7 @@ RSpec.feature 'Anyone can create a estate' do
   end
 
   scenario 'an invalid estate cannot be submitted' do
-    visit root_path
+    visit dashboard_path
 
     click_on(I18n.t('button.create.estate'))
 

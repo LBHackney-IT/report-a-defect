@@ -1,12 +1,16 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can find a communal_area' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'with a name' do
     scheme = create(:scheme)
     interested_communal_area = create(:communal_area, scheme: scheme, name: 'Clift House')
     uninterested_communal_area = create(:communal_area, scheme: scheme, name: 'Darling House')
 
-    visit root_path
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 

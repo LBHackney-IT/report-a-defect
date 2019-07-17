@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a priority for a scheme' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   let!(:scheme) { create(:scheme) }
 
   scenario 'a scheme priority can be viewed' do

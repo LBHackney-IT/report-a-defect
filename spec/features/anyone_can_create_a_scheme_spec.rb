@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a scheme' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   let!(:estate) { create(:estate) }
 
   scenario 'a scheme can be created' do

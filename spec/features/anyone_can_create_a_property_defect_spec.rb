@@ -1,11 +1,15 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a defect for a property' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'a property can be found and defect can be created' do
     property = create(:property, address: '1 Hackney Street')
     priority = create(:priority, scheme: property.scheme, name: 'P1', days: 1)
 
-    visit root_path
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 

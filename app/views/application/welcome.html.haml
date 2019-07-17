@@ -1,0 +1,7 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.dashboard')
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl= I18n.t('page_title.welcome')
+
+    = link_to 'Sign in', '/auth/auth0', class: 'govuk-button'

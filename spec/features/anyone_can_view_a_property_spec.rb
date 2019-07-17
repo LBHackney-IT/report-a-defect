@@ -1,10 +1,14 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can view a property' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'a property can be found and viewed' do
     property = create(:property, address: '1 Hackney Street')
 
-    visit root_path
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -36,7 +40,7 @@ RSpec.feature 'Anyone can view a property' do
     visit property_path(property)
 
     within('.govuk-breadcrumbs') do
-      expect(page).to have_link('Home', href: '/')
+      expect(page).to have_link('Home', href: '/dashboard')
       expect(page).to have_link(
         I18n.t('page_title.staff.estates.show', name: property.scheme.estate.name),
         href: estate_path(property.scheme.estate)

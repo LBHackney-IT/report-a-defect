@@ -1,11 +1,15 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can view all defects' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'all open defects are shown by default' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -43,7 +47,7 @@ RSpec.feature 'Anyone can view all defects' do
     _open_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     closed_defect = DefectPresenter.new(create(:property_defect, status: :completed))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -62,7 +66,7 @@ RSpec.feature 'Anyone can view all defects' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -81,7 +85,7 @@ RSpec.feature 'Anyone can view all defects' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -102,7 +106,7 @@ RSpec.feature 'Anyone can view all defects' do
     open_communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
     closed_communal_defect = DefectPresenter.new(create(:communal_defect, status: :closed))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -141,7 +145,7 @@ RSpec.feature 'Anyone can view all defects' do
       create(:communal_defect, communal_area: distracting_communal_area, status: :outstanding)
     )
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 

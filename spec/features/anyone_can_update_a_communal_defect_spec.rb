@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can update a communal_area defect' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   let(:scheme) { create(:scheme, :with_priorities) }
   let(:communal_area) { create(:communal_area, scheme: scheme) }
 
