@@ -1,11 +1,15 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a defect for a communal_area' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'a communal_area can be found and defect can be created' do
     communal_area = create(:communal_area, name: 'Chipping')
     priority = create(:priority, scheme: communal_area.scheme, name: 'P1', days: 1)
 
-    visit root_path
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 

@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can view a report for a scheme' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   let(:scheme) { create(:scheme, created_at: 5.days.ago) }
   let(:priority) { create(:priority, scheme: scheme) }
   let(:property) { create(:property, scheme: scheme) }
@@ -10,7 +14,7 @@ RSpec.feature 'Anyone can view a report for a scheme' do
     create_list(:property_defect, 1, property: property, priority: priority)
     create_list(:communal_defect, 2, communal_area: communal_area, priority: priority)
 
-    visit root_path
+    visit dashboard_path
 
     within('.scheme-reports') do
       click_on(I18n.t('generic.link.show'))

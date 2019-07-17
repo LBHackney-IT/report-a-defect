@@ -1,12 +1,16 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can find a property' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'with an address' do
     scheme = create(:scheme)
     interested_property = create(:property, scheme: scheme, address: '1 Hackney Street')
     uninterested_property = create(:property, scheme: scheme, address: '60 London Road')
 
-    visit root_path
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -22,7 +26,7 @@ RSpec.feature 'Anyone can find a property' do
   end
 
   scenario 'can navigate back to make another search' do
-    visit root_path
+    visit dashboard_path
 
     within('form.search') do
       fill_in 'query', with: 'Hackney'

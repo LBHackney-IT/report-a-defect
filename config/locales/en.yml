@@ -5,6 +5,7 @@ en:
   service:
     name: 'Report a Defect'
   page_title:
+    welcome: 'Report a Defect service'
     contractor:
       defects:
         accepted:
@@ -77,10 +78,12 @@ en:
     link:
       show: 'View'
       edit: 'Edit'
+      sign_out: 'Sign out'
     button:
       find: 'Search'
       download: 'Download'
       filter: 'Filter'
+      sign_in: 'Sign in'
     notice:
       create:
         success:

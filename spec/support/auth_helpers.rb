@@ -14,6 +14,20 @@ module AuthHelpers
     allow(fake_env).to receive(env_field_for_username.to_sym).and_return(env_value_for_username)
     allow(fake_env).to receive(env_field_for_password.to_sym).and_return(env_value_for_password)
   end
+
+  def mock_successful_authentication(uid: '12345', name: 'Alex')
+    OmniAuth.config.mock_auth[:auth0] = OmniAuth::AuthHash.new(
+      provider: 'auth0',
+      uid: uid,
+      info: {
+        name: name,
+      }
+    )
+  end
+
+  def stub_authenticated_session(name: 'Alex')
+    page.set_rack_session(userinfo: { uid: '123456789', info: { name: name } })
+  end
 end
 
 RSpec.shared_examples 'basic auth' do
