@@ -75,6 +75,8 @@ RSpec.configure do |config|
 
   # Use built in helpers for stopping Time instead of depending on Timecop
   config.include ActiveSupport::Testing::TimeHelpers
+
+  OmniAuth.config.test_mode = true
 end
 
 Shoulda::Matchers.configure do |config|
