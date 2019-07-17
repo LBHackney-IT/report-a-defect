@@ -23,7 +23,7 @@
     %header.govuk-header.lbh-header{"data-module": "header", role: "banner"}
       .govuk-header.govuk-header__container.lbh-header__container
         .govuk-header__logo
-          %a.govuk-header__link.govuk-header__link--homepage{href: dashboard_path}
+          %a.govuk-header__link.govuk-header__link--homepage{href: 'https://hackney.gov.uk/'}
             %span.govuk-header__logotype
               %svg.govuk-header__logotype-crown{focusable: "false", height: "28", role: "presentation", viewbox: "0 0 141.78 25.28", width: "200", xmlns: "http://www.w3.org/2000/svg"}
                 %path{d: "M118.94 9.23a2.63 2.63 0 0 0-2.85 2.45h5.28a2.39 2.39 0 0 0-2.43-2.45zM53 16.32a1.59 1.59 0 0 0 1.73 1.34A2.19 2.19 0 0 0 57 15.4v-1.34a9.75 9.75 0 0 1-2.18.7c-1.2.24-1.82.58-1.82 1.56z", fill: "none"}
@@ -64,6 +64,6 @@
               All content is available under the
               = succeed "," do
                 %a.govuk-footer__link{href: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/", rel: "license"} Open Government Licence v3.0
-        
+
   :javascript
     window.GOVUKFrontend.initAll()
