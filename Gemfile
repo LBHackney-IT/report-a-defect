@@ -57,4 +57,5 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'shoulda'
+  gem 'webmock', '~> 3.5'
 end
