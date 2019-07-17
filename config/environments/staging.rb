@@ -91,4 +91,4 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 end
 
-OmniAuth.config.full_host = 'https://lbh-report-a-defect-staging.herokuapp.com/'
+OmniAuth.config.full_host = 'https://lbh-report-a-defect-staging.herokuapp.com'
