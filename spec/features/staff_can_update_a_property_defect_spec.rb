@@ -7,9 +7,9 @@ RSpec.feature 'Anyone can update a defect' do
 
   let(:scheme) { create(:scheme, :with_priorities) }
   let(:property) { create(:property, scheme: scheme) }
+  let!(:defect) { create(:communal_defect, property: property) }
 
   scenario 'a defect can be updated' do
-    defect = create(:property_defect, property: property)
     new_priority = create(:priority, scheme: property.scheme, days: 999)
 
     visit property_defect_path(defect.property, defect)
@@ -52,8 +52,6 @@ RSpec.feature 'Anyone can update a defect' do
   end
 
   scenario 'a defect status can be updated' do
-    defect = create(:property_defect, property: property)
-
     visit edit_property_defect_path(defect.property, defect)
 
     within('form.edit_defect') do
@@ -87,8 +85,6 @@ RSpec.feature 'Anyone can update a defect' do
   end
 
   scenario 'any defect status can be chosen' do
-    defect = create(:property_defect, property: property)
-
     visit edit_property_defect_path(defect.property, defect)
 
     expected_statues = %w[outstanding completed closed raised_in_error follow_on end_of_year referral rejected dispute]
@@ -105,8 +101,6 @@ RSpec.feature 'Anyone can update a defect' do
   end
 
   scenario 'an invalid defect cannot be updated' do
-    defect = create(:property_defect, property: property)
-
     visit property_defect_path(defect.property, defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
@@ -129,9 +123,21 @@ RSpec.feature 'Anyone can update a defect' do
     end
   end
 
-  scenario 'updating the priority is optional' do
-    defect = create(:property_defect, property: property)
+  scenario 'setting the completion date' do
+    visit edit_property_defect_path(defect.communal_area, defect)
 
+    within('form.edit_defect') do
+      fill_in 'target_completion_date_day', with: '31'
+      fill_in 'target_completion_date_month', with: '7'
+      fill_in 'target_completion_date_year', with: '2020'
+      click_on(I18n.t('button.update.defect'))
+    end
+
+    expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
+    expect(page).to have_content('31 July 2020')
+  end
+
+  scenario 'updating the priority is optional' do
     visit edit_property_defect_path(defect.property, defect)
 
     within('.existing-priority-information') do

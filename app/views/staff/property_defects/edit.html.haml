@@ -56,4 +56,8 @@
                 selected: @defect.priority,
                 label_method: ->(obj){ priority_form_label(priority: obj) }
 
+      %p Or, set a different target completion date:
+
+      = render partial: 'shared/defects/date_fields', locals: { name: 'target_completion_date', date: nil }
+
       = f.button :submit, I18n.t('button.update.defect')

@@ -32,7 +32,10 @@ class Staff::PropertyDefectsController < Staff::BaseController
     @defect = EditDefect.new(
       defect: defect,
       defect_params: defect_params,
-      options: { priority_id: priority_id }
+      options: {
+        priority_id: priority_id,
+        target_completion_date: target_completion_date,
+      }
     ).call
 
     if @defect.valid?
@@ -56,6 +59,10 @@ class Staff::PropertyDefectsController < Staff::BaseController
 
   def priority_id
     params.require(:defect).permit(:priority)[:priority]
+  end
+
+  def target_completion_date
+    params.require(:target_completion_date).permit(:day, :month, :year)
   end
 
   def defect_params
