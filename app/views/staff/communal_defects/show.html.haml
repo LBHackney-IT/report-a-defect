@@ -10,7 +10,7 @@
   .govuk-grid-column-one-half
     %h2.govuk-heading-m= @defect.title
     = link_to(I18n.t('button.edit.defect'), edit_communal_area_defect_path(@defect.communal_area, @defect), class: 'govuk-button govuk-button--secondary mb0')
-
+    = link_to(I18n.t('button.forward.contractor'), new_defect_forward_path(@defect), class: 'govuk-button govuk-button--secondary mb0')
 .govuk-grid-row
   .govuk-grid-column-one-half.summary
     = render partial: '/shared/defects/summary_information', locals: { defect: @defect }
