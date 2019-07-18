@@ -18,13 +18,11 @@ RSpec.describe 'Defect creation', type: :request do
   context 'when the defect is for a property' do
     let(:property) { create(:property) }
 
-    it 'forwards the email to the contractor and employer agent' do
+    it 'forwards the email to the contractor and employer agent by default' do
       defect_attributes = build(:property_defect).attributes
       defect_attributes.merge!(priority: create(:priority).id)
       params = {
         defect: defect_attributes,
-        send_email_to_contractor: 'true',
-        send_email_to_employer_agent: 'true',
       }
 
       contractor_message_delivery = instance_double(ActionMailer::MessageDelivery)
@@ -41,18 +39,39 @@ RSpec.describe 'Defect creation', type: :request do
 
       post property_defects_path(property), params: params
     end
+
+    context 'when the email should not be sent automatically' do
+      it 'forwards the email to the contractor and employer agent' do
+        defect_attributes = build(:property_defect).attributes
+        defect_attributes.merge!(
+          priority: create(:priority).id,
+          send_contractor_email: '0',
+          send_employer_agent_email: '0',
+        )
+
+        params = {
+          defect: defect_attributes,
+        }
+
+        expect(DefectMailer).not_to receive(:forward)
+          .with('contractor', property.scheme.contractor_email_address, anything)
+
+        expect(DefectMailer).not_to receive(:forward)
+          .with('employer_agent', property.scheme.employer_agent_email_address, anything)
+
+        post property_defects_path(property), params: params
+      end
+    end
   end
 
   context 'when the defect is for a communal_area' do
     let(:communal_area) { create(:communal_area) }
 
-    it 'forwards the email to the contractor and employer agent' do
+    it 'forwards the email to the contractor and employer agent by default' do
       defect_attributes = build(:communal_defect).attributes
       defect_attributes.merge!(priority: create(:priority).id)
       params = {
         defect: defect_attributes,
-        send_email_to_contractor: 'true',
-        send_email_to_employer_agent: 'true',
       }
 
       contractor_message_delivery = instance_double(ActionMailer::MessageDelivery)
@@ -68,6 +87,29 @@ RSpec.describe 'Defect creation', type: :request do
       expect(employer_agent_message_delivery).to receive(:deliver_later)
 
       post communal_area_defects_path(communal_area), params: params
+    end
+
+    context 'when the email should not be sent automatically' do
+      it 'forwards the email to the contractor and employer agent' do
+        defect_attributes = build(:communal_defect).attributes
+        defect_attributes.merge!(
+          priority: create(:priority).id,
+          send_contractor_email: '0',
+          send_employer_agent_email: '0',
+        )
+
+        params = {
+          defect: defect_attributes,
+        }
+
+        expect(DefectMailer).not_to receive(:forward)
+          .with('contractor', communal_area.scheme.contractor_email_address, anything)
+
+        expect(DefectMailer).not_to receive(:forward)
+          .with('employer_agent', communal_area.scheme.employer_agent_email_address, anything)
+
+        post communal_area_defects_path(communal_area), params: params
+      end
     end
   end
 end
