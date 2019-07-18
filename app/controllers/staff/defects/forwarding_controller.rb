@@ -3,14 +3,33 @@ class Staff::Defects::ForwardingController < Staff::BaseController
 
   def new
     @defect = Defect.find(id)
-    @other_events = @defect.activities.where(key: 'defect.forwarded_to_contractor')
+    @other_events = @defect.activities.where(key: "defect.forwarded_to_#{recipient_type}")
   end
 
   def create
     defect = Defect.find(id)
-    EmailContractor.new(defect: defect).call
+
+    if recipient_type.eql?('contractor')
+      EmailContractor.new(defect: defect).call
+    elsif recipient_type.eql?('employer_agent')
+      EmailEmployerAgent.new(defect: defect).call
+    end
+
     redirect_to defect_path_for(defect: defect),
-                flash: { success: I18n.t('page_content.defect.forwarding.success') }
+                flash: {
+                  success: I18n.t('page_content.defect.forwarding.success',
+                                  recipient_type: formatted_recipient_type),
+                }
+  end
+
+  helper_method :recipient_type
+  def recipient_type
+    params[:recipient_type]
+  end
+
+  helper_method :formatted_recipient_type
+  def formatted_recipient_type
+    recipient_type.tr('_', ' ')
   end
 
   private
