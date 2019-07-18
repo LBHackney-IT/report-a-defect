@@ -6,7 +6,6 @@ class Defect < ApplicationRecord
             :description,
             :trade,
             :priority,
-            :reference_number,
             :status,
             :target_completion_date,
             presence: true
@@ -16,7 +15,6 @@ class Defect < ApplicationRecord
   validates :contact_phone_number, numericality: true,
                                    length: { minimum: 10, maximum: 15 },
                                    allow_blank: true
-  attribute :reference_number, :string, default: -> { SecureRandom.hex(3).upcase }
 
   enum status: %i[
     outstanding
@@ -159,6 +157,13 @@ class Defect < ApplicationRecord
 
   def self.send_chain(methods)
     methods.inject(self) { |s, method| s.send(*method) }
+  end
+
+  def reference_number
+    return nil if new_record?
+
+    reload if sequence_number.blank?
+    format('NB-%06d', sequence_number).gsub(/-(\d{3})/, '-\1-')
   end
 
   def set_completion_date

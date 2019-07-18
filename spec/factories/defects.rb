@@ -9,7 +9,6 @@ FactoryBot.define do
     trade { Defect::TRADES.sample }
     target_completion_date { Faker::Date.between(1.day.from_now, 5.days.from_now) }
     status { Defect.statuses.keys.sample }
-    reference_number { SecureRandom.hex(3).upcase }
 
     association :priority, factory: :priority
 
