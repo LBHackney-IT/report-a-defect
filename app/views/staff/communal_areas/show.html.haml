@@ -2,7 +2,7 @@
 
 .govuk-breadcrumbs
   %ol.govuk-breadcrumbs__list
-    = breadcrumb_link_to('Home', root_path)
+    = breadcrumb_link_to('Home', dashboard_path)
     = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @communal_area.scheme.estate.name), estate_path(@communal_area.scheme.estate))
     = breadcrumb_link_to(I18n.t('page_title.staff.schemes.show', name: @communal_area.scheme.name), estate_scheme_path(@communal_area.scheme.estate, @communal_area.scheme))
     = breadcrumb_current(I18n.t('page_title.staff.communal_areas.show', name: @communal_area.name))
@@ -23,7 +23,7 @@
 .govuk-grid-row
   .govuk-grid-column-full
     %h1.govuk-heading-m.section-heading
-      = I18n.t('page_content.communal_area.table.header')
+      = I18n.t('page_content.defect.communal_area.table.header')
 
   .govuk-grid-column-full
     = link_to(I18n.t('button.create.communal_defect'), new_communal_area_defect_path(@communal_area), class: 'govuk-button mb0')

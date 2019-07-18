@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can update a scheme' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   let!(:scheme) { create(:scheme) }
 
   scenario 'a scheme can be udpated' do

@@ -2,6 +2,10 @@ require 'rails_helper'
 
 RSpec.feature 'Anyone can create a comment' do
   before(:each) do
+    stub_authenticated_session(name: 'Alex')
+  end
+
+  before(:each) do
     travel_to Time.zone.parse('2019-05-23')
   end
 
@@ -14,7 +18,7 @@ RSpec.feature 'Anyone can create a comment' do
     let!(:defect) { create(:property_defect, property: property) }
 
     scenario 'a property can be found and comment can be created' do
-      visit root_path
+      visit dashboard_path
 
       expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -46,7 +50,7 @@ RSpec.feature 'Anyone can create a comment' do
 
       within('.comments') do
         comment = Comment.first
-        expect(page).to have_content('Comment left by Generic team user posted on 23 May 2019 at 00:00')
+        expect(page).to have_content('Comment left by Alex posted on 23 May 2019 at 00:00')
         expect(page).to have_content(comment.message)
       end
     end
@@ -66,7 +70,7 @@ RSpec.feature 'Anyone can create a comment' do
     let!(:defect) { create(:communal_defect, communal_area: communal_area) }
 
     scenario 'a communal_area can be found and comment can be created' do
-      visit root_path
+      visit dashboard_path
 
       expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -96,7 +100,7 @@ RSpec.feature 'Anyone can create a comment' do
 
       within('.comments') do
         comment = Comment.first
-        expect(page).to have_content('Comment left by Generic team user posted on 23 May 2019 at 00:00')
+        expect(page).to have_content('Comment left by Alex posted on 23 May 2019 at 00:00')
         expect(page).to have_content(comment.message)
       end
     end

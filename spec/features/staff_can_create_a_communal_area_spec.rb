@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a communal_area' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   let!(:scheme) { create(:scheme) }
 
   scenario 'a communal_area can be created' do

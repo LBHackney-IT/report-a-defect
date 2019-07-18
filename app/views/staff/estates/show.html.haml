@@ -2,7 +2,7 @@
 
 .govuk-breadcrumbs
   %ol.govuk-breadcrumbs__list
-    = breadcrumb_link_to('Home', root_path)
+    = breadcrumb_link_to('Home', dashboard_path)
     = breadcrumb_current(I18n.t('page_title.staff.estates.show', name: @estate.name))
 
 .govuk-grid-row

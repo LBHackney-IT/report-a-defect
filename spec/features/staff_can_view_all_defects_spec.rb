@@ -1,11 +1,15 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can view all defects' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'all open defects are shown by default' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -20,7 +24,6 @@ RSpec.feature 'Anyone can view all defects' do
       expect(page).to have_content(property_defect.trade)
       expect(page).to have_content(property_defect.target_completion_date)
       expect(page).to have_link(
-        I18n.t('generic.link.show'),
         href: property_defect_path(property_defect.property, property_defect)
       )
       expect(page).to have_content(communal_defect.reference_number)
@@ -33,7 +36,6 @@ RSpec.feature 'Anyone can view all defects' do
       expect(page).to have_content(communal_defect.trade)
       expect(page).to have_content(communal_defect.target_completion_date)
       expect(page).to have_link(
-        I18n.t('generic.link.show'),
         href: communal_area_defect_path(communal_defect.communal_area, communal_defect)
       )
     end
@@ -43,7 +45,7 @@ RSpec.feature 'Anyone can view all defects' do
     _open_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     closed_defect = DefectPresenter.new(create(:property_defect, status: :completed))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -62,7 +64,7 @@ RSpec.feature 'Anyone can view all defects' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -81,7 +83,7 @@ RSpec.feature 'Anyone can view all defects' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -102,7 +104,7 @@ RSpec.feature 'Anyone can view all defects' do
     open_communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
     closed_communal_defect = DefectPresenter.new(create(:communal_defect, status: :closed))
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -141,7 +143,7 @@ RSpec.feature 'Anyone can view all defects' do
       create(:communal_defect, communal_area: distracting_communal_area, status: :outstanding)
     )
 
-    visit root_path
+    visit dashboard_path
 
     click_on('View all defects')
 

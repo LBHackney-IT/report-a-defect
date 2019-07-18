@@ -1,10 +1,14 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can view a communal_area' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   scenario 'a communal_area can be found and viewed' do
     communal_area = create(:communal_area, name: 'Chipping')
 
-    visit root_path
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -20,6 +24,8 @@ RSpec.feature 'Anyone can view a communal_area' do
     within('.communal_area_information') do
       expect(page).to have_content(communal_area.name)
     end
+
+    expect(page).to have_content(I18n.t('page_content.defect.communal_area.table.header'))
   end
 
   scenario 'can use breadcrumbs to navigate' do
@@ -28,7 +34,7 @@ RSpec.feature 'Anyone can view a communal_area' do
     visit communal_area_path(communal_area)
 
     within('.govuk-breadcrumbs') do
-      expect(page).to have_link('Home', href: '/')
+      expect(page).to have_link('Home', href: '/dashboard')
       expect(page).to have_link(
         I18n.t('page_title.staff.estates.show', name: communal_area.scheme.estate.name),
         href: estate_path(communal_area.scheme.estate)

@@ -1,5 +1,5 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.defects.index')
-= link_to 'Back', root_path, class: 'govuk-back-link'
+= link_to 'Back', dashboard_path, class: 'govuk-back-link'
 
 .govuk-grid-row
   .govuk-grid-column-full
@@ -8,73 +8,86 @@
       %span.govuk-caption-l= "Showing #{@defects.count} of #{Defect.count} defects"
 
 .govuk-grid-row
-  .govuk-grid-column-full
-    %h2.govuk-heading-m Filters
+  %aside{role: 'complementary'}
+    .govuk-grid-column-one-quarter
+      %h2.govuk-heading-m Filter by
 
-    = form_tag defects_path, class: 'filter-defects', method: :get do
-      .govuk-form-group
-        %fieldset.govuk-fieldset.lbh-fieldset
-          = label_tag 'statuses', 'Status', class: 'govuk-label'
-          .govuk-checkboxes.checkbox-group
-            .govuk-checkboxes__item
-              = check_box_tag 'statuses[]', 'Open', open_status?, id: 'statuses_open', class: 'govuk-checkboxes__input'
-              = label_tag 'statuses[]', 'Open', for: 'statuses_open', class: 'govuk-label govuk-checkboxes__label'
-            .govuk-checkboxes__item
-              = check_box_tag 'statuses[]', 'Closed', closed_status?, id: 'statuses_closed', class: 'govuk-checkboxes__input'
-              = label_tag 'statuses[]', 'Closed', for: 'statuses_closed', class: 'govuk-label govuk-checkboxes__label'
-        %fieldset.govuk-fieldset.lbh-fieldset
-          = label_tag 'types', 'Type', class: 'govuk-label'
-          .govuk-checkboxes.checkbox-group
-            .govuk-checkboxes__item
-              = check_box_tag 'types[]', 'Property', type_property?, id: 'types_property', class: 'govuk-checkboxes__input'
-              = label_tag 'types[]', 'Property', for: 'types_property', class: 'govuk-label govuk-checkboxes__label'
-            .govuk-checkboxes__item
-              = check_box_tag 'types[]', 'Communal', type_communal?, id: 'types_communal', class: 'govuk-checkboxes__input'
-              = label_tag 'types[]', 'Communal', for: 'types_communal', class: 'govuk-label govuk-checkboxes__label'
-        %fieldset.govuk-fieldset.lbh-fieldset
-          = label_tag 'schemes', 'Scheme', class: 'govuk-label'
-          .govuk-checkboxes.checkbox-group
-            - Scheme.all.each do |scheme|
+      = form_tag defects_path, class: 'filter-defects', method: :get do
+        .govuk-form-group
+          %fieldset.govuk-fieldset.lbh-fieldset
+            = label_tag 'statuses', 'Status', class: 'govuk-label govuk-!-font-weight-bold'
+            .govuk-checkboxes.checkbox-group.govuk-checkboxes--small
               .govuk-checkboxes__item
-                = check_box_tag 'scheme_ids[]', scheme.id, selected_scheme?(scheme.id), id: scheme.id, class: 'govuk-checkboxes__input'
-                = label_tag 'scheme_ids[]', scheme.name, for: scheme.id, class: 'govuk-label govuk-checkboxes__label'
-      = submit_tag I18n.t('generic.button.filter'), class: 'govuk-button mb0'
+                = check_box_tag 'statuses[]', 'Open', open_status?, id: 'statuses_open', class: 'govuk-checkboxes__input'
+                = label_tag 'statuses[]', 'Open', for: 'statuses_open', class: 'govuk-label govuk-checkboxes__label'
+              .govuk-checkboxes__item
+                = check_box_tag 'statuses[]', 'Closed', closed_status?, id: 'statuses_closed', class: 'govuk-checkboxes__input'
+                = label_tag 'statuses[]', 'Closed', for: 'statuses_closed', class: 'govuk-label govuk-checkboxes__label'
+          %fieldset.govuk-fieldset.lbh-fieldset
+            = label_tag 'types', 'Type', class: 'govuk-label govuk-!-font-weight-bold'
+            .govuk-checkboxes.checkbox-group.govuk-checkboxes--small
+              .govuk-checkboxes__item
+                = check_box_tag 'types[]', 'Property', type_property?, id: 'types_property', class: 'govuk-checkboxes__input'
+                = label_tag 'types[]', 'Property', for: 'types_property', class: 'govuk-label govuk-checkboxes__label'
+              .govuk-checkboxes__item
+                = check_box_tag 'types[]', 'Communal', type_communal?, id: 'types_communal', class: 'govuk-checkboxes__input'
+                = label_tag 'types[]', 'Communal', for: 'types_communal', class: 'govuk-label govuk-checkboxes__label'
+          %fieldset.govuk-fieldset.lbh-fieldset
+            = label_tag 'schemes', 'Scheme', class: 'govuk-label govuk-!-font-weight-bold'
+            .govuk-checkboxes.checkbox-group.govuk-checkboxes--small
+              - Scheme.all.each do |scheme|
+                .govuk-checkboxes__item
+                  = check_box_tag 'scheme_ids[]', scheme.id, selected_scheme?(scheme.id), id: scheme.id, class: 'govuk-checkboxes__input'
+                  = label_tag 'scheme_ids[]', scheme.name, for: scheme.id, class: 'govuk-label govuk-checkboxes__label'
+        = submit_tag I18n.t('generic.button.filter'), class: 'govuk-button mb0'
 
-.govuk-grid-row
-  .govuk-grid-column-full
-    %table.govuk-table.defects
-      %thead.govuk-table__head
-        %tr.govuk-table__row
-          %th.govuk-table__header
-            Reference number
-          %th.govuk-table__header
-            Title
-          %th.govuk-table__header
-            Scheme
-          %th.govuk-table__header
-            Type
-          %th.govuk-table__header
-            Status
-          %th.govuk-table__header
-            Address
-          %th.govuk-table__header
-            Priority
-          %th.govuk-table__header
-            Trade
-          %th.govuk-table__header
-            Target completion
-          %th.govuk-table__header
-            Actions
-      %tbody.govuk-table__body
-        - @defects.each do |defect|
+  %article{role: 'main'}
+    .govuk-grid-column-three-quarters
+      %table.govuk-table.defects{summary: " This table contains a list of defects with their reference numbers, due date, status and priority and the location"}
+        %caption.govuk-table__caption
+          %h2
+            Defects list
+        %thead.govuk-table__head
           %tr.govuk-table__row
-            %td.govuk-table__cell= defect.reference_number
-            %td.govuk-table__cell= defect.title
-            %td.govuk-table__cell= defect.scheme.name
-            %td.govuk-table__cell= defect.defect_type
-            %td.govuk-table__cell= defect.status
-            %td.govuk-table__cell= defect.address
-            %td.govuk-table__cell= defect.priority.name
-            %td.govuk-table__cell= defect.trade
-            %td.govuk-table__cell= defect.target_completion_date
-            %td.govuk-table__cell= link_to I18n.t('generic.link.show'), defect_path_for(defect: defect), class: 'govuk-link'
+            %th.govuk-table__header{scope:'col', class: 'govuk-!-width-one-third'}
+              Defect reference and name
+            %th.govuk-table__header{scope:'col'}
+              Due by
+            %th.govuk-table__header{scope:'col'}
+              Status and priority
+            %th.govuk-table__header{scope:'col', class: 'govuk-!-width-one-third'}
+              Location
+        %tbody.govuk-table__body.lbh-table
+          - @defects.each do |defect|
+            %tr.govuk-table__row
+              %th.govuk-table__header.lbh-table-cell{scope:'row'}
+                %a{href: defect_path_for(defect: defect), arialabeledby: 'Click the link to get to defects full details page', class: ''}
+
+                  %span.cell-defect-ref
+                    %span.visually-hidden
+                      Number
+                    = defect.reference_number
+
+                  %span.cell-defect-name
+                    = defect.title
+
+                  %span.cell-trade-label
+                    = defect.trade
+
+              %td.govuk-table__cell.due-date
+                = defect.target_completion_date
+
+              %td.govuk-table__cell.lbh-table-cell
+                %span{ class: "cell-status-label #{defect.status.downcase}" }
+                  = defect.status
+                %span.visually-hidden
+                  Priority
+                = defect.priority.name
+              %td.govuk-table__cell.lbh-table-cell
+                %span
+                  = defect.defect_type
+                %span
+                  = defect.address
+                %span
+                  = defect.scheme.name
+                  scheme

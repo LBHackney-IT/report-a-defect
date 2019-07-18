@@ -9,7 +9,7 @@ class Staff::EstatesController < Staff::BaseController
     if @estate.valid?
       @estate.save
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'estate')
-      redirect_to root_path
+      redirect_to dashboard_path
     else
       render :new
     end

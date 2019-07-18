@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can update a defect' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   let(:scheme) { create(:scheme, :with_priorities) }
   let(:property) { create(:property, scheme: scheme) }
 
@@ -62,6 +66,8 @@ RSpec.feature 'Anyone can update a defect' do
   end
 
   scenario 'a detect status change is listed as an event' do
+    stub_authenticated_session(name: 'Bob')
+
     travel_to Time.zone.parse('2019-05-23')
 
     defect = create(:property_defect, property: property, status: :outstanding)
@@ -75,7 +81,7 @@ RSpec.feature 'Anyone can update a defect' do
 
     within('.events') do
       expect(page).to have_content(
-        I18n.t('events.defect.status_changed', name: 'Generic team user', old: 'Outstanding', new: 'Completed')
+        I18n.t('events.defect.status_changed', name: 'Bob', old: 'Outstanding', new: 'Completed')
       )
     end
   end

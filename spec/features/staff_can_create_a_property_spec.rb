@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.feature 'Anyone can create a property' do
+  before(:each) do
+    stub_authenticated_session
+  end
+
   let!(:scheme) { create(:scheme) }
 
   scenario 'a property can be created' do
