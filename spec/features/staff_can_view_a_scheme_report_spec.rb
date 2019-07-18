@@ -171,12 +171,12 @@ RSpec.feature 'Anyone can view a report for a scheme' do
     end
 
     within('.date-filter') do
-      fill_in 'from_day', with: '23'
-      fill_in 'from_month', with: '5'
-      fill_in 'from_year', with: '2019'
-      fill_in 'to_day', with: '24'
-      fill_in 'to_month', with: '5'
-      fill_in 'to_year', with: '2019'
+      fill_in 'from_date[day]', with: '23'
+      fill_in 'from_date[month]', with: '5'
+      fill_in 'from_date[year]', with: '2019'
+      fill_in 'to_date[day]', with: '24'
+      fill_in 'to_date[month]', with: '5'
+      fill_in 'to_date[year]', with: '2019'
     end
 
     click_button 'Apply dates'
