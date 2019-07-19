@@ -11,5 +11,7 @@ class EmailContractor
       defect.scheme.contractor_email_address,
       defect.id
     ).deliver_later
+
+    NotifyDefectSentToContractorJob.perform_later(defect.id)
   end
 end
