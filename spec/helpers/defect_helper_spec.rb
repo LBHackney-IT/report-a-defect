@@ -92,6 +92,32 @@ RSpec.describe DefectHelper, type: :helper do
       end
     end
 
+    context 'when the event describes a flag being added' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(
+          trackable: defect,
+          owner: user,
+          key: 'defect.update',
+          parameters: { changes: { flagged: [false, true] } }
+        )
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.flag_added', name: event.owner.name))
+      end
+    end
+
+    context 'when the event describes a flag being removed' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(
+          trackable: defect,
+          owner: user,
+          key: 'defect.update',
+          parameters: { changes: { flagged: [true, false] } }
+        )
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.flag_removed', name: event.owner.name))
+      end
+    end
+
     context 'when the event describes a status change' do
       it 'returns the event description' do
         event = PublicActivity::Activity.new(

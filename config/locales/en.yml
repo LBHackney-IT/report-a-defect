@@ -185,6 +185,8 @@ en:
     defect:
       created: 'Defect was created by %{name}'
       updated: 'Defect was updated by %{name}'
+      flag_added: 'Flag was added by %{name}'
+      flag_removed: 'Flag was removed by %{name}'
       status_changed: 'Status was changed from %{old} to %{new} by %{name}'
       forwarded_to_contractor: 'An email was sent to the contractor (%{email})'
       forwarded_to_employer_agent: 'An email was sent to the employer agent (%{email})'

@@ -153,8 +153,18 @@ RSpec.describe Defect, type: :model do
       defect = build(:defect, status: 'outstanding')
       defect.follow_on!
 
-      event = defect.activities.last
+      event = defect.activities.first
       expect(event.parameters[:changes]).to eq('status' => %w[outstanding follow_on])
+    end
+  end
+
+  describe '#flagged' do
+    it 'records changes in the activity log' do
+      defect = build(:defect, status: 'outstanding', flagged: false)
+      defect.update!(flagged: true)
+
+      event = defect.activities.first
+      expect(event.parameters[:changes]).to eq('flagged' => [false, true])
     end
   end
 
