@@ -134,6 +134,15 @@ RSpec.describe DefectHelper, type: :helper do
                                      email: event.trackable.scheme.contractor_email_address))
       end
     end
+
+    context 'when the key is defect.notification.contact.sent_to_contractor' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(trackable: defect, owner: user, key: 'defect.notification.contact.sent_to_contractor')
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.notification.contact.sent_to_contractor',
+                                     phone_number: event.trackable.contact_phone_number))
+      end
+    end
   end
 
   describe '#format_status' do

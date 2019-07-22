@@ -13,5 +13,10 @@ RSpec.describe EmailContractor do
 
       described_class.new(defect: defect).call
     end
+
+    it 'sends an SMS to the contact phone number' do
+      expect(NotifyDefectSentToContractorJob).to receive(:perform_later).with(defect.id)
+      described_class.new(defect: defect).call
+    end
   end
 end

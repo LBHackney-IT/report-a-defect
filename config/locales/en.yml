@@ -77,7 +77,9 @@ en:
         table:
           header: 'Communal defects'
       forwarding:
-        new: 'Send this defect information to the scheme %{recipient_type}.'
+        new:
+          contractor: 'Send this defect information to the scheme contractor, this will also notify the contact phone number that this defect is waiting on the contractor.'
+          employer_agent: 'Send this defect information to the scheme employer agent.'
         unsent: 'This defect has not been sent to the %{recipient_type} before.'
         success: 'Email sent to the %{recipient_type}'
   error_pages:
@@ -144,6 +146,8 @@ en:
         description: 'This will be how this defect is described to residents in status notifications'
       access_information:
         description: 'Help the contractor gain access to this communal area'
+      contact_phone_number:
+        hint: 'This number will be used to send updates to by text message'
     priority:
       code:
         label: 'Priority code'
@@ -181,6 +185,9 @@ en:
       forwarded_to_contractor: 'An email was sent to the contractor (%{email})'
       forwarded_to_employer_agent: 'An email was sent to the employer agent (%{email})'
       accepted: 'Defect was accepted by %{email}'
+      notification:
+        contact:
+          sent_to_contractor: 'An SMS was sent to the contact explaining that this is now waiting on the contractor (%{phone_number})'
   activerecord:
     attributes:
       property:

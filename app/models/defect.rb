@@ -189,7 +189,7 @@ class Defect < ApplicationRecord
   end
 
   def contact_phone_number=(value)
-    super(value.tr(' ', ''))
+    super(value&.tr(' ', ''))
   end
 
   def token

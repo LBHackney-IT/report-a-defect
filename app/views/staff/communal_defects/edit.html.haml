@@ -27,7 +27,8 @@
                   input_html: { rows: 5 }
         = f.input :contact_name
         = f.input :contact_email_address
-        = f.input :contact_phone_number
+        = f.input :contact_phone_number,
+                  hint: I18n.t('form.defect.contact_phone_number.hint')
         = f.input :trade,
                   wrapper: 'select',
                   input_html: { class: 'trades' },

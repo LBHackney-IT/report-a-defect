@@ -289,4 +289,20 @@ RSpec.describe Defect, type: :model do
       end
     end
   end
+
+  describe '.contact_phone_number=' do
+    it 'strips whitespace' do
+      defect = described_class.new
+      defect.contact_phone_number = '123 456'
+      expect(defect.contact_phone_number).to eq('123456')
+    end
+
+    context 'when there is no value' do
+      it 'returns nil' do
+        defect = described_class.new
+        defect.contact_phone_number = nil
+        expect(defect.contact_phone_number).to eq(nil)
+      end
+    end
+  end
 end

@@ -6,7 +6,7 @@
       = I18n.t('page_title.staff.defects.forwarding.create')
       %span.govuk-caption-l= 'Step 1 of 1'
 
-    %p.govuk-body= I18n.t('page_content.defect.forwarding.new', recipient_type: formatted_recipient_type)
+    %p.govuk-body= I18n.t("page_content.defect.forwarding.new.#{formatted_recipient_type}")
 
     - if @other_events.present?
       = render partial: 'shared/events/list', locals: { events: @other_events }
