@@ -19,7 +19,7 @@ RSpec.feature 'Staff can forward defect information by email' do
       click_on(I18n.t('button.forward.contractor'))
 
       expect(page).to have_content(I18n.t('page_title.staff.defects.forwarding.create', recipient_type: 'contractor'))
-      expect(page).to have_content(I18n.t('page_content.defect.forwarding.new', recipient_type: 'contractor'))
+      expect(page).to have_content(I18n.t('page_content.defect.forwarding.new.contractor'))
       expect(page).to have_content(I18n.t('page_content.defect.forwarding.unsent', recipient_type: 'contractor'))
 
       expect_any_instance_of(EmailContractor).to receive(:call)
@@ -40,7 +40,7 @@ RSpec.feature 'Staff can forward defect information by email' do
       click_on(I18n.t('button.forward.employer_agent'))
 
       expect(page).to have_content(I18n.t('page_title.staff.defects.forwarding.create', recipient_type: 'employer agent'))
-      expect(page).to have_content(I18n.t('page_content.defect.forwarding.new', recipient_type: 'employer agent'))
+      expect(page).to have_content(I18n.t('page_content.defect.forwarding.new.employer agent'))
       expect(page).to have_content(I18n.t('page_content.defect.forwarding.unsent', recipient_type: 'employer agent'))
 
       expect_any_instance_of(EmailEmployerAgent).to receive(:call)
@@ -64,7 +64,7 @@ RSpec.feature 'Staff can forward defect information by email' do
       click_on(I18n.t('button.forward.contractor'))
 
       expect(page).to have_content(I18n.t('page_title.staff.defects.forwarding.create', recipient_type: 'contractor'))
-      expect(page).to have_content(I18n.t('page_content.defect.forwarding.new', recipient_type: 'contractor'))
+      expect(page).to have_content(I18n.t('page_content.defect.forwarding.new.contractor'))
       expect(page).to have_content(I18n.t('page_content.defect.forwarding.unsent', recipient_type: 'contractor'))
 
       expect_any_instance_of(EmailContractor).to receive(:call)
@@ -85,7 +85,7 @@ RSpec.feature 'Staff can forward defect information by email' do
       click_on(I18n.t('button.forward.employer_agent'))
 
       expect(page).to have_content(I18n.t('page_title.staff.defects.forwarding.create', recipient_type: 'employer agent'))
-      expect(page).to have_content(I18n.t('page_content.defect.forwarding.new', recipient_type: 'employer agent'))
+      expect(page).to have_content(I18n.t('page_content.defect.forwarding.new.employer agent'))
       expect(page).to have_content(I18n.t('page_content.defect.forwarding.unsent', recipient_type: 'employer agent'))
 
       expect_any_instance_of(EmailEmployerAgent).to receive(:call)
@@ -95,5 +95,16 @@ RSpec.feature 'Staff can forward defect information by email' do
       expect(page).to have_content(I18n.t('page_content.defect.forwarding.success', recipient_type: 'employer agent'))
       expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
     end
+  end
+
+  scenario 'forwarding to a contractor' do
+    communal_area = create(:communal_area, scheme: scheme)
+    defect = create(:communal_defect, communal_area: communal_area)
+
+    visit communal_area_defect_path(defect.communal_area, defect)
+
+    click_on(I18n.t('button.forward.contractor'))
+
+    expect(page).to have_content(I18n.t('page_content.defect.forwarding.new.contractor'))
   end
 end
