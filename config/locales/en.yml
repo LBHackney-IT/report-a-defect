@@ -189,6 +189,7 @@ en:
         contact:
           sent_to_contractor: 'An SMS was sent to the contact explaining that this is now waiting on the contractor (%{phone_number})'
           accepted_by_contractor: 'An SMS was sent to the contact informing them that the contractor has accepted (%{phone_number})'
+          completed: 'An SMS was sent to the contact informing them that we believe this defect is completed (%{phone_number})'
   activerecord:
     attributes:
       property:
