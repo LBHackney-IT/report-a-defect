@@ -159,30 +159,30 @@ RSpec.feature 'Anyone can view a report for a scheme' do
   scenario 'filter defects' do
     travel_to Time.zone.parse('2019-05-25')
 
-    defect_one = create(:property_defect, created_at: Time.utc(2019, 5, 23), property: property)
-    defect_two = create(:property_defect, created_at: Time.utc(2019, 5, 24), property: property)
-    defect_three = create(:communal_defect, created_at: Time.utc(2019, 5, 24), communal_area: communal_area)
-    defect_four = create(:property_defect, created_at: Time.utc(2019, 5, 25), property: property)
-
-    defects = [defect_one, defect_two, defect_three, defect_four]
+    create(:property_defect, created_at: Time.utc(2019, 5, 23), property: property)
+    create(:property_defect, created_at: Time.utc(2019, 5, 24), property: property)
+    create(:communal_defect, created_at: Time.utc(2019, 5, 24), communal_area: communal_area)
+    create(:property_defect, created_at: Time.utc(2019, 5, 25), property: property)
 
     visit report_scheme_path(scheme)
 
     within('.summary') do
-      expect(page).to have_content(defects.count)
+      expect(page).to have_content('Total defects 3 1 4')
     end
 
     within('.date-filter') do
-      fill_in 'from_day', with: '5'
-      fill_in 'from_month', with: '23'
-      fill_in 'from_year', with: '2019'
-      fill_in 'to_day', with: '24'
-      fill_in 'to_month', with: '5'
-      fill_in 'to_year', with: '2019'
+      fill_in 'from_date[day]', with: '23'
+      fill_in 'from_date[month]', with: '5'
+      fill_in 'from_date[year]', with: '2019'
+      fill_in 'to_date[day]', with: '24'
+      fill_in 'to_date[month]', with: '5'
+      fill_in 'to_date[year]', with: '2019'
     end
 
+    click_button 'Apply dates'
+
     within('.summary') do
-      expect(page).to have_content('3')
+      expect(page).to have_content('Total defects 2 1 3')
     end
 
     travel_back

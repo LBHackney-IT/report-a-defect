@@ -17,5 +17,8 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Max: 25
 
+Naming/AccessorMethodName:
+  Enabled: false
+
 Style/ClassAndModuleChildren:
   Enabled: false

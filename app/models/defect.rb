@@ -170,10 +170,12 @@ class Defect < ApplicationRecord
     ReferenceNumber.new(sequence_number).to_s
   end
 
-  def set_completion_date
-    return unless priority
-
-    self.target_completion_date = Date.current + priority.days.days
+  def set_completion_date(date = nil)
+    if date
+      self.target_completion_date = date
+    elsif priority
+      self.target_completion_date = Date.current + priority.days.days
+    end
   end
 
   def self.format_status(status)

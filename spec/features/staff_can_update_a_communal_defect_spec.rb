@@ -7,9 +7,9 @@ RSpec.feature 'Anyone can update a communal_area defect' do
 
   let(:scheme) { create(:scheme, :with_priorities) }
   let(:communal_area) { create(:communal_area, scheme: scheme) }
+  let!(:defect) { create(:communal_defect, communal_area: communal_area) }
 
   scenario 'a defect can be updated' do
-    defect = create(:communal_defect, communal_area: communal_area)
     new_priority = create(:priority, scheme: communal_area.scheme, days: 999)
 
     visit communal_area_defect_path(defect.communal_area, defect)
@@ -51,8 +51,6 @@ RSpec.feature 'Anyone can update a communal_area defect' do
   end
 
   scenario 'any defect status can be chosen' do
-    defect = create(:communal_defect, communal_area: communal_area)
-
     visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     expected_statues = %w[outstanding completed closed raised_in_error follow_on end_of_year referral rejected dispute]
@@ -69,8 +67,6 @@ RSpec.feature 'Anyone can update a communal_area defect' do
   end
 
   scenario 'an invalid defect cannot be updated' do
-    defect = create(:communal_defect, communal_area: communal_area)
-
     visit communal_area_defect_path(defect.communal_area, defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
@@ -93,9 +89,21 @@ RSpec.feature 'Anyone can update a communal_area defect' do
     end
   end
 
-  scenario 'updating the priority is optional' do
-    defect = create(:communal_defect, communal_area: communal_area)
+  scenario 'setting the completion date' do
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
+    within('form.edit_defect') do
+      fill_in 'target_completion_date_day', with: '31'
+      fill_in 'target_completion_date_month', with: '7'
+      fill_in 'target_completion_date_year', with: '2020'
+      click_on(I18n.t('button.update.defect'))
+    end
+
+    expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
+    expect(page).to have_content('31 July 2020')
+  end
+
+  scenario 'updating the priority is optional' do
     visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     within('.existing-priority-information') do
