@@ -5,33 +5,45 @@ RSpec.feature 'Staff can flag a communal defect' do
     stub_authenticated_session
   end
 
-  scenario 'flagging a defect' do
-    defect = create(:communal_defect, flagged: false)
+  context 'flagging a defect' do
+    let(:defect) { create(:communal_defect, flagged: false) }
 
-    visit communal_area_defect_path(defect.communal_area, defect)
-    click_button I18n.t('button.flag.add')
+    before do
+      visit communal_area_defect_path(defect.communal_area, defect)
+      click_button I18n.t('button.flag.add')
+    end
 
-    expect(defect.reload).to be_flagged
+    it 'marks the defect as flagged' do
+      expect(defect.reload).to be_flagged
+    end
 
-    visit defects_path
+    it 'shows the flag in the list of defects' do
+      visit defects_path
 
-    within('table.defects tbody th:first-child') do
-      expect(page).to have_content('Flagged')
+      within('table.defects tbody th:first-child') do
+        expect(page).to have_content('Flagged')
+      end
     end
   end
 
-  scenario 'unflagging a defect' do
-    defect = create(:communal_defect, flagged: true)
+  context 'unflagging a defect' do
+    let(:defect) { create(:communal_defect, flagged: true) }
 
-    visit communal_area_defect_path(defect.communal_area, defect)
-    click_button I18n.t('button.flag.remove')
+    before do
+      visit communal_area_defect_path(defect.communal_area, defect)
+      click_button I18n.t('button.flag.remove')
+    end
 
-    expect(defect.reload).not_to be_flagged
+    it 'removes the flag from the defect' do
+      expect(defect.reload).not_to be_flagged
+    end
 
-    visit defects_path
+    it 'does not show a flag in the list of defects' do
+      visit defects_path
 
-    within('table.defects tbody th:first-child') do
-      expect(page).not_to have_content('Flagged')
+      within('table.defects tbody th:first-child') do
+        expect(page).not_to have_content('Flagged')
+      end
     end
   end
 end
