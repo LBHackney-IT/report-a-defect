@@ -144,6 +144,8 @@ en:
         description: 'This will be how this defect is described to residents in status notifications'
       access_information:
         description: 'Help the contractor gain access to this communal area'
+      contact_phone_number:
+        hint: 'This number will be used to send updates to by text message'
     priority:
       code:
         label: 'Priority code'
