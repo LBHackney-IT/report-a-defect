@@ -31,4 +31,8 @@ module DefectHelper
   def event_description_for(event:)
     DefectEventPresenter.new(event).description
   end
+
+  def flag_toggle_button(defect)
+    render partial: 'shared/defects/flag_toggle_button', locals: { defect: defect }
+  end
 end

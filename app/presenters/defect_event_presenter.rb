@@ -37,7 +37,14 @@ class DefectEventPresenter
   end
 
   def description_for_update
-    if params[:changes]&.key?(:status)
+    changes = params[:changes]
+
+    if changes&.key?(:flagged)
+      case changes[:flagged]
+      when [false, true] then I18n.t('events.defect.flag_added', name: @event.owner.name)
+      when [true, false] then I18n.t('events.defect.flag_removed', name: @event.owner.name)
+      end
+    elsif changes&.key?(:status)
       old, new = params[:changes][:status].map { |status| Defect.format_status(status) }
       I18n.t('events.defect.status_changed', name: @event.owner.name, old: old, new: new)
     else

@@ -74,6 +74,10 @@
                   %span.cell-trade-label
                     = defect.trade
 
+                  - if defect.flagged?
+                    %span.cell-flagged-label
+                      Flagged
+
               %td.govuk-table__cell.due-date
                 = defect.target_completion_date
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can update a property' do
+RSpec.feature 'Staff can update a property' do
   before(:each) do
     stub_authenticated_session
   end

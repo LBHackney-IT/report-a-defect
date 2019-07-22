@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can update a communal_area defect' do
+RSpec.feature 'Staff can update a communal_area defect' do
   before(:each) do
     stub_authenticated_session
   end

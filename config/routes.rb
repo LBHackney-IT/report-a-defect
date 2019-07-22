@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   resources :defects, controller: 'staff/defects' do
     resource :forward, controller: 'staff/defects/forwarding', only: %i[new create]
+    resource :flag, controller: 'staff/defect_flags', only: %i[create destroy]
   end
 
   resources :properties, controller: 'staff/properties', only: %i[show] do

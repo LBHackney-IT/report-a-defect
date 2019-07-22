@@ -28,3 +28,12 @@
 .collection_radio_buttons {
   @extend .govuk-radios__label;
 }
+
+.govuk-button.defect-flagged {
+  background-color: $lbh-error-colour;
+  font-weight: bold;
+}
+
+.defect-flagged-toggle {
+  display: inline-block;
+}

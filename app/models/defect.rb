@@ -71,7 +71,7 @@ class Defect < ApplicationRecord
   attr_reader :tracked_changes
 
   def remember_changes_for_activity
-    selected_changes = changes.slice(:status)
+    selected_changes = changes.slice(:flagged, :status)
     @tracked_changes = selected_changes unless selected_changes.empty?
   end
 
