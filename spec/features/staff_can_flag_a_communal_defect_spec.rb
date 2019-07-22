@@ -12,6 +12,12 @@ RSpec.feature 'Staff can flag a communal defect' do
     click_button I18n.t('button.flag.add')
 
     expect(defect.reload).to be_flagged
+
+    visit defects_path
+
+    within('table.defects tbody th:first-child') do
+      expect(page).to have_content('Flagged')
+    end
   end
 
   scenario 'unflagging a defect' do
@@ -21,5 +27,11 @@ RSpec.feature 'Staff can flag a communal defect' do
     click_button I18n.t('button.flag.remove')
 
     expect(defect.reload).not_to be_flagged
+
+    visit defects_path
+
+    within('table.defects tbody th:first-child') do
+      expect(page).not_to have_content('Flagged')
+    end
   end
 end
