@@ -159,11 +159,15 @@ class Defect < ApplicationRecord
     methods.inject(self) { |s, method| s.send(*method) }
   end
 
+  def self.by_reference_number(number)
+    find_by(sequence_number: number.to_i)
+  end
+
   def reference_number
     return nil if new_record?
 
     reload if sequence_number.blank?
-    format('NB-%06d', sequence_number).gsub(/-(\d{3})/, '-\1-')
+    ReferenceNumber.new(sequence_number).to_s
   end
 
   def set_completion_date
