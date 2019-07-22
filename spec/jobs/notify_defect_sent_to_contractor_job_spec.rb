@@ -55,5 +55,18 @@ RSpec.describe NotifyDefectSentToContractorJob, type: :job do
       described_class.perform_now(defect.id)
       expect(PublicActivity::Activity.where(key: 'defect.notification.contact.sent_to_contractor').count).to eq(1)
     end
+
+    context 'when the defect does not have a contact_phone_number' do
+      let(:defect) { create(:property_defect, contact_phone_number: nil) }
+      it 'does not enqueue a job' do
+        expect_any_instance_of(Notifications::Client).not_to receive(:send_sms)
+        described_class.perform_now(defect.id)
+      end
+
+      it 'does not create an activity event' do
+        described_class.perform_now(defect.id)
+        expect(PublicActivity::Activity.where(key: 'defect.notification.contact.sent_to_contractor').count).to eq(0)
+      end
+    end
   end
 end

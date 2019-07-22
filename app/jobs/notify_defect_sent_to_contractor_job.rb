@@ -5,6 +5,8 @@ class NotifyDefectSentToContractorJob < ApplicationJob
 
   def perform(defect_id)
     defect = Defect.find(defect_id)
+    return if defect.contact_phone_number.blank?
+
     client.send_sms(
       phone_number: defect.contact_phone_number,
       template_id: Figaro.env.NOTIFY_DEFECT_SENT_TO_CONTRACTOR_TEMPLATE,
