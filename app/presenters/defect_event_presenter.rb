@@ -3,7 +3,7 @@ class DefectEventPresenter
     @event = event
   end
 
-  def description
+  def description # rubocop:disable Metrics/CyclomaticComplexity
     case @event.key
     when 'defect.create' then
       description_for_create
@@ -15,6 +15,8 @@ class DefectEventPresenter
       description_for_forwarded_to_employer_agent
     when 'defect.accepted' then
       description_for_accepted
+    when 'defect.notification.contact.sent_to_contractor' then
+      description_for_sent_on_to_contact
     else
       @event.key
     end
@@ -57,6 +59,13 @@ class DefectEventPresenter
     I18n.t(
       'events.defect.accepted',
       email: @event.trackable.scheme.contractor_email_address
+    )
+  end
+
+  def description_for_sent_on_to_contact
+    I18n.t(
+      'events.defect.notification.contact.sent_to_contractor',
+      phone_number: @event.trackable.contact_phone_number
     )
   end
 
