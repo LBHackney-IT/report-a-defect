@@ -21,6 +21,7 @@ class EditDefect
       set_target_completion_date
     end
 
+    NotifyDefectCompletedJob.perform_later(defect.id) if defect.status_changed? && defect.completed?
     defect
   end
 

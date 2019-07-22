@@ -152,6 +152,15 @@ RSpec.describe DefectHelper, type: :helper do
                                      phone_number: event.trackable.contact_phone_number))
       end
     end
+
+    context 'when the key is defect.notification.contact.completed' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(trackable: defect, owner: user, key: 'defect.notification.contact.completed')
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.notification.contact.completed',
+                                     phone_number: event.trackable.contact_phone_number))
+      end
+    end
   end
 
   describe '#format_status' do
