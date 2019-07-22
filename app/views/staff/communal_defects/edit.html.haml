@@ -38,7 +38,7 @@
                   wrapper: 'select',
                   input_html: { class: 'status' },
                   collection: Defect.statuses,
-                  selected: @defect.status,
+                  selected: @defect.status.downcase,
                   required: true,
                   label_method: ->(obj){ status_form_label(option_array: obj) },
                   value_method: :first
