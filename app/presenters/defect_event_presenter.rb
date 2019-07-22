@@ -17,6 +17,8 @@ class DefectEventPresenter
       description_for_accepted
     when 'defect.notification.contact.sent_to_contractor' then
       description_for_sent_on_to_contact
+    when 'defect.notification.contact.accepted_by_contractor' then
+      description_for_accepted_by_to_contact
     else
       @event.key
     end
@@ -65,6 +67,13 @@ class DefectEventPresenter
   def description_for_sent_on_to_contact
     I18n.t(
       'events.defect.notification.contact.sent_to_contractor',
+      phone_number: @event.trackable.contact_phone_number
+    )
+  end
+
+  def description_for_accepted_by_to_contact
+    I18n.t(
+      'events.defect.notification.contact.accepted_by_contractor',
       phone_number: @event.trackable.contact_phone_number
     )
   end
