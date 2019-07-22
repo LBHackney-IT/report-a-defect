@@ -19,46 +19,4 @@ RSpec.describe ReportForm do
       end
     end
   end
-
-  describe '#from_day' do
-    it 'returns the from day' do
-      result = described_class.new(from_date: from_date, to_date: to_date).from_day
-      expect(result).to eql(1)
-    end
-  end
-
-  describe '#from_month' do
-    it 'returns the from month' do
-      result = described_class.new(from_date: from_date, to_date: to_date).from_month
-      expect(result).to eql(1)
-    end
-  end
-
-  describe '#from_year' do
-    it 'returns the from year' do
-      result = described_class.new(from_date: from_date, to_date: to_date).from_year
-      expect(result).to eql(2019)
-    end
-  end
-
-  describe '#to_day' do
-    it 'returns the to day' do
-      result = described_class.new(from_date: from_date, to_date: to_date).to_day
-      expect(result).to eql(1)
-    end
-  end
-
-  describe '#to_month' do
-    it 'returns the to month' do
-      result = described_class.new(from_date: from_date, to_date: to_date).to_month
-      expect(result).to eql(12)
-    end
-  end
-
-  describe '#to_year' do
-    it 'returns the to year' do
-      result = described_class.new(from_date: from_date, to_date: to_date).to_year
-      expect(result).to eql(2019)
-    end
-  end
 end
