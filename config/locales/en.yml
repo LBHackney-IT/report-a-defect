@@ -125,6 +125,9 @@ en:
     forward:
       contractor: 'Forward to contractor'
       employer_agent: 'Forward to employer agent'
+    flag:
+      add: Flag defect
+      remove: Remove flag
   form:
     property:
       guidance: 'Find address information (Address, Postcode, UPRN) from %{link}.'

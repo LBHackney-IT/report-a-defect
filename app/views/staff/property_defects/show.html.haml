@@ -9,6 +9,7 @@
 .govuk-grid-row
   .govuk-grid-column-full
     %h2.govuk-heading-m= @defect.title
+    = flag_toggle_button(@defect)
     = link_to(I18n.t('button.edit.defect'), edit_property_defect_path(@defect.property, @defect), class: 'govuk-button govuk-button--secondary mb0')
     = link_to(I18n.t('button.forward.contractor'), new_defect_forward_path(@defect, recipient_type: :contractor), class: 'govuk-button govuk-button--secondary mb0')
     = link_to(I18n.t('button.forward.employer_agent'), new_defect_forward_path(@defect, recipient_type: :employer_agent), class: 'govuk-button govuk-button--secondary mb0')
