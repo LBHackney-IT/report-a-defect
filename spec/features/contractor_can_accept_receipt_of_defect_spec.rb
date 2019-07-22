@@ -28,6 +28,16 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
 
       travel_back
     end
+
+    it 'enqueues a job to inform the contact' do
+      defect = create(:property_defect)
+
+      expect(NotifyDefectAcceptedByContractorJob)
+        .to receive(:perform_later)
+        .with(defect.id)
+
+      visit defect_accept_path(defect.token)
+    end
   end
 
   context 'with an incorrect token' do
