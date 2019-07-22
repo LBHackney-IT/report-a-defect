@@ -21,7 +21,9 @@ Rails.application.routes.draw do
   get 'report' => 'staff/report#index'
   get 'report/scheme/:id' => 'staff/report#show', as: :report_scheme
 
-  resources :defects, controller: 'staff/defects'
+  resources :defects, controller: 'staff/defects' do
+    resource :forward, controller: 'staff/defects/forwarding', only: %i[new create]
+  end
 
   resources :properties, controller: 'staff/properties', only: %i[show] do
     resources :defects, controller: 'staff/property_defects', only: %i[new create show edit update]

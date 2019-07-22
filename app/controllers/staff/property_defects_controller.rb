@@ -11,7 +11,11 @@ class Staff::PropertyDefectsController < Staff::BaseController
     @defect = BuildDefect.new(defect_params: defect_params, options: options).call
 
     if @defect.valid?
-      SavePropertyDefect.new(defect: @defect).call
+      SavePropertyDefect.new(
+        defect: @defect,
+        send_email_to_contractor: send_email_to_contractor,
+        send_email_to_employer_agent: send_email_to_employer_agent
+      ).call
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'defect')
       redirect_to property_path(@property)
     else
@@ -75,5 +79,13 @@ class Staff::PropertyDefectsController < Staff::BaseController
       :trade,
       :status
     )
+  end
+
+  def send_email_to_contractor
+    params.require(:defect).fetch('send_contractor_email', '1').downcase == '1'
+  end
+
+  def send_email_to_employer_agent
+    params.require(:defect).fetch('send_employer_agent_email', '1').downcase == '1'
   end
 end

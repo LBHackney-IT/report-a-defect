@@ -48,6 +48,8 @@ en:
           communal_area: 'Create communal defect'
         show: 'Defect %{reference_number}'
         edit: 'Update defect'
+        forwarding:
+          create: 'Forward defect'
       comments:
         create: 'Create Comment'
   page_content:
@@ -74,6 +76,10 @@ en:
       communal_area:
         table:
           header: 'Communal defects'
+      forwarding:
+        new: 'Send this defect information to the scheme %{recipient_type}.'
+        unsent: 'This defect has not been sent to the %{recipient_type} before.'
+        success: 'Email sent to the %{recipient_type}'
   error_pages:
     unprocessable_entity: 'Cannot process this request'
   generic:
@@ -86,6 +92,7 @@ en:
       download: 'Download'
       filter: 'Apply filters'
       sign_in: 'Sign in'
+      send: 'Send'
     notice:
       create:
         success:
@@ -113,6 +120,9 @@ en:
     edit:
       scheme: Edit scheme
       defect: Edit defect
+    forward:
+      contractor: 'Forward to contractor'
+      employer_agent: 'Forward to employer agent'
   form:
     property:
       guidance: 'Find address information (Address, Postcode, UPRN) from %{link}.'

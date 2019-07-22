@@ -2,6 +2,8 @@ require 'csv'
 
 # rubocop:disable Metrics/ClassLength
 class Defect < ApplicationRecord
+  attr_accessor :send_contractor_email, :send_employer_agent_email
+
   validates :title,
             :description,
             :trade,

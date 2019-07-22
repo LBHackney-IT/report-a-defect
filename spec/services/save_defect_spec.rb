@@ -29,20 +29,30 @@ RSpec.describe SaveDefect do
       described_class.new(defect: defect).call
     end
 
-    it 'sends the email asynchronously' do
-      contractor_message_delivery = instance_double(ActionMailer::MessageDelivery)
-      expect(DefectMailer).to receive(:forward)
-        .with('contractor', defect.scheme.contractor_email_address, defect.id)
-        .and_return(contractor_message_delivery)
-      expect(contractor_message_delivery).to receive(:deliver_later)
+    it 'sends the email asynchronously by default' do
+      email_contractor_double = double(EmailContractor)
+      expect(EmailContractor).to receive(:new).with(defect: defect).and_return(email_contractor_double)
+      expect(email_contractor_double).to receive(:call)
 
-      employer_agent_message_delivery = instance_double(ActionMailer::MessageDelivery)
-      expect(DefectMailer).to receive(:forward)
-        .with('employer_agent', defect.scheme.employer_agent_email_address, defect.id)
-        .and_return(employer_agent_message_delivery)
-      expect(employer_agent_message_delivery).to receive(:deliver_later)
+      email_contractor_double = double(EmailEmployerAgent)
+      expect(EmailEmployerAgent).to receive(:new).with(defect: defect).and_return(email_contractor_double)
+      expect(email_contractor_double).to receive(:call)
 
       described_class.new(defect: defect).call
+    end
+
+    context 'when send_email_to_contractor is false' do
+      it 'does not send the contractor email' do
+        expect_any_instance_of(EmailContractor).not_to receive(:call)
+        described_class.new(defect: defect, send_email_to_contractor: false, send_email_to_employer_agent: false).call
+      end
+    end
+
+    context 'when send_email_to_employer_agent is false' do
+      it 'does not send the employer agent email' do
+        expect_any_instance_of(EmailEmployerAgent).not_to receive(:call)
+        described_class.new(defect: defect, send_email_to_contractor: false, send_email_to_employer_agent: false).call
+      end
     end
   end
 end

@@ -44,4 +44,19 @@
                   required: true,
                   selected: @defect.priority,
                   label_method: ->(obj){ priority_form_label(priority: obj) }
+
+        %span.govuk-label.govuk-label
+          %label.required
+            Forwarding
+        = f.input :send_contractor_email,
+                  as: :boolean,
+                  wrapper: :inline_checkbox,
+                  input_html: { checked: @defect.send_contractor_email || true },
+                  wrapper_html: { id: 'send_contractor_email' }
+        = f.input :send_employer_agent_email,
+                  as: :boolean,
+                  wrapper: :inline_checkbox,
+                  input_html: { checked: @defect.send_employer_agent_email || true },
+                  wrapper_html: { id: 'send_employer_agent_email' }
+
       = f.button :submit, I18n.t('button.create.property_defect')

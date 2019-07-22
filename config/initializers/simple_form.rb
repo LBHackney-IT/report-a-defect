@@ -224,7 +224,7 @@ SimpleForm.setup do |config|
     checkbox.use :html5
     checkbox.wrapper class: 'govuk-checkboxes__item' do |field|
       field.use :input, class: 'govuk-checkboxes__input'
-      field.use :label_text, wrap_with: { tag: 'label', class: 'govuk-label govuk-label govuk-checkboxes__label' }
+      field.use :label, wrap_with: { tag: 'span', class: 'govuk-label govuk-label govuk-checkboxes__label' }
     end
 
     checkbox.use :error, wrap_with: { tag: 'div', class: 'help-inline' }
