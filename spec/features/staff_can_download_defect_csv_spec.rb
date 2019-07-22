@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can download defect data' do
+RSpec.feature 'Staff can download defect data' do
   before(:each) do
     stub_authenticated_session
   end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can update a scheme' do
+RSpec.feature 'Staff can update a scheme' do
   before(:each) do
     stub_authenticated_session
   end

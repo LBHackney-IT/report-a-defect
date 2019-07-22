@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can view a report for a scheme' do
+RSpec.feature 'Staff can view a report for a scheme' do
   before(:each) do
     stub_authenticated_session
   end

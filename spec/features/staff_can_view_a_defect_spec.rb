@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can view a defect' do
+RSpec.feature 'Staff can view a defect' do
   before(:each) do
     stub_authenticated_session
   end

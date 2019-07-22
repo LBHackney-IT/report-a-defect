@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can find a communal_area' do
+RSpec.feature 'Staff can find a communal_area' do
   before(:each) do
     stub_authenticated_session
   end

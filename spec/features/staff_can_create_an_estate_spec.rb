@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can create a estate' do
+RSpec.feature 'Staff can create a estate' do
   before(:each) do
     stub_authenticated_session
   end
