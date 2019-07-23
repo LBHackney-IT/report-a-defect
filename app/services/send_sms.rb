@@ -1,7 +1,7 @@
 class SendSms
   def defect_accepted_by_contractor(defect_id:)
     defect = Defect.find(defect_id)
-    return if defect.contact_phone_number.blank?
+    return if prevent_sms?(phone_number: defect.contact_phone_number)
 
     client.send_sms(
       phone_number: defect.contact_phone_number,
@@ -17,7 +17,7 @@ class SendSms
 
   def defect_completed(defect_id:)
     defect = Defect.find(defect_id)
-    return if defect.contact_phone_number.blank?
+    return if prevent_sms?(phone_number: defect.contact_phone_number)
 
     client.send_sms(
       phone_number: defect.contact_phone_number,
@@ -32,7 +32,7 @@ class SendSms
 
   def sent_to_contractor(defect_id:)
     defect = Defect.find(defect_id)
-    return if defect.contact_phone_number.blank?
+    return if prevent_sms?(phone_number: defect.contact_phone_number)
 
     client.send_sms(
       phone_number: defect.contact_phone_number,
@@ -53,7 +53,9 @@ class SendSms
     @client ||= Notifications::Client.new(Figaro.env.NOTIFY_KEY)
   end
 
-  def send_sms?
-
+  def prevent_sms?(phone_number:)
+    return true if phone_number.nil?
+    return true if Figaro.env.SMS_BLACKLIST == phone_number
+    false
   end
 end
