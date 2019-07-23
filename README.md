@@ -9,7 +9,7 @@ Documentation can be found in the doc directory.
 Architecture decision records can be found in the doc/architecture/decisions directory.
 
 ## Prerequisites
-* (Docker)[https://docs.docker.com/docker-for-mac]
+* [Docker](https://docs.docker.com/docker-for-mac)
 
 ## Getting started
 ```bash
