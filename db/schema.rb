@@ -62,7 +62,6 @@ ActiveRecord::Schema.define(version: 2019_07_22_104700) do
     t.string "trade"
     t.date "target_completion_date"
     t.integer "status", default: 0
-    t.string "reference_number"
     t.uuid "property_id"
     t.uuid "priority_id"
     t.datetime "created_at", null: false
