@@ -51,8 +51,24 @@ RSpec.feature 'Staff can view a defect' do
     end
   end
 
-  scenario 'a defect can be found by reference number' do
+  scenario 'a property defect can be found by reference number' do
     defect = create(:property_defect)
+
+    visit dashboard_path
+
+    within('form.search') do
+      fill_in 'query', with: defect.reference_number
+      click_on(I18n.t('generic.button.find'))
+    end
+
+    expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
+
+    expect(page).to have_content(defect.reference_number)
+    expect(page).to have_content(defect.title)
+  end
+
+  scenario 'a communal defect can be found by reference number' do
+    defect = create(:communal_defect)
 
     visit dashboard_path
 
