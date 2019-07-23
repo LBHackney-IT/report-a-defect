@@ -11,7 +11,11 @@ class Staff::CommunalDefectsController < Staff::BaseController
     @defect = BuildDefect.new(defect_params: defect_params, options: options).call
 
     if @defect.valid?
-      SaveCommunalDefect.new(defect: @defect).call
+      SaveCommunalDefect.new(
+        defect: @defect,
+        send_email_to_contractor: send_email_to_contractor,
+        send_email_to_employer_agent: send_email_to_employer_agent
+      ).call
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'defect')
       redirect_to communal_area_path(@communal_area)
     else
@@ -19,20 +23,15 @@ class Staff::CommunalDefectsController < Staff::BaseController
     end
   end
 
-  def show
-    @defect = DefectPresenter.new(Defect.find(id))
-  end
-
-  def edit
-    @defect = DefectPresenter.new(Defect.find(id))
-  end
-
   def update
     defect = Defect.find(id)
     @defect = EditDefect.new(
       defect: defect,
       defect_params: defect_params,
-      options: { priority_id: priority_id }
+      options: {
+        priority_id: priority_id,
+        target_completion_date: target_completion_date,
+      }
     ).call
 
     if @defect.valid?
@@ -42,6 +41,14 @@ class Staff::CommunalDefectsController < Staff::BaseController
     else
       render :edit
     end
+  end
+
+  def show
+    @defect = DefectPresenter.new(Defect.find(id))
+  end
+
+  def edit
+    @defect = DefectPresenter.new(Defect.find(id))
   end
 
   private
@@ -58,6 +65,10 @@ class Staff::CommunalDefectsController < Staff::BaseController
     params.require(:defect).permit(:priority)[:priority]
   end
 
+  def target_completion_date
+    params.require(:target_completion_date).permit(:day, :month, :year)
+  end
+
   def defect_params
     params.require(:defect).permit(
       :title,
@@ -69,5 +80,13 @@ class Staff::CommunalDefectsController < Staff::BaseController
       :trade,
       :status
     )
+  end
+
+  def send_email_to_contractor
+    params.require(:defect).fetch('send_contractor_email', '1').downcase == '1'
+  end
+
+  def send_email_to_employer_agent
+    params.require(:defect).fetch('send_employer_agent_email', '1').downcase == '1'
   end
 end

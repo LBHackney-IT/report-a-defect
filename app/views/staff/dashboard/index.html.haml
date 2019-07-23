@@ -11,7 +11,7 @@
 
     = form_tag search_path, method: :get, class: 'search' do |f|
       .govuk-form-group
-        = label_tag 'query', 'Address or communal area name', class: 'govuk-label'
+        = label_tag 'query', 'Reference number, address or communal area name', class: 'govuk-label'
         = search_field_tag :query, @search.query, class: 'govuk-input form-control form-control-communal_area govuk-!-width-three-quarters', placeholder: '1 Hackney Street or Clift House'
       = submit_tag I18n.t('generic.button.find'), class: 'govuk-button mb0'
 

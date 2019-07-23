@@ -27,7 +27,8 @@
                   input_html: { rows: 5 }
         = f.input :contact_name
         = f.input :contact_email_address
-        = f.input :contact_phone_number
+        = f.input :contact_phone_number,
+                  hint: I18n.t('form.defect.contact_phone_number.hint')
         = f.input :trade,
                   wrapper: 'select',
                   input_html: { class: 'trades' },
@@ -37,7 +38,7 @@
                   wrapper: 'select',
                   input_html: { class: 'status' },
                   collection: Defect.statuses,
-                  selected: @defect.status,
+                  selected: @defect.status.downcase,
                   required: true,
                   label_method: ->(obj){ status_form_label(option_array: obj) },
                   value_method: :first
@@ -60,5 +61,9 @@
                 required: false,
                 selected: @defect.priority,
                 label_method: ->(obj){ priority_form_label(priority: obj) }
+
+      %p Or, set a different target completion date:
+
+      = render partial: 'shared/defects/date_fields', locals: { name: 'target_completion_date', date: nil }
 
       = f.button :submit, I18n.t('button.update.defect')

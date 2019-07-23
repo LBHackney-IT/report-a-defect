@@ -124,6 +124,20 @@ RSpec.describe Defect, type: :model do
     end
   end
 
+  describe '#reference_number' do
+    it 'returns a formatted identifier code' do
+      defect = create(:defect, sequence_number: 42)
+      expect(defect.reference_number).to eq('NB-000-042')
+    end
+
+    it 'uses sequential identifiers' do
+      defects = create_list(:defect, 5)
+      ids = defects.map { |d| d.reference_number.scan(/\d/).join('').to_i }
+      first = ids.first
+      expect(ids).to eq((0..4).map { |i| first + i })
+    end
+  end
+
   describe '#status' do
     it 'returns the capitalized status' do
       defect = build(:defect, status: 'outstanding')
@@ -139,8 +153,18 @@ RSpec.describe Defect, type: :model do
       defect = build(:defect, status: 'outstanding')
       defect.follow_on!
 
-      event = defect.activities.last
+      event = defect.activities.first
       expect(event.parameters[:changes]).to eq('status' => %w[outstanding follow_on])
+    end
+  end
+
+  describe '#flagged' do
+    it 'records changes in the activity log' do
+      defect = build(:defect, status: 'outstanding', flagged: false)
+      defect.update!(flagged: true)
+
+      event = defect.activities.first
+      expect(event.parameters[:changes]).to eq('flagged' => [false, true])
     end
   end
 
@@ -200,7 +224,7 @@ RSpec.describe Defect, type: :model do
       create(:property_defect,
              property: property,
              priority: priority,
-             reference_number: '123ABC',
+             sequence_number: 1,
              title: 'a short title',
              status: :outstanding,
              trade: 'Electrical',
@@ -215,7 +239,7 @@ RSpec.describe Defect, type: :model do
       create(:communal_defect,
              communal_area: communal_area,
              priority: priority,
-             reference_number: '456ABC',
+             sequence_number: 2,
              title: 'a shorter title',
              status: :outstanding,
              trade: 'Electrical',
@@ -272,6 +296,22 @@ RSpec.describe Defect, type: :model do
         end
         expect(TestDefect).to receive(:any_scope).with(%w[foo bar])
         TestDefect.send_chain([:all, [:any_scope, %w[foo bar]]])
+      end
+    end
+  end
+
+  describe '.contact_phone_number=' do
+    it 'strips whitespace' do
+      defect = described_class.new
+      defect.contact_phone_number = '123 456'
+      expect(defect.contact_phone_number).to eq('123456')
+    end
+
+    context 'when there is no value' do
+      it 'returns nil' do
+        defect = described_class.new
+        defect.contact_phone_number = nil
+        expect(defect.contact_phone_number).to eq(nil)
       end
     end
   end

@@ -25,7 +25,8 @@
           input_html: { rows: 5 }
         = f.input :contact_name
         = f.input :contact_email_address
-        = f.input :contact_phone_number
+        = f.input :contact_phone_number,
+                  hint: I18n.t('form.defect.contact_phone_number.hint')
         = f.input :trade,
                   wrapper: 'select',
                   input_html: { class: 'trades' },
@@ -35,7 +36,7 @@
                   wrapper: 'select',
                   input_html: { class: 'status' },
                   collection: Defect.statuses,
-                  selected: @defect.status,
+                  selected: @defect.status.downcase,
                   required: true,
                   label_method: ->(obj){ status_form_label(option_array: obj) },
                   value_method: :first
@@ -49,4 +50,19 @@
                   required: true,
                   selected: @defect.priority,
                   label_method: ->(obj){ priority_form_label(priority: obj) }
+
+        %span.govuk-label.govuk-label
+          %label.required
+            Forwarding
+        = f.input :send_contractor_email,
+                  as: :boolean,
+                  wrapper: :inline_checkbox,
+                  input_html: { checked: @defect.send_contractor_email || true },
+                  wrapper_html: { id: 'send_contractor_email' }
+        = f.input :send_employer_agent_email,
+                  as: :boolean,
+                  wrapper: :inline_checkbox,
+                  input_html: { checked: @defect.send_employer_agent_email || true },
+                  wrapper_html: { id: 'send_employer_agent_email' }
+
       = f.button :submit, I18n.t('button.create.communal_defect')

@@ -92,6 +92,32 @@ RSpec.describe DefectHelper, type: :helper do
       end
     end
 
+    context 'when the event describes a flag being added' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(
+          trackable: defect,
+          owner: user,
+          key: 'defect.update',
+          parameters: { changes: { flagged: [false, true] } }
+        )
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.flag_added', name: event.owner.name))
+      end
+    end
+
+    context 'when the event describes a flag being removed' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(
+          trackable: defect,
+          owner: user,
+          key: 'defect.update',
+          parameters: { changes: { flagged: [true, false] } }
+        )
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.flag_removed', name: event.owner.name))
+      end
+    end
+
     context 'when the event describes a status change' do
       it 'returns the event description' do
         event = PublicActivity::Activity.new(
@@ -132,6 +158,33 @@ RSpec.describe DefectHelper, type: :helper do
         result = helper.event_description_for(event: event)
         expect(result).to eql(I18n.t('events.defect.accepted',
                                      email: event.trackable.scheme.contractor_email_address))
+      end
+    end
+
+    context 'when the key is defect.notification.contact.sent_to_contractor' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(trackable: defect, owner: user, key: 'defect.notification.contact.sent_to_contractor')
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.notification.contact.sent_to_contractor',
+                                     phone_number: event.trackable.contact_phone_number))
+      end
+    end
+
+    context 'when the key is defect.notification.contact.accepted_by_contractor' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(trackable: defect, owner: user, key: 'defect.notification.contact.accepted_by_contractor')
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.notification.contact.accepted_by_contractor',
+                                     phone_number: event.trackable.contact_phone_number))
+      end
+    end
+
+    context 'when the key is defect.notification.contact.completed' do
+      it 'returns the event description' do
+        event = PublicActivity::Activity.new(trackable: defect, owner: user, key: 'defect.notification.contact.completed')
+        result = helper.event_description_for(event: event)
+        expect(result).to eql(I18n.t('events.defect.notification.contact.completed',
+                                     phone_number: event.trackable.contact_phone_number))
       end
     end
   end

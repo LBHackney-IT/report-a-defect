@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_26_160126) do
+ActiveRecord::Schema.define(version: 2019_07_22_104700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -62,7 +62,6 @@ ActiveRecord::Schema.define(version: 2019_06_26_160126) do
     t.string "trade"
     t.date "target_completion_date"
     t.integer "status", default: 0
-    t.string "reference_number", null: false
     t.uuid "property_id"
     t.uuid "priority_id"
     t.datetime "created_at", null: false
@@ -71,9 +70,12 @@ ActiveRecord::Schema.define(version: 2019_06_26_160126) do
     t.string "access_information"
     t.boolean "communal", default: false
     t.uuid "communal_area_id"
+    t.serial "sequence_number", null: false
+    t.boolean "flagged", default: false, null: false
     t.index ["communal_area_id"], name: "index_defects_on_communal_area_id"
     t.index ["priority_id"], name: "index_defects_on_priority_id"
     t.index ["property_id"], name: "index_defects_on_property_id"
+    t.index ["sequence_number"], name: "index_defects_on_sequence_number", unique: true
   end
 
   create_table "estates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

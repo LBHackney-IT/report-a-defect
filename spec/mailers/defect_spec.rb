@@ -32,6 +32,7 @@ RSpec.describe DefectMailer, type: :mailer do
       expect(body_lines[16].strip).to match("#{I18n.t('email.defect.forward.headings.title.priority_name')}: #{presenter.priority_name}")
       expect(body_lines[17].strip).to match("#{I18n.t('email.defect.forward.headings.title.target_completion_date')}: #{presenter.target_completion_date}")
       expect(body_lines[19]).to match(%r{http:\/\/localhost:3000\/defects\/#{defect.token}\/accept})
+      expect(body_lines[20]).to match(I18n.t('email.defect.forward.rejection'))
     end
 
     it 'sends an email to employer_agent' do

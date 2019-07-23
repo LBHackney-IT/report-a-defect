@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can find a property' do
+RSpec.feature 'Staff can find a property' do
   before(:each) do
     stub_authenticated_session
   end

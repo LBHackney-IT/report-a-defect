@@ -2,11 +2,12 @@ require 'csv'
 
 # rubocop:disable Metrics/ClassLength
 class Defect < ApplicationRecord
+  attr_accessor :send_contractor_email, :send_employer_agent_email
+
   validates :title,
             :description,
             :trade,
             :priority,
-            :reference_number,
             :status,
             :target_completion_date,
             presence: true
@@ -16,7 +17,6 @@ class Defect < ApplicationRecord
   validates :contact_phone_number, numericality: true,
                                    length: { minimum: 10, maximum: 15 },
                                    allow_blank: true
-  attribute :reference_number, :string, default: -> { SecureRandom.hex(3).upcase }
 
   enum status: %i[
     outstanding
@@ -71,7 +71,7 @@ class Defect < ApplicationRecord
   attr_reader :tracked_changes
 
   def remember_changes_for_activity
-    selected_changes = changes.slice(:status)
+    selected_changes = changes.slice(:flagged, :status)
     @tracked_changes = selected_changes unless selected_changes.empty?
   end
 
@@ -161,10 +161,23 @@ class Defect < ApplicationRecord
     methods.inject(self) { |s, method| s.send(*method) }
   end
 
-  def set_completion_date
-    return unless priority
+  def self.by_reference_number(number)
+    find_by(sequence_number: number.to_i)
+  end
 
-    self.target_completion_date = Date.current + priority.days.days
+  def reference_number
+    return nil if new_record?
+
+    reload if sequence_number.blank?
+    ReferenceNumber.new(sequence_number).to_s
+  end
+
+  def set_completion_date(date = nil)
+    if date
+      self.target_completion_date = date
+    elsif priority
+      self.target_completion_date = Date.current + priority.days.days
+    end
   end
 
   def self.format_status(status)
@@ -176,7 +189,7 @@ class Defect < ApplicationRecord
   end
 
   def contact_phone_number=(value)
-    super(value.tr(' ', ''))
+    super(value&.tr(' ', ''))
   end
 
   def token

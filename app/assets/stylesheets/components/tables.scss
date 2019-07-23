@@ -44,6 +44,17 @@
         color: $lbh-text-colour;
         font-weight: normal;
         font-size: 1rem;
+        display: inline-block;
+      }
+
+      .cell-flagged-label {
+        background-color: $lbh-error-colour;
+        color: $lbh-text-white-colour;
+        font-weight: bold;
+        font-size: 1rem;
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 2px;
       }
     }
 

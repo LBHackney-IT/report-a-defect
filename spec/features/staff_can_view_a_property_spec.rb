@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can view a property' do
+RSpec.feature 'Staff can view a property' do
   before(:each) do
     stub_authenticated_session
   end

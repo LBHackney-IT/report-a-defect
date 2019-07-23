@@ -48,6 +48,8 @@ en:
           communal_area: 'Create communal defect'
         show: 'Defect %{reference_number}'
         edit: 'Update defect'
+        forwarding:
+          create: 'Forward defect'
       comments:
         create: 'Create Comment'
   page_content:
@@ -65,6 +67,7 @@ en:
         priorities:
           no_priorities: 'There are no priotities set yet. You need to create them.'
     defect:
+      not_found: 'No defect could be found with reference number %{reference_number}'
       show:
         not_accepted_yet: 'Waiting on the contractor to accept'
       property:
@@ -73,6 +76,12 @@ en:
       communal_area:
         table:
           header: 'Communal defects'
+      forwarding:
+        new:
+          contractor: 'Send this defect information to the scheme contractor, this will also notify the contact phone number that this defect is waiting on the contractor.'
+          employer_agent: 'Send this defect information to the scheme employer agent.'
+        unsent: 'This defect has not been sent to the %{recipient_type} before.'
+        success: 'Email sent to the %{recipient_type}'
   error_pages:
     unprocessable_entity: 'Cannot process this request'
   generic:
@@ -85,6 +94,7 @@ en:
       download: 'Download'
       filter: 'Apply filters'
       sign_in: 'Sign in'
+      send: 'Send'
     notice:
       create:
         success:
@@ -112,6 +122,12 @@ en:
     edit:
       scheme: Edit scheme
       defect: Edit defect
+    forward:
+      contractor: 'Forward to contractor'
+      employer_agent: 'Forward to employer agent'
+    flag:
+      add: Flag defect
+      remove: Remove flag
   form:
     property:
       guidance: 'Find address information (Address, Postcode, UPRN) from %{link}.'
@@ -133,6 +149,8 @@ en:
         description: 'This will be how this defect is described to residents in status notifications'
       access_information:
         description: 'Help the contractor gain access to this communal area'
+      contact_phone_number:
+        hint: 'This number will be used to send updates to by text message'
     priority:
       code:
         label: 'Priority code'
@@ -159,6 +177,7 @@ en:
             contractor: 'Contractor'
             priority_name: 'Priority'
             target_completion_date: 'Target completion date'
+        rejection: 'Or, to reject ownership please email newbuild@hackney.gov.uk and include the reference number.'
         accept:
           link: 'Accept ownership of this defect'
         # alternate: 'Call us if not'
@@ -166,10 +185,17 @@ en:
     defect:
       created: 'Defect was created by %{name}'
       updated: 'Defect was updated by %{name}'
+      flag_added: 'Flag was added by %{name}'
+      flag_removed: 'Flag was removed by %{name}'
       status_changed: 'Status was changed from %{old} to %{new} by %{name}'
       forwarded_to_contractor: 'An email was sent to the contractor (%{email})'
       forwarded_to_employer_agent: 'An email was sent to the employer agent (%{email})'
       accepted: 'Defect was accepted by %{email}'
+      notification:
+        contact:
+          sent_to_contractor: 'An SMS was sent to the contact explaining that this is now waiting on the contractor (%{phone_number})'
+          accepted_by_contractor: 'An SMS was sent to the contact informing them that the contractor has accepted (%{phone_number})'
+          completed: 'An SMS was sent to the contact informing them that we believe this defect is completed (%{phone_number})'
   activerecord:
     attributes:
       property:

@@ -7,6 +7,7 @@ class Contractor::DefectsController < Contractor::BaseController
       render 'unprocessable_entity', status: :unprocessable_entity
     else
       @defect.create_activity(key: 'defect.accepted')
+      NotifyDefectAcceptedByContractorJob.perform_later(@defect.id)
     end
   rescue ActiveSupport::MessageVerifier::InvalidSignature
     render 'unprocessable_entity', status: :unprocessable_entity

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Anyone can create a comment' do
+RSpec.feature 'Staff can create a comment' do
   before(:each) do
     stub_authenticated_session(name: 'Alex')
   end

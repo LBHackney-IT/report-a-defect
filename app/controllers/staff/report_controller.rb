@@ -28,34 +28,20 @@ class Staff::ReportController < Staff::BaseController
   end
 
   def from_date
-    Date.new(from_year, from_month, from_day)
+    date_param(:from_date, scheme.created_at)
   end
 
   def to_date
-    Date.new(to_year, to_month, to_day)
+    date_param(:to_date, Date.current)
   end
 
-  def from_day
-    params.fetch(:from_day, scheme.created_at.day).to_i
-  end
+  def date_param(param_name, default_date)
+    form_value = params.fetch(param_name, {})
 
-  def from_month
-    params.fetch(:from_month, scheme.created_at.month).to_i
-  end
+    day, month, year = %i[day month year].map do |field|
+      form_value.fetch(field, default_date.__send__(field)).to_i
+    end
 
-  def from_year
-    params.fetch(:from_year, scheme.created_at.year).to_i
-  end
-
-  def to_day
-    params.fetch(:to_day, Date.current.day).to_i
-  end
-
-  def to_month
-    params.fetch(:to_month, Date.current.month).to_i
-  end
-
-  def to_year
-    params.fetch(:to_year, Date.current.year).to_i
+    Date.new(year, month, day)
   end
 end
