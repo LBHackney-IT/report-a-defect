@@ -12,7 +12,9 @@
       %span.govuk-caption-l= @presenter.date_range
 
     = form_tag report_scheme_path(scheme: @presenter.scheme.id), class: 'date-filter', method: :get do
+      %h2.govuk-heading-m From
       = render partial: 'shared/defects/date_fields', locals: { name: 'from_date', date: @report_form.from_date }
+      %h2.govuk-heading-m To
       = render partial: 'shared/defects/date_fields', locals: { name: 'to_date', date: @report_form.to_date }
 
       %br
