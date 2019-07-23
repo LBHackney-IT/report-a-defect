@@ -5,16 +5,36 @@ RSpec.describe SendSms do
   let(:defect) { create(:property_defect, contact_phone_number: '07123456789') }
   let(:sent_message_double) { double(:sent_message, content: { body: 'Lorem ipsum' }) }
   let(:fake_env) { double.as_null_object }
+  let(:notify_client) { double(Notifications::Client, send_sms: sent_message_double) }
 
   before(:each) do
     allow(Figaro).to receive(:env).and_return(fake_env)
     allow(fake_env).to receive(:NOTIFY_KEY).and_return(fake_notify_key)
+    allow(fake_env).to receive(:SMS_BLACKLIST).and_return(nil)
   end
 
   describe '#defect_accepted_by_contractor' do
     let(:fake_notify_template) { 'asd87f9-hgf8-gdf8-vd8os-asdf879asdo' }
     before(:each) do
       allow(fake_env).to receive(:NOTIFY_DEFECT_ACCEPTED_BY_CONTRACTOR_TEMPLATE).and_return(fake_notify_template)
+    end
+
+    context 'when the number is on the blacklist' do
+      let(:defect) { create(:property_defect, contact_phone_number: '07111111111') }
+      it 'returns false and does not send an SMS' do
+        allow(Notifications::Client)
+          .to receive(:new)
+          .with(fake_notify_key)
+          .and_return(notify_client)
+
+        allow(Figaro).to receive(:env).and_return(fake_env)
+        allow(fake_env).to receive(:SMS_BLACKLIST).and_return('07111111111')
+        expect_any_instance_of(Notifications::Client).not_to receive(:send_sms)
+
+        result = described_class.new.defect_accepted_by_contractor(defect_id: defect.id)
+
+        expect(result).to eq(nil)
+      end
     end
 
     it 'asks GOV.UK Notify to send an SMS' do
@@ -70,6 +90,24 @@ RSpec.describe SendSms do
       allow(fake_env).to receive(:NOTIFY_DEFECT_COMPLETED_TEMPLATE).and_return(fake_notify_template)
     end
 
+    context 'when the number is on the blacklist' do
+      let(:defect) { create(:property_defect, contact_phone_number: '07111111111') }
+      it 'returns false and does not send an SMS' do
+        allow(Notifications::Client)
+          .to receive(:new)
+          .with(fake_notify_key)
+          .and_return(notify_client)
+
+        allow(Figaro).to receive(:env).and_return(fake_env)
+        allow(fake_env).to receive(:SMS_BLACKLIST).and_return('07111111111')
+        expect_any_instance_of(Notifications::Client).not_to receive(:send_sms)
+
+        result = described_class.new.defect_accepted_by_contractor(defect_id: defect.id)
+
+        expect(result).to eq(nil)
+      end
+    end
+
     it 'asks GOV.UK Notify to send an SMS' do
       notify_client = double(Notifications::Client, send_sms: sent_message_double)
       expect(Notifications::Client)
@@ -120,6 +158,24 @@ RSpec.describe SendSms do
     let(:fake_notify_template) { 'asd87f9-hgf8-gdf8-vd8os-asdf879asdo' }
     before(:each) do
       allow(fake_env).to receive(:NOTIFY_DEFECT_SENT_TO_CONTRACTOR_TEMPLATE).and_return(fake_notify_template)
+    end
+
+    context 'when the number is on the blacklist' do
+      let(:defect) { create(:property_defect, contact_phone_number: '07111111111') }
+      it 'returns false and does not send an SMS' do
+        allow(Figaro).to receive(:env).and_return(fake_env)
+        allow(fake_env).to receive(:SMS_BLACKLIST).and_return('07111111111')
+        allow(Notifications::Client)
+          .to receive(:new)
+          .with(fake_notify_key)
+          .and_return(notify_client)
+
+        expect_any_instance_of(Notifications::Client).not_to receive(:send_sms)
+
+        result = described_class.new.defect_accepted_by_contractor(defect_id: defect.id)
+
+        expect(result).to eq(nil)
+      end
     end
 
     it 'asks GOV.UK Notify to send an SMS' do
