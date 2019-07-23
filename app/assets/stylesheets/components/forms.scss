@@ -29,9 +29,17 @@
   @extend .govuk-radios__label;
 }
 
-.govuk-button.defect-flagged {
+.defect-flagged {
   background-color: $lbh-error-colour;
+  color: $lbh-text-white-colour;
+  border-radius: 2px;
+  display: block;
+  font-size: 1.1875rem;
   font-weight: bold;
+  line-height: 1;
+  padding: 9px 10px;
+  width: 4em;
+  margin-bottom: 1em;
 }
 
 .defect-flagged-toggle {
