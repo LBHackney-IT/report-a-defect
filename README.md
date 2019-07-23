@@ -12,13 +12,17 @@ Architecture decision records can be found in the doc/architecture/decisions dir
 * [Docker](https://docs.docker.com/docker-for-mac)
 
 ## Getting started
-```bash
-docker-compose up
-```
 
-If you'd like to use the `pry` gem for debugging start with:
+The following command will start all containers, do any database set up if required before leaving you on an interactive prompt within rails server:
+
 ```bash
 bin/dstart
+```
+
+If you'd like to see all logs, like Sidekiq or Redis you can use the default:
+
+```
+docker-compose up
 ```
 
 ## Running the tests
