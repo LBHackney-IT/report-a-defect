@@ -19,7 +19,7 @@ class Staff::SearchesController < Staff::BaseController
     defect = Defect.by_reference_number(number)
 
     if defect
-      redirect_to property_defect_path(defect.property_id, defect)
+      redirect_to helpers.defect_path_for(defect: defect)
     else
       flash[:notice] = I18n.t('page_content.defect.not_found', reference_number: query)
       redirect_to dashboard_path
