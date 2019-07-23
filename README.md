@@ -5,6 +5,8 @@ A web service that allows Hackney residents to report defects with their newly b
 ## Documentation
 Documentation can be found in the doc directory.
 
+Technical handover and summary information of the beta can be read in a [Hackney Google Sheet](https://docs.google.com/document/d/1qfhREOLLcKOf4VKfXmLAVF1-qHxTTBLZGfYCgIqlVJE/edit).
+
 ## ADRs
 Architecture decision records can be found in the doc/architecture/decisions directory.
 
