@@ -223,6 +223,7 @@ RSpec.describe SchemeReportPresenter do
       # aren't triggered and no Activity records are created as they would be.
       travel_to Time.zone.parse('2019-05-22')
       completed_early_defect.completed!
+      completed_early_defect.update!(flagged: true)
 
       travel_to Time.zone.parse('2019-05-23')
       completed_on_time_defect.completed!

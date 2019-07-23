@@ -70,7 +70,7 @@ class SchemeReportPresenter
 
       # TODO: Query parameter JSON at database level rather than in Ruby
       true if updates_before_target_completion.detect do |updated_event|
-        updated_event.parameters[:changes][:status].last == 'completed'
+        updated_event.parameters[:changes][:status]&.last == 'completed'
       end
     end
   end
