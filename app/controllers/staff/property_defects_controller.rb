@@ -43,7 +43,7 @@ class Staff::PropertyDefectsController < Staff::BaseController
     ).call
 
     if @defect.valid?
-      @defect.save
+      UpdateDefect.new(defect: @defect).call
       flash[:success] = I18n.t('generic.notice.update.success', resource: 'defect')
       redirect_to property_defect_path(@defect.property, @defect)
     else
