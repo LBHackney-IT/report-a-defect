@@ -154,4 +154,17 @@ RSpec.feature 'Staff can update a defect' do
 
     expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
   end
+
+  scenario 'updating a status to completed' do
+    defect = create(:property_defect, property: property, status: :outstanding)
+
+    visit edit_property_defect_path(defect.property, defect)
+
+    expect(NotifyDefectCompletedJob).to receive(:perform_later).with(defect.id)
+
+    within('form.edit_defect') do
+      select 'Completed', from: 'defect[status]'
+      click_on(I18n.t('button.update.defect'))
+    end
+  end
 end

@@ -43,23 +43,6 @@ RSpec.describe EditDefect do
       end
     end
 
-    context 'when the new status is changed to completed' do
-      let(:defect) { create(:property_defect) }
-      let(:defect_params) do
-        build(:property_defect, status: :completed)
-          .attributes
-          .except!('id')
-      end
-
-      it 'enqueues a job to notify the contact' do
-        expect(NotifyDefectCompletedJob)
-          .to receive(:perform_later)
-          .with(defect.id)
-
-        service.call
-      end
-    end
-
     context 'when the status was already completed' do
       let(:defect) { create(:property_defect, status: :completed) }
       let(:defect_params) do

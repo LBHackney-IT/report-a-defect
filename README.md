@@ -5,20 +5,26 @@ A web service that allows Hackney residents to report defects with their newly b
 ## Documentation
 Documentation can be found in the doc directory.
 
+Technical handover and summary information of the beta can be read in a [Hackney Google Sheet](https://docs.google.com/document/d/1qfhREOLLcKOf4VKfXmLAVF1-qHxTTBLZGfYCgIqlVJE/edit).
+
 ## ADRs
 Architecture decision records can be found in the doc/architecture/decisions directory.
 
 ## Prerequisites
-* (Docker)[https://docs.docker.com/docker-for-mac]
+* [Docker](https://docs.docker.com/docker-for-mac)
 
 ## Getting started
-```bash
-docker-compose up
-```
 
-If you'd like to use the `pry` gem for debugging start with:
+The following command will start all containers, do any database set up if required before leaving you on an interactive prompt within rails server:
+
 ```bash
 bin/dstart
+```
+
+If you'd like to see all logs, like Sidekiq or Redis you can use the default:
+
+```
+docker-compose up
 ```
 
 ## Running the tests

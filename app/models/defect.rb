@@ -67,7 +67,7 @@ class Defect < ApplicationRecord
     owner: ->(controller, _) { controller.current_user if controller },
     params: { changes: ->(_, model) { model.tracked_changes } }
 
-  before_save :remember_changes_for_activity
+  before_update :remember_changes_for_activity
   attr_reader :tracked_changes
 
   def remember_changes_for_activity
