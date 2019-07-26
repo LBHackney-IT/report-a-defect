@@ -203,35 +203,61 @@ RSpec.describe SchemeReportPresenter do
 
   describe '#defects_completed_on_time' do
     it 'returns a count for all defects completed before or on their target date' do
-      travel_to Time.zone.parse('2019-05-23')
+      travel_to Time.zone.local(2019, 5, 21, 10, 0, 0)
       completed_early_defect = create(:property_defect,
+                                      status: :completed,
                                       property: property,
                                       priority: priority,
                                       target_completion_date: Date.new(2019, 5, 23))
       completed_on_time_defect = create(:property_defect,
+                                        status: :completed,
                                         property: property,
                                         priority: priority,
                                         target_completion_date: Date.new(2019, 5, 23))
       completed_later_defect = create(:property_defect,
+                                      status: :completed,
                                       property: property,
                                       priority: priority,
                                       target_completion_date: Date.new(2019, 5, 23))
+      travel_back
 
-      # This test depends on the PublicActivity gem working in the background to
-      # create the event records which we use to track status changes.
-      # We cannot use FactoryBot with `status: :completed` as the model callbacks
-      # aren't triggered and no Activity records are created as they would be.
-      travel_to Time.zone.parse('2019-05-22')
-      completed_early_defect.completed!
-      completed_early_defect.update!(flagged: true)
+      travel_to Time.zone.local(2019, 5, 22, 10, 10, 10) do
+        completed_early_defect.create_activity(
+          key: 'defect.update',
+          parameters: {
+            changes:
+            {
+              status: %w[outstanding completed],
+            },
+          },
+        )
+      end
 
-      travel_to Time.zone.parse('2019-05-23')
-      completed_on_time_defect.completed!
+      travel_to Time.zone.local(2019, 5, 23, 10, 10, 10) do
+        completed_on_time_defect.create_activity(
+          key: 'defect.update',
+          parameters: {
+            changes:
+            {
+              status: %w[outstanding completed],
+            },
+          }
+        )
+      end
 
-      travel_to Time.zone.parse('2019-05-24')
-      completed_later_defect.completed!
+      travel_to Time.zone.local(2019, 5, 24, 10, 10, 10) do
+        completed_on_time_defect.create_activity(
+          key: 'defect.update',
+          parameters: {
+            changes:
+            {
+              status: %w[outstanding completed],
+            },
+          },
+        )
+      end
 
-      travel_to Time.zone.parse('2019-05-23')
+      travel_to Time.zone.local(2019, 5, 23, 10, 20, 10)
 
       result = described_class.new(scheme: scheme).defects_completed_on_time(priority: priority)
 
@@ -243,18 +269,40 @@ RSpec.describe SchemeReportPresenter do
     end
 
     it 'returns only completed defects' do
-      travel_to Time.zone.parse('2019-05-23')
-
+      travel_to Time.zone.local(2019, 5, 23, 10, 10, 10)
       rejected_defect = create(:property_defect,
+                               status: :rejected,
                                property: property,
                                priority: priority,
                                target_completion_date: Date.current)
-      rejected_defect.rejected!
+      rejected_defect.create_activity(
+        key: 'defect.update',
+        parameters: {
+          changes:
+          {
+            status: %w[outstanding rejected],
+          },
+        },
+      )
       completed_defect = create(:property_defect,
+                                status: :completed,
                                 property: property,
                                 priority: priority,
                                 target_completion_date: Date.current)
-      completed_defect.completed!
+
+      completed_defect.create_activity(
+        key: 'defect.update',
+        parameters: {
+          changes:
+          {
+            status: %w[outstanding completed],
+          },
+        },
+      )
+
+      travel_back
+
+      travel_to Time.zone.local(2019, 5, 23, 10, 20, 10)
 
       result = described_class.new(scheme: scheme).defects_completed_on_time(priority: priority)
 
@@ -264,7 +312,6 @@ RSpec.describe SchemeReportPresenter do
       travel_back
     end
 
-    # TODO: Commit why this might happen
     context 'when the defect has flipped back from completed to in progress' do
       it 'does not include that defect in the count' do
         completed_on_time_defect = create(:property_defect,

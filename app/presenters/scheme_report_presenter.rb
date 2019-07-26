@@ -60,17 +60,14 @@ class SchemeReportPresenter
 
   def defects_completed_on_time(priority:)
     completed_defects(priority: priority).select do |completed_defect|
-      updates_before_target_completion = completed_defect.activities.where(
-        [
-          'key = ? and created_at < ?',
-          'defect.update',
-          completed_defect.target_completion_date,
-        ]
-      )
+      completed_defect_activities = completed_defect.activities.where(key: 'defect.update')
+      activities_on_time = completed_defect_activities.select do |activity|
+        activity.created_at.to_date <= completed_defect.target_completion_date
+      end
 
       # TODO: Query parameter JSON at database level rather than in Ruby
-      true if updates_before_target_completion.detect do |updated_event|
-        updated_event.parameters[:changes][:status]&.last == 'completed'
+      true if activities_on_time.detect do |update_activity|
+        update_activity.parameters[:changes][:status]&.last == 'completed'
       end
     end
   end
