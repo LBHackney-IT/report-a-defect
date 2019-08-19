@@ -170,8 +170,8 @@ RSpec.describe Defect, type: :model do
     end
   end
 
-  describe '#set_completion_date' do
-    it 'sets the completion date to the number of priority days in the future' do
+  describe '#set_target_completion_date' do
+    it 'sets the target completion date to the number of priority days in the future' do
       travel_to Time.zone.parse('2019-05-23')
 
       previous_priority = create(:priority, days: 2)
@@ -180,7 +180,7 @@ RSpec.describe Defect, type: :model do
       defect = create(:property_defect, priority: previous_priority)
       defect.reload.priority = new_priority
 
-      defect.set_completion_date
+      defect.set_target_completion_date
 
       expect(defect.target_completion_date).to eq(Date.new(2019, 5, 26))
 

@@ -16,7 +16,7 @@ class EditDefect
 
     if priority_id.present?
       defect.priority = Priority.find(priority_id)
-      defect.set_completion_date
+      defect.set_target_completion_date
     else
       set_target_completion_date
     end
@@ -32,6 +32,6 @@ class EditDefect
 
     day, month, year = date_parts.map(&:to_i)
     date = Date.new(year, month, day)
-    defect.set_completion_date(date)
+    defect.set_target_completion_date(date)
   end
 end

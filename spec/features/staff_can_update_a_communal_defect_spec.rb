@@ -89,7 +89,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
     end
   end
 
-  scenario 'setting the completion date' do
+  scenario 'setting the target completion date' do
     visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     within('form.edit_defect') do
