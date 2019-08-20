@@ -31,7 +31,11 @@ Rails.application.routes.draw do
   end
 
   resources :communal_areas, controller: 'staff/communal_areas', only: %i[show] do
-    resources :defects, controller: 'staff/communal_defects', only: %i[new create show edit update]
+    resources :defects,
+              controller: 'staff/communal_defects',
+              only: %i[new create show edit update] do
+      resource :completion, controller: 'staff/communal_defects/completion', only: %i[new create]
+    end
   end
 
   resources :defects, controller: 'contractor/defects' do
