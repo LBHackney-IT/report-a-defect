@@ -226,6 +226,7 @@ class Defect < ApplicationRecord
       priority_name
       priority_duration
       target_completion_date
+      actual_completion_date
       estate
       scheme
       property_address

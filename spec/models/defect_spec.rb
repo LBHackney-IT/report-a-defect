@@ -231,6 +231,7 @@ RSpec.describe Defect, type: :model do
              status: :outstanding,
              trade: 'Electrical',
              target_completion_date: Date.new(2020, 10, 1),
+             actual_completion_date: Date.new(2020, 9, 30),
              description: 'a long description',
              access_information: 'The key is under the garden pot',
              created_at: Time.utc(2018, 10, 1, 12, 13, 55))
@@ -246,6 +247,7 @@ RSpec.describe Defect, type: :model do
              status: :outstanding,
              trade: 'Electrical',
              target_completion_date: Date.new(2019, 10, 1),
+             actual_completion_date: Date.new(2019, 10, 3),
              description: 'a longer description',
              access_information: 'The communal door will be unlocked',
              created_at: Time.utc(2017, 10, 1, 12, 13, 55))
@@ -273,6 +275,7 @@ RSpec.describe Defect, type: :model do
           priority_name
           priority_duration
           target_completion_date
+          actual_completion_date
           estate
           scheme
           property_address

@@ -22,6 +22,11 @@ FactoryBot.define do
       association :communal_area, factory: :communal_area
     end
 
+    trait :completed do
+      status { :completed }
+      actual_completion_date { Faker::Date.between(1.day.from_now, 5.days.from_now) }
+    end
+
     trait :with_comments do
       after(:create) do |defect|
         create_list(:comment, 3, defect: defect)
