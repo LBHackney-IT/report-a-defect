@@ -54,6 +54,8 @@
             %th.govuk-table__header{scope:'col'}
               Due by
             %th.govuk-table__header{scope:'col'}
+              Actual completion
+            %th.govuk-table__header{scope:'col'}
               Status and priority
             %th.govuk-table__header{scope:'col', class: 'govuk-!-width-one-third'}
               Location
@@ -80,6 +82,9 @@
 
               %td.govuk-table__cell.due-date
                 = defect.target_completion_date
+
+              %td.govuk-table__cell.due-date
+                = defect.actual_completion_date
 
               %td.govuk-table__cell.lbh-table-cell
                 %span{ class: "cell-status-label #{defect.status.downcase}" }
