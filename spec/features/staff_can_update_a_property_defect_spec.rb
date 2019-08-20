@@ -55,12 +55,12 @@ RSpec.feature 'Staff can update a defect' do
     visit edit_property_defect_path(defect.property, defect)
 
     within('form.edit_defect') do
-      select 'Completed', from: 'defect[status]'
+      select 'Closed', from: 'defect[status]'
       click_on(I18n.t('button.update.defect'))
     end
 
     expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
-    expect(page).to have_content('Completed')
+    expect(page).to have_content('Closed')
   end
 
   scenario 'a detect status change is listed as an event' do
@@ -73,13 +73,13 @@ RSpec.feature 'Staff can update a defect' do
     visit edit_property_defect_path(defect.property, defect)
 
     within('form.edit_defect') do
-      select 'Completed', from: 'defect[status]'
+      select 'Closed', from: 'defect[status]'
       click_on(I18n.t('button.update.defect'))
     end
 
     within('.events') do
       expect(page).to have_content(
-        I18n.t('events.defect.status_changed', name: 'Bob', old: 'Outstanding', new: 'Completed')
+        I18n.t('events.defect.status_changed', name: 'Bob', old: 'Outstanding', new: 'Closed')
       )
     end
   end
@@ -155,7 +155,7 @@ RSpec.feature 'Staff can update a defect' do
     expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
   end
 
-  scenario 'updating a status to completed' do
+  scenario 'completing a defect and providing the actual completion date' do
     defect = create(:property_defect, property: property, status: :outstanding)
 
     visit edit_property_defect_path(defect.property, defect)
@@ -166,5 +166,17 @@ RSpec.feature 'Staff can update a defect' do
       select 'Completed', from: 'defect[status]'
       click_on(I18n.t('button.update.defect'))
     end
+
+    expect(page).to have_content(I18n.t('page_title.staff.defects.completion.new', reference_number: defect.reference_number))
+
+    within('form.edit_defect') do
+      fill_in 'actual_completion_date_day', with: '28'
+      fill_in 'actual_completion_date_month', with: '7'
+      fill_in 'actual_completion_date_year', with: '2020'
+      click_on(I18n.t('button.complete.defect'))
+    end
+
+    expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
+    expect(page).to have_content('28 July 2020')
   end
 end
