@@ -1,4 +1,6 @@
-class Staff::CommunalDefects::CompletionController < Staff::BaseController
+class Staff::Defects::CompletionController < Staff::BaseController
+  include DefectHelper
+
   def new
     @defect = Defect.find(id)
   end
@@ -17,7 +19,7 @@ class Staff::CommunalDefects::CompletionController < Staff::BaseController
     UpdateDefect.new(defect: @defect).call
 
     flash[:success] = I18n.t('generic.notice.update.success', resource: 'defect')
-    redirect_to communal_area_defect_path(@defect.communal_area, @defect)
+    redirect_to defect_path_for(defect: @defect)
   end
 
   private

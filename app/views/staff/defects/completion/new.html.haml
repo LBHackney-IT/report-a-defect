@@ -1,6 +1,6 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.defects.completion.new', reference_number: @defect.reference_number)
 
-= link_to "Back to #{I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)}", communal_area_defect_path(@defect.communal_area, @defect), class: 'govuk-back-link'
+= link_to "Back to #{I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)}", defect_path_for(defect: @defect), class: 'govuk-back-link'
 
 .govuk-grid-row
   .govuk-grid-column-two-thirds
@@ -13,7 +13,7 @@
         %p.govuk-inset-text
           = @defect.target_completion_date
 
-    = simple_form_for [@defect.communal_area, @defect], method: :post, url: communal_area_defect_completion_path(@defect.communal_area) do |f|
+    = simple_form_for @defect, method: :post, url: defect_completion_path(@defect) do |f|
       %p Actual completion date
       = render partial: 'shared/defects/date_fields', locals: { name: 'actual_completion_date', date: @defect.actual_completion_date }
 
