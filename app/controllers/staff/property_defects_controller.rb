@@ -42,12 +42,15 @@ class Staff::PropertyDefectsController < Staff::BaseController
       }
     ).call
 
-    if @defect.valid?
-      UpdateDefect.new(defect: @defect).call
+    return render :edit if @defect.invalid?
+
+    UpdateDefect.new(defect: @defect).call
+
+    if @defect.saved_change_to_status? && @defect.completed?
+      redirect_to new_defect_completion_path(@defect)
+    else
       flash[:success] = I18n.t('generic.notice.update.success', resource: 'defect')
       redirect_to property_defect_path(@defect.property, @defect)
-    else
-      render :edit
     end
   end
 

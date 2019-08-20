@@ -50,6 +50,8 @@ en:
         edit: 'Update defect'
         forwarding:
           create: 'Forward defect'
+        completion:
+          new: 'Complete defect %{reference_number}'
       comments:
         create: 'Create Comment'
   page_content:
@@ -128,6 +130,8 @@ en:
     flag:
       add: Flag defect
       remove: Remove flag
+    complete:
+      defect: 'Complete defect'
   form:
     property:
       guidance: 'Find address information (Address, Postcode, UPRN) from %{link}.'

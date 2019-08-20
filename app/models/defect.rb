@@ -172,12 +172,16 @@ class Defect < ApplicationRecord
     ReferenceNumber.new(sequence_number).to_s
   end
 
-  def set_completion_date(date = nil)
+  def set_target_completion_date(date = nil)
     if date
       self.target_completion_date = date
     elsif priority
       self.target_completion_date = Date.current + priority.days.days
     end
+  end
+
+  def set_actual_completion_date(date)
+    self.actual_completion_date = date
   end
 
   def self.format_status(status)
@@ -222,6 +226,7 @@ class Defect < ApplicationRecord
       priority_name
       priority_duration
       target_completion_date
+      actual_completion_date
       estate
       scheme
       property_address

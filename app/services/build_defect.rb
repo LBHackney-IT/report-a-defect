@@ -16,7 +16,7 @@ class BuildDefect
     defect.property = Property.find(property_id) if property_id.present?
     defect.communal_area = CommunalArea.find(communal_area_id) if communal_area_id.present?
     defect.priority = Priority.find(priority_id) if priority_id.present?
-    defect.set_completion_date
+    defect.set_target_completion_date
 
     defect
   end

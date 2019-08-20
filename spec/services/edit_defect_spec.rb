@@ -43,6 +43,21 @@ RSpec.describe EditDefect do
       end
     end
 
+    context 'when the actual completion date is present' do
+      let(:service) do
+        described_class.new(
+          defect: defect,
+          defect_params: defect_params,
+          options: { actual_completion_date: { day: 25, month: 12, year: 2020 } }
+        )
+      end
+
+      it 'updates the actual_completion_date' do
+        result = service.call
+        expect(result.actual_completion_date).to eq(Date.new(2020, 12, 25))
+      end
+    end
+
     context 'when the status was already completed' do
       let(:defect) { create(:property_defect, status: :completed) }
       let(:defect_params) do

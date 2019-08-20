@@ -34,12 +34,15 @@ class Staff::CommunalDefectsController < Staff::BaseController
       }
     ).call
 
-    if @defect.valid?
-      UpdateDefect.new(defect: @defect).call
+    return render :edit if @defect.invalid?
+
+    UpdateDefect.new(defect: @defect).call
+
+    if @defect.saved_change_to_status? && @defect.completed?
+      redirect_to new_defect_completion_path(@defect)
+    else
       flash[:success] = I18n.t('generic.notice.update.success', resource: 'defect')
       redirect_to communal_area_defect_path(@defect.communal_area, @defect)
-    else
-      render :edit
     end
   end
 
