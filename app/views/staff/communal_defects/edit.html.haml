@@ -66,4 +66,12 @@
 
       = render partial: 'shared/defects/date_fields', locals: { name: 'target_completion_date', date: nil }
 
+      - if @defect.actual_completion_date.present?
+        .existing-priority-information
+          %label.govuk-label
+            %span Actual completion date
+            %p.govuk-inset-text= @defect.actual_completion_date
+
+          = render partial: 'shared/defects/date_fields', locals: { name: 'actual_completion_date', date: nil }
+
       = f.button :submit, I18n.t('button.update.defect')
