@@ -31,6 +31,7 @@ class Staff::CommunalDefectsController < Staff::BaseController
       options: {
         priority_id: priority_id,
         target_completion_date: target_completion_date,
+        actual_completion_date: actual_completion_date,
       }
     ).call
 
@@ -70,6 +71,10 @@ class Staff::CommunalDefectsController < Staff::BaseController
 
   def target_completion_date
     params.require(:target_completion_date).permit(:day, :month, :year)
+  end
+
+  def actual_completion_date
+    params.fetch(:actual_completion_date, {}).permit(:day, :month, :year)
   end
 
   def defect_params
