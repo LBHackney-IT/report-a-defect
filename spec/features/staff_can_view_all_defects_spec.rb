@@ -43,7 +43,7 @@ RSpec.feature 'Staff can view all defects' do
 
   scenario 'closed defects can be shown' do
     _open_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
-    closed_defect = DefectPresenter.new(create(:property_defect, status: :completed))
+    closed_defect = DefectPresenter.new(create(:property_defect, :completed))
 
     visit dashboard_path
 
@@ -57,6 +57,7 @@ RSpec.feature 'Staff can view all defects' do
     within '.defects' do
       expect(page).to have_content(closed_defect.reference_number)
       expect(page).to have_content(closed_defect.status)
+      expect(page).to have_content(closed_defect.actual_completion_date)
     end
   end
 

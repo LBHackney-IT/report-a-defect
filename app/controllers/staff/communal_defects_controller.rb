@@ -31,15 +31,19 @@ class Staff::CommunalDefectsController < Staff::BaseController
       options: {
         priority_id: priority_id,
         target_completion_date: target_completion_date,
+        actual_completion_date: actual_completion_date,
       }
     ).call
 
-    if @defect.valid?
-      UpdateDefect.new(defect: @defect).call
+    return render :edit if @defect.invalid?
+
+    UpdateDefect.new(defect: @defect).call
+
+    if @defect.saved_change_to_status? && @defect.completed?
+      redirect_to new_defect_completion_path(@defect)
+    else
       flash[:success] = I18n.t('generic.notice.update.success', resource: 'defect')
       redirect_to communal_area_defect_path(@defect.communal_area, @defect)
-    else
-      render :edit
     end
   end
 
@@ -67,6 +71,10 @@ class Staff::CommunalDefectsController < Staff::BaseController
 
   def target_completion_date
     params.require(:target_completion_date).permit(:day, :month, :year)
+  end
+
+  def actual_completion_date
+    params.fetch(:actual_completion_date, {}).permit(:day, :month, :year)
   end
 
   def defect_params

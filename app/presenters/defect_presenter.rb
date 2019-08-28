@@ -30,6 +30,10 @@ class DefectPresenter < SimpleDelegator
     super.to_s
   end
 
+  def actual_completion_date
+    super.to_s
+  end
+
   def category
     return 'Plumbing' if Defect::PLUMBING_TRADES.include?(trade)
     return 'Electrical/Mechanical' if Defect::ELECTRICAL_TRADES.include?(trade)
@@ -51,6 +55,7 @@ class DefectPresenter < SimpleDelegator
       priority.name,
       priority.days,
       target_completion_date,
+      actual_completion_date,
       scheme.estate.name,
       scheme.name,
       property&.address,

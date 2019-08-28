@@ -170,8 +170,8 @@ RSpec.describe Defect, type: :model do
     end
   end
 
-  describe '#set_completion_date' do
-    it 'sets the completion date to the number of priority days in the future' do
+  describe '#set_target_completion_date' do
+    it 'sets the target completion date to the number of priority days in the future' do
       travel_to Time.zone.parse('2019-05-23')
 
       previous_priority = create(:priority, days: 2)
@@ -180,7 +180,7 @@ RSpec.describe Defect, type: :model do
       defect = create(:property_defect, priority: previous_priority)
       defect.reload.priority = new_priority
 
-      defect.set_completion_date
+      defect.set_target_completion_date
 
       expect(defect.target_completion_date).to eq(Date.new(2019, 5, 26))
 
@@ -231,6 +231,7 @@ RSpec.describe Defect, type: :model do
              status: :outstanding,
              trade: 'Electrical',
              target_completion_date: Date.new(2020, 10, 1),
+             actual_completion_date: Date.new(2020, 9, 30),
              description: 'a long description',
              access_information: 'The key is under the garden pot',
              created_at: Time.utc(2018, 10, 1, 12, 13, 55))
@@ -246,6 +247,7 @@ RSpec.describe Defect, type: :model do
              status: :outstanding,
              trade: 'Electrical',
              target_completion_date: Date.new(2019, 10, 1),
+             actual_completion_date: Date.new(2019, 10, 3),
              description: 'a longer description',
              access_information: 'The communal door will be unlocked',
              created_at: Time.utc(2017, 10, 1, 12, 13, 55))
@@ -273,6 +275,7 @@ RSpec.describe Defect, type: :model do
           priority_name
           priority_duration
           target_completion_date
+          actual_completion_date
           estate
           scheme
           property_address

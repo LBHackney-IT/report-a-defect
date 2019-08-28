@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   resources :defects, controller: 'staff/defects' do
     resource :forward, controller: 'staff/defects/forwarding', only: %i[new create]
     resource :flag, controller: 'staff/defect_flags', only: %i[create destroy]
+    resource :completion, controller: 'staff/defects/completion', only: %i[new create]
   end
 
   resources :properties, controller: 'staff/properties', only: %i[show] do
@@ -31,7 +32,10 @@ Rails.application.routes.draw do
   end
 
   resources :communal_areas, controller: 'staff/communal_areas', only: %i[show] do
-    resources :defects, controller: 'staff/communal_defects', only: %i[new create show edit update]
+    resources :defects,
+              controller: 'staff/communal_defects',
+              only: %i[new create show edit update] do
+    end
   end
 
   resources :defects, controller: 'contractor/defects' do
