@@ -42,15 +42,13 @@
                   required: true,
                   label_method: ->(obj){ status_form_label(option_array: obj) },
                   value_method: :first
-      - if @defect.actual_completion_date.present?
-        .existing-priority-information
+
+      .existing-priority-information
+        - if @defect.status.downcase == 'completed'
           %label.govuk-label
             %span Actual completion date
             %p.govuk-inset-text= @defect.actual_completion_date
-
           = render partial: 'shared/defects/date_fields', locals: { name: 'actual_completion_date', date: nil }
-
-      .existing-priority-information
         %label.govuk-label
           %span Priority status
           %p.govuk-inset-text= @defect.priority.name

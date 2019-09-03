@@ -162,6 +162,22 @@ RSpec.feature 'Staff can update a communal_area defect' do
     expect(page).to have_content('29 July 2020')
   end
 
+  scenario 'adding an actual completion date after completion' do
+    defect = create(:communal_defect, :completed, communal_area: communal_area, actual_completion_date: nil)
+
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
+
+    within('form.edit_defect') do
+      fill_in 'actual_completion_date_day', with: '29'
+      fill_in 'actual_completion_date_month', with: '7'
+      fill_in 'actual_completion_date_year', with: '2020'
+      click_on(I18n.t('button.update.defect'))
+    end
+
+    expect(page).to have_content(I18n.t('generic.notice.update.success', resource: 'defect'))
+    expect(page).to have_content('29 July 2020')
+  end
+
   scenario 'attempting to update the actual completion date before completion' do
     defect = create(:communal_defect, communal_area: communal_area, status: :outstanding)
 
