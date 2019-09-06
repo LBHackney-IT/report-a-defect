@@ -67,6 +67,8 @@ class SchemeReportPresenter
 
       # TODO: Query parameter JSON at database level rather than in Ruby
       true if activities_on_time.detect do |update_activity|
+        update_activity.parameters &&
+        update_activity.parameters[:changes] &&
         update_activity.parameters[:changes][:status]&.last == 'completed'
       end
     end
