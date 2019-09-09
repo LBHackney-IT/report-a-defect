@@ -78,30 +78,30 @@ class Defect < ApplicationRecord
   PLUMBING_TRADES = [
     'Plumbing',
     'Drainage',
-    'Water temp / supply',
+    'Water Temperature/Supply',
   ].freeze
 
   ELECTRICAL_TRADES = [
     'Electrical',
+    'Electrical/Mechanical',
     'Connectivity',
     'Lighting',
     'Boiler work',
     'MVHR',
-    'Fan / Ventilation',
-    'Fire safety',
+    'Fan/Ventilation',
+    'Fire Safety',
     'Lifts',
     'Heating',
-    'Intercoms / Entry Phones',
+    'Intercoms/Entry Phones',
     'Filters',
   ].freeze
 
   CARPENTRY_TRADES = [
     'Carpentry',
+    'Carpentry/Doors',
     'Door work',
-    'Window work',
+    'Window Work',
     'Metal work',
-    'Locks',
-    'Adapted bathrooms',
   ].freeze
 
   COSMETIC_TRADES = [
@@ -114,7 +114,7 @@ class Defect < ApplicationRecord
     'Plastering',
     'Blinds',
     'Brickwork',
-    'Roof',
+    'Roof work',
   ].freeze
 
   TRADES = [

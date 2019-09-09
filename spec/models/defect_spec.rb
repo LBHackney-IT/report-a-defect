@@ -320,4 +320,17 @@ RSpec.describe Defect, type: :model do
       end
     end
   end
+
+  describe '::TRADES' do
+    it 'includes all the trades, and only those trades, that are in the trades-by-category lists' do
+      expect(Defect::TRADES.sort).to eq(
+        (
+          Defect::ELECTRICAL_TRADES +
+          Defect::PLUMBING_TRADES +
+          Defect::CARPENTRY_TRADES +
+          Defect::COSMETIC_TRADES
+        ).sort
+      )
+    end
+  end
 end
