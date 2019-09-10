@@ -117,38 +117,12 @@ class Defect < ApplicationRecord
     'Roof work',
   ].freeze
 
-  TRADES = [
-    'Blinds',
-    'Boiler work',
-    'Brickwork',
-    'Carpentry',
-    'Carpentry/Doors',
-    'Connectivity',
-    'Cosmetic',
-    'Damp',
-    'Decoration',
-    'Door work',
-    'Drainage',
-    'Electrical',
-    'Electrical/Mechanical',
-    'Fan/Ventilation',
-    'Filters',
-    'Fire Safety',
-    'Floor work',
-    'Heating',
-    'Intercoms/Entry Phones',
-    'Lifts',
-    'Lighting',
-    'Mastic',
-    'Metal work',
-    'MVHR',
-    'Plastering',
-    'Plumbing',
-    'Roof work',
-    'Tile work',
-    'Water Temperature/Supply',
-    'Window Work',
-  ].freeze
+  TRADES = (
+    PLUMBING_TRADES +
+    ELECTRICAL_TRADES +
+    CARPENTRY_TRADES +
+    COSMETIC_TRADES
+  ).sort.uniq.freeze
 
   CATEGORIES = {
     'Plumbing' => PLUMBING_TRADES,

@@ -322,15 +322,21 @@ RSpec.describe Defect, type: :model do
   end
 
   describe '::TRADES' do
-    it 'includes all the trades, and only those trades, that are in the trades-by-category lists' do
-      expect(Defect::TRADES.sort).to eq(
-        (
-          Defect::ELECTRICAL_TRADES +
-          Defect::PLUMBING_TRADES +
-          Defect::CARPENTRY_TRADES +
-          Defect::COSMETIC_TRADES
-        ).sort
-      )
+    it 'includes all the trades, and only those trades, that are in trades by category' do
+      expect(
+        Defect::ELECTRICAL_TRADES +
+        Defect::PLUMBING_TRADES +
+        Defect::CARPENTRY_TRADES +
+        Defect::COSMETIC_TRADES
+      ).to match_array(Defect::TRADES)
+    end
+
+    it 'does not have duplicates' do
+      expect(Defect::TRADES).to eq(Defect::TRADES.uniq)
+    end
+
+    it 'is sorted alphabetically' do
+      expect(Defect::TRADES).to eq(Defect::TRADES.sort)
     end
   end
 end
