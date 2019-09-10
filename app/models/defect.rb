@@ -78,30 +78,30 @@ class Defect < ApplicationRecord
   PLUMBING_TRADES = [
     'Plumbing',
     'Drainage',
-    'Water temp / supply',
+    'Water Temperature/Supply',
   ].freeze
 
   ELECTRICAL_TRADES = [
     'Electrical',
+    'Electrical/Mechanical',
     'Connectivity',
     'Lighting',
     'Boiler work',
     'MVHR',
-    'Fan / Ventilation',
-    'Fire safety',
+    'Fan/Ventilation',
+    'Fire Safety',
     'Lifts',
     'Heating',
-    'Intercoms / Entry Phones',
+    'Intercoms/Entry Phones',
     'Filters',
   ].freeze
 
   CARPENTRY_TRADES = [
     'Carpentry',
+    'Carpentry/Doors',
     'Door work',
-    'Window work',
+    'Window Work',
     'Metal work',
-    'Locks',
-    'Adapted bathrooms',
   ].freeze
 
   COSMETIC_TRADES = [
@@ -114,41 +114,15 @@ class Defect < ApplicationRecord
     'Plastering',
     'Blinds',
     'Brickwork',
-    'Roof',
+    'Roof work',
   ].freeze
 
-  TRADES = [
-    'Blinds',
-    'Boiler work',
-    'Brickwork',
-    'Carpentry',
-    'Carpentry/Doors',
-    'Connectivity',
-    'Cosmetic',
-    'Damp',
-    'Decoration',
-    'Door work',
-    'Drainage',
-    'Electrical',
-    'Electrical/Mechanical',
-    'Fan/Ventilation',
-    'Filters',
-    'Fire Safety',
-    'Floor work',
-    'Heating',
-    'Intercoms/Entry Phones',
-    'Lifts',
-    'Lighting',
-    'Mastic',
-    'Metal work',
-    'MVHR',
-    'Plastering',
-    'Plumbing',
-    'Roof work',
-    'Tile work',
-    'Water Temperature/Supply',
-    'Window Work',
-  ].freeze
+  TRADES = (
+    PLUMBING_TRADES +
+    ELECTRICAL_TRADES +
+    CARPENTRY_TRADES +
+    COSMETIC_TRADES
+  ).sort.uniq.freeze
 
   CATEGORIES = {
     'Plumbing' => PLUMBING_TRADES,
