@@ -241,7 +241,8 @@ RSpec.describe Defect, type: :model do
              actual_completion_date: Date.new(2020, 9, 30),
              description: 'a long description',
              access_information: 'The key is under the garden pot',
-             created_at: Time.utc(2018, 10, 1, 12, 13, 55))
+             created_at: Time.utc(2018, 10, 1, 12, 13, 55),
+             added_at: Time.utc(2018, 10, 1, 11, 13, 55))
     end
 
     let(:communal_area) { create(:communal_area, name: 'Pine Creek', location: '1-100 Hackney Street', scheme: scheme) }
@@ -257,7 +258,8 @@ RSpec.describe Defect, type: :model do
              actual_completion_date: Date.new(2019, 10, 3),
              description: 'a longer description',
              access_information: 'The communal door will be unlocked',
-             created_at: Time.utc(2017, 10, 1, 12, 13, 55))
+             created_at: Time.utc(2017, 10, 1, 12, 13, 55),
+             added_at: Time.utc(2017, 10, 1, 11, 13, 55))
     end
 
     it 'returns a CSV of all defects ordered by created_at' do
@@ -273,7 +275,8 @@ RSpec.describe Defect, type: :model do
       expect(described_class.csv_headers).to eq(
         %w[
           reference_number
-          created_at
+          date_created
+          date_added
           title
           type
           status

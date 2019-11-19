@@ -191,7 +191,8 @@ class Defect < ApplicationRecord
   def self.csv_headers
     %w[
       reference_number
-      created_at
+      date_created
+      date_added
       title
       type
       status

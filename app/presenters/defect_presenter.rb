@@ -47,6 +47,7 @@ class DefectPresenter < SimpleDelegator
     [
       reference_number,
       created_at.to_s,
+      added_at.to_s,
       title,
       defect_type,
       status,

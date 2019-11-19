@@ -149,6 +149,7 @@ RSpec.describe DefectPresenter do
           [
             defect.reference_number,
             defect.created_at.to_s,
+            defect.added_at.to_s,
             defect.title,
             'Property',
             defect.status,
@@ -178,6 +179,7 @@ RSpec.describe DefectPresenter do
           [
             defect.reference_number,
             defect.created_at.to_s,
+            defect.added_at.to_s,
             defect.title,
             'Communal',
             defect.status,
