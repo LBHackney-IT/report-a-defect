@@ -33,6 +33,9 @@ RSpec.feature 'Staff can create a defect for a property' do
     end
 
     within('form.new_defect') do
+      fill_in 'created_at[day]', with: '1'
+      fill_in 'created_at[month]', with: '2'
+      fill_in 'created_at[year]', with: '2019'
       fill_in 'defect[title]', with: 'Electrics failed'
       fill_in 'defect[description]', with: 'None of the electrics work'
       fill_in 'defect[contact_name]', with: 'Alex Stone'
@@ -51,6 +54,7 @@ RSpec.feature 'Staff can create a defect for a property' do
       expect(page).to have_content('Electrical')
       expect(page).to have_content('Outstanding')
       expect(page).to have_content(priority.name)
+      expect(page).to have_content('1 February 2019')
       expect(page).to have_content(defect.target_completion_date)
       expect(page).to have_content(defect.reference_number)
     end

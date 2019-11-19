@@ -25,6 +25,9 @@ RSpec.feature 'Staff can update a defect' do
     end
 
     within('form.edit_defect') do
+      fill_in 'created_at[day]', with: '2'
+      fill_in 'created_at[month]', with: '3'
+      fill_in 'created_at[year]', with: '2019'
       fill_in 'defect[title]', with: 'New title'
       fill_in 'defect[description]', with: 'New description'
       fill_in 'defect[contact_name]', with: 'New name'
@@ -47,6 +50,7 @@ RSpec.feature 'Staff can update a defect' do
     expect(page).to have_content('0123456789')
     expect(page).to have_content('Brickwork')
     expect(page).to have_content(new_priority.name)
+    expect(page).to have_content('2 March 2019')
 
     expect(page).to have_content((Date.current + new_priority.days).to_date)
   end

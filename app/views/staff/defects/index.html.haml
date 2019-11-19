@@ -52,6 +52,8 @@
             %th.govuk-table__header{scope:'col', class: 'govuk-!-width-one-third'}
               Defect reference and name
             %th.govuk-table__header{scope:'col'}
+              Created on
+            %th.govuk-table__header{scope:'col'}
               Due by
             %th.govuk-table__header{scope:'col'}
               Actual completion
@@ -79,6 +81,9 @@
                   - if defect.flagged?
                     %span.cell-flagged-label
                       Flagged
+
+              %td.govuk-table__cell
+                = defect.created_at
 
               %td.govuk-table__cell.due-date
                 = defect.target_completion_date

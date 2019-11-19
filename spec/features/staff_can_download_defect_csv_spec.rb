@@ -19,7 +19,8 @@ RSpec.feature 'Staff can download defect data' do
     # Headers
     expected_headers = %w[
       reference_number
-      created_at
+      date_created
+      date_added
       title
       type
       status
