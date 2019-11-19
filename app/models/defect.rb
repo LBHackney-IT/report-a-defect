@@ -158,6 +158,10 @@ class Defect < ApplicationRecord
     self.actual_completion_date = date
   end
 
+  def set_created_at(date)
+    self.created_at = date
+  end
+
   def self.format_status(status)
     status.tr('_', ' ').capitalize
   end

@@ -58,7 +58,8 @@ RSpec.describe Defect, type: :model do
   describe 'added_at' do
     it 'automatically populates added_at' do
       defect = create(:defect)
-      expect(defect.reload.added_at).not_to be_nil
+      the_date = Time.zone.now.to_date.to_s # can't freeze because setting happens in Postgres
+      expect(defect.reload.added_at.to_date.to_s).to eq(the_date)
     end
   end
 
@@ -347,6 +348,14 @@ RSpec.describe Defect, type: :model do
 
     it 'is sorted alphabetically' do
       expect(Defect::TRADES).to eq(Defect::TRADES.sort)
+    end
+  end
+
+  describe '.set_created_at' do
+    it 'sets the created_at' do
+      defect = build(:defect)
+      defect.set_created_at(Date.new(2019, 1, 1))
+      expect(defect.created_at).to eq('2019-1-1')
     end
   end
 end
