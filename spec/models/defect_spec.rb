@@ -55,6 +55,13 @@ RSpec.describe Defect, type: :model do
     end
   end
 
+  describe 'added_at' do
+    it 'automatically populates added_at' do
+      defect = create(:defect)
+      expect(defect.reload.added_at).not_to be_nil
+    end
+  end
+
   describe '.for_properties' do
     it 'returns a list of defects for a given property ID' do
       interested_property = create(:property)
