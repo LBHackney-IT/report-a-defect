@@ -12,24 +12,11 @@ RSpec.describe DefectPresenter do
     end
   end
 
-  describe '#created_time' do
-    it 'returns the created at timestamp' do
-      result = described_class.new(property_defect).created_at
-      expect(result).to eq(property_defect.created_at)
-    end
-
-    context 'when the time is UTC' do
-      it 'returns the time in GMT' do
-        # rubocop:disable Rails/TimeZone
-        utc_time = Time.new(2017, 10, 30, 13)
-        # rubocop:enable Rails/TimeZone
-
-        property_defect.update(created_at: utc_time)
-
-        result = described_class.new(property_defect).created_time
-
-        expect(result).to eql('30th October 2017, 13:00')
-      end
+  describe '#created_at' do
+    it 'returns a formatted date' do
+      defect = create(:property_defect)
+      created_at = defect.created_at.to_date.to_s
+      expect(described_class.new(defect).created_at).to eq(created_at)
     end
   end
 

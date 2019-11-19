@@ -15,8 +15,8 @@ class DefectPresenter < SimpleDelegator
     property.present? ? 'Property' : 'Communal'
   end
 
-  def created_time
-    created_at.to_s
+  def created_at
+    super.to_date.to_s
   end
 
   def accepted_on
