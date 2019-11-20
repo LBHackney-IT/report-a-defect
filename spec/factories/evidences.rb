@@ -3,5 +3,6 @@ FactoryBot.define do
     description { Faker::Lorem.paragraph }
     supporting_file { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'evidence.png'), 'image/png') }
     association :defect, factory: :defect
+    association :user, factory: :user
   end
 end

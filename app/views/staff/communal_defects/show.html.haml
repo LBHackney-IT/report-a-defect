@@ -11,6 +11,7 @@
     %h2.govuk-heading-m= @defect.title
     = flag_toggle_button(@defect)
     = link_to(I18n.t('button.edit.defect'), edit_communal_area_defect_path(@defect.communal_area, @defect), class: 'govuk-button govuk-button--secondary mb0')
+    = link_to(I18n.t('button.create.evidence'), new_defect_evidence_path(@defect), class: 'govuk-button govuk-button--secondary mb0')
     = link_to(I18n.t('button.forward.contractor'), new_defect_forward_path(@defect, recipient_type: :contractor), class: 'govuk-button govuk-button--secondary mb0')
     = link_to(I18n.t('button.forward.employer_agent'), new_defect_forward_path(@defect, recipient_type: :employer_agent), class: 'govuk-button govuk-button--secondary mb0')
 
@@ -28,6 +29,10 @@
 
   .govuk-grid-column-one-half.contact-information
     = render partial: '/shared/defects/contact_information', locals: { defect: @defect }
+
+.govuk-grid-row
+  .govuk-grid-column-one-half.evidence
+    = render partial: '/shared/defects/evidence_information', locals: { evidences: @defect.evidences }
 
 .govuk-grid-row
   %hr{class: 'govuk-section-break govuk-section-break--xs govuk-section-break--visible govuk-!-margin-bottom-4'}
