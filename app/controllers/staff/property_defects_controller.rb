@@ -7,7 +7,11 @@ class Staff::PropertyDefectsController < Staff::BaseController
   def create
     @property = Property.find(property_id)
 
-    options = { property_id: property_id, priority_id: priority_id }
+    options = {
+      property_id: property_id,
+      priority_id: priority_id,
+      created_at: created_at,
+    }
     @defect = BuildDefect.new(defect_params: defect_params, options: options).call
 
     if @defect.valid?
@@ -40,6 +44,7 @@ class Staff::PropertyDefectsController < Staff::BaseController
         priority_id: priority_id,
         target_completion_date: target_completion_date,
         actual_completion_date: actual_completion_date,
+        created_at: created_at,
       }
     ).call
 
@@ -75,6 +80,10 @@ class Staff::PropertyDefectsController < Staff::BaseController
 
   def actual_completion_date
     params.fetch(:actual_completion_date, {}).permit(:day, :month, :year)
+  end
+
+  def created_at
+    params.fetch(:created_at, {}).permit(:day, :month, :year)
   end
 
   def defect_params

@@ -72,5 +72,20 @@ RSpec.describe EditDefect do
         service.call
       end
     end
+
+    context 'when the created on date is set' do
+      let(:service) do
+        described_class.new(
+          defect: defect,
+          defect_params: defect_params,
+          options: { created_at: { day: 25, month: 12, year: 2018 } }
+        )
+      end
+
+      it 'updates the created_at date' do
+        result = service.call
+        expect(result.created_at).to eq(Date.new(2018, 12, 25))
+      end
+    end
   end
 end

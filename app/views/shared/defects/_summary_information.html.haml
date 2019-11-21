@@ -8,6 +8,9 @@
     %dt.govuk-summary-list__key Status
     %dd.govuk-summary-list__value= defect.status
   %div.govuk-summary-list__row
+    %dt.govuk-summary-list__key= I18n.t('generic.label.created_date')
+    %dd.govuk-summary-list__value= defect.created_at
+  %div.govuk-summary-list__row
     %dt.govuk-summary-list__key Target date
     %dd.govuk-summary-list__value= defect.target_completion_date
   %div.govuk-summary-list__row

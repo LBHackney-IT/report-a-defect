@@ -104,6 +104,8 @@ en:
       update:
         success:
           'The %{resource} has successfully been updated.'
+    label:
+      created_date: 'Date created'
   button:
     report:
       download_all: Download all defect data

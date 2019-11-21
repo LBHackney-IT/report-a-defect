@@ -1,8 +1,5 @@
-class EditDefect
-  attr_accessor :defect,
-                :defect_params,
-                :priority_id,
-                :target_completion_date,
+class EditDefect < DefectBuilder
+  attr_accessor :target_completion_date,
                 :actual_completion_date
 
   def initialize(defect:, defect_params:, options: {})
@@ -11,6 +8,7 @@ class EditDefect
     self.priority_id = options[:priority_id]
     self.target_completion_date = options.fetch(:target_completion_date, {})
     self.actual_completion_date = options.fetch(:actual_completion_date, {})
+    self.created_at = options.fetch(:created_at, {})
   end
 
   def call
@@ -24,6 +22,7 @@ class EditDefect
     end
 
     set_actual_completion_date
+    set_created_at if created_at.present?
 
     defect
   end

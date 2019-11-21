@@ -48,7 +48,7 @@ class DefectEventPresenter
       old, new = params[:changes][:status].map { |status| Defect.format_status(status) }
       I18n.t('events.defect.status_changed', name: @event.owner.name, old: old, new: new)
     else
-      I18n.t('events.defect.updated', name: @event.owner.name)
+      I18n.t('events.defect.updated', name: @event.owner&.name)
     end
   end
 

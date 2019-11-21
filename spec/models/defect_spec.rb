@@ -55,6 +55,14 @@ RSpec.describe Defect, type: :model do
     end
   end
 
+  describe 'added_at' do
+    it 'automatically populates added_at' do
+      defect = create(:defect)
+      the_date = Time.zone.now.to_date.to_s # can't freeze because setting happens in Postgres
+      expect(defect.reload.added_at.to_date.to_s).to eq(the_date)
+    end
+  end
+
   describe '.for_properties' do
     it 'returns a list of defects for a given property ID' do
       interested_property = create(:property)
@@ -234,7 +242,8 @@ RSpec.describe Defect, type: :model do
              actual_completion_date: Date.new(2020, 9, 30),
              description: 'a long description',
              access_information: 'The key is under the garden pot',
-             created_at: Time.utc(2018, 10, 1, 12, 13, 55))
+             created_at: Time.utc(2018, 10, 1, 12, 13, 55),
+             added_at: Time.utc(2018, 10, 1, 11, 13, 55))
     end
 
     let(:communal_area) { create(:communal_area, name: 'Pine Creek', location: '1-100 Hackney Street', scheme: scheme) }
@@ -250,7 +259,8 @@ RSpec.describe Defect, type: :model do
              actual_completion_date: Date.new(2019, 10, 3),
              description: 'a longer description',
              access_information: 'The communal door will be unlocked',
-             created_at: Time.utc(2017, 10, 1, 12, 13, 55))
+             created_at: Time.utc(2017, 10, 1, 12, 13, 55),
+             added_at: Time.utc(2017, 10, 1, 11, 13, 55))
     end
 
     it 'returns a CSV of all defects ordered by created_at' do
@@ -266,7 +276,8 @@ RSpec.describe Defect, type: :model do
       expect(described_class.csv_headers).to eq(
         %w[
           reference_number
-          created_at
+          date_created
+          date_added
           title
           type
           status
@@ -337,6 +348,14 @@ RSpec.describe Defect, type: :model do
 
     it 'is sorted alphabetically' do
       expect(Defect::TRADES).to eq(Defect::TRADES.sort)
+    end
+  end
+
+  describe '.set_created_at' do
+    it 'sets the created_at' do
+      defect = build(:defect)
+      defect.set_created_at(Date.new(2019, 1, 1))
+      expect(defect.created_at).to eq('2019-1-1')
     end
   end
 end
