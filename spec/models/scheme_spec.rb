@@ -46,7 +46,7 @@ RSpec.describe Scheme, type: :model do
   describe '.set_start_date' do
     it 'sets the start_date' do
       scheme = build(:scheme)
-      scheme.set_start_date({ day: 1, month: 2, year: 2019 })
+      scheme.set_start_date(day: 1, month: 2, year: 2019)
       expect(scheme.start_date).to eq(Date.new(2019, 2, 1))
     end
   end
