@@ -13,7 +13,7 @@ RSpec.feature 'Staff can create evidence' do
     travel_back
   end
 
-  context 'when the defect is for a property' do
+  context 'when the defect is for a property', :carrierwave do
     let!(:property) { create(:property, address: '1 Hackney Street') }
     let!(:defect) { create(:property_defect, property: property) }
 
@@ -48,7 +48,7 @@ RSpec.feature 'Staff can create evidence' do
     end
   end
 
-  context 'when the defect is for a communal area' do
+  context 'when the defect is for a communal area', :carrierwave do
     let!(:communal_area) { create(:communal_area, name: 'Hackney Street') }
     let!(:defect) { create(:communal_defect, communal_area: communal_area) }
 
