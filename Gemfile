@@ -26,6 +26,10 @@ gem 'sentry-raven'
 gem 'newrelic_rpm'
 gem 'figaro'
 
+# Support file upload
+gem 'fog-aws'
+gem 'carrierwave', '~> 2.0'
+
 # Add to termporarily support usability testing
 gem 'faker'
 gem 'factory_bot_rails'

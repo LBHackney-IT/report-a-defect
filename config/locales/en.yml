@@ -54,6 +54,8 @@ en:
           new: 'Complete defect %{reference_number}'
       comments:
         create: 'Create Comment'
+      evidences:
+        create: 'Create evidence'
   page_content:
     dashboard:
       header:
@@ -118,6 +120,7 @@ en:
       property_defect: 'Create property defect'
       communal_defect: 'Create communal defect'
       comment: 'Create comment'
+      evidence: 'Create evidence'
     update:
       scheme: 'Update scheme'
       communal_area: 'Update communal area'
