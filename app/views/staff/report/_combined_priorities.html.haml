@@ -16,6 +16,7 @@
         Percentage completed on time
   %tbody.govuk-table__body
     - presenter.priorities.each do |priority|
+      - next if presenter.defects_by_priority(priority: priority).count < 1
       %tr.govuk-table__row
         %td.govuk-table__cell= priority
         %td.govuk-table__cell= presenter.due_defects_by_priority(priority: priority).count
