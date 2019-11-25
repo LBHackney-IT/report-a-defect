@@ -23,8 +23,8 @@ class ReportPresenter
 
   def priority_percentage(priority:)
     percentage_for(
-      number: Float(defects_by_priority(priority: priority).count),
-      total: Float(defects.count)
+      number: Float(defects_completed_on_time(priority: priority).count),
+      total: Float(defects_by_priority(priority: priority).count)
     )
   end
 

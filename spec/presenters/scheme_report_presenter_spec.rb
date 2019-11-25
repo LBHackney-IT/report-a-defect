@@ -133,10 +133,21 @@ RSpec.describe SchemeReportPresenter do
   end
 
   describe '#priority_percentage' do
-    it 'returns the percentage of defects with this priority ' do
+    it 'returns the percentage of defects completed on time with this priority ' do
+      travel_to Time.zone.parse('2019-05-23')
+
+      completed_on_time_priority = create(:property_defect,
+                                          property: property,
+                                          priority: priority,
+                                          target_completion_date: Date.new(2019, 5, 24))
+
+      completed_on_time_priority.completed!
+
       create(:property_defect, property: property, priority: priority)
       result = described_class.new(scheme: scheme).priority_percentage(priority: priority)
-      expect(result).to eql('100.0%')
+      expect(result).to eql('50.0%')
+
+      travel_back
     end
 
     context 'when there are no defects with that priority' do

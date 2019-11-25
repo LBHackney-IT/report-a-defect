@@ -93,6 +93,10 @@ RSpec.feature 'Staff can view a report for a scheme' do
   scenario 'defect information by scheme priority' do
     travel_to Time.zone.parse('2019-05-23')
 
+    completed_on_time_priority = create(:property_defect,
+                                        property: property,
+                                        priority: priority,
+                                        target_completion_date: Date.new(2019, 5, 24))
     _due_priority = create(:property_defect,
                            property: property,
                            priority: priority,
@@ -102,6 +106,8 @@ RSpec.feature 'Staff can view a report for a scheme' do
                                       property: property,
                                       priority: priority,
                                       target_completion_date: Date.new(2019, 5, 22))
+
+    completed_on_time_priority.completed!
 
     visit report_scheme_path(scheme)
 
@@ -115,7 +121,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
         expect(page).to have_content(priority.days)
       end
 
-      expect(page).to have_content('100.0%')
+      expect(page).to have_content('25.0%')
       expect(page).to have_content('1')
       expect(page).to have_content('2')
       expect(page).to have_content('3')

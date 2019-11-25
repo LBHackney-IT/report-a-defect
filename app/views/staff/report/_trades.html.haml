@@ -5,12 +5,12 @@
       %th.govuk-table__header
         Name
       %th.govuk-table__header
-        Percentage
-      %th.govuk-table__header
         Total
+      %th.govuk-table__header
+        Percentage
   %tbody.govuk-table__body
     - Defect::CATEGORIES.each do |category, trades|
       %tr.govuk-table__row
         %td.govuk-table__cell= category
-        %td.govuk-table__cell= presenter.category_percentage(category: category)
         %td.govuk-table__cell= presenter.defects_by_category(category: category).count
+        %td.govuk-table__cell= presenter.category_percentage(category: category)
