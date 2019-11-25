@@ -34,6 +34,11 @@ class Staff::DefectsController < Staff::BaseController
           .map { |type| type.parameterize.underscore.to_sym }
   end
 
+  def escalations
+    params.fetch(:escalations, [])
+          .map { |escalation| escalation.parameterize.underscore.to_sym }
+  end
+
   helper_method :type_property?
   def type_property?
     return false if types.blank?
@@ -44,6 +49,24 @@ class Staff::DefectsController < Staff::BaseController
   def type_communal?
     return false if types.blank?
     types.include?(:communal)
+  end
+
+  helper_method :escalated_escalated?
+  def escalated_escalated?
+    return false if escalations.blank?
+    escalations.include?(:escalated)
+  end
+
+  helper_method :escalated_overdue?
+  def escalated_overdue?
+    return false if escalations.blank?
+    escalations.include?(:overdue)
+  end
+
+  helper_method :escalated_due_soon?
+  def escalated_due_soon?
+    return false if escalations.blank?
+    escalations.include?(:due_soon)
   end
 
   def scheme_ids
