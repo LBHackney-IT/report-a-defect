@@ -96,7 +96,13 @@ RSpec.feature 'Staff can view a report for a scheme' do
     completed_on_time_priority = create(:property_defect,
                                         property: property,
                                         priority: priority,
-                                        target_completion_date: Date.new(2019, 5, 24))
+                                        target_completion_date: Date.new(2019, 5, 24),
+                                        status: :completed)
+    completed_on_time_priority.activities.create!(key: 'defect.update',
+                                                  parameters: {
+                                                    changes: { status: ['', 'completed'] },
+                                                  })
+
     _due_priority = create(:property_defect,
                            property: property,
                            priority: priority,
@@ -106,8 +112,6 @@ RSpec.feature 'Staff can view a report for a scheme' do
                                       property: property,
                                       priority: priority,
                                       target_completion_date: Date.new(2019, 5, 22))
-
-    completed_on_time_priority.completed!
 
     visit report_scheme_path(scheme)
 

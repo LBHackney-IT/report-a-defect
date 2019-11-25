@@ -139,9 +139,13 @@ RSpec.describe SchemeReportPresenter do
       completed_on_time_priority = create(:property_defect,
                                           property: property,
                                           priority: priority,
-                                          target_completion_date: Date.new(2019, 5, 24))
+                                          target_completion_date: Date.new(2019, 5, 24),
+                                          status: :completed)
 
-      completed_on_time_priority.completed!
+      completed_on_time_priority.activities.create!(key: 'defect.update',
+                                                    parameters: {
+                                                      changes: { status: ['', 'completed'] },
+                                                    })
 
       create(:property_defect, property: property, priority: priority)
       result = described_class.new(scheme: scheme).priority_percentage(priority: priority)
