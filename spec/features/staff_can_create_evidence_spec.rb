@@ -35,6 +35,7 @@ RSpec.feature 'Staff can create evidence' do
       within('.evidence') do
         evidence = Evidence.first
         expect(page).to have_content(evidence.description)
+        expect(page).to have_selector(:css, "a[href='#{evidence.supporting_file.url}']")
       end
     end
 

@@ -5,7 +5,7 @@ RSpec.feature 'Staff can create a defect for a property' do
     stub_authenticated_session
   end
 
-  scenario 'a property can be found and defect can be created' do
+  scenario 'a property can be found and defect can be created', :carrierwave do
     property = create(:property, address: '1 Hackney Street')
     priority = create(:priority, scheme: property.scheme, name: 'P1', days: 1)
 
@@ -43,6 +43,8 @@ RSpec.feature 'Staff can create a defect for a property' do
       fill_in 'defect[contact_phone_number]', with: '07123456789'
       select 'Electrical', from: 'defect[trade]'
       choose priority.name
+      attach_file 'defect[evidences_attributes][0][supporting_file]', Rails.root.join('spec', 'fixtures', 'evidence.png')
+      fill_in 'defect[evidences_attributes][0][description]', with: 'Some uploaded evidence'
       click_on(I18n.t('button.create.property_defect'))
     end
 
@@ -64,6 +66,12 @@ RSpec.feature 'Staff can create a defect for a property' do
     within('.property-location') do
       expect(page).to have_content('Property')
       expect(page).to have_content(property.address)
+    end
+
+    within('.evidence') do
+      evidence = Evidence.first
+      expect(page).to have_content('Some uploaded evidence')
+      expect(page).to have_selector(:css, "a[href='#{evidence.supporting_file.url}']")
     end
   end
 

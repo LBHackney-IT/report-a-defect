@@ -2,6 +2,7 @@ class Staff::PropertyDefectsController < Staff::BaseController
   def new
     @property = Property.find(property_id)
     @defect = Defect.new
+    @defect.evidences.build
   end
 
   def create
@@ -11,6 +12,7 @@ class Staff::PropertyDefectsController < Staff::BaseController
       property_id: property_id,
       priority_id: priority_id,
       created_at: created_at,
+      user: current_user,
     }
     @defect = BuildDefect.new(defect_params: defect_params, options: options).call
 
@@ -94,7 +96,8 @@ class Staff::PropertyDefectsController < Staff::BaseController
       :contact_email_address,
       :contact_phone_number,
       :trade,
-      :status
+      :status,
+      evidences_attributes: %i[supporting_file description]
     )
   end
 
