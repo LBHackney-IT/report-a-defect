@@ -10,7 +10,7 @@
       = I18n.t('page_title.staff.reports.index')
       %span.govuk-caption-l= @presenter.date_range
 
-    = form_tag report_path, class: 'date-filter', method: :get do
+    = form_tag report_path, class: 'report-filter', method: :get do
       %h2.govuk-heading-m From
       = render partial: 'shared/defects/date_fields', locals: { name: 'from_date', date: @report_form.from_date }
       %h2.govuk-heading-m To
