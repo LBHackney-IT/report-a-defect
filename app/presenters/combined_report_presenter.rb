@@ -15,9 +15,8 @@ class CombinedReportPresenter < ReportPresenter
 
   def defects_by_priority(priority:)
     priorities = Priority.joins(:scheme)
-                         .where('schemes.id IN (?) AND priorities.name = ?',
-                                schemes.pluck(:id),
-                                priority)
+                         .where(schemes: { id: schemes.pluck(:id) })
+                         .where(priorities: { name: priority })
     defects.for_priorities(priorities)
   end
 
