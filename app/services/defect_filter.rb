@@ -1,16 +1,18 @@
 class DefectFilter
   attr_accessor :statuses,
                 :types,
-                :schemes
+                :schemes,
+                :escalations
 
-  def initialize(statuses: [], types: [], schemes: [])
+  def initialize(statuses: [], types: [], schemes: [], escalations: [])
     self.statuses = statuses
     self.types = types
     self.schemes = schemes
+    self.escalations = escalations
   end
 
   def scopes
-    scopes = [status_scope, type_scope, scheme_scope].compact
+    scopes = [status_scope, type_scope, scheme_scope, escalation_scope].compact
     return [:all] if scopes.empty?
     scopes
   end
@@ -34,6 +36,20 @@ class DefectFilter
     [:for_scheme, schemes]
   end
 
+  def escalation_scope
+    return escalated_permutations if manually_escalated?
+    return :overdue_and_due_soon if due_soon? && overdue?
+    return :overdue if overdue?
+    return :due_soon if due_soon?
+  end
+
+  def escalated_permutations
+    return if overdue? && due_soon?
+    return :flagged_and_overdue if overdue?
+    return :flagged_and_due_soon if due_soon?
+    :flagged
+  end
+
   def none?
     statuses.empty?
   end
@@ -52,5 +68,17 @@ class DefectFilter
 
   def communal?
     types.include?(:communal)
+  end
+
+  def manually_escalated?
+    escalations.include?(:manually_escalated)
+  end
+
+  def overdue?
+    escalations.include?(:overdue)
+  end
+
+  def due_soon?
+    escalations.include?(:due_soon)
   end
 end

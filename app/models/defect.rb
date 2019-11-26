@@ -52,6 +52,13 @@ class Defect < ApplicationRecord
 
   scope :for_trades, (->(trade_names) { where(trade: trade_names) })
 
+  scope :flagged, (-> { where(flagged: true) })
+  scope :overdue, (-> { open.where('target_completion_date < ?', Date.current) })
+  scope :due_soon, (-> { open.where('target_completion_date < ?', 3.days.since) })
+  scope :flagged_and_overdue, (-> { flagged.or(overdue) })
+  scope :overdue_and_due_soon, (-> { overdue.or(due_soon) })
+  scope :flagged_and_due_soon, (-> { flagged.or(due_soon) })
+
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
   belongs_to :priority

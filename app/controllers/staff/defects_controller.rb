@@ -1,9 +1,18 @@
 class Staff::DefectsController < Staff::BaseController
+  helper_method :open_status?,
+                :closed_status?,
+                :type_property?,
+                :type_communal?,
+                :escalated_manually?,
+                :escalated_overdue?,
+                :escalated_due_soon?,
+                :selected_scheme?
   def index
     @defect_filter = DefectFilter.new(
       statuses: statuses,
       types: types,
       schemes: scheme_ids,
+      escalations: escalations,
     )
     @defects = DefectFinder.new(order: :target_completion_date, filter: @defect_filter)
                            .call
@@ -17,15 +26,15 @@ class Staff::DefectsController < Staff::BaseController
           .map { |status| status.parameterize.underscore.to_sym }
   end
 
-  helper_method :open_status?
   def open_status?
     return false if statuses.blank?
+
     statuses.include?(:open)
   end
 
-  helper_method :closed_status?
   def closed_status?
     return false if statuses.blank?
+
     statuses.include?(:closed)
   end
 
@@ -39,33 +48,33 @@ class Staff::DefectsController < Staff::BaseController
           .map { |escalation| escalation.parameterize.underscore.to_sym }
   end
 
-  helper_method :type_property?
   def type_property?
     return false if types.blank?
+
     types.include?(:property)
   end
 
-  helper_method :type_communal?
   def type_communal?
     return false if types.blank?
+
     types.include?(:communal)
   end
 
-  helper_method :escalated_escalated?
-  def escalated_escalated?
+  def escalated_manually?
     return false if escalations.blank?
-    escalations.include?(:escalated)
+
+    escalations.include?(:manually_escalated)
   end
 
-  helper_method :escalated_overdue?
   def escalated_overdue?
     return false if escalations.blank?
+
     escalations.include?(:overdue)
   end
 
-  helper_method :escalated_due_soon?
   def escalated_due_soon?
     return false if escalations.blank?
+
     escalations.include?(:due_soon)
   end
 
@@ -73,9 +82,9 @@ class Staff::DefectsController < Staff::BaseController
     params.fetch(:scheme_ids, [])
   end
 
-  helper_method :selected_scheme?
   def selected_scheme?(scheme_id)
     return false if scheme_id.blank?
+
     scheme_ids.include?(scheme_id)
   end
 end
