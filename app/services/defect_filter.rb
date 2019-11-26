@@ -37,17 +37,27 @@ class DefectFilter
   end
 
   def escalation_scope
-    return escalated_permutations if manually_escalated?
-    return :overdue_and_due_soon if due_soon? && overdue?
-    return :overdue if overdue?
-    return :due_soon if due_soon?
+    if manually_escalated?
+      escalated_permutations
+    elsif due_soon? && overdue?
+      :overdue_and_due_soon
+    elsif overdue?
+      :overdue
+    elsif due_soon?
+      :due_soon
+    end
   end
 
   def escalated_permutations
     return if overdue? && due_soon?
-    return :flagged_and_overdue if overdue?
-    return :flagged_and_due_soon if due_soon?
-    :flagged
+
+    if overdue?
+      :flagged_and_overdue
+    elsif due_soon?
+      :flagged_and_due_soon
+    else
+      :flagged
+    end
   end
 
   def none?
