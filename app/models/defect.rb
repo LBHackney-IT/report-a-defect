@@ -214,6 +214,7 @@ class Defect < ApplicationRecord
       communal_area_location
       description
       access_information
+      flagged
     ]
   end
 end
