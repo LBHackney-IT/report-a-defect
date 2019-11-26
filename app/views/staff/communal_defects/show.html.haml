@@ -1,6 +1,12 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)
 
-= link_to "Back to #{I18n.t('page_title.staff.communal_areas.show', name: @defect.communal_area.name)}", communal_area_path(@defect.communal_area), class: 'govuk-back-link'
+.govuk-breadcrumbs
+  %ol.govuk-breadcrumbs__list
+    = breadcrumb_link_to('Home', dashboard_path)
+    = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @defect.communal_area.scheme.estate.name), estate_path(@defect.communal_area.scheme.estate))
+    = breadcrumb_link_to(I18n.t('page_title.staff.schemes.show', name: @defect.communal_area.scheme.name), estate_scheme_path(@defect.communal_area.scheme.estate, @defect.communal_area.scheme))
+    = breadcrumb_link_to(I18n.t('page_title.staff.communal_areas.show', name: @defect.communal_area.name), communal_area_path(@defect.communal_area))
+    = breadcrumb_current(@defect.reference_number)
 
 .govuk-grid-row
   .govuk-grid-column-full

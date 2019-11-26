@@ -118,7 +118,7 @@ RSpec.feature 'Staff can view a defect' do
 
     visit property_defect_path(defect.property, defect)
 
-    expect(page).to have_link("Back to #{defect.property.address}", href: property_path(defect.property))
+    expect(page).to have_link(defect.property.address, href: property_path(defect.property))
   end
 
   scenario 'can use breadcrumbs to navigate back to a communal_area' do
@@ -126,7 +126,7 @@ RSpec.feature 'Staff can view a defect' do
 
     visit communal_area_defect_path(defect.communal_area, defect)
 
-    expect(page).to have_link("Back to #{defect.communal_area.name}", href: communal_area_path(defect.communal_area))
+    expect(page).to have_link(defect.communal_area.name, href: communal_area_path(defect.communal_area))
   end
 
   scenario 'can see comments' do
