@@ -1,6 +1,7 @@
 class BuildDefect < DefectBuilder
   attr_accessor :communal_area_id,
-                :property_id
+                :property_id,
+                :user
 
   def initialize(defect_params:, options: {})
     self.defect_params = defect_params
@@ -8,6 +9,7 @@ class BuildDefect < DefectBuilder
     self.communal_area_id = options[:communal_area_id]
     self.priority_id = options[:priority_id]
     self.created_at = options[:created_at]
+    self.user = options[:user]
   end
 
   def call
@@ -18,7 +20,14 @@ class BuildDefect < DefectBuilder
     defect.set_target_completion_date
 
     set_created_at if created_at.present?
+    set_evidence_user
 
     defect
+  end
+
+  private
+
+  def set_evidence_user
+    defect.evidences.first.user = user if defect.evidences.present?
   end
 end

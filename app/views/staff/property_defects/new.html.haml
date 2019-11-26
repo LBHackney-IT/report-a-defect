@@ -53,6 +53,18 @@
 
         %span.govuk-label.govuk-label
           %label.required
+            Evidence
+            = f.fields_for :evidences do |evidence_form|
+              = evidence_form.input :supporting_file,
+                                    as: :file
+
+              = evidence_form.input :description,
+                        wrapper: 'textarea',
+                        as: :text,
+                        input_html: { rows: 1 }
+
+        %span.govuk-label.govuk-label
+          %label.required
             Forwarding
         = f.input :send_contractor_email,
                   as: :boolean,
