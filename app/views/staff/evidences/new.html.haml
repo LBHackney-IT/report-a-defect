@@ -10,13 +10,14 @@
 
     = simple_form_for [@defect, @evidence], html: { class: 'new_evidence' } do |f|
       .govuk-form-group
+        = f.input :description,
+                  wrapper: 'textarea',
+                  as: :text,
+                  input_html: { rows: 5 },
+                  required: true
+
         = f.input :supporting_file,
                   as: :file,
                   required: true
 
-        = f.input :description,
-                  wrapper: 'textarea',
-                  as: :text,
-                  input_html: { rows: 10 },
-                  required: true
       = f.button :submit, I18n.t('button.create.evidence')

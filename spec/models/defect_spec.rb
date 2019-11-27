@@ -296,7 +296,7 @@ RSpec.describe Defect, type: :model do
           communal_area_location
           description
           access_information
-          flagged
+          escalated_defects
         ]
       )
     end
