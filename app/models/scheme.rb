@@ -23,11 +23,7 @@ class Scheme < ApplicationRecord
   tracked owner: ->(controller, _) { controller.current_user if controller }
 
   def set_start_date(date)
-    date_parts = date.values_at(:day, :month, :year)
-    return unless date_parts.all?(&:present?)
-
-    day, month, year = date_parts.map(&:to_i)
-    date = Date.new(year, month, day)
-    self.start_date = date
+    date = BuildDate.new(date).call
+    self.start_date = date if date.present?
   end
 end
