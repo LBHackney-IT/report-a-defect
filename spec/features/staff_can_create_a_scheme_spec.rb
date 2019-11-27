@@ -21,6 +21,9 @@ RSpec.feature 'Staff can create a scheme' do
       fill_in 'scheme[contractor_email_address]', with: 'email@example.com'
       fill_in 'scheme[employer_agent_name]', with: 'Alex'
       fill_in 'scheme[employer_agent_email_address]', with: 'alex@example.com'
+      fill_in 'start_date[day]', with: '1'
+      fill_in 'start_date[month]', with: '2'
+      fill_in 'start_date[year]', with: '2019'
       click_on(I18n.t('button.create.scheme'))
     end
 
@@ -34,6 +37,7 @@ RSpec.feature 'Staff can create a scheme' do
       click_on(I18n.t('generic.link.show'))
     end
 
+    expect(page).to have_content('1 February 2019')
     expect(page).to have_content(scheme.contractor_email_address)
     expect(page).to have_content(scheme.employer_agent_name)
     expect(page).to have_content(scheme.employer_agent_email_address)

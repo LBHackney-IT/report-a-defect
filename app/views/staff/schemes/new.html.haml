@@ -17,4 +17,8 @@
         = f.input :contractor_email_address
         = f.input :employer_agent_name
         = f.input :employer_agent_email_address
+        .govuk-form-group
+          %label.govuk-label.govuk-label{for: 'start_date_day'}
+            Start date
+          = render partial: 'shared/defects/date_fields', locals: { name: 'start_date', date: @scheme.start_date }
       = f.button :submit, I18n.t('button.create.scheme')

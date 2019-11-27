@@ -30,20 +30,12 @@ class EditDefect < DefectBuilder
   private
 
   def set_target_completion_date
-    date_parts = target_completion_date.values_at(:day, :month, :year)
-    return unless date_parts.all?(&:present?)
-
-    day, month, year = date_parts.map(&:to_i)
-    date = Date.new(year, month, day)
-    defect.set_target_completion_date(date)
+    date = BuildDate.new(target_completion_date).call
+    defect.set_target_completion_date(date) if date.present?
   end
 
   def set_actual_completion_date
-    date_parts = actual_completion_date.values_at(:day, :month, :year)
-    return unless date_parts.all?(&:present?)
-
-    day, month, year = date_parts.map(&:to_i)
-    date = Date.new(year, month, day)
-    defect.set_actual_completion_date(date)
+    date = BuildDate.new(actual_completion_date).call
+    defect.set_actual_completion_date(date) if date.present?
   end
 end

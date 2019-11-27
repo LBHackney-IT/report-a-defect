@@ -4,6 +4,9 @@ class Staff::ReportController < Staff::BaseController
   def index
     filter = DefectFilter.new(statuses: %i[open closed])
     @defects = DefectFinder.new(filter: filter).call
+    @report_form = ReportForm.new(from_date: combined_from_date, to_date: to_date)
+    @scheme_list = Scheme.all.order(:name)
+    @presenter = CombinedReportPresenter.new(schemes: schemes, report_form: @report_form)
 
     respond_to do |format|
       format.html
@@ -27,8 +30,20 @@ class Staff::ReportController < Staff::BaseController
     params[:id]
   end
 
+  def schemes
+    @schemes || Scheme.find(scheme_ids)
+  end
+
+  def scheme_ids
+    @scheme_ids ||= params[:schemes] || Scheme.recent.pluck(:id)
+  end
+
   def from_date
     date_param(:from_date, scheme.created_at)
+  end
+
+  def combined_from_date
+    date_param(:from_date, Scheme::REPORT_MONTHS.months.ago)
   end
 
   def to_date

@@ -16,6 +16,7 @@ en:
     staff:
       dashboard: 'Dashboard'
       reports:
+        index: 'Combined report'
         scheme:
           show: 'Scheme report for %{name}'
       search:
@@ -111,6 +112,7 @@ en:
   button:
     report:
       download_all: Download all defect data
+      view_combined: View combined report
     create:
       estate: 'Create estate'
       scheme: 'Create scheme'

@@ -7,6 +7,7 @@ class Staff::SchemesController < Staff::BaseController
   def create
     @estate = Estate.find(estate_id)
     @scheme = Scheme.new(scheme_params)
+    @scheme.set_start_date(start_date)
     @scheme.estate = @estate
 
     if @scheme.valid?
@@ -29,6 +30,7 @@ class Staff::SchemesController < Staff::BaseController
   def update
     @scheme = Scheme.find(scheme_id)
     @scheme.assign_attributes(scheme_params)
+    @scheme.set_start_date(start_date)
 
     if @scheme.valid?
       @scheme.save
@@ -47,6 +49,10 @@ class Staff::SchemesController < Staff::BaseController
 
   def scheme_id
     params[:id]
+  end
+
+  def start_date
+    params.fetch(:start_date, {}).permit(:day, :month, :year)
   end
 
   def scheme_params

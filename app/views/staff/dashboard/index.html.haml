@@ -3,7 +3,7 @@
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-xl= I18n.t('page_title.staff.dashboard')
-    
+
     %h3.govuk-heading-m
       = I18n.t('page_content.dashboard.header.find_defect')
     %p.govuk-body-s
@@ -48,6 +48,7 @@
           %tr.govuk-table__row
             %td.govuk-table__cell= scheme.name
             %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), report_scheme_path(scheme), class: 'govuk-link')
+    = link_to(I18n.t('button.report.view_combined'), report_path, class: 'govuk-button')
 
   .govuk-grid-column-one-third
     %h2.govuk-heading-m

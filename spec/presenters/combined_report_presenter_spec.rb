@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe SchemeReportPresenter do
-  let(:scheme) { create(:scheme) }
-  let(:property) { create(:property, scheme: scheme) }
-  let(:priority) { create(:priority, scheme: scheme) }
+RSpec.describe CombinedReportPresenter do
+  let(:schemes) { create_list(:scheme, 2, start_date: 1.day.ago) }
+  let(:property) { create(:property, scheme: schemes.first) }
+  let(:priority) { create(:priority, scheme: schemes.first) }
 
   describe '#defects' do
-    it 'returns all defects for the given scheme' do
+    it 'returns all defects for the schemes' do
       defect = create(:property_defect, property: property, priority: priority)
-      result = described_class.new(scheme: defect.scheme).defects
+      result = described_class.new(schemes: schemes).defects
       expect(result).to include(defect)
     end
 
@@ -23,25 +23,12 @@ RSpec.describe SchemeReportPresenter do
         in_range_defect = create(:property_defect, created_at: Time.utc(2019, 2, 1), property: property, priority: priority)
         after_range_defect = create(:property_defect, created_at: Time.utc(2020, 1, 1), property: property, priority: priority)
 
-        result = described_class.new(scheme: scheme, report_form: report_form).defects
+        result = described_class.new(schemes: schemes, report_form: report_form).defects
 
         expect(result).to include(in_range_defect)
         expect(result).not_to include(before_range_defect)
         expect(result).not_to include(after_range_defect)
       end
-    end
-
-    it 'includes defects on an individual day' do
-      from_date = Date.new(2019, 1, 1)
-      to_date = Date.new(2019, 1, 1)
-      date_range = from_date..to_date
-      report_form = double(from_date: from_date, to_date: to_date, date_range: date_range)
-
-      in_range_defect = create(:property_defect, created_at: Time.utc(2019, 1, 1), property: property, priority: priority)
-
-      result = described_class.new(scheme: scheme, report_form: report_form).defects
-
-      expect(result).to include(in_range_defect)
     end
   end
 
@@ -53,7 +40,7 @@ RSpec.describe SchemeReportPresenter do
       to_date = Date.current
 
       report_form = double(from_date: from_date, to_date: to_date)
-      result = described_class.new(scheme: scheme, report_form: report_form).date_range
+      result = described_class.new(schemes: schemes, report_form: report_form).date_range
       expect(result).to eq('From 10 January 2019 to 16 July 2019')
 
       travel_back
@@ -61,11 +48,11 @@ RSpec.describe SchemeReportPresenter do
   end
 
   describe '#defects_by_status' do
-    it 'returns all defects that belong to the given scheme with the given status' do
+    it 'returns all defects with the given status' do
       outstanding_defect = create(:property_defect, property: property, priority: priority, status: :outstanding)
       closed_defect = create(:property_defect, property: property, priority: priority, status: :closed)
 
-      result = described_class.new(scheme: scheme).defects_by_status(text: 'outstanding')
+      result = described_class.new(schemes: schemes).defects_by_status(text: 'outstanding')
       expect(result).to include(outstanding_defect)
       expect(result).not_to include(closed_defect)
     end
@@ -76,7 +63,7 @@ RSpec.describe SchemeReportPresenter do
         create(:property_defect, property: property, priority: priority, status: :completed)
         create(:property_defect, property: property, priority: priority, status: :closed)
         create(:property_defect, property: property, priority: priority, status: :closed)
-        result = described_class.new(scheme: scheme).defects_by_status(text: 'closed')
+        result = described_class.new(schemes: schemes).defects_by_status(text: 'closed')
         expect(result.count).to eql(2)
       end
     end
@@ -87,7 +74,7 @@ RSpec.describe SchemeReportPresenter do
       electrical_defect = create(:property_defect, property: property, trade: 'Electrical')
       plumbing_defect = create(:property_defect, property: property, trade: 'Drainage')
 
-      result = described_class.new(scheme: scheme).defects_by_category(category: 'Plumbing')
+      result = described_class.new(schemes: schemes).defects_by_category(category: 'Plumbing')
 
       expect(result).to include(plumbing_defect)
       expect(result).not_to include(electrical_defect)
@@ -98,7 +85,7 @@ RSpec.describe SchemeReportPresenter do
     it 'returns the percentage of defects with this category ' do
       create(:property_defect, property: property, trade: 'Plumbing')
       create(:property_defect, property: property, trade: 'Electrical')
-      result = described_class.new(scheme: scheme).category_percentage(category: 'Electrical/Mechanical')
+      result = described_class.new(schemes: schemes).category_percentage(category: 'Electrical/Mechanical')
       expect(result).to eql('50.0%')
     end
 
@@ -107,27 +94,27 @@ RSpec.describe SchemeReportPresenter do
         create(:property_defect, property: property, trade: 'Electrical')
         create(:property_defect, property: property, trade: 'Plumbing')
         create(:property_defect, property: property, trade: 'Plumbing')
-        result = described_class.new(scheme: scheme).category_percentage(category: 'Electrical/Mechanical')
+        result = described_class.new(schemes: schemes).category_percentage(category: 'Electrical/Mechanical')
         expect(result).to eql('33.33%')
       end
     end
 
     context 'when there are no defects with that trade' do
       it 'returns 0.0%' do
-        result = described_class.new(scheme: scheme).category_percentage(category: 'Electrical/Mechanical')
+        result = described_class.new(schemes: schemes).category_percentage(category: 'Electrical/Mechanical')
         expect(result).to eql('0.0%')
       end
     end
   end
 
   describe '#defects_by_priority' do
-    let(:second_priority) { create(:priority, scheme: scheme) }
+    let(:second_priority) { create(:priority, scheme: schemes.last) }
 
     it 'returns a count for all defects for the given priority' do
       first_priority_defect = create(:property_defect, property: property, priority: priority)
       second_priority_defect = create(:property_defect, property: property, priority: second_priority)
 
-      result = described_class.new(scheme: scheme).defects_by_priority(priority: priority)
+      result = described_class.new(schemes: [schemes.first]).defects_by_priority(priority: priority.name)
 
       expect(result).to include(first_priority_defect)
       expect(result).not_to include(second_priority_defect)
@@ -150,7 +137,7 @@ RSpec.describe SchemeReportPresenter do
                                                     })
 
       create(:property_defect, property: property, priority: priority)
-      result = described_class.new(scheme: scheme).priority_percentage(priority: priority)
+      result = described_class.new(schemes: schemes).priority_percentage(priority: priority.name)
       expect(result).to eql('50.0%')
 
       travel_back
@@ -158,7 +145,7 @@ RSpec.describe SchemeReportPresenter do
 
     context 'when there are no defects with that priority' do
       it 'returns 0.0%' do
-        result = described_class.new(scheme: scheme).priority_percentage(priority: priority)
+        result = described_class.new(schemes: schemes).priority_percentage(priority: priority)
         expect(result).to eql('0.0%')
       end
     end
@@ -181,7 +168,7 @@ RSpec.describe SchemeReportPresenter do
                                        priority: priority,
                                        target_completion_date: Date.new(2019, 5, 22))
 
-      result = described_class.new(scheme: scheme).due_defects_by_priority(priority: priority)
+      result = described_class.new(schemes: schemes).due_defects_by_priority(priority: priority.name)
 
       expect(result).to include(due_tomorrow_priority_defect)
       expect(result).to include(due_today_priority_defect)
@@ -208,7 +195,7 @@ RSpec.describe SchemeReportPresenter do
                                        priority: priority,
                                        target_completion_date: Date.new(2019, 5, 22))
 
-      result = described_class.new(scheme: scheme).overdue_defects_by_priority(priority: priority)
+      result = described_class.new(schemes: schemes).overdue_defects_by_priority(priority: priority.name)
 
       expect(result).not_to include(due_tomorrow_priority_defect)
       expect(result).not_to include(due_today_priority_defect)
@@ -276,7 +263,7 @@ RSpec.describe SchemeReportPresenter do
 
       travel_to Time.zone.local(2019, 5, 23, 10, 20, 10)
 
-      result = described_class.new(scheme: scheme).defects_completed_on_time(priority: priority)
+      result = described_class.new(schemes: schemes).defects_completed_on_time(priority: priority.name)
 
       expect(result).to include(completed_early_defect)
       expect(result).to include(completed_on_time_defect)
@@ -321,7 +308,7 @@ RSpec.describe SchemeReportPresenter do
 
       travel_to Time.zone.local(2019, 5, 23, 10, 20, 10)
 
-      result = described_class.new(scheme: scheme).defects_completed_on_time(priority: priority)
+      result = described_class.new(schemes: schemes).defects_completed_on_time(priority: priority.name)
 
       expect(result).to include(completed_defect)
       expect(result).not_to include(rejected_defect)
@@ -339,9 +326,24 @@ RSpec.describe SchemeReportPresenter do
         completed_on_time_defect.completed!
         completed_on_time_defect.outstanding!
 
-        result = described_class.new(scheme: scheme).defects_completed_on_time(priority: priority)
+        result = described_class.new(schemes: schemes).defects_completed_on_time(priority: priority)
 
         expect(result).not_to include(completed_on_time_defect)
+      end
+    end
+  end
+
+  describe '#priorities_with_defects' do
+    context 'when one priority has no defects' do
+      it 'ignores that priority' do
+        p1 = create(:priority, name: 'P1', scheme: property.scheme)
+        p2 = create(:priority, name: 'P2', scheme: property.scheme)
+        _defect = create(:property_defect, property: property, priority: p1)
+
+        result = described_class.new(schemes: schemes).priorities_with_defects
+
+        expect(result).to include(p1.name)
+        expect(result).not_to include(p2.name)
       end
     end
   end

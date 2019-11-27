@@ -1,27 +1,29 @@
 require 'rails_helper'
 
-RSpec.feature 'Staff can view a report for a scheme' do
+RSpec.feature 'Staff can view a combined report for all schemes' do
   before(:each) do
     stub_authenticated_session
   end
 
-  let(:scheme) { create(:scheme, created_at: 5.days.ago) }
+  let(:scheme) { create(:scheme, created_at: 5.days.ago, start_date: 5.days.ago) }
   let(:priority) { create(:priority, scheme: scheme) }
   let(:property) { create(:property, scheme: scheme) }
   let(:communal_area) { create(:communal_area, scheme: scheme) }
 
-  scenario 'summary information for all defects belonging to the scheme' do
+  let(:second_scheme) { create(:scheme, created_at: 5.days.ago, start_date: 5.days.ago) }
+  let(:second_priority) { create(:priority, scheme: second_scheme) }
+  let(:second_property) { create(:property, scheme: second_scheme) }
+
+  scenario 'summary information for all defects belonging to the schemes' do
     create_list(:property_defect, 1, property: property, priority: priority)
     create_list(:communal_defect, 2, communal_area: communal_area, priority: priority)
 
     visit dashboard_path
 
-    within('.scheme-reports') do
-      click_on(I18n.t('generic.link.show'))
-    end
+    click_on(I18n.t('button.report.view_combined'))
 
-    expect(page).to have_content(I18n.t('page_title.staff.reports.scheme.show', name: scheme.name))
-    expect(page).to have_content("From #{scheme.created_at.to_date} to #{Date.current}")
+    expect(page).to have_content(I18n.t('page_title.staff.reports.index'))
+    expect(page).to have_content("From #{14.months.ago.to_date} to #{Date.current}")
 
     within('.summary') do
       %w[Title Property Communal Total].each do |column_header|
@@ -36,14 +38,14 @@ RSpec.feature 'Staff can view a report for a scheme' do
     end
   end
 
-  scenario 'defect information by status belonging to the scheme' do
+  scenario 'defect information by status' do
     outstanding_property_defects = create_list(:property_defect, 1, property: property, status: :outstanding)
     outstanding_communal_defects = create_list(:communal_defect, 2, communal_area: communal_area, status: :outstanding)
 
     closed_property_defects = create_list(:property_defect, 3, property: property, status: :closed)
     closed_communal_defects = create_list(:communal_defect, 4, communal_area: communal_area, status: :closed)
 
-    visit report_scheme_path(scheme)
+    visit report_path
 
     within('.statuses') do
       %w[Name Property Communal Total].each do |header|
@@ -64,14 +66,14 @@ RSpec.feature 'Staff can view a report for a scheme' do
     end
   end
 
-  scenario 'defect information by trade belonging to the scheme' do
+  scenario 'defect information by trade' do
     electrical_property_defects = create_list(:property_defect, 1, property: property, trade: 'Electrical')
     electrical_communal_defects = create_list(:communal_defect, 2, communal_area: communal_area, trade: 'Electrical')
 
     plumbing_property_defects = create_list(:property_defect, 3, property: property, trade: 'Plumbing')
     plumbing_communal_defects = create_list(:communal_defect, 4, communal_area: communal_area, trade: 'Plumbing')
 
-    visit report_scheme_path(scheme)
+    visit report_path
 
     within('.trades') do
       %w[Name Percentage Total].each do |header|
@@ -90,19 +92,13 @@ RSpec.feature 'Staff can view a report for a scheme' do
     end
   end
 
-  scenario 'defect information by scheme priority' do
+  scenario 'defect information by priority' do
     travel_to Time.zone.parse('2019-05-23')
 
     completed_on_time_priority = create(:property_defect,
                                         property: property,
                                         priority: priority,
-                                        target_completion_date: Date.new(2019, 5, 24),
-                                        status: :completed)
-    completed_on_time_priority.activities.create!(key: 'defect.update',
-                                                  parameters: {
-                                                    changes: { status: ['', 'completed'] },
-                                                  })
-
+                                        target_completion_date: Date.new(2019, 5, 24))
     _due_priority = create(:property_defect,
                            property: property,
                            priority: priority,
@@ -113,16 +109,17 @@ RSpec.feature 'Staff can view a report for a scheme' do
                                       priority: priority,
                                       target_completion_date: Date.new(2019, 5, 22))
 
-    visit report_scheme_path(scheme)
+    completed_on_time_priority.completed!
+
+    visit report_path
 
     within('.priorities') do
-      %w[Code Days Total Due Overdue Completed on time].each do |header|
+      %w[Code Total Due Overdue Completed on time].each do |header|
         expect(page).to have_content(header)
       end
 
       scheme.priorities.each do |priority|
         expect(page).to have_content(priority.name)
-        expect(page).to have_content(priority.days)
       end
 
       expect(page).to have_content('25.0%')
@@ -157,7 +154,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
       completed_later_defect,
     ].each(&:completed!)
 
-    visit report_scheme_path(scheme)
+    visit report_path
 
     within('.priorities') do
       expect(page).to have_content('2')
@@ -166,7 +163,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
     travel_back
   end
 
-  scenario 'filter defects' do
+  scenario 'filter defects by date' do
     travel_to Time.zone.parse('2019-05-25')
 
     create(:property_defect, created_at: Time.utc(2019, 5, 23), property: property)
@@ -174,13 +171,13 @@ RSpec.feature 'Staff can view a report for a scheme' do
     create(:communal_defect, created_at: Time.utc(2019, 5, 24), communal_area: communal_area)
     create(:property_defect, created_at: Time.utc(2019, 5, 25), property: property)
 
-    visit report_scheme_path(scheme)
+    visit report_path
 
     within('.summary') do
       expect(page).to have_content('Total defects 3 1 4')
     end
 
-    within('.date-filter') do
+    within('.report-filter') do
       fill_in 'from_date[day]', with: '23'
       fill_in 'from_date[month]', with: '5'
       fill_in 'from_date[year]', with: '2019'
@@ -189,10 +186,35 @@ RSpec.feature 'Staff can view a report for a scheme' do
       fill_in 'to_date[year]', with: '2019'
     end
 
-    click_button 'Apply dates'
+    click_button 'Apply filters'
 
     within('.summary') do
       expect(page).to have_content('Total defects 2 1 3')
+    end
+
+    travel_back
+  end
+
+  scenario 'filter defects by scheme' do
+    travel_to Time.zone.parse('2019-05-25')
+
+    create(:property_defect, created_at: Time.utc(2019, 5, 23), property: second_property)
+    create(:property_defect, created_at: Time.utc(2019, 5, 23), property: property)
+
+    visit report_path
+
+    within('.summary') do
+      expect(page).to have_content('Total defects 2 0 2')
+    end
+
+    within('.report-filter') do
+      uncheck second_scheme.id
+    end
+
+    click_button 'Apply filters'
+
+    within('.summary') do
+      expect(page).to have_content('Total defects 1 0 1')
     end
 
     travel_back
