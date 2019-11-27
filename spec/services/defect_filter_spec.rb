@@ -92,5 +92,70 @@ RSpec.describe DefectFilter do
         end
       end
     end
+
+    describe 'escalations' do
+      context 'when the escalation is manual' do
+        it 'returns an array with :flagged' do
+          result = described_class.new(escalations: %i[manually_escalated])
+          expect(result.scopes).to eq([:flagged])
+        end
+      end
+
+      context 'when the escalation is overdue' do
+        it 'returns an array with :overdue' do
+          result = described_class.new(escalations: %i[overdue])
+          expect(result.scopes).to eq([:overdue])
+        end
+      end
+
+      context 'when the escalation is due soon' do
+        it 'returns an array with :due_soon' do
+          result = described_class.new(escalations: %i[due_soon])
+          expect(result.scopes).to eq([:due_soon])
+        end
+      end
+
+      context 'when the escalation is overdue and manual' do
+        it 'returns an array with :flagged_and_overdue' do
+          result = described_class.new(escalations: %i[overdue manually_escalated])
+          expect(result.scopes).to include(:flagged_and_overdue)
+        end
+      end
+
+      context 'when the escalation is overdue and due soon' do
+        it 'returns an array with :overdue_and_due_soon' do
+          result = described_class.new(escalations: %i[overdue due_soon])
+          expect(result.scopes).to include(:overdue_and_due_soon)
+        end
+      end
+
+      context 'when the escalation is manual and due soon' do
+        it 'returns an array with :overdue_and_due_soon' do
+          result = described_class.new(escalations: %i[manually_escalated due_soon])
+          expect(result.scopes).to include(:flagged_and_due_soon)
+        end
+      end
+
+      context 'when the escalation is manual, due soon, and overdue' do
+        it 'returns an array with :all' do
+          result = described_class.new(escalations: %i[manually_escalated due_soon overdue])
+          expect(result.scopes).to include(:all)
+        end
+      end
+
+      context 'when the escalation is unknown' do
+        it 'returns an array with :all' do
+          result = described_class.new(escalations: %i[foo])
+          expect(result.scopes).to eq([:all])
+        end
+      end
+
+      context 'when there are no escalations' do
+        it 'returns an array with :all' do
+          result = described_class.new(escalations: %i[])
+          expect(result.scopes).to eq([:all])
+        end
+      end
+    end
   end
 end

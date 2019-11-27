@@ -244,7 +244,8 @@ RSpec.describe Defect, type: :model do
              description: 'a long description',
              access_information: 'The key is under the garden pot',
              created_at: Time.utc(2018, 10, 1, 12, 13, 55),
-             added_at: Time.utc(2018, 10, 1, 11, 13, 55))
+             added_at: Time.utc(2018, 10, 1, 11, 13, 55),
+             flagged: true)
     end
 
     let(:communal_area) { create(:communal_area, name: 'Pine Creek', location: '1-100 Hackney Street', scheme: scheme) }
@@ -295,6 +296,7 @@ RSpec.describe Defect, type: :model do
           communal_area_location
           description
           access_information
+          escalated_defects
         ]
       )
     end

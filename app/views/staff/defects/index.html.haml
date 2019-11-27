@@ -39,6 +39,19 @@
                 .govuk-checkboxes__item
                   = check_box_tag 'scheme_ids[]', scheme.id, selected_scheme?(scheme.id), id: scheme.id, class: 'govuk-checkboxes__input'
                   = label_tag 'scheme_ids[]', scheme.name, for: scheme.id, class: 'govuk-label govuk-checkboxes__label'
+          %fieldset.govuk-fieldset.lbh-fieldset
+            = label_tag 'escalations', 'Escalations', class: 'govuk-label govuk-!-font-weight-bold'
+            .govuk-checkboxes.checkbox-group.govuk-checkboxes--small
+              .govuk-checkboxes__item
+                = check_box_tag 'escalations[]', 'Manually escalated', escalated_manually?, id: 'escalations_escalated', class: 'govuk-checkboxes__input'
+                = label_tag 'escalations[]', 'Manually escalated', for: 'escalations_escalated', class: 'govuk-label govuk-checkboxes__label'
+              .govuk-checkboxes__item
+                = check_box_tag 'escalations[]', 'Overdue', escalated_overdue?, id: 'escalations_overdue', class: 'govuk-checkboxes__input'
+                = label_tag 'escalations[]', 'Overdue', for: 'escalations_overdue', class: 'govuk-label govuk-checkboxes__label'
+              .govuk-checkboxes__item
+                = check_box_tag 'escalations[]', 'Due soon', escalated_due_soon?, id: 'escalations_due_soon', class: 'govuk-checkboxes__input'
+                = label_tag 'escalations[]', 'Due soon', for: 'escalations_due_soon', class: 'govuk-label govuk-checkboxes__label'
+
         = submit_tag I18n.t('generic.button.filter'), class: 'govuk-button mb0'
 
   %article{role: 'main'}
