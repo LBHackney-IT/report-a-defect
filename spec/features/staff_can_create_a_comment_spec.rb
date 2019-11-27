@@ -65,7 +65,7 @@ RSpec.feature 'Staff can create a comment' do
     end
   end
 
-  context 'when the defect is for a communal communal_area' do
+  context 'when the defect is for a communal area' do
     let!(:communal_area) { create(:communal_area, name: 'Hackney Street') }
     let!(:defect) { create(:communal_defect, communal_area: communal_area) }
 

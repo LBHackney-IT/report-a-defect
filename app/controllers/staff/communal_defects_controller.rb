@@ -2,6 +2,7 @@ class Staff::CommunalDefectsController < Staff::BaseController
   def new
     @communal_area = CommunalArea.find(communal_area_id)
     @defect = Defect.new
+    @defect.evidences.build
   end
 
   def create
@@ -11,6 +12,7 @@ class Staff::CommunalDefectsController < Staff::BaseController
       communal_area_id: communal_area_id,
       priority_id: priority_id,
       created_at: created_at,
+      user: current_user,
     }
     @defect = BuildDefect.new(defect_params: defect_params, options: options).call
 
@@ -95,7 +97,8 @@ class Staff::CommunalDefectsController < Staff::BaseController
       :contact_email_address,
       :contact_phone_number,
       :trade,
-      :status
+      :status,
+      evidences_attributes: %i[supporting_file description]
     )
   end
 

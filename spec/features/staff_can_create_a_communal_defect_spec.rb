@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Staff can create a defect for a communal_area' do
+RSpec.feature 'Staff can create a defect for a communal_area', :carrierwave do
   before(:each) do
     stub_authenticated_session
   end
@@ -42,6 +42,8 @@ RSpec.feature 'Staff can create a defect for a communal_area' do
       fill_in 'defect[contact_email_address]', with: 'email@example.com'
       fill_in 'defect[contact_phone_number]', with: '07123456789'
       select 'Electrical', from: 'defect[trade]'
+      attach_file 'defect[evidences_attributes][0][supporting_file]', Rails.root.join('spec', 'fixtures', 'evidence.png')
+      fill_in 'defect[evidences_attributes][0][description]', with: 'Some uploaded evidence'
       choose priority.name
       click_on(I18n.t('button.create.communal_defect'))
     end
@@ -64,6 +66,12 @@ RSpec.feature 'Staff can create a defect for a communal_area' do
     within('.communal-location') do
       expect(page).to have_content('Communal Area')
       expect(page).to have_content('33-50 Hackney Street, communal entrance')
+    end
+
+    within('.evidence') do
+      evidence = Evidence.first
+      expect(page).to have_content('Some uploaded evidence')
+      expect(page).to have_selector(:css, "a[href='#{evidence.supporting_file.url}']")
     end
   end
 

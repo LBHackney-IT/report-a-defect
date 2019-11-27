@@ -1,0 +1,22 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.evidences.create')
+
+= link_to "Back to #{I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)}", defect_path_for(defect: @defect), class: 'govuk-back-link'
+
+.govuk-grid-row
+  .govuk-grid-column-two-thirds
+    %h1.govuk-heading-xl
+      = I18n.t('page_title.staff.evidences.create')
+      %span.govuk-caption-l= 'Step 1 of 1'
+
+    = simple_form_for [@defect, @evidence], html: { class: 'new_evidence' } do |f|
+      .govuk-form-group
+        = f.input :supporting_file,
+                  as: :file,
+                  required: true
+
+        = f.input :description,
+                  wrapper: 'textarea',
+                  as: :text,
+                  input_html: { rows: 10 },
+                  required: true
+      = f.button :submit, I18n.t('button.create.evidence')

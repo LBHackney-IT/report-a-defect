@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_19_114751) do
+ActiveRecord::Schema.define(version: 2019_11_20_160534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -86,6 +86,17 @@ ActiveRecord::Schema.define(version: 2019_11_19_114751) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "evidences", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "description"
+    t.uuid "defect_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id"
+    t.string "supporting_file"
+    t.index ["defect_id"], name: "index_evidences_on_defect_id"
+    t.index ["user_id"], name: "index_evidences_on_user_id"
+  end
+
   create_table "priorities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.uuid "scheme_id"
@@ -130,6 +141,8 @@ ActiveRecord::Schema.define(version: 2019_11_19_114751) do
   add_foreign_key "communal_areas", "schemes"
   add_foreign_key "defects", "priorities"
   add_foreign_key "defects", "properties"
+  add_foreign_key "evidences", "defects"
+  add_foreign_key "evidences", "users"
   add_foreign_key "priorities", "schemes"
   add_foreign_key "properties", "schemes"
   add_foreign_key "schemes", "estates"

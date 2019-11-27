@@ -56,6 +56,9 @@ class Defect < ApplicationRecord
   belongs_to :communal_area, optional: true
   belongs_to :priority
   has_many :comments, dependent: :destroy
+  has_many :evidences, dependent: :destroy
+
+  accepts_nested_attributes_for :evidences, reject_if: :all_blank
 
   def scheme
     return communal_area&.scheme if communal_area

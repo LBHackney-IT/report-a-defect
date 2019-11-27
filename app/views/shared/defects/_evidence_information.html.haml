@@ -1,0 +1,21 @@
+%h3.govuk-heading-s.section-heading--s
+  Evidence
+
+- if evidences.empty?
+  %p Add the evidence by clicking the 'Create evidence' link.
+- else
+  %ul.govuk-list.media-list
+    - evidences.each do |evidence|
+      %li.lbh-comment
+        .evidence-body.desciption
+          %p.govuk-body= evidence.description
+        .media-body
+          = link_to 'View supporting file', evidence.supporting_file.url, target: '_blank'
+          %p.govuk-body.media-heading
+            %span.visually-hidden
+              Evidence added by
+            %span{class: 'author govuk-body-s govuk-!-font-weight-bold'}
+              #{evidence.user.name}
+            %span.visually-hidden
+              posted
+            %time.govuk-body-s= format_time_in_sentence(evidence.created_at)
