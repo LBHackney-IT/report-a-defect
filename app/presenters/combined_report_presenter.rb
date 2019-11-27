@@ -1,6 +1,7 @@
 class CombinedReportPresenter < ReportPresenter
   def initialize(schemes: [],
-                 report_form: ReportForm.new(from_date: 14.months.ago, to_date: Date.current))
+                 report_form: ReportForm.new(from_date: Scheme::REPORT_MONTHS.months.ago,
+                                             to_date: Date.current))
     self.schemes = schemes
     self.report_form = report_form
   end

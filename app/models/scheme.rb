@@ -1,4 +1,6 @@
 class Scheme < ApplicationRecord
+  REPORT_MONTHS = 14
+
   has_many :priorities, dependent: :destroy
   has_many :communal_areas, dependent: :destroy
   has_many :properties, dependent: :destroy
@@ -15,7 +17,7 @@ class Scheme < ApplicationRecord
             format: { with: URI::MailTo::EMAIL_REGEXP },
             allow_blank: true
 
-  scope :within_14_months, (-> { where(start_date: [14.months.ago..Time.zone.now]) })
+  scope :recent, (-> { where(start_date: [REPORT_MONTHS.months.ago..Time.zone.now]) })
 
   include PublicActivity::Model
   tracked owner: ->(controller, _) { controller.current_user if controller }

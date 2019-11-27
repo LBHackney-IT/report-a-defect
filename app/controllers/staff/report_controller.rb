@@ -35,7 +35,7 @@ class Staff::ReportController < Staff::BaseController
   end
 
   def scheme_ids
-    @scheme_ids ||= params[:schemes] || Scheme.within_14_months.pluck(:id)
+    @scheme_ids ||= params[:schemes] || Scheme.recent.pluck(:id)
   end
 
   def from_date
@@ -43,7 +43,7 @@ class Staff::ReportController < Staff::BaseController
   end
 
   def combined_from_date
-    date_param(:from_date, 14.months.ago)
+    date_param(:from_date, Scheme::REPORT_MONTHS.months.ago)
   end
 
   def to_date
