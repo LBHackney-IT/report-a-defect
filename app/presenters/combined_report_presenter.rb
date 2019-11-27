@@ -20,4 +20,8 @@ class CombinedReportPresenter < ReportPresenter
   def priorities
     Priority.group(:name).pluck(:name).sort
   end
+
+  def priorities_with_defects
+    priorities.select { |priority| defects_by_priority(priority: priority).any? }
+  end
 end

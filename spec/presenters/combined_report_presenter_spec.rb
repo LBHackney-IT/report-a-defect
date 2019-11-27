@@ -332,4 +332,19 @@ RSpec.describe CombinedReportPresenter do
       end
     end
   end
+
+  describe '#priorities_with_defects' do
+    context 'when one priority has no defects' do
+      it 'ignores that priority' do
+        p1 = create(:priority, name: 'P1', scheme: property.scheme)
+        p2 = create(:priority, name: 'P2', scheme: property.scheme)
+        _defect = create(:property_defect, property: property, priority: p1)
+
+        result = described_class.new(schemes: schemes).priorities_with_defects
+
+        expect(result).to include(p1.name)
+        expect(result).not_to include(p2.name)
+      end
+    end
+  end
 end
