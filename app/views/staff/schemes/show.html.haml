@@ -9,6 +9,7 @@
 .govuk-grid-row
   .govuk-grid-column-full
     %h1.govuk-heading-l= I18n.t('page_title.staff.schemes.show', name: @scheme.name)
+    %p.scheme_information.scheme_start_date= "Start date: #{@scheme.start_date}" if @scheme.start_date.present?
     %p.scheme_information.scheme_name_and_estate
       #{I18n.t('page_title.staff.schemes.show', name: @scheme.name)} belongs to #{I18n.t('page_title.staff.estates.show', name: @scheme.estate.name)}
 

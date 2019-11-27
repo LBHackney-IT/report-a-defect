@@ -1,0 +1,32 @@
+- content_for :page_title_prefix, I18n.t('page_title.staff.reports.index')
+
+.govuk-breadcrumbs
+  %ol.govuk-breadcrumbs__list
+    = breadcrumb_link_to('Home', dashboard_path)
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    %h1.govuk-heading-l
+      = I18n.t('page_title.staff.reports.index')
+      %span.govuk-caption-l= @presenter.date_range
+
+    = form_tag report_path, class: 'report-filter', method: :get do
+      %h2.govuk-heading-m From
+      = render partial: 'shared/defects/date_fields', locals: { name: 'from_date', date: @report_form.from_date }
+      %h2.govuk-heading-m To
+      = render partial: 'shared/defects/date_fields', locals: { name: 'to_date', date: @report_form.to_date }
+      %h2.govuk-heading-m For schemes
+      .govuk-checkboxes.checkbox-group.govuk-checkboxes--small
+      - @scheme_list.each do |scheme|
+        .govuk-checkboxes__item
+          = check_box_tag 'schemes[]', scheme.id, @scheme_ids&.include?(scheme.id), id: scheme.id, class: 'govuk-checkboxes__input'
+          = label_tag 'schemes[]', scheme.name, for: scheme.id, class: 'govuk-label govuk-checkboxes__label'
+      %br
+      = submit_tag 'Apply filters', class: 'govuk-button mb0'
+
+.govuk-grid-row
+  .govuk-grid-column-full
+    = render partial: 'summary', locals: { presenter: @presenter }
+    = render partial: 'statuses', locals: { presenter: @presenter }
+    = render partial: 'trades', locals: { presenter: @presenter }
+    = render partial: 'combined_priorities', locals: { presenter: @presenter }
