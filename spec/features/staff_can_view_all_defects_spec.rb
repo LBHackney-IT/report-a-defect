@@ -206,8 +206,8 @@ RSpec.feature 'Staff can view all defects' do
 
   scenario 'defects can be filtered by due soon escalations' do
     travel_to Time.zone.parse('2019-11-26') do
-      on_time_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 29), status: :outstanding)
-      due_soon_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 25), status: :outstanding)
+      on_time_defect = create(:property_defect, target_completion_date: Date.new(2019, 12, 5), status: :outstanding)
+      due_soon_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 27), status: :outstanding)
 
       visit dashboard_path
 
