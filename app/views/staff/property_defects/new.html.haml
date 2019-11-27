@@ -55,13 +55,12 @@
           %label.required
             Evidence
             = f.fields_for :evidences do |evidence_form|
-              = evidence_form.input :supporting_file,
-                                    as: :file
-
               = evidence_form.input :description,
                         wrapper: 'textarea',
                         as: :text,
                         input_html: { rows: 1 }
+              = evidence_form.input :supporting_file,
+                                    as: :file
 
         %span.govuk-label.govuk-label
           %label.required
