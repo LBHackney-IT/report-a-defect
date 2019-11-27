@@ -162,6 +162,70 @@ RSpec.feature 'Staff can view all defects' do
     end
   end
 
+  scenario 'defects can be filtered by manual escalations' do
+    flagged_defect = DefectPresenter.new(create(:property_defect, flagged: true))
+    unflagged_defect = DefectPresenter.new(create(:property_defect, flagged: false))
+
+    visit dashboard_path
+
+    click_on('View all defects')
+
+    within('.filter-defects') do
+      uncheck_all_filters
+      check 'Manually escalated', name: 'escalations[]'
+      click_on(I18n.t('generic.button.filter'))
+    end
+
+    within '.defects' do
+      expect(page).to have_content(flagged_defect.reference_number)
+      expect(page).not_to have_content(unflagged_defect.reference_number)
+    end
+  end
+
+  scenario 'defects can be filtered by overdue escalations' do
+    travel_to Time.zone.parse('2019-11-26') do
+      on_time_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 29), status: :outstanding)
+      overdue_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 20), status: :outstanding)
+
+      visit dashboard_path
+
+      click_on('View all defects')
+
+      within('.filter-defects') do
+        uncheck_all_filters
+        check 'Overdue', name: 'escalations[]'
+        click_on(I18n.t('generic.button.filter'))
+      end
+
+      within '.defects' do
+        expect(page).to have_content(overdue_defect.reference_number)
+        expect(page).not_to have_content(on_time_defect.reference_number)
+      end
+    end
+  end
+
+  scenario 'defects can be filtered by due soon escalations' do
+    travel_to Time.zone.parse('2019-11-26') do
+      on_time_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 29), status: :outstanding)
+      due_soon_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 25), status: :outstanding)
+
+      visit dashboard_path
+
+      click_on('View all defects')
+
+      within('.filter-defects') do
+        uncheck_all_filters
+        check 'Due soon', name: 'escalations[]'
+        click_on(I18n.t('generic.button.filter'))
+      end
+
+      within '.defects' do
+        expect(page).to have_content(due_soon_defect.reference_number)
+        expect(page).not_to have_content(on_time_defect.reference_number)
+      end
+    end
+  end
+
   def uncheck_all_filters
     all('input[type=checkbox]').each do |checkbox|
       checkbox.click if checkbox.checked?
