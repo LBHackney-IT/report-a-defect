@@ -16,7 +16,8 @@ RSpec.describe CombinedReportPresenter do
       it 'returns on defects created within that range' do
         from_date = Date.new(2019, 1, 1)
         to_date = Date.new(2019, 12, 1)
-        report_form = double(from_date: from_date, to_date: to_date)
+        date_range = from_date..to_date
+        report_form = double(from_date: from_date, to_date: to_date, date_range: date_range)
 
         before_range_defect = create(:property_defect, created_at: Time.utc(2018, 1, 1), property: property, priority: priority)
         in_range_defect = create(:property_defect, created_at: Time.utc(2019, 2, 1), property: property, priority: priority)

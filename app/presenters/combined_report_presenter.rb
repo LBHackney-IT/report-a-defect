@@ -7,10 +7,7 @@ class CombinedReportPresenter < ReportPresenter
 
   def defects
     @defects ||= Defect.for_scheme(schemes.pluck(:id))
-                       .where(
-                         'created_at >= ? and created_at <= ?',
-                         report_form.from_date.beginning_of_day, report_form.to_date.end_of_day
-                       )
+                       .where(created_at: report_form.date_range)
   end
 
   def defects_by_priority(priority:)
