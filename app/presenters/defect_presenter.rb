@@ -42,6 +42,10 @@ class DefectPresenter < SimpleDelegator
     trade
   end
 
+  def flagged_tag
+    'flagged' if flagged?
+  end
+
   # rubocop:disable Metrics/AbcSize
   def to_row
     [
@@ -64,6 +68,7 @@ class DefectPresenter < SimpleDelegator
       communal_area&.location,
       description,
       access_information,
+      flagged_tag,
     ]
   end
   # rubocop:enable Metrics/AbcSize

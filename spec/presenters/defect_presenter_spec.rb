@@ -153,6 +153,7 @@ RSpec.describe DefectPresenter do
             nil,
             defect.description,
             defect.access_information,
+            nil,
           ]
         )
       end
@@ -160,7 +161,7 @@ RSpec.describe DefectPresenter do
 
     context 'when the defect is for a communal area' do
       it 'returns an array of values as they should appear in a CSV row' do
-        defect = described_class.new(create(:communal_defect, :completed))
+        defect = described_class.new(create(:communal_defect, :completed, flagged: true))
         result = defect.to_row
         expect(result).to eq(
           [
@@ -183,6 +184,7 @@ RSpec.describe DefectPresenter do
             defect.communal_area.location,
             defect.description,
             defect.access_information,
+            'flagged',
           ]
         )
       end
