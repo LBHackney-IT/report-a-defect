@@ -3,12 +3,13 @@
 = I18n.t("email.defects.#{@template}.heading")
 \
 - @defects.each do |defect|
-  = "#{link_to defect.reference_number, defect_url(defect)},
+  = "#{defect.reference_number},
      #{defect.title},
      #{defect.trade},
      #{I18n.t('email.defects.shared.table.created_at', date: defect.created_at)},
      #{I18n.t('email.defects.shared.table.target_completion_date', date: defect.target_completion_date)},
      #{I18n.t('email.defects.shared.table.status', status: defect.status)},
      #{I18n.t('email.defects.shared.table.priority', priority: defect.priority.name)}"
+  = defect_url(defect)
   \---
   \

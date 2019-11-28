@@ -15,7 +15,7 @@ RSpec.describe DefectsMailer, type: :mailer do
       mail = DefectsMailer.notify('due_soon_and_overdue', defects.pluck(:id))
       body_lines = mail.body.raw_source.lines
       first_defect_line = body_lines[4].strip
-      second_defect_line = body_lines[7].strip
+      second_defect_line = body_lines[8].strip
 
       expect(mail.subject).to eq(I18n.t('email.defects.due_soon_and_overdue.subject', count: 2))
       expect(mail.to).to eq([NBT_GROUP_EMAIL])
@@ -39,7 +39,7 @@ RSpec.describe DefectsMailer, type: :mailer do
       mail = DefectsMailer.notify('escalated', defects.pluck(:id))
       body_lines = mail.body.raw_source.lines
       first_defect_line = body_lines[4].strip
-      second_defect_line = body_lines[7].strip
+      second_defect_line = body_lines[8].strip
 
       expect(mail.subject).to eq(I18n.t('email.defects.escalated.subject', count: 2))
       expect(mail.to).to eq([NBT_GROUP_EMAIL])
