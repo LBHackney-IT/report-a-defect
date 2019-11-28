@@ -22,16 +22,12 @@ RSpec.describe DefectsMailer, type: :mailer do
       expect(body_lines[0].strip).to match(/# #{I18n.t('app.title')}/)
       expect(body_lines[2].strip).to match(I18n.t('email.defects.due_soon_and_overdue.heading'))
 
-      expect(first_defect_line).to include(defects.first.created_at)
-      expect(first_defect_line).to include(defects.first.title)
-      expect(first_defect_line).to include(defects.first.trade)
-      expect(first_defect_line).to include(defects.first.status)
+      expect(first_defect_line).to include(defects.first.reference_number)
+      expect(first_defect_line).to include(defects.first.target_completion_date)
       expect(first_defect_line).to include(defects.first.priority.name)
 
-      expect(second_defect_line).to include(defects.last.created_at)
-      expect(second_defect_line).to include(defects.last.title)
-      expect(second_defect_line).to include(defects.last.trade)
-      expect(second_defect_line).to include(defects.last.status)
+      expect(second_defect_line).to include(defects.last.reference_number)
+      expect(second_defect_line).to include(defects.last.target_completion_date)
       expect(second_defect_line).to include(defects.last.priority.name)
     end
 
@@ -46,16 +42,12 @@ RSpec.describe DefectsMailer, type: :mailer do
       expect(body_lines[0].strip).to match(/# #{I18n.t('app.title')}/)
       expect(body_lines[2].strip).to match(I18n.t('email.defects.escalated.heading'))
 
-      expect(first_defect_line).to include(defects.first.created_at)
-      expect(first_defect_line).to include(defects.first.title)
-      expect(first_defect_line).to include(defects.first.trade)
-      expect(first_defect_line).to include(defects.first.status)
+      expect(first_defect_line).to include(defects.first.reference_number)
+      expect(first_defect_line).to include(defects.first.target_completion_date)
       expect(first_defect_line).to include(defects.first.priority.name)
 
-      expect(second_defect_line).to include(defects.last.created_at)
-      expect(second_defect_line).to include(defects.last.title)
-      expect(second_defect_line).to include(defects.last.trade)
-      expect(second_defect_line).to include(defects.last.status)
+      expect(second_defect_line).to include(defects.last.reference_number)
+      expect(second_defect_line).to include(defects.last.target_completion_date)
       expect(second_defect_line).to include(defects.last.priority.name)
     end
   end
