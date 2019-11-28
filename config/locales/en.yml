@@ -191,7 +191,15 @@ en:
         rejection: 'Or, to reject ownership please email newbuild@hackney.gov.uk and include the reference number.'
         accept:
           link: 'Accept ownership of this defect'
-        # alternate: 'Call us if not'
+    defects:
+      due_soon_and_overdue:
+        subject: 'Defects that are due soon or overdue'
+        heading: 'A list of defects that are either due soon or overdue'
+        table:
+          created_at: 'Created on: %{date}'
+          target_completion_date: 'Due by: %{date}'
+          status: 'Status: %{status}'
+          priority: 'Priority: %{priority}'
   events:
     defect:
       created: 'Defect was created by %{name}'
