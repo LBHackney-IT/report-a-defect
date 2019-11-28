@@ -195,11 +195,16 @@ en:
       due_soon_and_overdue:
         subject: 'Defects that are due soon or overdue'
         heading: 'A list of defects that are either due soon or overdue'
+      escalated:
+        subject: 'Manually escalated defects'
+        heading: 'A list of defects that have been manually escalated'
+      shared:
         table:
           created_at: 'Created on: %{date}'
           target_completion_date: 'Due by: %{date}'
           status: 'Status: %{status}'
           priority: 'Priority: %{priority}'
+
   events:
     defect:
       created: 'Defect was created by %{name}'
