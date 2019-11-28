@@ -17,7 +17,7 @@ RSpec.describe DefectsMailer, type: :mailer do
       first_defect_line = body_lines[4].strip
       second_defect_line = body_lines[7].strip
 
-      expect(mail.subject).to eq(I18n.t('email.defects.due_soon_and_overdue.subject'))
+      expect(mail.subject).to eq(I18n.t('email.defects.due_soon_and_overdue.subject', count: 2))
       expect(mail.to).to eq([NBT_GROUP_EMAIL])
       expect(body_lines[0].strip).to match(/# #{I18n.t('app.title')}/)
       expect(body_lines[2].strip).to match(I18n.t('email.defects.due_soon_and_overdue.heading'))
@@ -41,7 +41,7 @@ RSpec.describe DefectsMailer, type: :mailer do
       first_defect_line = body_lines[4].strip
       second_defect_line = body_lines[7].strip
 
-      expect(mail.subject).to eq(I18n.t('email.defects.escalated.subject'))
+      expect(mail.subject).to eq(I18n.t('email.defects.escalated.subject', count: 2))
       expect(mail.to).to eq([NBT_GROUP_EMAIL])
       expect(body_lines[0].strip).to match(/# #{I18n.t('app.title')}/)
       expect(body_lines[2].strip).to match(I18n.t('email.defects.escalated.heading'))

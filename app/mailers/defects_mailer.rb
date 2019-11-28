@@ -6,7 +6,7 @@ class DefectsMailer < ApplicationMailer
     view_mail(
       template_for(template),
       to: NBT_GROUP_EMAIL,
-      subject: I18n.t("email.defects.#{template}.subject"),
+      subject: I18n.t("email.defects.#{template}.subject", count: @defects.count),
       template_name: 'notify',
     )
   end

@@ -193,10 +193,10 @@ en:
           link: 'Accept ownership of this defect'
     defects:
       due_soon_and_overdue:
-        subject: 'Defects that are due soon or overdue'
+        subject: '%{count} defects are due soon or overdue'
         heading: 'A list of defects that are either due soon or overdue'
       escalated:
-        subject: 'Manually escalated defects'
+        subject: '%{count} manually escalated defects'
         heading: 'A list of defects that have been manually escalated'
       shared:
         table:
