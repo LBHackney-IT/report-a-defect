@@ -25,6 +25,9 @@ RSpec.feature 'Staff can update a scheme' do
       fill_in 'scheme[contractor_email_address]', with: 'new@email.com'
       fill_in 'scheme[employer_agent_name]', with: 'Alex'
       fill_in 'scheme[employer_agent_email_address]', with: 'alex@example.com'
+      fill_in 'scheme[employer_agent_phone_number]', with: '07712345678'
+      fill_in 'scheme[project_manager_name]', with: 'Sara'
+      fill_in 'scheme[project_manager_email_address]', with: 'sara@example.com'
       click_on(I18n.t('button.update.scheme'))
     end
   end
