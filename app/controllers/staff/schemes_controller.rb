@@ -62,6 +62,7 @@ class Staff::SchemesController < Staff::BaseController
       :contractor_email_address,
       :employer_agent_name,
       :employer_agent_email_address,
+      :employer_agent_phone_number,
       :project_manager_name,
       :project_manager_email_address
     )

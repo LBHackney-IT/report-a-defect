@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_04_143808) do
+ActiveRecord::Schema.define(version: 2019_12_04_150141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 2019_12_04_143808) do
     t.date "start_date"
     t.string "project_manager_name"
     t.string "project_manager_email_address"
+    t.string "employer_agent_phone_number"
     t.index ["estate_id"], name: "index_schemes_on_estate_id"
   end
 
