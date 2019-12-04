@@ -1,8 +1,10 @@
 class EmailEscalatedDefects
   attr_accessor :defects
 
-  def initialize(defects:)
-    self.defects = defects
+  def initialize
+    self.defects = Defect.open
+                         .flagged
+                         .order(:target_completion_date)
   end
 
   def call

@@ -3,15 +3,10 @@
 
 namespace :notify do
   task escalated_defects: :environment do
-    escalated_defects = Defect.open
-                              .flagged
-                              .order(:target_completion_date)
-    EmailEscalatedDefects.new(defects: escalated_defects).call
+    EmailEscalatedDefects.new.call
   end
 
   task due_soon_and_overdue_defects: :environment do
-    due_soon_and_overdue_defects = Defect.overdue_and_due_soon
-                                         .order(:target_completion_date)
-    EmailDueSoonAndOverdueDefects.new(defects: due_soon_and_overdue_defects).call
+    EmailDueSoonAndOverdueDefects.new.call
   end
 end
