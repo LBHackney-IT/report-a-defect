@@ -6,9 +6,6 @@ class EmailEscalatedDefects
   end
 
   def call
-    DefectsMailer.notify(
-      'escalated',
-      defects.pluck(:id)
-    ).deliver_later
+    DefectsMailer.escalated(defects.pluck(:id)).deliver_later
   end
 end

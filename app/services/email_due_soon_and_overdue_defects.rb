@@ -6,9 +6,6 @@ class EmailDueSoonAndOverdueDefects
   end
 
   def call
-    DefectsMailer.notify(
-      'due_soon_and_overdue',
-      defects.pluck(:id)
-    ).deliver_later
+    DefectsMailer.due_soon_and_overdue(defects.pluck(:id)).deliver_later
   end
 end

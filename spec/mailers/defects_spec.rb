@@ -12,7 +12,7 @@ RSpec.describe DefectsMailer, type: :mailer do
 
   describe('#notify') do
     it 'sends an email about due soon and overdue defects' do
-      mail = DefectsMailer.notify('due_soon_and_overdue', defects.pluck(:id))
+      mail = DefectsMailer.due_soon_and_overdue(defects.pluck(:id))
       body_lines = mail.body.raw_source.lines
       first_defect_line = body_lines[4].strip
       second_defect_line = body_lines[8].strip
@@ -32,7 +32,7 @@ RSpec.describe DefectsMailer, type: :mailer do
     end
 
     it 'sends an email about escalated defects' do
-      mail = DefectsMailer.notify('escalated', defects.pluck(:id))
+      mail = DefectsMailer.escalated(defects.pluck(:id))
       body_lines = mail.body.raw_source.lines
       first_defect_line = body_lines[4].strip
       second_defect_line = body_lines[8].strip
