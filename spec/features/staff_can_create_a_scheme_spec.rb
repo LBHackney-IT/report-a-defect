@@ -21,6 +21,9 @@ RSpec.feature 'Staff can create a scheme' do
       fill_in 'scheme[contractor_email_address]', with: 'email@example.com'
       fill_in 'scheme[employer_agent_name]', with: 'Alex'
       fill_in 'scheme[employer_agent_email_address]', with: 'alex@example.com'
+      fill_in 'scheme[employer_agent_phone_number]', with: '07712345678'
+      fill_in 'scheme[project_manager_name]', with: 'Sara'
+      fill_in 'scheme[project_manager_email_address]', with: 'sara@example.com'
       fill_in 'start_date[day]', with: '1'
       fill_in 'start_date[month]', with: '2'
       fill_in 'start_date[year]', with: '2019'
@@ -41,6 +44,9 @@ RSpec.feature 'Staff can create a scheme' do
     expect(page).to have_content(scheme.contractor_email_address)
     expect(page).to have_content(scheme.employer_agent_name)
     expect(page).to have_content(scheme.employer_agent_email_address)
+    expect(page).to have_content(scheme.employer_agent_phone_number)
+    expect(page).to have_content(scheme.project_manager_name)
+    expect(page).to have_content(scheme.project_manager_email_address)
   end
 
   scenario 'an invalid scheme cannot be submitted' do

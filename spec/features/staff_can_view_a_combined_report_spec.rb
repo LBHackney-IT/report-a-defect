@@ -92,45 +92,6 @@ RSpec.feature 'Staff can view a combined report for all schemes' do
     end
   end
 
-  scenario 'defect information by priority' do
-    travel_to Time.zone.parse('2019-05-23')
-
-    completed_on_time_priority = create(:property_defect,
-                                        property: property,
-                                        priority: priority,
-                                        target_completion_date: Date.new(2019, 5, 24))
-    _due_priority = create(:property_defect,
-                           property: property,
-                           priority: priority,
-                           target_completion_date: Date.new(2019, 5, 24))
-    _overdue_priorities = create_list(:property_defect,
-                                      2,
-                                      property: property,
-                                      priority: priority,
-                                      target_completion_date: Date.new(2019, 5, 22))
-
-    completed_on_time_priority.completed!
-
-    visit report_path
-
-    within('.priorities') do
-      %w[Code Total Due Overdue Completed on time].each do |header|
-        expect(page).to have_content(header)
-      end
-
-      scheme.priorities.each do |priority|
-        expect(page).to have_content(priority.name)
-      end
-
-      expect(page).to have_content('25.0%')
-      expect(page).to have_content('1')
-      expect(page).to have_content('2')
-      expect(page).to have_content('4')
-    end
-
-    travel_back
-  end
-
   scenario 'defects completed on or before their target date' do
     travel_to Time.zone.parse('2019-05-23')
 
