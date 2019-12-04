@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe EmailEscalatedDefects do
-  let!(:defects) { create_list(:property_defect, 3, status: :outstanding, flagged: true) }
+  let!(:defects) { create_list(:property_defect, 1, status: :outstanding, flagged: true) }
 
   describe '#call' do
     it 'emails the team' do
