@@ -1,0 +1,11 @@
+\# #{t('app.title')}
+\
+= I18n.t("email.defects.#{@template}.heading")
+\
+- @defects.each do |defect|
+  = "#{defect.reference_number},
+     #{I18n.t('email.defects.shared.table.target_completion_date', date: defect.target_completion_date)},
+     #{I18n.t('email.defects.shared.table.priority', priority: defect.priority.name)}"
+  = defect_url(defect)
+  \---
+  \

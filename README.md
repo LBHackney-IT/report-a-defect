@@ -45,6 +45,15 @@ bin/dspec
 bin/dspec spec/features/*
 ```
 
+## Rake tasks
+
+We have two rake tasks.
+
+- `rails notify:escalated_defects` will send one email with all the open defects
+with manual escalations.
+- `rails notify:due_soon_and_overdue_defects` will send one email with all defects
+which are either due soon or overdue.
+
 ## Access
 
 ### Staging
