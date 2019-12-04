@@ -6,6 +6,9 @@
   = "#{defect.reference_number},
      #{I18n.t('email.defects.shared.table.target_completion_date', date: defect.target_completion_date)},
      #{I18n.t('email.defects.shared.table.priority', priority: defect.priority.name)}"
-  = defect_url(defect)
+  - if defect.communal?
+    = communal_area_defect_url(defect.communal_area, defect.id)
+  - else
+    = property_defect_url(defect.property, defect.id)
   \---
   \
