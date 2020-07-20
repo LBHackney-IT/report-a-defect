@@ -152,26 +152,35 @@ RSpec.describe CombinedReportPresenter do
   end
 
   describe '#due_defects_by_priority' do
-    it 'returns all defects with a target_completion_date before todays date' do
+    it 'returns all open defects with a target_completion_date before todays date' do
       travel_to Time.zone.parse('2019-05-23')
 
       due_tomorrow_priority_defect = create(:property_defect,
                                             property: property,
                                             priority: priority,
+                                            status: 'outstanding',
                                             target_completion_date: Date.new(2019, 5, 24))
       due_today_priority_defect = create(:property_defect,
                                          property: property,
                                          priority: priority,
+                                         status: 'outstanding',
                                          target_completion_date: Date.new(2019, 5, 23))
+      completed_priority_defect = create(:property_defect,
+                                         property: property,
+                                         priority: priority,
+                                         status: 'completed',
+                                         target_completion_date: Date.new(2019, 5, 24))
       overdue_priority_defect = create(:property_defect,
                                        property: property,
                                        priority: priority,
+                                       status: 'outstanding',
                                        target_completion_date: Date.new(2019, 5, 22))
 
       result = described_class.new(schemes: schemes).due_defects_by_priority(priority: priority.name)
 
       expect(result).to include(due_tomorrow_priority_defect)
       expect(result).to include(due_today_priority_defect)
+      expect(result).not_to include(completed_priority_defect)
       expect(result).not_to include(overdue_priority_defect)
 
       travel_back

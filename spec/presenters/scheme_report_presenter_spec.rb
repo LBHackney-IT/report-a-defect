@@ -171,20 +171,29 @@ RSpec.describe SchemeReportPresenter do
       due_tomorrow_priority_defect = create(:property_defect,
                                             property: property,
                                             priority: priority,
+                                            status: 'outstanding',
                                             target_completion_date: Date.new(2019, 5, 24))
       due_today_priority_defect = create(:property_defect,
                                          property: property,
                                          priority: priority,
+                                         status: 'outstanding',
                                          target_completion_date: Date.new(2019, 5, 23))
+      completed_priority_defect = create(:property_defect,
+                                         property: property,
+                                         priority: priority,
+                                         status: 'completed',
+                                         target_completion_date: Date.new(2019, 5, 24))
       overdue_priority_defect = create(:property_defect,
                                        property: property,
                                        priority: priority,
+                                       status: 'outstanding',
                                        target_completion_date: Date.new(2019, 5, 22))
 
       result = described_class.new(scheme: scheme).due_defects_by_priority(priority: priority)
 
       expect(result).to include(due_tomorrow_priority_defect)
       expect(result).to include(due_today_priority_defect)
+      expect(result).not_to include(completed_priority_defect)
       expect(result).not_to include(overdue_priority_defect)
 
       travel_back
