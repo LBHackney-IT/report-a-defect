@@ -98,15 +98,18 @@ RSpec.feature 'Staff can view a combined report for all schemes' do
     completed_early_defect = create(:property_defect,
                                     property: property,
                                     priority: priority,
-                                    target_completion_date: Date.new(2019, 5, 22))
+                                    target_completion_date: Date.new(2019, 5, 22),
+                                    actual_completion_date: Date.new(2019, 5, 21))
     completed_on_time_defect = create(:property_defect,
                                       property: property,
                                       priority: priority,
-                                      target_completion_date: Date.new(2019, 5, 23))
+                                      target_completion_date: Date.new(2019, 5, 23),
+                                      actual_completion_date: Date.new(2019, 5, 23))
     completed_later_defect = create(:property_defect,
                                     property: property,
                                     priority: priority,
-                                    target_completion_date: Date.new(2019, 5, 24))
+                                    target_completion_date: Date.new(2019, 5, 24),
+                                    actual_completion_date: Date.new(2019, 5, 25))
 
     # Update the records status so that PublicActivity creates the required defect.update events
     [

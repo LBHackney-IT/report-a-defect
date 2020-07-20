@@ -35,7 +35,10 @@ class ReportPresenter
 
   def overdue_defects_by_priority(priority:)
     defects = defects_by_priority(priority: priority)
-    defects.where('target_completion_date < ?', Date.current)
+    defects_completed_late = defects.where('target_completion_date < actual_completion_date')
+    defects_still_open_and_overdue = defects.open.where('target_completion_date < ?', Date.current)
+
+    (defects_completed_late + defects_still_open_and_overdue).uniq
   end
 
   def defects_completed_on_time(priority:)
