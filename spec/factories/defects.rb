@@ -1,4 +1,5 @@
 FactoryBot.define do
+  old_date = "2019-01-01"
   factory :defect do
     title { Faker::Lorem.paragraph_by_chars(50) }
     description { Faker::Lorem.paragraph_by_chars(750) }
@@ -7,7 +8,9 @@ FactoryBot.define do
     contact_email_address { Faker::Internet.email }
     contact_phone_number { Faker::Base.numerify('###########') }
     trade { Defect::TRADES.sample }
-    target_completion_date { Faker::Date.between(1.day.from_now, 5.days.from_now) }
+    target_completion_date { Faker::Date.between(old_date, 5.days.from_now) }
+    created_at { Faker::Date.between(old_date, Date.today) }
+
     status { Defect.statuses.keys.sample }
 
     association :priority, factory: :priority

@@ -61,3 +61,25 @@ FactoryBot.create_list(
   communal_area: communal_area,
   priority: [priority1, priority2, priority3, priority4].sample
 )
+
+user = FactoryBot.create(:user)
+
+# Create a `defect.update` activity to simulate a change of status - updating
+# the activity more realistically (i.e. creating them as "outstanding" and
+# _then_ updating their status) is tricky, as it doesn't assign an `owner` to
+# the activity, so we're essentially lying about their status here, but it's
+# slightly closer to what actually happens.
+Defect.all.each do |defect|
+  next if defect.status.downcase == 'outstanding'
+
+  completed_statuses = %w[completed closed raised_in_error rejected]
+  if completed_statuses.include?(defect.status.downcase)
+    defect.update(actual_completion_date: Faker::Date.between("2019-01-01", 8.days.from_now))
+  end
+
+  defect.create_activity(
+    key: 'defect.update',
+    params: { changes: { status: ['outstanding', defect.status] } },
+    owner: user
+  )
+end
