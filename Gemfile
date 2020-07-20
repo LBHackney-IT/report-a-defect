@@ -41,6 +41,7 @@ group :development, :test do
   gem 'pry'
   gem 'dxw-utils', git: 'https://github.com/dxw/dxw-utils'
   gem 'bullet'
+  gem 'dotenv-rails'
 end
 
 group :development do
