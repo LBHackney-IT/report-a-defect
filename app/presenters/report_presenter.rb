@@ -34,8 +34,11 @@ class ReportPresenter
   end
 
   def overdue_defects_by_priority(priority:)
-    defects = defects_by_priority(priority: priority)
-    defects.where('target_completion_date < ?', Date.current)
+    (
+      defects_completed_late(priority: priority) +
+      defects_still_open_and_overdue(priority: priority) +
+      completed_defects_with_no_completion_date(priority: priority)
+    ).uniq
   end
 
   def defects_completed_on_time(priority:)
@@ -64,5 +67,24 @@ class ReportPresenter
 
   def completed_defects(priority:)
     defects_by_priority(priority: priority).completed
+  end
+
+  def defects_completed_late(priority:)
+    defects = defects_by_priority(priority: priority)
+    defects.completed.where('target_completion_date < actual_completion_date')
+  end
+
+  # This is a catch-all, as some defects may not have a completion date due to
+  # the hacky way in which they are marked as closed - we have no way of telling whether
+  # they were completed on time, so this should make any data inconsistencies obvious
+  # for the team to fix
+  def completed_defects_with_no_completion_date(priority:)
+    defects = defects_by_priority(priority: priority)
+    defects.completed.where(actual_completion_date: nil)
+  end
+
+  def defects_still_open_and_overdue(priority:)
+    defects = defects_by_priority(priority: priority)
+    defects.open.where('target_completion_date < ?', Date.current)
   end
 end

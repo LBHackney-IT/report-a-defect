@@ -201,27 +201,43 @@ RSpec.describe SchemeReportPresenter do
   end
 
   describe '#overdue_defects_by_priority' do
-    it 'returns all defects with a target_completion_date before todays date' do
+    it 'returns all defects completed late, with a target_completion_date before today\'s date, or completed with no actual_completion_date' do
       travel_to Time.zone.parse('2019-05-23')
 
       due_tomorrow_priority_defect = create(:property_defect,
                                             property: property,
                                             priority: priority,
+                                            status: 'outstanding',
                                             target_completion_date: Date.new(2019, 5, 24))
       due_today_priority_defect = create(:property_defect,
                                          property: property,
                                          priority: priority,
+                                         status: 'outstanding',
                                          target_completion_date: Date.new(2019, 5, 23))
       overdue_priority_defect = create(:property_defect,
                                        property: property,
                                        priority: priority,
+                                       status: 'outstanding',
                                        target_completion_date: Date.new(2019, 5, 22))
+      late_completed_priority_defect = create(:property_defect,
+                                              property: property,
+                                              priority: priority,
+                                              status: 'completed',
+                                              target_completion_date: Date.new(2019, 5, 22),
+                                              actual_completion_date: Date.new(2019, 5, 23))
+      completed_with_no_actual_completion_date_defect = create(:property_defect,
+                                                               property: property,
+                                                               priority: priority,
+                                                               status: 'completed',
+                                                               target_completion_date: Date.new(2019, 5, 22))
 
       result = described_class.new(scheme: scheme).overdue_defects_by_priority(priority: priority)
 
       expect(result).not_to include(due_tomorrow_priority_defect)
       expect(result).not_to include(due_today_priority_defect)
       expect(result).to include(overdue_priority_defect)
+      expect(result).to include(late_completed_priority_defect)
+      expect(result).to include(completed_with_no_actual_completion_date_defect)
 
       travel_back
     end
