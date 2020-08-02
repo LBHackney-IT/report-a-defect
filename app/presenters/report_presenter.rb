@@ -24,7 +24,7 @@ class ReportPresenter
   def priority_percentage(priority:)
     percentage_for(
       number: Float(defects_completed_on_time(priority: priority).count),
-      total: Float(defects_by_priority(priority: priority).count)
+      total: Float(completed_and_overdue_defects(priority: priority).count)
     )
   end
 
@@ -34,26 +34,18 @@ class ReportPresenter
   end
 
   def overdue_defects_by_priority(priority:)
-    defects = defects_by_priority(priority: priority)
-    defects_completed_late = defects.where('target_completion_date < actual_completion_date')
-    defects_still_open_and_overdue = defects.open.where('target_completion_date < ?', Date.current)
-
-    (defects_completed_late + defects_still_open_and_overdue).uniq
+    (
+      defects_completed_late(priority: priority) +
+      defects_still_open_and_overdue(priority: priority) +
+      completed_defects_with_no_completion_date(priority: priority)
+    ).uniq
   end
 
   def defects_completed_on_time(priority:)
     completed_defects(priority: priority).select do |completed_defect|
-      completed_defect_activities = completed_defect.activities.where(key: 'defect.update')
-      activities_on_time = completed_defect_activities.select do |activity|
-        activity.created_at.to_date <= completed_defect.target_completion_date
-      end
+      next if completed_defect.actual_completion_date.nil?
 
-      # TODO: Query parameter JSON at database level rather than in Ruby
-      true if activities_on_time.detect do |update_activity|
-        update_activity.parameters &&
-        update_activity.parameters[:changes] &&
-        update_activity.parameters[:changes][:status]&.last == 'completed'
-      end
+      completed_defect.actual_completion_date <= completed_defect.target_completion_date
     end
   end
 
@@ -66,6 +58,32 @@ class ReportPresenter
   end
 
   def completed_defects(priority:)
-    defects_by_priority(priority: priority).completed
+    defects_by_priority(priority: priority).closed
+  end
+
+  def defects_completed_late(priority:)
+    defects = defects_by_priority(priority: priority)
+    defects.closed.where('target_completion_date < actual_completion_date')
+  end
+
+  # This is a catch-all, as some defects may not have a completion date due to
+  # the hacky way in which they are marked as closed - we have no way of telling whether
+  # they were completed on time, so this should make any data inconsistencies obvious
+  # for the team to fix
+  def completed_defects_with_no_completion_date(priority:)
+    defects = defects_by_priority(priority: priority)
+    defects.closed.where(actual_completion_date: nil)
+  end
+
+  def defects_still_open_and_overdue(priority:)
+    defects = defects_by_priority(priority: priority)
+    defects.open.where('target_completion_date < ?', Date.current)
+  end
+
+  def completed_and_overdue_defects(priority:)
+    (
+      completed_defects(priority: priority) +
+      defects_still_open_and_overdue(priority: priority)
+    ).uniq
   end
 end

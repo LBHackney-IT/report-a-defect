@@ -6,7 +6,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
   end
 
   let(:scheme) { create(:scheme, created_at: 5.days.ago) }
-  let(:priority) { create(:priority, scheme: scheme) }
+  let(:priority) { create(:priority, scheme: scheme, name: 'P1', days: 10) }
   let(:property) { create(:property, scheme: scheme) }
   let(:communal_area) { create(:communal_area, scheme: scheme) }
 
@@ -93,42 +93,32 @@ RSpec.feature 'Staff can view a report for a scheme' do
   scenario 'defect information by scheme priority' do
     travel_to Time.zone.parse('2019-05-23')
 
-    completed_on_time_priority = create(:property_defect,
-                                        property: property,
-                                        priority: priority,
-                                        target_completion_date: Date.new(2019, 5, 24),
-                                        status: :completed)
-    completed_on_time_priority.activities.create!(key: 'defect.update',
-                                                  parameters: {
-                                                    changes: { status: ['', 'completed'] },
-                                                  })
-
+    _completed_on_time_priority = create(:property_defect,
+                                         property: property,
+                                         priority: priority,
+                                         target_completion_date: Date.new(2019, 5, 24),
+                                         actual_completion_date: Date.new(2019, 5, 24),
+                                         status: :completed)
     _due_priority = create(:property_defect,
                            property: property,
                            priority: priority,
+                           status: 'outstanding',
                            target_completion_date: Date.new(2019, 5, 24))
     _overdue_priorities = create_list(:property_defect,
                                       2,
                                       property: property,
                                       priority: priority,
+                                      status: 'outstanding',
                                       target_completion_date: Date.new(2019, 5, 22))
 
     visit report_scheme_path(scheme)
 
     within('.priorities') do
-      %w[Code Days Total Due Overdue Completed on time].each do |header|
-        expect(page).to have_content(header)
-      end
+      expect(page).to have_content(
+        'Code Days Due Overdue Total Completed on time Percentage completed on time'
+      )
 
-      scheme.priorities.each do |priority|
-        expect(page).to have_content(priority.name)
-        expect(page).to have_content(priority.days)
-      end
-
-      expect(page).to have_content('25.0%')
-      expect(page).to have_content('1')
-      expect(page).to have_content('2')
-      expect(page).to have_content('4')
+      expect(page).to have_content('P1 10 1 2 4 1 33.33%')
     end
 
     travel_back
@@ -137,33 +127,39 @@ RSpec.feature 'Staff can view a report for a scheme' do
   scenario 'defects completed on or before their target date' do
     travel_to Time.zone.parse('2019-05-23')
 
-    completed_early_defect = create(:property_defect,
-                                    property: property,
-                                    priority: priority,
-                                    target_completion_date: Date.new(2019, 5, 22))
-    completed_on_time_defect = create(:property_defect,
-                                      property: property,
-                                      priority: priority,
-                                      target_completion_date: Date.new(2019, 5, 23))
-    completed_later_defect = create(:property_defect,
-                                    property: property,
-                                    priority: priority,
-                                    target_completion_date: Date.new(2019, 5, 24))
+    _completed_early_defect = create(:property_defect,
+                                     property: property,
+                                     priority: priority,
+                                     status: 'completed',
+                                     target_completion_date: Date.new(2019, 5, 22),
+                                     actual_completion_date: Date.new(2019, 5, 21))
+    _completed_on_time_defect = create(:property_defect,
+                                       property: property,
+                                       priority: priority,
+                                       status: 'completed',
+                                       target_completion_date: Date.new(2019, 5, 23),
+                                       actual_completion_date: Date.new(2019, 5, 23))
+    _completed_later_defect = create(:property_defect,
+                                     property: property,
+                                     priority: priority,
+                                     status: 'completed',
+                                     target_completion_date: Date.new(2019, 5, 24),
+                                     actual_completion_date: Date.new(2019, 5, 25))
+    _old_defect_with_no_actual_completion_date = create(:property_defect,
+                                                        property: property,
+                                                        priority: priority,
+                                                        status: 'completed',
+                                                        target_completion_date: Date.new(2019, 5, 24))
 
-    # Update the records status so that PublicActivity creates the required defect.update events
-    [
-      completed_early_defect,
-      completed_on_time_defect,
-      completed_later_defect,
-    ].each(&:completed!)
-
+    travel_back
     visit report_scheme_path(scheme)
 
     within('.priorities') do
-      expect(page).to have_content('2')
+      expect(page).to have_content(
+        'Code Days Due Overdue Total Completed on time Percentage completed on time'
+      )
+      expect(page).to have_content('P1 10 0 1 4 2 66.67%')
     end
-
-    travel_back
   end
 
   scenario 'filter defects' do
