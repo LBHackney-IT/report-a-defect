@@ -11,8 +11,11 @@ RSpec.feature 'Staff can view a report for a scheme' do
   let(:communal_area) { create(:communal_area, scheme: scheme) }
 
   scenario 'summary information for all defects belonging to the scheme' do
-    create_list(:property_defect, 1, property: property, priority: priority)
-    create_list(:communal_defect, 2, communal_area: communal_area, priority: priority)
+    property_defects_count = 1
+    communal_defects_count = 2
+    total = property_defects_count + communal_defects_count
+    create_list(:property_defect, property_defects_count, property: property, priority: priority)
+    create_list(:communal_defect, communal_defects_count, communal_area: communal_area, priority: priority)
 
     visit dashboard_path
 
@@ -28,10 +31,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
         expect(page).to have_content(column_header)
       end
       within('tbody tr') do
-        expect(page).to have_content('Total defects')
-        expect(page).to have_content('1')
-        expect(page).to have_content('2')
-        expect(page).to have_content('3')
+        expect(page).to have_content("Total defects #{property_defects_count} #{communal_defects_count} #{total}")
       end
     end
   end
