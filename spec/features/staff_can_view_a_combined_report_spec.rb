@@ -95,33 +95,37 @@ RSpec.feature 'Staff can view a combined report for all schemes' do
   scenario 'defects completed on or before their target date' do
     travel_to Time.zone.parse('2019-05-23')
 
-    completed_early_defect = create(:property_defect,
+    _completed_early_defect = create(:property_defect,
+                                     property: property,
+                                     priority: priority,
+                                     status: :completed,
+                                     target_completion_date: Date.new(2019, 5, 22),
+                                     actual_completion_date: Date.new(2019, 5, 21))
+    _completed_on_time_defect = create(:property_defect,
+                                       property: property,
+                                       priority: priority,
+                                       status: :completed,
+                                       target_completion_date: Date.new(2019, 5, 23),
+                                       actual_completion_date: Date.new(2019, 5, 23))
+    _completed_late_defect = create(:property_defect,
                                     property: property,
                                     priority: priority,
-                                    target_completion_date: Date.new(2019, 5, 22),
-                                    actual_completion_date: Date.new(2019, 5, 21))
-    completed_on_time_defect = create(:property_defect,
-                                      property: property,
-                                      priority: priority,
-                                      target_completion_date: Date.new(2019, 5, 23),
-                                      actual_completion_date: Date.new(2019, 5, 23))
-    completed_later_defect = create(:property_defect,
-                                    property: property,
-                                    priority: priority,
+                                    status: :completed,
                                     target_completion_date: Date.new(2019, 5, 24),
                                     actual_completion_date: Date.new(2019, 5, 25))
-
-    # Update the records status so that PublicActivity creates the required defect.update events
-    [
-      completed_early_defect,
-      completed_on_time_defect,
-      completed_later_defect,
-    ].each(&:completed!)
+    _old_defect_with_no_actual_completion_date = create(:property_defect,
+                                                        property: property,
+                                                        priority: priority,
+                                                        status: :completed,
+                                                        target_completion_date: Date.new(2019, 5, 24))
 
     visit report_path
 
     within('.priorities') do
-      expect(page).to have_content('2')
+      expect(page).to have_content(
+        'Code Due Overdue Total Completed on time Percentage completed on time'
+      )
+      expect(page).to have_content("#{priority.name} 0 2 4 2 50.0%")
     end
 
     travel_back
