@@ -35,17 +35,17 @@ class ReportPresenter
 
   def overdue_defects_by_priority(priority:)
     (
-      defects_completed_late(priority: priority) +
+      defects_closed_late(priority: priority) +
       defects_still_open_and_overdue(priority: priority) +
-      completed_defects_with_no_completion_date(priority: priority)
+      closed_defects_with_no_completion_date(priority: priority)
     ).uniq
   end
 
   def defects_completed_on_time(priority:)
-    completed_defects(priority: priority).select do |completed_defect|
-      next if completed_defect.actual_completion_date.nil?
+    closed_defects(priority: priority).select do |closed_defect|
+      next if closed_defect.actual_completion_date.nil?
 
-      completed_defect.actual_completion_date <= completed_defect.target_completion_date
+      closed_defect.actual_completion_date <= closed_defect.target_completion_date
     end
   end
 
@@ -57,22 +57,22 @@ class ReportPresenter
     "#{percentage.round(2)}%"
   end
 
-  def completed_defects(priority:)
-    defects_by_priority(priority: priority).completed
+  def closed_defects(priority:)
+    defects_by_priority(priority: priority).closed
   end
 
-  def defects_completed_late(priority:)
+  def defects_closed_late(priority:)
     defects = defects_by_priority(priority: priority)
-    defects.completed.where('target_completion_date < actual_completion_date')
+    defects.closed.where('target_completion_date < actual_completion_date')
   end
 
   # This is a catch-all, as some defects may not have a completion date due to
   # the hacky way in which they are marked as closed - we have no way of telling whether
   # they were completed on time, so this should make any data inconsistencies obvious
   # for the team to fix
-  def completed_defects_with_no_completion_date(priority:)
+  def closed_defects_with_no_completion_date(priority:)
     defects = defects_by_priority(priority: priority)
-    defects.completed.where(actual_completion_date: nil)
+    defects.closed.where(actual_completion_date: nil)
   end
 
   def defects_still_open_and_overdue(priority:)

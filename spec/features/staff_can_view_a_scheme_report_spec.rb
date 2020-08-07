@@ -140,7 +140,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
     travel_back
   end
 
-  scenario 'defects completed on or before their target date' do
+  scenario 'defects closed on or before their target date' do
     travel_to Time.zone.parse('2019-05-23')
 
     _completed_early_defect = create(:property_defect,
@@ -149,18 +149,35 @@ RSpec.feature 'Staff can view a report for a scheme' do
                                      status: :completed,
                                      target_completion_date: Date.new(2019, 5, 22),
                                      actual_completion_date: Date.new(2019, 5, 21))
-    _completed_on_time_defect = create(:property_defect,
-                                       property: property,
-                                       priority: priority,
-                                       status: :completed,
-                                       target_completion_date: Date.new(2019, 5, 23),
-                                       actual_completion_date: Date.new(2019, 5, 23))
+    _closed_on_time_defect = create(:property_defect,
+                                    property: property,
+                                    priority: priority,
+                                    status: :closed,
+                                    target_completion_date: Date.new(2019, 5, 23),
+                                    actual_completion_date: Date.new(2019, 5, 23))
+    _rejected_on_time_defect = create(:property_defect,
+                                      property: property,
+                                      priority: priority,
+                                      status: :rejected,
+                                      target_completion_date: Date.new(2019, 5, 23),
+                                      actual_completion_date: Date.new(2019, 5, 23))
     _completed_late_defect = create(:property_defect,
                                     property: property,
                                     priority: priority,
                                     status: :completed,
                                     target_completion_date: Date.new(2019, 5, 24),
                                     actual_completion_date: Date.new(2019, 5, 25))
+    _raised_in_error_late_defect = create(:property_defect,
+                                          property: property,
+                                          priority: priority,
+                                          status: 'raised_in_error',
+                                          target_completion_date: Date.new(2019, 5, 24),
+                                          actual_completion_date: Date.new(2019, 5, 25))
+    _overdue_open_defect = create(:property_defect,
+                                  property: property,
+                                  priority: priority,
+                                  status: 'outstanding',
+                                  target_completion_date: Date.new(2019, 5, 22))
     _old_defect_with_no_actual_completion_date = create(:property_defect,
                                                         property: property,
                                                         priority: priority,
@@ -173,7 +190,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
       expect(page).to have_content(
         'Code Days Due Overdue Total Completed on time Percentage completed on time'
       )
-      expect(page).to have_content('2 4 2 50.0%')
+      expect(page).to have_content('0 4 7 3 42.86%')
     end
 
     travel_back
