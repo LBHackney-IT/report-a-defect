@@ -53,4 +53,4 @@ RUN RAILS_ENV=production SECRET_KEY_BASE=`rake secret` bin/rails DATABASE_URL=po
 
 EXPOSE 3000
 
-CMD ["rails", "server"]
+CMD ["bundle", "exec", "rails", "server"]
