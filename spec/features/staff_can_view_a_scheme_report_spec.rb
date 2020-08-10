@@ -11,8 +11,11 @@ RSpec.feature 'Staff can view a report for a scheme' do
   let(:communal_area) { create(:communal_area, scheme: scheme) }
 
   scenario 'summary information for all defects belonging to the scheme' do
-    create_list(:property_defect, 1, property: property, priority: priority)
-    create_list(:communal_defect, 2, communal_area: communal_area, priority: priority)
+    property_defects_count = 1
+    communal_defects_count = 2
+    total = property_defects_count + communal_defects_count
+    create_list(:property_defect, property_defects_count, property: property, priority: priority)
+    create_list(:communal_defect, communal_defects_count, communal_area: communal_area, priority: priority)
 
     visit dashboard_path
 
@@ -28,10 +31,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
         expect(page).to have_content(column_header)
       end
       within('tbody tr') do
-        expect(page).to have_content('Total defects')
-        expect(page).to have_content('1')
-        expect(page).to have_content('2')
-        expect(page).to have_content('3')
+        expect(page).to have_content("Total defects #{property_defects_count} #{communal_defects_count} #{total}")
       end
     end
   end
@@ -93,74 +93,104 @@ RSpec.feature 'Staff can view a report for a scheme' do
   scenario 'defect information by scheme priority' do
     travel_to Time.zone.parse('2019-05-23')
 
-    completed_on_time_priority = create(:property_defect,
-                                        property: property,
-                                        priority: priority,
-                                        target_completion_date: Date.new(2019, 5, 24),
-                                        status: :completed)
-    completed_on_time_priority.activities.create!(key: 'defect.update',
-                                                  parameters: {
-                                                    changes: { status: ['', 'completed'] },
-                                                  })
+    _completed_on_time_priority = create(:property_defect,
+                                         property: property,
+                                         priority: priority,
+                                         status: :completed,
+                                         target_completion_date: Date.new(2019, 5, 24),
+                                         actual_completion_date: Date.new(2019, 5, 24))
+
+    _completed_early_priority = create(:property_defect,
+                                       property: property,
+                                       priority: priority,
+                                       status: :completed,
+                                       target_completion_date: Date.new(2019, 5, 22),
+                                       actual_completion_date: Date.new(2019, 5, 21))
 
     _due_priority = create(:property_defect,
                            property: property,
                            priority: priority,
+                           status: :outstanding,
                            target_completion_date: Date.new(2019, 5, 24))
-    _overdue_priorities = create_list(:property_defect,
-                                      2,
-                                      property: property,
-                                      priority: priority,
-                                      target_completion_date: Date.new(2019, 5, 22))
+    _overdue_priority = create(:property_defect,
+                               property: property,
+                               priority: priority,
+                               status: :outstanding,
+                               target_completion_date: Date.new(2019, 5, 22))
 
     visit report_scheme_path(scheme)
 
     within('.priorities') do
-      %w[Code Days Total Due Overdue Completed on time].each do |header|
+      [
+        'Code',
+        'Days',
+        'Due',
+        'Overdue',
+        'Total',
+        'Completed on time',
+        'Percentage completed on time',
+      ]
+        .each do |header|
         expect(page).to have_content(header)
       end
 
-      scheme.priorities.each do |priority|
-        expect(page).to have_content(priority.name)
-        expect(page).to have_content(priority.days)
-      end
-
-      expect(page).to have_content('25.0%')
-      expect(page).to have_content('1')
-      expect(page).to have_content('2')
-      expect(page).to have_content('4')
+      expect(page).to have_content("#{priority.name} #{priority.days} 1 1 4 2 50.0%")
     end
 
     travel_back
   end
 
-  scenario 'defects completed on or before their target date' do
+  scenario 'defects closed on or before their target date' do
     travel_to Time.zone.parse('2019-05-23')
 
-    completed_early_defect = create(:property_defect,
+    _completed_early_defect = create(:property_defect,
+                                     property: property,
+                                     priority: priority,
+                                     status: :completed,
+                                     target_completion_date: Date.new(2019, 5, 22),
+                                     actual_completion_date: Date.new(2019, 5, 21))
+    _closed_on_time_defect = create(:property_defect,
                                     property: property,
                                     priority: priority,
-                                    target_completion_date: Date.new(2019, 5, 22))
-    completed_on_time_defect = create(:property_defect,
+                                    status: :closed,
+                                    target_completion_date: Date.new(2019, 5, 23),
+                                    actual_completion_date: Date.new(2019, 5, 23))
+    _rejected_on_time_defect = create(:property_defect,
                                       property: property,
                                       priority: priority,
-                                      target_completion_date: Date.new(2019, 5, 23))
-    completed_later_defect = create(:property_defect,
+                                      status: :rejected,
+                                      target_completion_date: Date.new(2019, 5, 23),
+                                      actual_completion_date: Date.new(2019, 5, 23))
+    _completed_late_defect = create(:property_defect,
                                     property: property,
                                     priority: priority,
-                                    target_completion_date: Date.new(2019, 5, 24))
-
-    # Update the records status so that PublicActivity creates the required defect.update events
-    [
-      completed_early_defect,
-      completed_on_time_defect,
-      completed_later_defect,
-    ].each(&:completed!)
+                                    status: :completed,
+                                    target_completion_date: Date.new(2019, 5, 24),
+                                    actual_completion_date: Date.new(2019, 5, 25))
+    _raised_in_error_late_defect = create(:property_defect,
+                                          property: property,
+                                          priority: priority,
+                                          status: 'raised_in_error',
+                                          target_completion_date: Date.new(2019, 5, 24),
+                                          actual_completion_date: Date.new(2019, 5, 25))
+    _overdue_open_defect = create(:property_defect,
+                                  property: property,
+                                  priority: priority,
+                                  status: 'outstanding',
+                                  target_completion_date: Date.new(2019, 5, 22))
+    _old_defect_with_no_actual_completion_date = create(:property_defect,
+                                                        property: property,
+                                                        priority: priority,
+                                                        status: :completed,
+                                                        target_completion_date: Date.new(2019, 5, 24))
 
     visit report_scheme_path(scheme)
 
     within('.priorities') do
-      expect(page).to have_content('2')
+      expect(page).to have_content(
+        'Code Days Due Overdue Total Completed on time Percentage completed on time'
+      )
+      expect(page).to have_content('0 4 7 3 42.86%')
     end
 
     travel_back
