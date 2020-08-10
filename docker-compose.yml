@@ -27,6 +27,9 @@ services:
     container_name: report-a-defect_dev_db_1
     volumes:
       - pg_data:/var/lib/postgresql/data/:cached
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
     restart: on-failure
 
   redis_queue:
