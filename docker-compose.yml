@@ -20,13 +20,16 @@ services:
     volumes:
       - .:/srv/report-a-defect:cached
       - node_modules:/srv/report-a-defect/node_modules
-    command: bash -c "rm -f tmp/pids/server.pid && rails s"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s"
 
   db:
     image: postgres
     container_name: report-a-defect_dev_db_1
     volumes:
       - pg_data:/var/lib/postgresql/data/:cached
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
     restart: on-failure
 
   redis_queue:

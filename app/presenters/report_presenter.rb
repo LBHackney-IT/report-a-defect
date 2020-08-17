@@ -30,27 +30,22 @@ class ReportPresenter
 
   def due_defects_by_priority(priority:)
     defects = defects_by_priority(priority: priority)
-    defects.where('target_completion_date >= ?', Date.current)
+    defects.open.where('target_completion_date >= ?', Date.current)
   end
 
   def overdue_defects_by_priority(priority:)
-    defects = defects_by_priority(priority: priority)
-    defects.where('target_completion_date < ?', Date.current)
+    (
+      defects_closed_late(priority: priority) +
+      defects_still_open_and_overdue(priority: priority) +
+      closed_defects_with_no_completion_date(priority: priority)
+    ).uniq
   end
 
   def defects_completed_on_time(priority:)
-    completed_defects(priority: priority).select do |completed_defect|
-      completed_defect_activities = completed_defect.activities.where(key: 'defect.update')
-      activities_on_time = completed_defect_activities.select do |activity|
-        activity.created_at.to_date <= completed_defect.target_completion_date
-      end
+    closed_defects(priority: priority).select do |closed_defect|
+      next if closed_defect.actual_completion_date.nil?
 
-      # TODO: Query parameter JSON at database level rather than in Ruby
-      true if activities_on_time.detect do |update_activity|
-        update_activity.parameters &&
-        update_activity.parameters[:changes] &&
-        update_activity.parameters[:changes][:status]&.last == 'completed'
-      end
+      closed_defect.actual_completion_date <= closed_defect.target_completion_date
     end
   end
 
@@ -62,7 +57,26 @@ class ReportPresenter
     "#{percentage.round(2)}%"
   end
 
-  def completed_defects(priority:)
-    defects_by_priority(priority: priority).completed
+  def closed_defects(priority:)
+    defects_by_priority(priority: priority).closed
+  end
+
+  def defects_closed_late(priority:)
+    defects = defects_by_priority(priority: priority)
+    defects.closed.where('target_completion_date < actual_completion_date')
+  end
+
+  # This is a catch-all, as some defects may not have a completion date due to
+  # the hacky way in which they are marked as closed - we have no way of telling whether
+  # they were completed on time, so this should make any data inconsistencies obvious
+  # for the team to fix
+  def closed_defects_with_no_completion_date(priority:)
+    defects = defects_by_priority(priority: priority)
+    defects.closed.where(actual_completion_date: nil)
+  end
+
+  def defects_still_open_and_overdue(priority:)
+    defects = defects_by_priority(priority: priority)
+    defects.open.where('target_completion_date < ?', Date.current)
   end
 end

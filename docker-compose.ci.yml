@@ -25,6 +25,9 @@ services:
     container_name: report-a-defect_test_db_1
     volumes:
       - pg_test_data:/var/lib/postgresql/data/:cached
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
     networks:
       - test
     restart: on-failure

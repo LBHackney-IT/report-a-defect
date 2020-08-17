@@ -125,20 +125,32 @@ RSpec.describe CombinedReportPresenter do
     it 'returns the percentage of defects completed on time with this priority ' do
       travel_to Time.zone.parse('2019-05-23')
 
-      completed_on_time_priority = create(:property_defect,
-                                          property: property,
-                                          priority: priority,
-                                          target_completion_date: Date.new(2019, 5, 24),
-                                          status: :completed)
+      _completed_on_time_priority = create(:property_defect,
+                                           property: property,
+                                           priority: priority,
+                                           target_completion_date: Date.new(2019, 5, 24),
+                                           actual_completion_date: Date.new(2019, 5, 23),
+                                           status: :completed)
 
-      completed_on_time_priority.activities.create!(key: 'defect.update',
-                                                    parameters: {
-                                                      changes: { status: ['', 'completed'] },
-                                                    })
+      _completed_late_priority = create(
+        :property_defect,
+        property: property,
+        priority: priority,
+        target_completion_date: Date.new(2019, 5, 24),
+        actual_completion_date: Date.new(2019, 5, 25),
+        status: :completed
+      )
 
-      create(:property_defect, property: property, priority: priority)
+      _still_overdue_priority = create(
+        :property_defect,
+        property: property,
+        priority: priority,
+        target_completion_date: Date.new(2019, 5, 22),
+        status: :outstanding
+      )
+
       result = described_class.new(schemes: schemes).priority_percentage(priority: priority.name)
-      expect(result).to eql('50.0%')
+      expect(result).to eql('33.33%')
 
       travel_back
     end
@@ -152,26 +164,35 @@ RSpec.describe CombinedReportPresenter do
   end
 
   describe '#due_defects_by_priority' do
-    it 'returns all defects with a target_completion_date before todays date' do
+    it 'returns all open defects with a target_completion_date before todays date' do
       travel_to Time.zone.parse('2019-05-23')
 
       due_tomorrow_priority_defect = create(:property_defect,
                                             property: property,
                                             priority: priority,
+                                            status: 'outstanding',
                                             target_completion_date: Date.new(2019, 5, 24))
       due_today_priority_defect = create(:property_defect,
                                          property: property,
                                          priority: priority,
+                                         status: 'outstanding',
                                          target_completion_date: Date.new(2019, 5, 23))
+      completed_priority_defect = create(:property_defect,
+                                         property: property,
+                                         priority: priority,
+                                         status: 'completed',
+                                         target_completion_date: Date.new(2019, 5, 24))
       overdue_priority_defect = create(:property_defect,
                                        property: property,
                                        priority: priority,
+                                       status: 'outstanding',
                                        target_completion_date: Date.new(2019, 5, 22))
 
       result = described_class.new(schemes: schemes).due_defects_by_priority(priority: priority.name)
 
       expect(result).to include(due_tomorrow_priority_defect)
       expect(result).to include(due_today_priority_defect)
+      expect(result).not_to include(completed_priority_defect)
       expect(result).not_to include(overdue_priority_defect)
 
       travel_back
@@ -179,139 +200,97 @@ RSpec.describe CombinedReportPresenter do
   end
 
   describe '#overdue_defects_by_priority' do
-    it 'returns all defects with a target_completion_date before todays date' do
+    it 'returns all defects completed late, or with a target_completion_date before today\'s date, or completed with no actual_completion_date' do
       travel_to Time.zone.parse('2019-05-23')
 
       due_tomorrow_priority_defect = create(:property_defect,
                                             property: property,
                                             priority: priority,
+                                            status: 'outstanding',
                                             target_completion_date: Date.new(2019, 5, 24))
       due_today_priority_defect = create(:property_defect,
                                          property: property,
                                          priority: priority,
+                                         status: 'outstanding',
                                          target_completion_date: Date.new(2019, 5, 23))
+      priority_defect_completed_on_time = create(:property_defect,
+                                                 property: property,
+                                                 priority: priority,
+                                                 status: 'completed',
+                                                 target_completion_date: Date.new(2019, 5, 22),
+                                                 actual_completion_date: Date.new(2019, 5, 21))
       overdue_priority_defect = create(:property_defect,
                                        property: property,
                                        priority: priority,
+                                       status: 'outstanding',
                                        target_completion_date: Date.new(2019, 5, 22))
+      late_completed_priority_defect = create(:property_defect,
+                                              property: property,
+                                              priority: priority,
+                                              status: 'outstanding',
+                                              target_completion_date: Date.new(2019, 5, 22),
+                                              actual_completion_date: Date.new(2019, 5, 23))
+      completed_with_no_actual_completion_date_defect = create(:property_defect,
+                                                               property: property,
+                                                               priority: priority,
+                                                               status: 'completed',
+                                                               target_completion_date: Date.new(2019, 5, 22))
 
       result = described_class.new(schemes: schemes).overdue_defects_by_priority(priority: priority.name)
 
       expect(result).not_to include(due_tomorrow_priority_defect)
       expect(result).not_to include(due_today_priority_defect)
+      expect(result).not_to include(priority_defect_completed_on_time)
       expect(result).to include(overdue_priority_defect)
+      expect(result).to include(late_completed_priority_defect)
+      expect(result).to include(completed_with_no_actual_completion_date_defect)
 
       travel_back
     end
   end
 
   describe '#defects_completed_on_time' do
-    it 'returns a count for all defects completed before or on their target date' do
+    it 'returns a count for all defects closed before or on their target date' do
       travel_to Time.zone.local(2019, 5, 21, 10, 0, 0)
       completed_early_defect = create(:property_defect,
                                       status: :completed,
                                       property: property,
                                       priority: priority,
-                                      target_completion_date: Date.new(2019, 5, 23))
-      completed_on_time_defect = create(:property_defect,
-                                        status: :completed,
-                                        property: property,
-                                        priority: priority,
-                                        target_completion_date: Date.new(2019, 5, 23))
+                                      target_completion_date: Date.new(2019, 5, 23),
+                                      actual_completion_date: Date.new(2019, 5, 22))
+      closed_on_time_defect = create(:property_defect,
+                                     status: :closed,
+                                     property: property,
+                                     priority: priority,
+                                     target_completion_date: Date.new(2019, 5, 23),
+                                     actual_completion_date: Date.new(2019, 5, 23))
+      rejected_on_time_defect = create(:property_defect,
+                                       status: :rejected,
+                                       property: property,
+                                       priority: priority,
+                                       target_completion_date: Date.new(2019, 5, 23),
+                                       actual_completion_date: Date.new(2019, 5, 23))
       completed_later_defect = create(:property_defect,
                                       status: :completed,
                                       property: property,
                                       priority: priority,
-                                      target_completion_date: Date.new(2019, 5, 23))
-      travel_back
-
-      travel_to Time.zone.local(2019, 5, 22, 10, 10, 10) do
-        completed_early_defect.create_activity(
-          key: 'defect.update',
-          parameters: {
-            changes:
-            {
-              status: %w[outstanding completed],
-            },
-          },
-        )
-      end
-
-      travel_to Time.zone.local(2019, 5, 23, 10, 10, 10) do
-        completed_on_time_defect.create_activity(
-          key: 'defect.update',
-          parameters: {
-            changes:
-            {
-              status: %w[outstanding completed],
-            },
-          }
-        )
-      end
-
-      travel_to Time.zone.local(2019, 5, 24, 10, 10, 10) do
-        completed_on_time_defect.create_activity(
-          key: 'defect.update',
-          parameters: {
-            changes:
-            {
-              status: %w[outstanding completed],
-            },
-          },
-        )
-      end
+                                      target_completion_date: Date.new(2019, 5, 23),
+                                      actual_completion_date: Date.new(2019, 5, 25)),
+                               completed_defect_no_actual_completion_date = create(:property_defect,
+                                                                                   status: :completed,
+                                                                                   property: property,
+                                                                                   priority: priority,
+                                                                                   target_completion_date: Date.new(2019, 5, 23))
 
       travel_to Time.zone.local(2019, 5, 23, 10, 20, 10)
 
       result = described_class.new(schemes: schemes).defects_completed_on_time(priority: priority.name)
 
       expect(result).to include(completed_early_defect)
-      expect(result).to include(completed_on_time_defect)
+      expect(result).to include(closed_on_time_defect)
+      expect(result).to include(rejected_on_time_defect)
       expect(result).not_to include(completed_later_defect)
-
-      travel_back
-    end
-
-    it 'returns only completed defects' do
-      travel_to Time.zone.local(2019, 5, 23, 10, 10, 10)
-      rejected_defect = create(:property_defect,
-                               status: :rejected,
-                               property: property,
-                               priority: priority,
-                               target_completion_date: Date.current)
-      rejected_defect.create_activity(
-        key: 'defect.update',
-        parameters: {
-          changes:
-          {
-            status: %w[outstanding rejected],
-          },
-        },
-      )
-      completed_defect = create(:property_defect,
-                                status: :completed,
-                                property: property,
-                                priority: priority,
-                                target_completion_date: Date.current)
-
-      completed_defect.create_activity(
-        key: 'defect.update',
-        parameters: {
-          changes:
-          {
-            status: %w[outstanding completed],
-          },
-        },
-      )
-
-      travel_back
-
-      travel_to Time.zone.local(2019, 5, 23, 10, 20, 10)
-
-      result = described_class.new(schemes: schemes).defects_completed_on_time(priority: priority.name)
-
-      expect(result).to include(completed_defect)
-      expect(result).not_to include(rejected_defect)
+      expect(result).not_to include(completed_defect_no_actual_completion_date)
 
       travel_back
     end
