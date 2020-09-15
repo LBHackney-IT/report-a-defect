@@ -10,7 +10,7 @@ class SchemeReportPresenter < ReportPresenter
 
   def defects
     @defects ||= Defect.for_scheme([scheme.id])
-                       .where(created_at: report_form.date_range)
+                       .where(added_at: report_form.date_range)
   end
 
   def defects_by_priority(priority:)

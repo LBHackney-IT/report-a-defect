@@ -4,7 +4,7 @@ RSpec.configure do |config|
   end
 end
 
-Dir[Rails.root.join('app', 'uploaders', '*.rb')].each { |file| require file }
+Dir[Rails.root.join('app', 'uploaders', '*.rb')].sort.each { |file| require file }
 
 if defined?(CarrierWave)
   CarrierWave::Uploader::Base.descendants.each do |klass|

@@ -39,7 +39,6 @@ group :development, :test do
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
   gem 'pry'
-  gem 'dxw-utils', git: 'https://github.com/dxw/dxw-utils'
   gem 'bullet'
 end
 
@@ -63,5 +62,6 @@ group :test do
   gem 'launchy'
   gem 'shoulda'
   gem 'rack_session_access'
+  gem 'rubocop'
   gem 'webmock', '~> 3.5'
 end

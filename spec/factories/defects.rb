@@ -9,6 +9,7 @@ FactoryBot.define do
     trade { Defect::TRADES.sample }
     target_completion_date { Faker::Date.between(1.day.from_now, 5.days.from_now) }
     status { Defect.statuses.keys.sample }
+    added_at { Time.now.utc }
 
     association :priority, factory: :priority
 
