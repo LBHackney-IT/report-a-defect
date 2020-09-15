@@ -9,7 +9,7 @@ gem 'jquery-rails'
 gem 'pg', '~> 0.18'
 gem 'pg_search'
 gem 'public_activity'
-gem 'puma', '~> 3.7'
+gem 'puma', '~> 3.12'
 gem 'mail-notify'
 gem 'omniauth-auth0', '~> 2.2'
 gem 'omniauth-rails_csrf_protection'
@@ -39,8 +39,8 @@ group :development, :test do
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
   gem 'pry'
-  gem 'dxw-utils', git: 'https://github.com/dxw/dxw-utils'
   gem 'bullet'
+  gem 'rubocop'
 end
 
 group :development do

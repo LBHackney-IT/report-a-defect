@@ -5,21 +5,21 @@ class DefectEventPresenter
 
   def description # rubocop:disable Metrics/CyclomaticComplexity
     case @event.key
-    when 'defect.create' then
+    when 'defect.create'
       description_for_create
-    when 'defect.update' then
+    when 'defect.update'
       description_for_update
-    when 'defect.forwarded_to_contractor' then
+    when 'defect.forwarded_to_contractor'
       descrition_for_forwarded_to_contractor
-    when 'defect.forwarded_to_employer_agent' then
+    when 'defect.forwarded_to_employer_agent'
       description_for_forwarded_to_employer_agent
-    when 'defect.accepted' then
+    when 'defect.accepted'
       description_for_accepted
-    when 'defect.notification.contact.sent_to_contractor' then
+    when 'defect.notification.contact.sent_to_contractor'
       description_for_sent_on_to_contact
-    when 'defect.notification.contact.accepted_by_contractor' then
+    when 'defect.notification.contact.accepted_by_contractor'
       description_for_accepted_by_to_contact
-    when 'defect.notification.contact.completed' then
+    when 'defect.notification.contact.completed'
       description_for_completed
     else
       @event.key

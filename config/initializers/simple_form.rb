@@ -10,7 +10,7 @@
 # Use this setup block to configure all options available in SimpleForm.
 
 # rubocop:disable Metrics/BlockLength
-# rubocop:disable Metrics/LineLength
+# rubocop:disable Layout/LineLength
 SimpleForm.setup do |config|
   # Wrappers are used by the form builder to generate a
   # complete input. You can remove any component from the
@@ -242,4 +242,4 @@ SimpleForm.setup do |config|
   end
 end
 # rubocop:enable Metrics/BlockLength
-# rubocop:enable Metrics/LineLength
+# rubocop:enable Layout/LineLength

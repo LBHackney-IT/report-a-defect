@@ -3,9 +3,9 @@ set -e
 
 if [ $# -eq 0 ]
 then
-  echo "No arguments supplied. Defaults to 'rake default'"
-  docker exec -it report-a-defect_test_web_1 rake default $@
+  echo "No arguments supplied. Defaults to 'bundle exec rake default'"
+  docker exec -it report-a-defect_test_web_1 bundle exec rake default $@
 else
   echo "Testing: $@"
-  docker exec -it report-a-defect_test_web_1 rspec --order random "$@"
+  docker exec -it report-a-defect_test_web_1 bundle exec rspec --order random "$@"
 fi

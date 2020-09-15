@@ -1,9 +1,59 @@
-inherit_gem:
-  dxw-utils:
-    - dxw-rubocop.yml
+AllCops:
+  TargetRubyVersion: 2.6
+  Exclude:
+    - 'db/migrate/**/*'
+    - 'db/schema.rb'
+    - 'bin/**/*'
+    - 'lib/tasks/*'
+    - 'vendor/bundle/**/*'
+
+Bundler/OrderedGems:
+    Enabled: false
+
+Style/Alias:
+    Enabled: false
+
+Style/FrozenStringLiteralComment:
+    Enabled: false
+
+Style/NumericLiterals:
+    Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+    EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+    EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArguments:
+    Enabled: false
+
+Style/Documentation:
+    Enabled: false
+
+Style/FormatStringToken:
+    Enabled: false
+
+Layout/EmptyLineAfterGuardClause:
+    Enabled: false
+
+Layout/LineLength:
+    Max: 100
+    Exclude:
+      - 'spec/**/*'
+      - 'features/**/*'
+      - 'config/initializers/judge_role_types.rb'
+      - 'config/initializers/secure_headers.rb'
+      # Also list here third party config eg:
+      # - 'config/initializers/rollbar.rb'
+
+Metrics/MethodLength:
+    Max: 25
+    Exclude:
+      - 'spec/**/*'
 
 Metrics/AbcSize:
-  Max: 25
+  Max: 30
   Exclude:
     - 'spec/**/*'
 
@@ -14,11 +64,11 @@ Metrics/BlockLength:
     - 'config/environments/*'
     - 'config/initializers/devise.rb'
 
-Metrics/MethodLength:
-  Max: 25
-
 Naming/AccessorMethodName:
   Enabled: false
 
 Style/ClassAndModuleChildren:
   Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 8

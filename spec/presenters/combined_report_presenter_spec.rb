@@ -19,9 +19,9 @@ RSpec.describe CombinedReportPresenter do
         date_range = from_date..to_date
         report_form = double(from_date: from_date, to_date: to_date, date_range: date_range)
 
-        before_range_defect = create(:property_defect, created_at: Time.utc(2018, 1, 1), property: property, priority: priority)
-        in_range_defect = create(:property_defect, created_at: Time.utc(2019, 2, 1), property: property, priority: priority)
-        after_range_defect = create(:property_defect, created_at: Time.utc(2020, 1, 1), property: property, priority: priority)
+        before_range_defect = create(:property_defect, added_at: Time.utc(2018, 1, 1), property: property, priority: priority)
+        in_range_defect = create(:property_defect, added_at: Time.utc(2019, 2, 1), property: property, priority: priority)
+        after_range_defect = create(:property_defect, added_at: Time.utc(2020, 1, 1), property: property, priority: priority)
 
         result = described_class.new(schemes: schemes, report_form: report_form).defects
 
