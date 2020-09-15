@@ -199,10 +199,10 @@ RSpec.feature 'Staff can view a report for a scheme' do
   scenario 'filter defects' do
     travel_to Time.zone.parse('2019-05-25')
 
-    create(:property_defect, created_at: Time.utc(2019, 5, 23), property: property)
-    create(:property_defect, created_at: Time.utc(2019, 5, 24), property: property)
-    create(:communal_defect, created_at: Time.utc(2019, 5, 24), communal_area: communal_area)
-    create(:property_defect, created_at: Time.utc(2019, 5, 25), property: property)
+    create(:property_defect, added_at: Time.utc(2019, 5, 23), property: property)
+    create(:property_defect, added_at: Time.utc(2019, 5, 24), property: property)
+    create(:communal_defect, added_at: Time.utc(2019, 5, 24), communal_area: communal_area)
+    create(:property_defect, added_at: Time.utc(2019, 5, 25), property: property)
 
     visit report_scheme_path(scheme)
 
