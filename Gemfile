@@ -40,6 +40,7 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'pry'
   gem 'bullet'
+  gem 'rubocop'
 end
 
 group :development do
@@ -62,6 +63,5 @@ group :test do
   gem 'launchy'
   gem 'shoulda'
   gem 'rack_session_access'
-  gem 'rubocop'
   gem 'webmock', '~> 3.5'
 end
