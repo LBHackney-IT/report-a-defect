@@ -21,12 +21,14 @@ services:
       - test
 
   db-test:
-    image: postgres
+    image: postgres:10.21
     container_name: report-a-defect_test_db_1
     volumes:
       - pg_test_data:/var/lib/postgresql/data/:cached
     environment:
+      - POSTGRES_DB=report-a-defect
       - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust
     networks:
       - test
