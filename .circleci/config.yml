@@ -49,7 +49,7 @@ jobs:
             chmod +x .circleci/setup-heroku.sh
             .circleci/setup-heroku.sh
       - run:
-          name: Deploy the Docker image to Heroku Production
+          name: Deploy the Docker image to Heroku Staging
           command: |
             docker image load --input /tmp/built-image.tar
             docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
