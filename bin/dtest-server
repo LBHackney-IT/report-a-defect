@@ -4,7 +4,7 @@ set -e
 
 run_with_pretty_print()
 {
-  echo "\n\033[36m===> $1\033[0m\n"
+  echo "===> $1"
   eval $1
 }
 
