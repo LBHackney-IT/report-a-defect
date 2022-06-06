@@ -18,7 +18,7 @@ services:
     command: ["bundle", "exec", "./bin/dsetup && spring server"]
     restart: on-failure
     networks:
-      - test
+      - ci
 
   db-test:
     image: postgres:10.21
@@ -31,11 +31,11 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust
     networks:
-      - test
+      - ci
     restart: on-failure
 
 networks:
-  test:
+  ci:
 
 volumes:
   pg_test_data: {}
