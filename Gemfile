@@ -29,7 +29,7 @@ gem 'figaro'
 
 # Support file upload
 gem 'fog-aws'
-gem 'carrierwave', '~> 2.0'
+gem 'carrierwave', '~> 2.1'
 
 # Add to termporarily support usability testing
 gem 'faker'
