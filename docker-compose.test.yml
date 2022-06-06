@@ -30,7 +30,7 @@ services:
           memory: 50M
 
   db-test:
-    image: postgres
+    image: postgres:13.6
     container_name: report-a-defect_test_db_1
     volumes:
       - pg_test_data:/var/lib/postgresql/data/:cached

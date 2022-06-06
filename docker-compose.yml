@@ -23,7 +23,7 @@ services:
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s"
 
   db:
-    image: postgres
+    image: postgres:13.6
     container_name: report-a-defect_dev_db_1
     volumes:
       - pg_data:/var/lib/postgresql/data/:cached

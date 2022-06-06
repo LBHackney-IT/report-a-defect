@@ -21,7 +21,7 @@ services:
       - test
 
   db-test:
-    image: postgres:10.21
+    image: postgres:13.6
     container_name: report-a-defect_test_db_1
     volumes:
       - pg_test_data:/var/lib/postgresql/data/:cached
