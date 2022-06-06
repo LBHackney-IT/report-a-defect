@@ -173,7 +173,9 @@ GEM
     mime-types (3.3)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2019.1009)
-    mimemagic (0.3.3)
+    mimemagic (0.3.10)
+      nokogiri (~> 1)
+      rake
     mini_magick (4.9.5)
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
@@ -396,6 +398,7 @@ DEPENDENCIES
   launchy
   listen (>= 3.0.5, < 3.2)
   mail-notify
+  mimemagic (~> 0.3.8)
   newrelic_rpm
   omniauth-auth0 (~> 2.2)
   omniauth-rails_csrf_protection
@@ -430,4 +433,4 @@ RUBY VERSION
    ruby 2.6.1p33
 
 BUNDLED WITH
-   2.0.2
+   2.3.9
