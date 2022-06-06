@@ -3,22 +3,10 @@ jobs:
   build_and_test:
     working_directory: ~/report_a_defect
     docker:
-      - image: buildpack-deps:trusty
+      - image: cimg/base:2020.01
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: Install Docker
-          command: |
-            curl -fsSL https://get.docker.com -o get-docker.sh
-            sh get-docker.sh
-            rm get-docker.sh
-      - run:
-          name: Install Docker Compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - run:
           name: Run the tests
           command: |
@@ -46,18 +34,12 @@ jobs:
   deploy_staging:
     working_directory: ~/report_a_defect
     docker:
-      - image: buildpack-deps:trusty
+      - image: cimg/base:2020.01
     steps:
       - restore_cache:
           keys:
             - docker-images-{{ .Environment.CIRCLE_SHA1 }}
       - setup_remote_docker
-      - run:
-          name: Install Docker
-          command: |
-            curl -fsSL https://get.docker.com -o get-docker.sh
-            sh get-docker.sh
-            rm get-docker.sh
       - run:
           name: Login to Docker
           command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
@@ -81,18 +63,12 @@ jobs:
   deploy_production:
     working_directory: ~/report_a_defect
     docker:
-      - image: buildpack-deps:trusty
+      - image: cimg/ruby:2.6.5
     steps:
       - restore_cache:
           keys:
             - docker-images-{{ .Environment.CIRCLE_SHA1 }}
       - setup_remote_docker
-      - run:
-          name: Install Docker
-          command: |
-            curl -fsSL https://get.docker.com -o get-docker.sh
-            sh get-docker.sh
-            rm get-docker.sh
       - run:
           name: Login to Docker
           command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
