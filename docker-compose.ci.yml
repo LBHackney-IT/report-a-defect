@@ -7,34 +7,36 @@ services:
         RAILS_ENV: "test"
     environment:
       RAILS_ENV: "test"
-      DATABASE_URL: "postgres://postgres@db-test:5432/report-a-defect?template=template0&pool=5&encoding=unicode"
+      DATABASE_URL: "postgres://postgres:password@db-test:5432/report-a-defect?template=template0&pool=5&encoding=unicode"
     container_name: report-a-defect_test_web_1
     env_file:
       - docker-compose.env.example
     volumes:
-      - node_modules:/srv/report-a-defect/node_modules:cached
+      - ci_node_modules:/srv/report-a-defect/node_modules:cached
     depends_on:
       - db-test
     command: ["bundle", "exec", "./bin/dsetup && spring server"]
     restart: on-failure
     networks:
-      - test
+      - ci
 
   db-test:
-    image: postgres
+    image: postgres:10.21
     container_name: report-a-defect_test_db_1
     volumes:
-      - pg_test_data:/var/lib/postgresql/data/:cached
+      - ci_pg_test_data:/var/lib/postgresql/data/:cached
     environment:
+      - POSTGRES_DB=report-a-defect
       - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust
     networks:
-      - test
+      - ci
     restart: on-failure
 
 networks:
-  test:
+  ci:
 
 volumes:
-  pg_test_data: {}
-  node_modules:
+  ci_pg_test_data: {}
+  ci_node_modules:

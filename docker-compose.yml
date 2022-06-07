@@ -20,7 +20,7 @@ services:
     volumes:
       - .:/srv/report-a-defect:cached
       - node_modules:/srv/report-a-defect/node_modules
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
 
   db:
     image: postgres
@@ -28,7 +28,9 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data/:cached
     environment:
+      - POSTGRES_DB=report-a-defect
       - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust
     restart: on-failure
 

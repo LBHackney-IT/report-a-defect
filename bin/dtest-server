@@ -4,7 +4,7 @@ set -e
 
 run_with_pretty_print()
 {
-  echo "\n\033[36m===> $1\033[0m\n"
+  echo "===> $1"
   eval $1
 }
 
@@ -39,5 +39,10 @@ then
   # Circle CI cannot mount volumes which are very useful for quick file reloading
   # in dev and test. Therefore we require an almost identical docker-compose.yml
   # file for CI only.
+
+  # INFO: When running CI mode locally to verify changes, we need to clear up
+  # any old state
+  run_with_pretty_print 'docker-compose --file docker-compose.ci.yml down -v'
+
   start_test_server 'docker-compose.ci.yml'
 fi
