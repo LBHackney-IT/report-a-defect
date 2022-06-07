@@ -9,7 +9,7 @@ class Property < ApplicationRecord
 
   validates :uprn, uniqueness: true
 
-  include PgSearch
+  include PgSearch::Model
   pg_search_scope :search_by_address, against: %i[address]
 
   include PublicActivity::Model
