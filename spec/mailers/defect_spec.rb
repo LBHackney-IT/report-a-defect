@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe DefectMailer, type: :mailer do
   before(:each) do
-    stub_const('NOTIFY_FORWARD_DEFECT_TEMPLATE', '')
+    stub_const('NOTIFY_FORWARD_DEFECT_TEMPLATE', '1')
     travel_to Time.zone.parse('2019-05-23')
   end
 

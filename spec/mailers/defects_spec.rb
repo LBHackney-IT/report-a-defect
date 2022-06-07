@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe DefectsMailer, type: :mailer do
   before(:each) do
-    stub_const('NOTIFY_DAILY_DUE_SOON_TEMPLATE', '')
-    stub_const('NOTIFY_DAILY_ESCALATION_TEMPLATE', '')
+    stub_const('NOTIFY_DAILY_DUE_SOON_TEMPLATE', '1')
+    stub_const('NOTIFY_DAILY_ESCALATION_TEMPLATE', '2')
     stub_const('NBT_GROUP_EMAIL', 'test@email.com')
   end
 

@@ -20,4 +20,4 @@ Sidekiq.configure_client do |config|
   }
 end
 
-Sidekiq::Logging.logger.level = Logger::WARN if Rails.env.production?
+Sidekiq.logger.level = Logger::WARN if Rails.env.production?

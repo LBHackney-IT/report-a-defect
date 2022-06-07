@@ -1,5 +1,6 @@
 class SchemeReportPresenter < ReportPresenter
   attr_accessor :scheme
+
   delegate :name, to: :scheme
 
   def initialize(scheme:,
