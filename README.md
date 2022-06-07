@@ -60,6 +60,17 @@ with manual escalations.
 * `rails notify:due_soon_and_overdue_defects` will send one email with all defects
 which are either due soon or overdue.
 
+## Releasing changes
+
+This application supports branch based deployments.
+
+* To deploy to staging, create and merge pull requests into the `develop` branch
+* To deploy to production, update your local `develop` branch and merge it into
+  the `master` branch and push
+
+[Circle CI](https://app.circleci.com/pipelines/github/LBHackney-IT/report-a-defect)
+will automatically deploy this to Heroku.
+
 ## Access
 
 ### Staging
