@@ -13,7 +13,7 @@ services:
       - docker-compose.env.example
     volumes:
       - .:/srv/report-a-defect:cached
-      - node_modules:/srv/report-a-defect/node_modules:cached
+      - test_node_modules:/srv/report-a-defect/node_modules:cached
     depends_on:
       - db-test
     command: ["bundle", "exec", "./bin/dsetup && spring server"]
@@ -25,19 +25,19 @@ services:
     image: postgres
     container_name: report-a-defect_test_db_1
     volumes:
-      - pg_test_data:/var/lib/postgresql/data/:cached
+      - test_pg_data:/var/lib/postgresql/data/:cached
     environment:
       - POSTGRES_DB=report-a-defect
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust
+    restart: on-failure
     networks:
       - tests
-    restart: on-failure
 
 networks:
   tests:
 
 volumes:
-  pg_test_data: {}
-  node_modules:
+  test_pg_data: {}
+  test_node_modules:
