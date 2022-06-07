@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.feature 'Staff can update a defect' do
   before(:each) do
-    stub_authenticated_session
+    stub_authenticated_session(name: 'Bob')
   end
 
   let(:scheme) { create(:scheme, :with_priorities) }
@@ -68,8 +68,6 @@ RSpec.feature 'Staff can update a defect' do
   end
 
   scenario 'a detect status change is listed as an event' do
-    stub_authenticated_session(name: 'Bob')
-
     travel_to Time.zone.parse('2019-05-23')
 
     defect = create(:property_defect, property: property, status: :outstanding)

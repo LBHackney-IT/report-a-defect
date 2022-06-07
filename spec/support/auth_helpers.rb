@@ -25,8 +25,13 @@ module AuthHelpers
     )
   end
 
+  # TODO: Stub this out to speed it up
   def stub_authenticated_session(name: 'Alex')
-    page.set_rack_session(userinfo: { uid: '123456789', info: { name: name } })
+    mock_successful_authentication(name: name)
+
+    visit dashboard_path
+
+    click_on(I18n.t('generic.button.sign_in'))
   end
 end
 

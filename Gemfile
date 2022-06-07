@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 ruby '2.6.1'
+gem 'activerecord-session_store'
 gem 'coffee-rails', '~> 4.2'
 gem 'haml-rails'
 gem 'high_voltage'
@@ -63,6 +64,5 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'shoulda'
-  gem 'rack_session_access'
   gem 'webmock', '~> 3.5'
 end
