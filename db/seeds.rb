@@ -74,7 +74,8 @@ Defect.all.each do |defect|
 
   completed_statuses = %w[completed closed raised_in_error rejected]
   if completed_statuses.include?(defect.status.downcase)
-    defect.update(actual_completion_date: Faker::Date.between(4.days.ago, 4.days.from_now))
+    defect.update(actual_completion_date: Faker::Date.between(from: 4.days.ago,
+                                                              to: 4.days.from_now))
   end
 
   defect.create_activity(

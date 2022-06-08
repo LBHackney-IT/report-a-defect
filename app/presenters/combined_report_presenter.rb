@@ -1,4 +1,5 @@
-class CombinedReportPresenter < ReportPresenter
+class CombinedReportPresenter
+  include ReportPresenter
   def initialize(schemes: [],
                  report_form: ReportForm.new(from_date: Scheme::REPORT_MONTHS.months.ago,
                                              to_date: Date.current))

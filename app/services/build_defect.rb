@@ -1,4 +1,5 @@
-class BuildDefect < DefectBuilder
+class BuildDefect
+  include DefectBuilder
   attr_accessor :communal_area_id,
                 :property_id,
                 :user

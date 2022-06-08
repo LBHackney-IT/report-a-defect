@@ -1,13 +1,13 @@
 FactoryBot.define do
   factory :defect do
-    title { Faker::Lorem.paragraph_by_chars(50) }
-    description { Faker::Lorem.paragraph_by_chars(750) }
-    access_information { Faker::Lorem.paragraph_by_chars(250) }
+    title { Faker::Lorem.paragraph_by_chars(number: 50) }
+    description { Faker::Lorem.paragraph_by_chars(number: 750) }
+    access_information { Faker::Lorem.paragraph_by_chars(number: 250) }
     contact_name { Faker::Name.name }
     contact_email_address { Faker::Internet.email }
     contact_phone_number { Faker::Base.numerify('###########') }
     trade { Defect::TRADES.sample }
-    target_completion_date { Faker::Date.between(1.day.from_now, 5.days.from_now) }
+    target_completion_date { Faker::Date.between(from: 1.day.from_now, to: 5.days.from_now) }
     status { Defect.statuses.keys.sample }
     added_at { Time.now.utc }
 
@@ -25,7 +25,7 @@ FactoryBot.define do
 
     trait :completed do
       status { :completed }
-      actual_completion_date { Faker::Date.between(1.day.from_now, 5.days.from_now) }
+      actual_completion_date { Faker::Date.between(from: 1.day.from_now, to: 5.days.from_now) }
     end
 
     trait :with_comments do

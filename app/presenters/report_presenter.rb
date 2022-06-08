@@ -1,4 +1,4 @@
-class ReportPresenter
+module ReportPresenter
   attr_accessor :schemes, :report_form
 
   def date_range
