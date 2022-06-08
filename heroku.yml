@@ -4,7 +4,7 @@ build:
 release:
   image: web
   command:
-    - rake db:migrate
+    - bundle exec rake db:migrate
 run:
   web: bundle exec puma -C config/puma.rb
   worker:
