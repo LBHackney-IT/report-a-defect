@@ -1,4 +1,5 @@
-class EditDefect < DefectBuilder
+class EditDefect
+  include DefectBuilder
   attr_accessor :target_completion_date,
                 :actual_completion_date
 

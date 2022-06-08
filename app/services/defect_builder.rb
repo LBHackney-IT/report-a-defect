@@ -1,4 +1,4 @@
-class DefectBuilder
+module DefectBuilder
   attr_accessor :defect,
                 :defect_params,
                 :priority_id,

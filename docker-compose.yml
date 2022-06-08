@@ -19,25 +19,30 @@ services:
     restart: on-failure
     volumes:
       - .:/srv/report-a-defect:cached
-      - node_modules:/srv/report-a-defect/node_modules
+      - dev_node_modules:/srv/report-a-defect/node_modules
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
-
+    networks:
+      - dev
   db:
     image: postgres
     container_name: report-a-defect_dev_db_1
     volumes:
-      - pg_data:/var/lib/postgresql/data/:cached
+      - dev_pg_data:/var/lib/postgresql/data/:cached
     environment:
       - POSTGRES_DB=report-a-defect
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust
     restart: on-failure
+    networks:
+      - dev
 
   redis_queue:
     image: redis:latest
     command: redis-server
     restart: on-failure
+    networks:
+      - dev
 
   sidekiq:
     image: local/report_a_defect
@@ -54,7 +59,11 @@ services:
     depends_on:
       - redis_queue
     restart: on-failure
+    networks:
+      - dev
 
+networks:
+  dev:
 volumes:
-  pg_data: {}
-  node_modules:
+  dev_pg_data: {}
+  dev_node_modules:

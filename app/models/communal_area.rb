@@ -6,7 +6,7 @@ class CommunalArea < ApplicationRecord
             :location,
             presence: true
 
-  include PgSearch
+  include PgSearch::Model
   pg_search_scope :search_by_name, against: %i[name]
 
   include PublicActivity::Model

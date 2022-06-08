@@ -26,10 +26,10 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   def current_user
     return nil unless signed_in_user_id
-    @current_user ||= User.find_or_create_by(
+    @current_user ||= User.where(
       identifier: signed_in_user_id,
       name: signed_in_user_name
-    )
+    ).first_or_initialize
   end
 
   def sign_out

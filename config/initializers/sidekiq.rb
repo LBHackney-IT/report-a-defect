@@ -1,7 +1,7 @@
 redis_url = "#{ENV['REDIS_URL']}/0"
 
 options = {
-  concurrency: Integer(ENV.fetch('RAILS_MAX_THREADS') { 5 }),
+  concurrency: Integer(ENV.fetch('RAILS_MAX_THREADS', 5)),
 }
 
 Sidekiq.configure_server do |config|
@@ -20,4 +20,4 @@ Sidekiq.configure_client do |config|
   }
 end
 
-Sidekiq::Logging.logger.level = Logger::WARN if Rails.env.production?
+Sidekiq.logger.level = Logger::WARN if Rails.env.production?

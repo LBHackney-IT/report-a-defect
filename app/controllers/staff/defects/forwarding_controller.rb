@@ -9,9 +9,10 @@ class Staff::Defects::ForwardingController < Staff::BaseController
   def create
     defect = Defect.find(id)
 
-    if recipient_type.eql?('contractor')
+    case recipient_type
+    when 'contractor'
       EmailContractor.new(defect: defect).call
-    elsif recipient_type.eql?('employer_agent')
+    when 'employer_agent'
       EmailEmployerAgent.new(defect: defect).call
     end
 
