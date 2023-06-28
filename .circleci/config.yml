@@ -39,7 +39,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Login to Docker
-          command: echo "$HEROKU_API_KEY" | docker login --username=$HEROKU_LOGIN --password-stdin registry.heroku.com
+          command: echo $HEROKU_API_KEY | docker login --username=$HEROKU_LOGIN --password-stdin registry.heroku.com
       - run:
           name: Setup Heroku
           command: |
@@ -68,7 +68,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Login to Docker
-          command: echo "$HEROKU_API_KEY" | docker login --username=$HEROKU_LOGIN --password-stdin registry.heroku.com
+          command: echo $HEROKU_API_KEY | docker login --username=$HEROKU_LOGIN --password-stdin registry.heroku.com
       - run:
           name: Setup Heroku
           command: |
