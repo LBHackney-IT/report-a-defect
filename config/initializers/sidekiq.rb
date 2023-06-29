@@ -8,6 +8,7 @@ Sidekiq.configure_server do |config|
   config.options.merge!(options)
   config.redis = {
     url: redis_url,
+    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
     size: config.options[:concurrency] + 5,
   }
 end
@@ -16,6 +17,7 @@ Sidekiq.configure_client do |config|
   config.options.merge!(options)
   config.redis = {
     url: redis_url,
+    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
     size: config.options[:concurrency] + 5,
   }
 end

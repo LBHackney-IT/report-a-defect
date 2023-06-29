@@ -9,13 +9,13 @@ COPY package-lock.json ./package-lock.json
 RUN npm set progress=false && npm config set depth 0
 RUN npm install --save govuk-frontend
 
-FROM ruby:2.6.1 as release
+FROM ruby:2.6.6 as release
 MAINTAINER dxw <rails@dxw.com>
 RUN apt-get update && apt-get install -qq -y \
   build-essential \
   libpq-dev \
   --fix-missing --no-install-recommends
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
         && apt-get install -y nodejs
 
 ENV INSTALL_PATH /srv/report-a-defect
