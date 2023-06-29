@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.6.1'
+ruby '2.6.6'
 gem 'activerecord-session_store'
 gem 'dotenv-rails'
 gem 'haml-rails', '~> 2.0'
