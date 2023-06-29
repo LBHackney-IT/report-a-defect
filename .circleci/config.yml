@@ -90,17 +90,17 @@ workflows:
   version: 2
   continuous_delivery:
     jobs:
-#      - build_and_test
+      - build_and_test
       - deploy_staging:
-#          requires:
-#            - build_and_test
+          requires:
+            - build_and_test
           filters:
             branches:
               only:
                 - develop
       - deploy_production:
-#          requires:
-#            - build_and_test
+          requires:
+            - build_and_test
           filters:
             branches:
               only:
