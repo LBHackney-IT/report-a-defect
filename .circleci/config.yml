@@ -91,13 +91,13 @@ workflows:
   continuous_delivery:
     jobs:
       - build_and_test
-      - deploy_staging:
-          requires:
-            - build_and_test
-          filters:
-            branches:
-              only:
-                - develop
+      - deploy_staging
+          # requires:
+          #   - build_and_test
+          # filters:
+          #   branches:
+          #     only:
+          #       - develop
       - deploy_production:
           requires:
             - build_and_test
