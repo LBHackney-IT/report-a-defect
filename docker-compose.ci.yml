@@ -3,6 +3,7 @@ services:
   test:
     build:
       context: .
+      dockerfile: Dockerfile
       args:
         RAILS_ENV: "test"
     environment:
