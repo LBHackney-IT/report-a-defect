@@ -22,7 +22,7 @@ jobs:
           command: |
             cp -rT . /tmp/report-a-defect
       - save_cache:
-          key: docker-images-{{ .Environment.CIRCLE_SHA1 }}
+          key: docker-images-ruby-3.1-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - /tmp/report-a-defect
             - /tmp/built-image.tar
@@ -34,7 +34,7 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - docker-images-{{ .Environment.CIRCLE_SHA1 }}
+            - docker-images-ruby-3.1-{{ .Environment.CIRCLE_SHA1 }}
       - setup_remote_docker
       - run:
           name: Login to Docker
