@@ -17,7 +17,7 @@ class Scheme < ApplicationRecord
             format: { with: URI::MailTo::EMAIL_REGEXP },
             allow_blank: true
 
-  scope :recent, (-> { where(start_date: [REPORT_MONTHS.months.ago..Time.zone.now]) })
+  scope :recent, -> { where(start_date: [REPORT_MONTHS.months.ago..Time.zone.now]) }
 
   include PublicActivity::Model
   tracked owner: ->(controller, _) { controller.current_user if controller }
