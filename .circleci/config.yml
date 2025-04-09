@@ -15,7 +15,7 @@ jobs:
           name: Save the tested Docker image for deployment
           command: |
             docker images
-            docker image tag report-a-defect-test:latest reportadefect:$CIRCLE_SHA1
+            docker image tag report_a_defect-test:latest reportadefect:$CIRCLE_SHA1
             docker image save -o /tmp/built-image.tar reportadefect:$CIRCLE_SHA1
             docker image load --input /tmp/built-image.tar
       - run:
