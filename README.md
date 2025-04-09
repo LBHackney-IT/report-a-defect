@@ -27,7 +27,7 @@ bin/dstart
 If you'd like to see all logs, like Sidekiq or Redis you can use the default:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 ## Running the tests
