@@ -11,6 +11,7 @@ jobs:
           name: Run the tests
           command: |
             bin/dtest-server ci
+            bin/dspec
       - run:
           name: Save the tested Docker image for deployment
           command: |
@@ -37,6 +38,9 @@ jobs:
             - docker-images-{{ .Environment.CIRCLE_SHA1 }}
       - setup_remote_docker
       - run:
+          name: Login to Docker
+          command: docker login --username=_ --password-stdin registry.heroku.com
+      - run:
           name: Setup Heroku CLI
           command: |
             cd /tmp/report-a-defect
@@ -60,7 +64,10 @@ jobs:
             - docker-images-{{ .Environment.CIRCLE_SHA1 }}
       - setup_remote_docker
       - run:
-          name: Setup Heroku CLI
+          name: Login to Docker
+          command: docker login --username=_ --password-stdin registry.heroku.com
+      - run:
+          name: Setup Heroku
           command: |
             cd /tmp/report-a-defect
             chmod +x .circleci/setup-heroku.sh
@@ -69,7 +76,7 @@ jobs:
           name: Deploy the Docker image to Heroku Production
           command: |
             docker image load --input /tmp/built-image.tar
-            docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION /web
+            docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
             docker push registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
             heroku container:release web --app $HEROKU_APP_NAME_PRODUCTION
 
