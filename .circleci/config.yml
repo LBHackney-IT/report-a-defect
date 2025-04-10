@@ -39,6 +39,7 @@ jobs:
       - run:
           name: Setup Heroku CLI
           command: |
+            cd /tmp/report-a-defect
             chmod +x .circleci/setup-heroku.sh
             .circleci/setup-heroku.sh
       - run:
@@ -61,6 +62,7 @@ jobs:
       - run:
           name: Setup Heroku CLI
           command: |
+            cd /tmp/report-a-defect
             chmod +x .circleci/setup-heroku.sh
             .circleci/setup-heroku.sh
       - run:
