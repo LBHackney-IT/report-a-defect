@@ -22,7 +22,7 @@ jobs:
           command: |
             cp -rT . /tmp/report-a-defect
       - save_cache:
-          key: docker-images-ruby-3.1-{{ .Environment.CIRCLE_SHA1 }}
+          key: docker-images-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - /tmp/report-a-defect
             - /tmp/built-image.tar
@@ -34,17 +34,11 @@ jobs:
     steps:
       - restore_cache:
           keys:
-            - docker-images-ruby-3.1-{{ .Environment.CIRCLE_SHA1 }}
+            - docker-images-{{ .Environment.CIRCLE_SHA1 }}
       - setup_remote_docker
       - run:
-          name: Login to Docker
-          command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
-      - run:
-          name: Setup Heroku
+          name: Setup Heroku CLI
           command: |
-            cd /tmp/report-a-defect
-            git init
-            git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_STAGING.git develop:master
             chmod +x .circleci/setup-heroku.sh
             .circleci/setup-heroku.sh
       - run:
@@ -54,7 +48,6 @@ jobs:
             docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
             docker push registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
             heroku container:release web --app $HEROKU_APP_NAME_STAGING
-            heroku container:release worker --app $HEROKU_APP_NAME_STAGING
 
   deploy_production:
     working_directory: ~/report_a_defect
@@ -66,24 +59,17 @@ jobs:
             - docker-images-{{ .Environment.CIRCLE_SHA1 }}
       - setup_remote_docker
       - run:
-          name: Login to Docker
-          command: docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
-      - run:
-          name: Setup Heroku
+          name: Setup Heroku CLI
           command: |
-            cd /tmp/report-a-defect
-            git init
-            git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_PRODUCTION.git master:master
             chmod +x .circleci/setup-heroku.sh
             .circleci/setup-heroku.sh
       - run:
           name: Deploy the Docker image to Heroku Production
           command: |
             docker image load --input /tmp/built-image.tar
-            docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
+            docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION /web
             docker push registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
             heroku container:release web --app $HEROKU_APP_NAME_PRODUCTION
-            heroku container:release worker --app $HEROKU_APP_NAME_PRODUCTION
 
 workflows:
   version: 2
