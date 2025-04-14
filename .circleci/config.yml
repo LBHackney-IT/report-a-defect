@@ -53,6 +53,7 @@ jobs:
             docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
             docker push registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
             heroku container:release web --app $HEROKU_APP_NAME_STAGING
+            heroku container:release worker --app $HEROKU_APP_NAME_STAGING
 
   deploy_production:
     working_directory: ~/report_a_defect
@@ -79,6 +80,7 @@ jobs:
             docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
             docker push registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
             heroku container:release web --app $HEROKU_APP_NAME_PRODUCTION
+            heroku container:release worker --app $HEROKU_APP_NAME_STAGING
 
 workflows:
   version: 2
@@ -88,10 +90,10 @@ workflows:
       - deploy_staging:
           requires:
             - build_and_test
-          filters:
-            branches:
-              only:
-                - develop
+          # filters:
+          #   branches:
+          #     only:
+          #       - develop
       - deploy_production:
           requires:
             - build_and_test
