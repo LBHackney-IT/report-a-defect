@@ -36,5 +36,8 @@ module RequestARepair
       api_key: ENV['NOTIFY_KEY'],
     }
     config.action_mailer.default_url_options = { protocol: 'https' }
+
+    config.active_record.yaml_column_permitted_classes = [Symbol,
+                                                          ActiveSupport::HashWithIndifferentAccess]
   end
 end
