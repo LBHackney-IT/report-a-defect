@@ -4,7 +4,7 @@ options = {
   concurrency: Integer(ENV.fetch('RAILS_MAX_THREADS', 5)),
 }
 
-Sidekiq.configure_server do |_confif|
+Sidekiq.configure_server do |_config|
   config.redis = {
     url: redis_url,
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
