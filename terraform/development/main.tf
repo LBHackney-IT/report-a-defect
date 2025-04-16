@@ -65,7 +65,7 @@ module "aws-rds-lbh" {
   db_name              = "reportadefect"
   db_subnet_group_name = "report-a-defect-db-development"
   subnet_ids           = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
-  db_username          = "report-a-defect-admin"
+  db_username          = "report_a_defect_admin"
   environment          = "development"
   kms_key_arn          = ""
   vpc_id               = "vpc-0d15f152935c8716f"

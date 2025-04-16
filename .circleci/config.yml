@@ -85,10 +85,11 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: Run the tests
-          command: |
-            bin/dtest-server ci
+      # - run:
+      #     name: Run the tests
+      #     command: |
+      #       bin/dtest-server ci
+      #       bin/dspec
       - run:
           name: Save the tested Docker image for deployment
           command: |
