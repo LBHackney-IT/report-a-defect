@@ -1,6 +1,6 @@
 require 'rails_helper'
 class TestDefect < Defect
-  scope :any_scope, (->(args) { where(id: args) })
+  scope :any_scope, ->(args) { where(id: args) }
 end
 
 RSpec.describe Defect, type: :model do

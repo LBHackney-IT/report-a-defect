@@ -15,17 +15,17 @@ function cleanup {
 
   # ignore errors
   set +e
-  docker-compose down
+  docker compose down
 
   exit $code
 }
 
 trap cleanup EXIT
 
-run_with_pretty_print 'docker-compose build'
+run_with_pretty_print 'docker compose build'
 
-run_with_pretty_print 'docker-compose up -d'
+run_with_pretty_print 'docker compose up -d'
 
-run_with_pretty_print "docker-compose run --rm web bin/dsetup"
+run_with_pretty_print "docker compose run --rm web bin/dsetup"
 
 run_with_pretty_print 'docker attach report-a-defect_dev_web_1'

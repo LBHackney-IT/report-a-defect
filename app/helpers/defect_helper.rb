@@ -13,7 +13,7 @@ module DefectHelper
 
   def view_path_for(parent:, defect:)
     return property_defect_path(parent, defect) if parent.is_a?(Property)
-    return communal_area_defect_path(parent, defect) if parent.is_a?(CommunalArea)
+    communal_area_defect_path(parent, defect) if parent.is_a?(CommunalArea)
   end
 
   def defect_path_for(defect:)

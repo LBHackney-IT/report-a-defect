@@ -12,8 +12,8 @@ run_with_pretty_print()
 }
 
 pretty_print "Taking the current environment down…"
-run_with_pretty_print 'docker-compose down -v --remove-orphans'
-run_with_pretty_print 'docker-compose --file=docker-compose.test.yml down -v --remove-orphans'
+run_with_pretty_print 'docker compose down -v --remove-orphans'
+run_with_pretty_print 'docker compose --file=docker-compose.test.yml down -v --remove-orphans'
 
 pretty_print "Remove all unused images before we build new ones…"
 run_with_pretty_print 'docker image prune -f'
@@ -23,8 +23,8 @@ run_with_pretty_print 'bin/dtest-server'
 pretty_print "Rebuilt and started the testing server for TVS."
 
 pretty_print "Rebuilding the web server…"
-run_with_pretty_print 'docker-compose build'
-run_with_pretty_print 'docker-compose run --rm web bin/dsetup'
+run_with_pretty_print 'docker compose build'
+run_with_pretty_print 'docker compose run --rm web bin/dsetup'
 run_with_pretty_print 'bin/drake db:seed'
 pretty_print "Rebuilt and starting the web server…"
 run_with_pretty_print 'bin/dstart'

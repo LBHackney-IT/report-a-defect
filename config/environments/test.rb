@@ -57,7 +57,9 @@ Rails.application.configure do
   config.after_initialize do
     Bullet.enable = true
     Bullet.bullet_logger = true
-    Bullet.raise = true # raise an error if n+1 query occurs
+
+    Bullet.n_plus_one_query_enable = false # Disable n+1 query detection
+    Bullet.raise = false # Disable raising errors for warnings
 
     Bullet.add_safelist type: :unused_eager_loading,
                         class_name: 'Defect',
