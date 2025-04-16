@@ -24,7 +24,7 @@ locals {
   ssm_params = [
     "postgres/username",
     "postgres/password",
-    "postgres/database",
+    "postgres/port",
     "auth0_client_id",
     "auth0_client_secret",
     "auth0_domain",
@@ -62,10 +62,10 @@ module "aws-rds-lbh" {
   db_family            = "postgres15"
   db_identifier        = "report-a-defect-db-development"
   db_instance_class    = "db.t3.micro"
-  db_name              = data.aws_ssm_parameter.params["postgres/database"].value
+  db_name              = "report-a-defect-db-development"
   db_subnet_group_name = "report-a-defect-db-development"
   subnet_ids           = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
-  db_username          = data.aws_ssm_parameter.params["postgres/username"].value
+  db_username          = "report-a-defect-admin"
   environment          = "development"
   kms_key_arn          = ""
   vpc_id               = "vpc-0d15f152935c8716f"
@@ -98,8 +98,8 @@ module "aws-ecs-lbh" {
   ecs_service_config = {
     "report-a-defect" = {
       family             = "report-a-defect"
+      memory             = 1024
       cpu                = 512
-      memory             = 102
       execution_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
       task_role_arn      = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/3ecsTaskExecutionRole"
       launch_type        = "FARGATE"
