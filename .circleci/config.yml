@@ -11,7 +11,7 @@ executors:
       - image: circleci/python:3.8
   docker-terraform:
     docker:
-      - image: "hashicorp/terraform:light"
+      - image: hashicorp/terraform:1.5.7
 
 references:
   workspace_root: &workspace_root "~"
