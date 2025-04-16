@@ -15,6 +15,7 @@ terraform {
 }
 
 locals {
+  environment_name         = "development"
   lang                     = "en_US.UTF-8"
   new_relic_log            = "stdout"
   rack_env                 = "staging"
@@ -50,7 +51,7 @@ locals {
 # Dynamically pull all SSM parameters
 data "aws_ssm_parameter" "params" {
   for_each = toset(local.ssm_params)
-  name     = "/report-a-defect/development/${each.value}"
+  name     = "/report-a-defect/${local.environment_name}/${each.value}"
 }
 
 # RDS Module
@@ -60,18 +61,18 @@ module "aws-rds-lbh" {
   db_allocated_storage = 10
   db_engine_version    = "15.8"
   db_family            = "postgres15"
-  db_identifier        = "report-a-defect-db-development"
+  db_identifier        = "report-a-defect-db-${local.environment_name}"
   db_instance_class    = "db.t3.micro"
   db_name              = "reportadefect"
-  db_subnet_group_name = "report-a-defect-db-development"
+  db_subnet_group_name = "report-a-defect-db-${local.environment_name}"
   subnet_ids           = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
   db_username          = "report_a_defect_admin"
-  environment          = "development"
-  kms_key_arn          = ""
+  environment          = local.environment_name
+  kms_key_arn          = "arn:aws:kms:eu-west-2:${data.aws_caller_identity.current.account_id}}:key/99b165fa-c132-4cea-a53d-9c019da81cbc"
   vpc_id               = "vpc-0d15f152935c8716f"
   tags = {
-    Name              = "report-a-defect-db-development"
-    Environment       = "development"
+    Name              = "report-a-defect-db-${local.environment_name}"
+    Environment       = local.environment_name
     terraform-managed = true
     project_name      = "Report a Defect"
   }
@@ -81,7 +82,7 @@ module "aws-rds-lbh" {
 module "aws-ecs-lbh" {
   source                = "github.com/LBHackney-IT/aws-ecs-lbh?ref=27607834b4821b01ba0f0fade8e292181fe9658e"
   application           = "report-a-defect"
-  environment           = "development"
+  environment           = local.environment_name
   vpc_id                = "vpc-0d15f152935c8716f"
   task_subnets          = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
   create_alb            = true
@@ -91,7 +92,7 @@ module "aws-ecs-lbh" {
   listener_protocol     = "HTTP"
 
   alb_access_logs_configuration = {
-    access_log_prefix = "ecs-task-report-a-defect-development"
+    access_log_prefix = "ecs-task-report-a-defect-${local.environment_name}"
     retention_period  = 7
   }
 
@@ -114,9 +115,9 @@ module "aws-ecs-lbh" {
           logConfiguration = {
             logDriver = "awslogs"
             options = {
-              awslogs-group         = "ecs-task-report-a-defect-development"
+              awslogs-group         = "ecs-task-report-a-defect-${local.environment_name}"
               awslogs-region        = "eu-west-2"
-              awslogs-stream-prefix = "report-a-defect-development-logs"
+              awslogs-stream-prefix = "report-a-defect-${local.environment_name}-logs"
             }
           }
           environment = [
@@ -149,7 +150,6 @@ module "aws-ecs-lbh" {
           ]
         }
       ])
-
     }
   }
 }
