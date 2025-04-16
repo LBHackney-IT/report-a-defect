@@ -150,7 +150,7 @@ jobs:
     steps:
       - terraform-apply:
           environment: "production"
-  deploy_development:
+  deploy-development:
     working_directory: ~/report_a_defect
     docker:
       - image: cimg/base:2025.04
@@ -260,12 +260,17 @@ workflows:
       - terraform-apply-development:
           requires:
             - terraform-approve-development
-      - deploy_development:
+      - deploy-development:
           requires:
             - terraform-apply-development
   continuous_delivery:
     jobs:
-      - build_and_test
+      - build_and_test:
+          filters:
+            branches:
+              only:
+                - develop
+                - master
       - deploy_staging:
           requires:
             - build_and_test

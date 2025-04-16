@@ -130,8 +130,8 @@ module "aws-ecs-lbh" {
           ])
           cpu = 256
           memory = 512
-          execution_role_arn = "arn:aws:iam::364864573329:role/ecsTaskExecutionRole"
-          task_role_arn = "arn:aws:iam::364864573329:role/ecsTaskExecutionRole"
+          execution_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
+          task_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/3ecsTaskExecutionRole"
           launch_type = "FARGATE"        
       }
     }
