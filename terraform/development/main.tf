@@ -62,7 +62,7 @@ module "aws-rds-lbh" {
   db_family            = "postgres15"
   db_identifier        = "report-a-defect-db-development"
   db_instance_class    = "db.t3.micro"
-  db_name              = "report-a-defect-db-development"
+  db_name              = "reportadefect"
   db_subnet_group_name = "report-a-defect-db-development"
   subnet_ids           = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
   db_username          = "report-a-defect-admin"
