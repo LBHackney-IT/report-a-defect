@@ -68,7 +68,7 @@ module "aws-rds-lbh" {
   subnet_ids           = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
   db_username          = "report_a_defect_admin"
   environment          = local.environment_name
-  kms_key_arn          = "arn:aws:kms:eu-west-2:${data.aws_caller_identity.current.account_id}}:key/99b165fa-c132-4cea-a53d-9c019da81cbc"
+  kms_key_arn          = "arn:aws:kms:eu-west-2:${data.aws_caller_identity.current.account_id}:key/3cdafea1-f12f-4a3b-84c1-3a284d5ebaf4"
   vpc_id               = "vpc-0d15f152935c8716f"
   tags = {
     Name              = "report-a-defect-db-${local.environment_name}"
