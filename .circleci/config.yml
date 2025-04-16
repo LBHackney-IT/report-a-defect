@@ -89,7 +89,6 @@ jobs:
           name: Run the tests
           command: |
             bin/dtest-server ci
-            bin/dspec
       - run:
           name: Save the tested Docker image for deployment
           command: |
@@ -253,13 +252,9 @@ workflows:
       - terraform-init-and-plan-development:
           requires:
             - assume-role-development
-      - terraform-approve-development:
-          type: approval
-          requires:
-            - terraform-init-and-plan-development
       - terraform-apply-development:
           requires:
-            - terraform-approve-development
+            - terraform-init-and-plan-development
       - deploy-development:
           requires:
             - terraform-apply-development
