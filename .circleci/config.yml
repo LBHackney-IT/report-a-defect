@@ -258,6 +258,7 @@ workflows:
           requires:
             - terraform-init-and-plan-development
       - deploy-development:
+          context: api-assume-role-housing-development-context
           requires:
             - terraform-apply-development
   continuous_delivery:
