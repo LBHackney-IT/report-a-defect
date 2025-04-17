@@ -30,9 +30,6 @@ locals {
   rails_log_to_stdout      = "enabled"
   rails_serve_static_files = "enabled"
   ssm_params = [
-    "postgres/username",
-    "postgres/password",
-    "postgres/port",
     "auth0_client_id",
     "auth0_client_secret",
     "auth0_domain",
@@ -77,6 +74,17 @@ data "aws_subnets" "development_private_subnets" {
   }
 }
 
+data "aws_subnets" "development_public_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.development_vpc.id]
+  }
+  filter {
+    name   = "tag:Type"
+    values = ["public"]
+  }
+}
+
 # RDS Module
 module "aws-rds-lbh" {
   source               = "github.com/LBHackney-IT/aws-rds-lbh?ref=5583941f81fe14c3f365b19de22ec256a3b1ceae"
@@ -101,8 +109,9 @@ module "aws-ecs-lbh" {
   application           = "report-a-defect"
   environment           = local.environment_name
   vpc_id                = data.aws_vpc.development_vpc.id
-  task_subnets          = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"] # TODO: Use data.aws_subnets.development_private_subnets.ids
+  task_subnets          = data.aws_subnets.development_private_subnets.ids
   create_alb            = true
+  alb_subnets          = data.aws_subnets.development_public_subnets.ids
   create_cluster        = true
   create_ecr_repository = true
   listener_port         = 80
