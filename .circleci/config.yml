@@ -151,12 +151,11 @@ jobs:
       - terraform-apply:
           environment: "production"
   deploy-development:
-    attach_workspace:
-      at: *workspace_root
     working_directory: ~/report_a_defect
     docker:
       - image: cimg/base:2025.04
     steps:
+      - *attach_workspace
       - restore_cache:
           keys:
             - docker-images-{{ .Environment.CIRCLE_SHA1 }}
