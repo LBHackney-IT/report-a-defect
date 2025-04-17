@@ -1,5 +1,12 @@
 provider "aws" {
   region = "eu-west-2"
+  default_tags {
+    tags = {
+      Application = "Report a Defect"
+      TeamEmail   = "mmh-project-team@hackney.gov.uk" # Note: To change once HPT email is confirmed
+      Environment = "development"
+    }
+  }
 }
 
 data "aws_caller_identity" "current" {}
@@ -54,6 +61,22 @@ data "aws_ssm_parameter" "params" {
   name     = "/report-a-defect/${local.environment_name}/${each.value}"
 }
 
+data "aws_vpc" "development_vpc" {
+  tags = {
+    Name = "housing-dev"
+  }
+}
+data "aws_subnets" "development_private_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.development_vpc.id]
+  }
+  filter {
+    name   = "tag:Type"
+    values = ["private"]
+  }
+}
+
 # RDS Module
 module "aws-rds-lbh" {
   source               = "github.com/LBHackney-IT/aws-rds-lbh?ref=5583941f81fe14c3f365b19de22ec256a3b1ceae"
@@ -65,17 +88,11 @@ module "aws-rds-lbh" {
   db_instance_class    = "db.t3.micro"
   db_name              = "reportadefect"
   db_subnet_group_name = "report-a-defect-db-${local.environment_name}"
-  subnet_ids           = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
+  subnet_ids           = data.aws_subnets.development_private_subnets.ids
   db_username          = "report_a_defect_admin"
   environment          = local.environment_name
   kms_key_arn          = "arn:aws:kms:eu-west-2:${data.aws_caller_identity.current.account_id}:key/3cdafea1-f12f-4a3b-84c1-3a284d5ebaf4"
-  vpc_id               = "vpc-0d15f152935c8716f"
-  tags = {
-    Name              = "report-a-defect-db-${local.environment_name}"
-    Environment       = local.environment_name
-    terraform-managed = true
-    project_name      = "Report a Defect"
-  }
+  vpc_id               = data.aws_vpc.development_vpc.id
 }
 
 # ECS Module
@@ -83,8 +100,8 @@ module "aws-ecs-lbh" {
   source                = "github.com/LBHackney-IT/aws-ecs-lbh?ref=27607834b4821b01ba0f0fade8e292181fe9658e"
   application           = "report-a-defect"
   environment           = local.environment_name
-  vpc_id                = "vpc-0d15f152935c8716f"
-  task_subnets          = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"]
+  vpc_id                = data.aws_vpc.development_vpc.id
+  task_subnets          = data.aws_subnets.development_private_subnets.ids
   create_alb            = true
   create_cluster        = true
   create_ecr_repository = true
