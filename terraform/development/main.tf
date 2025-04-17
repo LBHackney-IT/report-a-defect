@@ -101,7 +101,7 @@ module "aws-ecs-lbh" {
   application           = "report-a-defect"
   environment           = local.environment_name
   vpc_id                = data.aws_vpc.development_vpc.id
-  task_subnets          = data.aws_subnets.development_private_subnets.ids
+  task_subnets          = ["subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd"] # TODO: Use data.aws_subnets.development_private_subnets.ids
   create_alb            = true
   create_cluster        = true
   create_ecr_repository = true
