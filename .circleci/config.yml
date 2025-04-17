@@ -165,7 +165,7 @@ jobs:
             sudo apt update
             sudo apt install software-properties-common
             sudo add-apt-repository --yes ppa:deadsnakes/ppa
-            sudo apt install python3.9
+            sudo apt install python3-pip
       - run:
           name: Install AWS CLI
           command: pip3 install awscli --upgrade --user
