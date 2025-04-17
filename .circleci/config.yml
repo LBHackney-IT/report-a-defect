@@ -174,7 +174,7 @@ jobs:
           name: Login to ECR
           command: |
             export AWS_REGION=eu-west-2
-            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_DEVELOPMENT.dkr.ecr.eu-west-2.amazonaws.com
+            docker login -u AWS -p $(aws ecr get-login-password --region eu-west-2) $AWS_ACCOUNT_DEVELOPMENT.dkr.ecr.eu-west-2.amazonaws.com
       - run:
           name: Tag new image for development release
           command: |
