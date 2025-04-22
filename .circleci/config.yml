@@ -72,10 +72,16 @@ commands:
           command: |
             cd ./terraform/<<parameters.environment>>/
             terraform apply -auto-approve plan.out
+      - run:
+           name: Get ECR repo URL & export vars  
+           command: |     
+            echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
+            cp $BASH_ENV bash.env
       - persist_to_workspace:
           root: *workspace_root
           paths:
             - .aws
+            - bash.env
 
 jobs:
   build_and_test:
@@ -171,23 +177,28 @@ jobs:
           name: Install AWS CLI
           command: pip3 install awscli --upgrade --user
       - run:
+          name: Load ECR repo URL
+          command: |
+            cat bash.env >> $BASH_ENV
+      - run:
           name: Login to ECR
           command: |
             export AWS_REGION=eu-west-2
-            docker login -u AWS -p $(aws ecr get-login-password --region eu-west-2) $AWS_ACCOUNT_DEVELOPMENT.dkr.ecr.eu-west-2.amazonaws.com
+            export AWS_ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
+            docker login -u AWS -p $(aws ecr get-login-password --region eu-west-2) $AWS_ACCOUNT.dkr.ecr.eu-west-2.amazonaws.com
       - run:
           name: Tag new image for development release
           command: |
             docker image load --input /tmp/built-image.tar
-            docker tag reportadefect:$CIRCLE_SHA1 $AWS_ACCOUNT_DEVELOPMENT.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/report-a-defect:$CIRCLE_SHA1
-            docker tag reportadefect:$CIRCLE_SHA1 $AWS_ACCOUNT_DEVELOPMENT.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/report-a-defect:latest
-            docker tag reportadefect:$CIRCLE_SHA1 $AWS_ACCOUNT_DEVELOPMENT.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/report-a-defect:development
+            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:$CIRCLE_SHA1
+            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:latest
+            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:development
       - run:
           name: Release new image to ECR
           command: |
-            docker push $AWS_ACCOUNT_DEVELOPMENT.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/report-a-defect:$CIRCLE_SHA1
-            docker push $AWS_ACCOUNT_DEVELOPMENT.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/report-a-defect:latest
-            docker push $AWS_ACCOUNT_DEVELOPMENT.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/report-a-defect:development
+            docker push $ECR_REPO_URL:$CIRCLE_SHA1
+            docker push $ECR_REPO_URL:latest
+            docker push $ECR_REPO_URL:development
   deploy_staging:
     working_directory: ~/report_a_defect
     docker:
@@ -258,7 +269,6 @@ workflows:
           requires:
             - terraform-init-and-plan-development
       - deploy-development:
-          context: api-assume-role-housing-development-context
           requires:
             - terraform-apply-development
   continuous_delivery:
