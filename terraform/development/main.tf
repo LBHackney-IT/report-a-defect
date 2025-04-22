@@ -92,7 +92,7 @@ module "aws-rds-lbh" {
   db_allocated_storage = 10
   db_engine_version    = "15.8"
   db_family            = "postgres15"
-  db_identifier        = "report-a-defect-db-${local.environment_name}"
+  db_identifier        = "report-a-defect-db"
   db_instance_class    = "db.t3.micro"
   db_name              = "reportadefect"
   db_port              = 5432
