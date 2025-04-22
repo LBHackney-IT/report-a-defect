@@ -87,24 +87,22 @@ data "aws_subnets" "development_public_subnets" {
 
 # Database Module (postgres)
 module "aws-rds-lbh" {
-  source               = "github.com/LBHackney-IT/aws-rds-lbh?ref=5583941f81fe14c3f365b19de22ec256a3b1ceae"
-  application          = "report-a-defect"
-  db_allocated_storage = 10
-  db_engine_version    = "15.8"
-  db_family            = "postgres15"
-  db_identifier        = "report-a-defect-db"
-  db_instance_class    = "db.t3.micro"
-  db_name              = "reportadefect"
-  db_port              = 5432
-  db_subnet_group_name = "report-a-defect-db-${local.environment_name}"
-  subnet_ids           = data.aws_subnets.development_private_subnets.ids
-  db_username          = "report_a_defect_admin"
-  environment          = local.environment_name
-  kms_key_arn          = "arn:aws:kms:eu-west-2:${data.aws_caller_identity.current.account_id}:key/3cdafea1-f12f-4a3b-84c1-3a284d5ebaf4"
-  vpc_id               = data.aws_vpc.development_vpc.id
-  allowed_security_group_ids = [
-    module.aws-ecs-lbh.ecs_task_security_group_ids["report-a-defect"]
-  ]
+  source                     = "github.com/LBHackney-IT/aws-rds-lbh?ref=5583941f81fe14c3f365b19de22ec256a3b1ceae"
+  application                = "report-a-defect"
+  db_allocated_storage       = 10
+  db_engine_version          = "15.8"
+  db_family                  = "postgres15"
+  db_identifier              = "report-a-defect-db"
+  db_instance_class          = "db.t3.micro"
+  db_name                    = "reportadefect"
+  db_port                    = 5432
+  db_subnet_group_name       = "report-a-defect-db-${local.environment_name}"
+  subnet_ids                 = data.aws_subnets.development_private_subnets.ids
+  db_username                = "report_a_defect_admin"
+  environment                = local.environment_name
+  kms_key_arn                = "arn:aws:kms:eu-west-2:${data.aws_caller_identity.current.account_id}:key/3cdafea1-f12f-4a3b-84c1-3a284d5ebaf4"
+  vpc_id                     = data.aws_vpc.development_vpc.id
+  allowed_security_group_ids = toset(module.aws-ecs-lbh.ecs_task_security_group_ids["report-a-defect"])
 }
 
 # Create connection string & store in Secrets Manager
