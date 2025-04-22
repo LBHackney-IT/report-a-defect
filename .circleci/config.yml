@@ -223,12 +223,12 @@ workflows:
           context: api-assume-role-housing-development-context
           requires:
             - build-and-test
-      - terraform-init-then-apply-development:
-          requires:
-            - assume-role-development
       - deploy-development:
           requires:
-            - terraform-init-then-apply-development
+            - assume-role-development
+      - terraform-init-then-apply-development:
+          requires:
+            - deploy-development
   continuous_delivery:
     jobs:
       - build-and-test:
