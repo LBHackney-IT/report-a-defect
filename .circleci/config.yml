@@ -76,7 +76,7 @@ commands:
            name: Get ECR repo URL & export vars  
            command: |     
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
-            cp $BASH_ENV bash.env
+            cp $BASH_ENV ~/bash.env
       - persist_to_workspace:
           root: *workspace_root
           paths:
