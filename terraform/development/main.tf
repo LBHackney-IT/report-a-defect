@@ -181,5 +181,5 @@ module "aws-ecs-lbh" {
 }
 
 output "ecr_repository_url" {
-  value = module.aws-ecs-lbh.ecr_repository_url
+  value = "${module.aws-ecs-lbh.ecr_repository_url}"
 }
