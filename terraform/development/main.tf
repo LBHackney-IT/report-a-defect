@@ -21,16 +21,6 @@ terraform {
   }
 }
 
-variable "enable_ecs_service" {
-  type    = bool
-  default = true
-}
-
-variable "image_tag" {
-  type    = string
-  default = "latest"
-}
-
 locals {
   environment_name         = "development"
   lang                     = "en_US.UTF-8"
