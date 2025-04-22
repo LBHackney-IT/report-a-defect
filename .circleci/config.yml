@@ -35,8 +35,8 @@ commands:
           root: *workspace_root
           paths:
             - .aws
-  terraform-init-then-plan:
-    description: "Initializes and run plan from terraform configuration"
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform configuration"
     parameters:
       environment:
         type: string
@@ -44,34 +44,16 @@ commands:
       - *attach_workspace
       - checkout
       - run:
+          name: get and init
           command: |
             cd ./terraform/<<parameters.environment>>/
             terraform get -update=true
             terraform init
-          name: get and init
       - run:
-          name: plan
+          name: apply & save ECR repo URL
           command: |
             cd ./terraform/<<parameters.environment>>/
-            terraform plan -out=plan.out
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .aws
-            - project/*
-  terraform-apply:
-    description: "Runs Terraform Apply"
-    parameters:
-      environment:
-        type: string
-    steps:
-      - *attach_workspace
-      - checkout
-      - run:
-          name: Apply & Save ECR repo URL
-          command: |
-            cd ./terraform/<<parameters.environment>>/
-            terraform apply -auto-approve plan.out
+            terraform apply -var image_tag=${CIRCLE_SHA1} -auto-approve
 
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
             cp $BASH_ENV ~/bash.env
@@ -124,35 +106,20 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
-  terraform-init-and-plan-development:
+  terraform-init-then-apply-development:
     executor: docker-terraform
     steps:
-      - terraform-init-then-plan:
+      - terraform-init-then-apply:
           environment: "development"
-  terraform-apply-development:
+  terraform-init-then-apply-staging:
     executor: docker-terraform
     steps:
-      - terraform-apply:
-          environment: "development"
-  terraform-init-and-plan-staging:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-plan:
+      - terraform-init-then-apply:
           environment: "staging"
-  terraform-apply-staging:
+  terraform-init-then-apply-production:
     executor: docker-terraform
     steps:
-      - terraform-apply:
-          environment: "staging"
-  terraform-init-and-plan-production:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-plan:
-          environment: "production"
-  terraform-apply-production:
-    executor: docker-terraform
-    steps:
-      - terraform-apply:
+      - terraform-init-then-apply:
           environment: "production"
   deploy-development:
     working_directory: ~/report_a_defect
@@ -189,14 +156,10 @@ jobs:
           command: |
             docker image load --input /tmp/built-image.tar
             docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:$CIRCLE_SHA1
-            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:latest
-            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:development
       - run:
           name: Release new image to ECR
           command: |
             docker push $ECR_REPO_URL:$CIRCLE_SHA1
-            docker push $ECR_REPO_URL:latest
-            docker push $ECR_REPO_URL:development
   deploy_staging:
     working_directory: ~/report_a_defect
     docker:
@@ -260,15 +223,12 @@ workflows:
           context: api-assume-role-housing-development-context
           requires:
             - build_and_test
-      - terraform-init-and-plan-development:
+      - terraform-init-then-apply-development:
           requires:
             - assume-role-development
-      - terraform-apply-development:
-          requires:
-            - terraform-init-and-plan-development
       - deploy-development:
           requires:
-            - terraform-apply-development
+            - terraform-init-then-apply-development
   continuous_delivery:
     jobs:
       - build_and_test:

@@ -133,7 +133,7 @@ module "aws-ecs-lbh" {
       container_definitions = jsonencode([
         {
           name         = "report-a-defect-container"
-          image        = "${data.aws_caller_identity.current.account_id}.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/report-a-defect:latest"
+          image        = "${data.aws_caller_identity.current.account_id}.dkr.ecr.eu-west-2.amazonaws.com/hackney/apps/report-a-defect:${var.image_tag}"
           memory       = 1024
           cpu          = 512
           essential    = true
