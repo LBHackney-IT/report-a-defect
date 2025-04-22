@@ -124,23 +124,13 @@ jobs:
   deploy-development:
     working_directory: ~/report_a_defect
     docker:
-      - image: cimg/base:2025.04
+      - image: amazon/aws-cli
     steps:
       - *attach_workspace
       - restore_cache:
           keys:
             - docker-images-{{ .Environment.CIRCLE_SHA1 }}
       - setup_remote_docker
-      - run:
-          name: Install Python
-          command: |
-            sudo apt update
-            sudo apt install software-properties-common
-            sudo add-apt-repository --yes ppa:deadsnakes/ppa
-            sudo apt install python3-pip
-      - run:
-          name: Install AWS CLI
-          command: pip3 install awscli --upgrade --user
       - run:
           name: Load environment variables
           command: |
