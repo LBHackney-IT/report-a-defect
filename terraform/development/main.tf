@@ -95,6 +95,7 @@ module "aws-rds-lbh" {
   db_identifier        = "report-a-defect-db-${local.environment_name}"
   db_instance_class    = "db.t3.micro"
   db_name              = "reportadefect"
+  db_port              = 5432
   db_subnet_group_name = "report-a-defect-db-${local.environment_name}"
   subnet_ids           = data.aws_subnets.development_private_subnets.ids
   db_username          = "report_a_defect_admin"
