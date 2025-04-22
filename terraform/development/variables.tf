@@ -3,3 +3,8 @@ variable "image_tag" {
   type        = string
   default     = "latest"
 }
+variable "enable_ecs_service" {
+  description = "Enable or disable the ECS service."
+  type        = bool
+  default     = true
+}
