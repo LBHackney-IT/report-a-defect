@@ -53,7 +53,7 @@ commands:
           name: apply & save env variables
           command: |
             cd ./terraform/<<parameters.environment>>/
-            terraform apply -auto-approve -replace='module.aws-rds-lbh.aws_security_group.rds'
+            terraform apply -auto-approve
 
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
             cp $BASH_ENV ~/bash.env
