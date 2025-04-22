@@ -177,9 +177,9 @@ jobs:
           name: Install AWS CLI
           command: pip3 install awscli --upgrade --user
       - run:
-          name: Load ECR repo URL
+          name: Load environment variables
           command: |
-            cat bash.env >> $BASH_ENV
+            cat ~/bash.env >> $BASH_ENV
       - run:
           name: Login to ECR
           command: |
