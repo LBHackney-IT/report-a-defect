@@ -77,7 +77,7 @@ commands:
             terraform get -update=true
             terraform init
       - run:
-          name: apply
+          name: apply with image tag
           command: |
             cd ./terraform/<<parameters.environment>>/
             terraform apply -var image_tag=${CIRCLE_SHA1} -auto-approve
