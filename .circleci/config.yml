@@ -68,16 +68,13 @@ commands:
       - *attach_workspace
       - checkout
       - run:
-          name: apply & save ecr repo URL
+          name: Apply & Save ECR repo URL
           command: |
             cd ./terraform/<<parameters.environment>>/
             terraform apply -auto-approve plan.out
 
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
             cp $BASH_ENV ~/bash.env
-      - run:
-          name: verify bash.env
-          command: cat ~/bash.env
       - persist_to_workspace:
           root: *workspace_root
           paths:

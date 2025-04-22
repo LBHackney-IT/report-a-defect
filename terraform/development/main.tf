@@ -128,7 +128,7 @@ module "aws-ecs-lbh" {
       memory             = 1024
       cpu                = 512
       execution_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
-      task_role_arn      = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/3ecsTaskExecutionRole"
+      task_role_arn      = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
       launch_type        = "FARGATE"
       container_definitions = jsonencode([
         {
