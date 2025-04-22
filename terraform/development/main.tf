@@ -104,6 +104,14 @@ module "aws-rds-lbh" {
 }
 
 # ECS Module
+
+# CloudWatch Log Group for ECS
+resource "aws_cloudwatch_log_group" "report_a_defect" {
+  name = "ecs-task-report-a-defect-${local.environment_name}"
+
+  retention_in_days = 60
+}
+
 module "aws-ecs-lbh" {
   source                = "github.com/LBHackney-IT/aws-ecs-lbh?ref=27607834b4821b01ba0f0fade8e292181fe9658e"
   application           = "report-a-defect"
@@ -111,11 +119,12 @@ module "aws-ecs-lbh" {
   vpc_id                = data.aws_vpc.development_vpc.id
   task_subnets          = data.aws_subnets.development_private_subnets.ids
   create_alb            = true
-  alb_subnets          = data.aws_subnets.development_public_subnets.ids
+  alb_subnets           = data.aws_subnets.development_public_subnets.ids
   create_cluster        = true
   create_ecr_repository = true
   listener_port         = 80
   listener_protocol     = "HTTP"
+  depends_on            = [aws_cloudwatch_log_group.report_a_defect]
 
   alb_access_logs_configuration = {
     access_log_prefix = "ecs-task-report-a-defect-${local.environment_name}"
@@ -178,13 +187,6 @@ module "aws-ecs-lbh" {
       ])
     }
   }
-}
-
-# CloudWatch Log Group for ECS
-resource "aws_cloudwatch_log_group" "report_a_defect" {
-  name = "ecs-task-report-a-defect-${local.environment_name}"
-
-  retention_in_days = 60
 }
 
 output "ecr_repository_url" {
