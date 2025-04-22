@@ -21,6 +21,16 @@ terraform {
   }
 }
 
+variable "enable_ecs_service" {
+  type    = bool
+  default = true
+}
+
+variable "image_tag" {
+  type    = string
+  default = "latest"
+}
+
 locals {
   environment_name         = "development"
   lang                     = "en_US.UTF-8"
@@ -131,7 +141,7 @@ module "aws-ecs-lbh" {
     retention_period  = 7
   }
 
-  ecs_service_config = {
+  ecs_service_config = var.enable_ecs_service ? {
     "report-a-defect" = {
       family             = "report-a-defect"
       memory             = 1024
@@ -186,9 +196,9 @@ module "aws-ecs-lbh" {
         }
       ])
     }
-  }
+  } : {}
 }
 
 output "ecr_repository_url" {
-  value = "${module.aws-ecs-lbh.ecr_repository_url}"
+  value = module.aws-ecs-lbh.ecr_repository_url
 }

@@ -35,8 +35,35 @@ commands:
           root: *workspace_root
           paths:
             - .aws
-  terraform-init-then-apply:
-    description: "Initializes and applies terraform configuration"
+  terraform-init-then-apply-ecr:
+    description: "Initializes and applies terraform without ECS deployment"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          name: get and init
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+      - run:
+          name: apply & save env variables
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -var enable_ecs_service=false -auto-approve
+
+            echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
+            cp $BASH_ENV ~/bash.env
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+            - bash.env
+  terraform-init-then-apply-ecs:
+    description: "Terraform init and apply for ECS deployment"
     parameters:
       environment:
         type: string
@@ -54,14 +81,6 @@ commands:
           command: |
             cd ./terraform/<<parameters.environment>>/
             terraform apply -var image_tag=${CIRCLE_SHA1} -auto-approve
-
-            echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
-            cp $BASH_ENV ~/bash.env
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - .aws
-            - bash.env
 
 jobs:
   build-and-test:
@@ -106,21 +125,39 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
-  terraform-init-then-apply-development:
+  terraform-init-then-apply-ecr-development:
     executor: docker-terraform
     steps:
-      - terraform-init-then-apply:
+      - terraform-init-then-apply-ecr:
           environment: "development"
-  terraform-init-then-apply-staging:
+  terraform-init-then-apply-ecs-development:
     executor: docker-terraform
     steps:
-      - terraform-init-then-apply:
+      - terraform-init-then-apply-ecs:
+          environment: "development"
+
+  terraform-init-then-apply-ecr-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply-ecr:
           environment: "staging"
-  terraform-init-then-apply-production:
+  terraform-init-then-apply-ecs-staging:
     executor: docker-terraform
     steps:
-      - terraform-init-then-apply:
+      - terraform-init-then-apply-ecs:
+          environment: "staging"
+
+  terraform-init-then-apply-ecr-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply-ecr:
           environment: "production"
+  terraform-init-then-apply-ecs-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply-ecs:
+          environment: "production"
+
   deploy-development:
     working_directory: ~/report_a_defect
     docker:
@@ -223,10 +260,13 @@ workflows:
           context: api-assume-role-housing-development-context
           requires:
             - build-and-test
-      - deploy-development:
+      - terraform-init-then-apply-ecr-development:
           requires:
             - assume-role-development
-      - terraform-init-then-apply-development:
+      - deploy-development:
+          requires:
+            - terraform-init-then-apply-ecr-development
+      - terraform-init-then-apply-ecs-development:
           requires:
             - deploy-development
   continuous_delivery:
