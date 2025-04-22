@@ -50,7 +50,7 @@ commands:
             terraform get -update=true
             terraform init
       - run:
-          name: apply & save ECR repo URL
+          name: apply & save env variables
           command: |
             cd ./terraform/<<parameters.environment>>/
             terraform apply -var image_tag=${CIRCLE_SHA1} -auto-approve
@@ -64,7 +64,7 @@ commands:
             - bash.env
 
 jobs:
-  build_and_test:
+  build-and-test:
     working_directory: ~/report_a_defect
     docker:
       - image: cimg/base:2025.04
@@ -218,11 +218,11 @@ workflows:
   version: 2
   check-and-deploy-development:
     jobs:
-      - build_and_test
+      - build-and-test
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - build_and_test
+            - build-and-test
       - terraform-init-then-apply-development:
           requires:
             - assume-role-development
@@ -231,7 +231,7 @@ workflows:
             - terraform-init-then-apply-development
   continuous_delivery:
     jobs:
-      - build_and_test:
+      - build-and-test:
           filters:
             branches:
               only:
@@ -239,14 +239,14 @@ workflows:
                 - master
       - deploy_staging:
           requires:
-            - build_and_test
+            - build-and-test
           filters:
             branches:
               only:
                 - develop
       - deploy_production:
           requires:
-            - build_and_test
+            - build-and-test
           filters:
             branches:
               only:

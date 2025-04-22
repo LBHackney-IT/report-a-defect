@@ -85,7 +85,7 @@ data "aws_subnets" "development_public_subnets" {
   }
 }
 
-# RDS Module
+# Database Module (postgres)
 module "aws-rds-lbh" {
   source               = "github.com/LBHackney-IT/aws-rds-lbh?ref=5583941f81fe14c3f365b19de22ec256a3b1ceae"
   application          = "report-a-defect"
@@ -141,7 +141,7 @@ module "aws-ecs-lbh" {
           logConfiguration = {
             logDriver = "awslogs"
             options = {
-              awslogs-group         = "ecs-task-report-a-defect-${local.environment_name}"
+              awslogs-group         = "${aws_cloudwatch_log_group.report_a_defect.name}"
               awslogs-region        = "eu-west-2"
               awslogs-stream-prefix = "report-a-defect-${local.environment_name}-logs"
             }
@@ -178,6 +178,13 @@ module "aws-ecs-lbh" {
       ])
     }
   }
+}
+
+# CloudWatch Log Group for ECS
+resource "aws_cloudwatch_log_group" "report_a_defect" {
+  name = "ecs-task-report-a-defect-${local.environment_name}"
+
+  retention_in_days = 60
 }
 
 output "ecr_repository_url" {
