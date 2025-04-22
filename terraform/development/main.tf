@@ -4,7 +4,7 @@ provider "aws" {
     tags = {
       Application = "Report a Defect"
       TeamEmail   = "mmh-project-team@hackney.gov.uk" # Note: To change once HPT email is confirmed
-      Environment = "development"
+      Environment = "dev"
     }
   }
 }
@@ -101,6 +101,25 @@ module "aws-rds-lbh" {
   environment          = local.environment_name
   kms_key_arn          = "arn:aws:kms:eu-west-2:${data.aws_caller_identity.current.account_id}:key/3cdafea1-f12f-4a3b-84c1-3a284d5ebaf4"
   vpc_id               = data.aws_vpc.development_vpc.id
+  allowed_security_group_ids = [
+    module.aws-ecs-lbh.ecs_task_security_group_ids["report-a-defect"]
+  ]
+}
+
+# Create connection string & store in Secrets Manager
+resource "aws_secretsmanager_secret" "database_url" {
+  name = "report-a-defect-database-url"
+}
+
+data "aws_secretsmanager_secret_version" "db_password" {
+  secret_id = module.aws-rds-lbh.db_password_secret_arn
+}
+
+resource "aws_secretsmanager_secret_version" "database_url_version" {
+  secret_id     = aws_secretsmanager_secret.database_url.id
+  secret_string = jsonencode({
+    DATABASE_URL = "postgres://${module.aws-rds-lbh.db_username}:${data.aws_secretsmanager_secret_version.db_password.secret_string}@${module.aws-rds-lbh.db_instance_endpoint}:${module.aws-rds-lbh.db_port}/${module.aws-rds-lbh.db_instance_name}"
+  })
 }
 
 # ECS Module
@@ -108,7 +127,6 @@ module "aws-rds-lbh" {
 # CloudWatch Log Group for ECS
 resource "aws_cloudwatch_log_group" "report_a_defect" {
   name = "ecs-task-report-a-defect-${local.environment_name}"
-
   retention_in_days = 60
 }
 
@@ -131,7 +149,7 @@ module "aws-ecs-lbh" {
     retention_period  = 7
   }
 
-  ecs_service_config = var.enable_ecs_service ? {
+  ecs_service_config = {
     "report-a-defect" = {
       family             = "report-a-defect"
       memory             = 1024
@@ -142,7 +160,7 @@ module "aws-ecs-lbh" {
       container_definitions = jsonencode([
         {
           name         = "report-a-defect-container"
-          image        = "${module.aws-ecs-lbh.ecr_repository_url}:${var.image_tag}"
+          image        = "${module.aws-ecs-lbh.ecr_repository_url}:${var.image_tag ? var.image_tag : "latest"}"
           memory       = 1024
           cpu          = 512
           essential    = true
@@ -155,11 +173,14 @@ module "aws-ecs-lbh" {
               awslogs-stream-prefix = "report-a-defect-${local.environment_name}-logs"
             }
           }
+          secrets   = [{
+            name      = "DATABASE_URL"
+            valueFrom = aws_secretsmanager_secret.database_url.arn
+          }]
           environment = [
             { name = "AUTH0_CLIENT_ID", value = data.aws_ssm_parameter.params["auth0_client_id"].value },
             { name = "AUTH0_CLIENT_SECRET", value = data.aws_ssm_parameter.params["auth0_client_secret"].value },
             { name = "AUTH0_DOMAIN", value = data.aws_ssm_parameter.params["auth0_domain"].value },
-            { name = "DATABASE_URL", value = "TODO" },
             { name = "HTTP_PASS", value = data.aws_ssm_parameter.params["http_pass"].value },
             { name = "HTTP_USER", value = data.aws_ssm_parameter.params["http_user"].value },
             { name = "LANG", value = local.lang },
@@ -186,9 +207,5 @@ module "aws-ecs-lbh" {
         }
       ])
     }
-  } : {}
-}
-
-output "ecr_repository_url" {
-  value = module.aws-ecs-lbh.ecr_repository_url
+  }
 }
