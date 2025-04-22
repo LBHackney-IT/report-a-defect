@@ -22,7 +22,7 @@ terraform {
 }
 
 locals {
-  environment_name         = "development"
+  environment_name         = "dev"
   lang                     = "en_US.UTF-8"
   new_relic_log            = "stdout"
   rack_env                 = "staging"
