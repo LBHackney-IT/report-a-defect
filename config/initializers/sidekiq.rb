@@ -4,7 +4,7 @@ options = {
   concurrency: Integer(ENV.fetch('RAILS_MAX_THREADS', 5)),
 }
 
-Sidekiq.configure_server do |_config|
+Sidekiq.configure_server do |config|
   config.redis = {
     url: redis_url,
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
@@ -22,6 +22,6 @@ Sidekiq.configure_client do |config|
   }
 end
 
-Sidekiq.configure_server do |cfg|
-  cfg.logger.level = Logger::WARN if Rails.env.production?
+Sidekiq.configure_server do |config|
+  config.logger.level = Logger::WARN if Rails.env.production?
 end
