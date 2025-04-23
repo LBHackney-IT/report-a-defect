@@ -259,13 +259,12 @@ workflows:
       - build-and-test
       - assume-role-development:
           context: api-assume-role-housing-development-context
-          requires:
-            - build-and-test
       - terraform-init-then-apply-development:
           requires:
             - assume-role-development
       - deploy-development:
           requires:
+            - build-and-test
             - terraform-init-then-apply-development
       - terraform-init-then-update-image-development:
           requires:
