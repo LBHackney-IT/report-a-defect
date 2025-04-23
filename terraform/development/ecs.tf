@@ -82,6 +82,13 @@ module "aws-ecs-lbh" {
       execution_role_arn = aws_iam_role.ecs_execution_role.arn
       task_role_arn      = aws_iam_role.ecs_task_role.arn
       launch_type        = "FARGATE"
+      ecs_service_alb_configs = [{
+        "report-a-defect" = {
+          container_name    = "report-a-defect-container"
+          container_port    = 3001
+          target_group_name = "report-a-defect"
+        }
+      }]
       container_definitions = jsonencode([
         {
           name         = "report-a-defect-container"
