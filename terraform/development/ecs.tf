@@ -77,6 +77,21 @@ module "aws-ecs-lbh" {
       target_protocol               = "HTTP"
       load_balancing_algorithm_type = "round_robin"
       slow_start                    = 30
+      stickiness = {
+        enabled = false
+        type    = "soure_ip"
+      }
+      health_check = {
+        enabled             = true
+        healthy_threshold   = 3
+        interval            = 30
+        matcher             = "200"
+        path                = "/health"
+        port                = 80
+        protocol            = "HTTP"
+        timeout             = 5
+        unhealthy_threshold = 3
+      }
     }
   }
 
