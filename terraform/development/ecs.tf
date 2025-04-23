@@ -1,5 +1,5 @@
 locals {
-# Dynamically pull all environment variables from SSM
+  # Dynamically pull all environment variables from SSM
   ssm_params = [
     "auth0_client_id",
     "auth0_domain",
@@ -33,20 +33,20 @@ data "aws_ssm_parameter" "params" {
 # Get secret arns from AWS Secrets Manager
 locals {
   secret_names = [
-    "report-a-defect-database-url",
-    "report-a-defect-aws-access-key-id",
-    "report-a-defect-aws-secret-access-key",
-    "report-a-defect-auth0-client-secret",
-    "report-a-defect-new-relic-license-key",
-    "report-a-defect-notify-key",
-    "report-a-defect-papertrail-api-token",
-    "report-a-defect-secret-key-base"
+    "database-url",
+    "aws-access-key-id",
+    "aws-secret-access-key",
+    "auth0-client-secret",
+    "new-relic-license-key",
+    "notify-key",
+    "papertrail-api-token",
+    "secret-key-base"
   ]
 }
 
 data "aws_secretsmanager_secret" "secrets" {
   for_each = toset(local.secret_names)
-  name     = each.value
+  name     = "report-a-defect-${each.value}"
 }
 
 # CloudWatch Log Group for ECS Task
@@ -100,35 +100,35 @@ module "aws-ecs-lbh" {
           }
           secrets = [{
             name      = "DATABASE_URL"
-            valueFrom = data.aws_secretsmanager_secret.secrets["report-a-defect-database-url"].arn
+            valueFrom = data.aws_secretsmanager_secret.secrets["database-url"].arn
             },
             {
               name      = "AWS_ACCESS_KEY_ID"
-              valueFrom = data.aws_secretsmanager_secret.secrets["aws_access_key_id"].arn
+              valueFrom = data.aws_secretsmanager_secret.secrets["aws-access-key-id"].arn
             },
             {
               name      = "AWS_SECRET_ACCESS_KEY"
-              valueFrom = data.aws_secretsmanager_secret.secrets["aws_secret_access_key"].arn
+              valueFrom = data.aws_secretsmanager_secret.secrets["aws-secret-access-key"].arn
             },
             {
               name      = "AUTH0_CLIENT_SECRET"
-              valueFrom = data.aws_secretsmanager_secret.secrets["auth0_client_secret"].arn
+              valueFrom = data.aws_secretsmanager_secret.secrets["auth0-client-secret"].arn
             },
             {
               name      = "NEW_RELIC_LICENSE_KEY"
-              valueFrom = data.aws_secretsmanager_secret.secrets["new_relic_license_key"].arn
+              valueFrom = data.aws_secretsmanager_secret.secrets["new-relic-license-key"].arn
             },
             {
               name      = "NOTIFY_KEY"
-              valueFrom = data.aws_secretsmanager_secret.secrets["notify_key"].arn
+              valueFrom = data.aws_secretsmanager_secret.secrets["notify-key"].arn
             },
             {
               name      = "PAPERTRAIL_API_TOKEN"
-              valueFrom = data.aws_secretsmanager_secret.secrets["papertrail_api_token"].arn
+              valueFrom = data.aws_secretsmanager_secret.secrets["papertrail-api-token"].arn
             },
             {
               name      = "SECRET_KEY_BASE"
-              valueFrom = data.aws_secretsmanager_secret.secrets["secret_key_base"].arn
+              valueFrom = data.aws_secretsmanager_secret.secrets["secret-key-base"].arn
           }]
           environment = [
             { name = "AWS_REGION", value = data.aws_ssm_parameter.params["aws_region"].value },
