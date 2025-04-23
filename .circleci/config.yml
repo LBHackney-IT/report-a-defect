@@ -35,8 +35,8 @@ commands:
           root: *workspace_root
           paths:
             - .aws
-  terraform-init-then-apply:
-    description: "Initializes and applies terraform without setting up the docker image"
+  terraform-init:
+    description: "Initializes terraform"
     parameters:
       environment:
         type: string
@@ -49,6 +49,14 @@ commands:
             cd ./terraform/<<parameters.environment>>/
             terraform get -update=true
             terraform init
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - terraform-init:
+          environment: <<parameters.environment>>
       - run:
           name: apply
           command: |
@@ -62,20 +70,14 @@ commands:
           paths:
             - .aws
             - bash.env
-  terraform-init-then-update-image:
-    description: "Initializes and applies terraform with the docker image tag"
+  terraform-update-ecs-container-image:
+    description: "Updates the ECS container to use the newly deployed image"
     parameters:
       environment:
         type: string
     steps:
-      - *attach_workspace
-      - checkout
-      - run:
-          name: get and init
-          command: |
-            cd ./terraform/<<parameters.environment>>/
-            terraform get -update=true
-            terraform init
+      - terraform-init:
+          environment: <<parameters.environment>>
       - run:
           name: apply with image tag
           command: |
@@ -130,10 +132,10 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment: "development"
-  terraform-init-then-update-image-development:
+  terraform-update-container-image-development:
     executor: docker-terraform
     steps:
-      - terraform-init-then-update-image:
+      - terraform-update-ecs-container-image:
           environment: "development"
 
   terraform-init-then-apply-staging:
@@ -141,10 +143,10 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment: "staging"
-  terraform-init-then-update-image-staging:
+  terraform-update-container-image-staging:
     executor: docker-terraform
     steps:
-      - terraform-init-then-update-image:
+      - terraform-update-ecs-container-image:
           environment: "staging"
 
   terraform-init-then-apply-production:
@@ -152,10 +154,10 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment: "production"
-  terraform-init-then-update-image-production:
+  terraform-update-container-image-production:
     executor: docker-terraform
     steps:
-      - terraform-init-then-update-image:
+      - terraform-update-ecs-container-image:
           environment: "production"
 
   deploy-development:
@@ -265,7 +267,7 @@ workflows:
           requires:
             - build-and-test
             - terraform-init-then-apply-development
-      - terraform-init-then-update-image-development:
+      - terraform-update-container-image-development:
           requires:
             - deploy-development
   continuous_delivery:

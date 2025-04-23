@@ -17,19 +17,23 @@ terraform {
     key     = "services/lbh-report-a-defect/state"
   }
 }
+
 data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
 
 
 locals {
   environment_name         = "development"
+  database_name            = "reportadefect"
+  database_port            = 5432
+  database_url             = "postgres://${aws_secretsmanager_secret_version.db_username.secret_string}:${aws_secretsmanager_secret_version.db_password.secret_string}@${module.lbh-db-postgres.instance_id}.eu-west-2.rds.amazonaws.com:local.database_port/reportadefect"
+  
+  # Environment variables
   lang                     = "en_US.UTF-8"
   new_relic_log            = "stdout"
   rack_env                 = "staging"
   rails_env                = "staging"
   rails_log_to_stdout      = "enabled"
   rails_serve_static_files = "enabled"
-  database_url_value       = "postgres://${aws_secretsmanager_secret_version.db_username.secret_string}:${random_password.db_password.result}@${module.lbh-db-postgres.instance_id}.eu-west-2.rds.amazonaws.com:5432/reportadefect"
   ssm_params = [
     "auth0_client_id",
     "auth0_client_secret",
@@ -119,8 +123,14 @@ resource "aws_secretsmanager_secret" "database_url" {
 
 resource "aws_secretsmanager_secret_version" "database_url_version" {
   secret_id     = aws_secretsmanager_secret.database_url.id
-  secret_string = jsonencode({ DATABASE_URL = local.database_url_value })
+  secret_string = jsonencode({ DATABASE_URL = local.database_url })
 }
+
+# Default KMS Key
+data "aws_kms_alias" "secretsmanager" {
+  name = "alias/aws/secretsmanager"
+}
+
 
 
 module "lbh-db-postgres" {
@@ -128,9 +138,9 @@ module "lbh-db-postgres" {
   project_name            = "report-a-defect"
   environment_name        = local.environment_name
   vpc_id                  = data.aws_vpc.development_vpc.id
-  db_identifier           = "report-a-defect-db"
-  db_name                 = "reportadefect"
-  db_port                 = 5432
+  db_identifier           = "report-a-defect"
+  db_name                 = local.database_name
+  db_port                 = local.database_port
   subnet_ids              = data.aws_subnets.development_private_subnets.ids
   db_engine               = "postgres"
   db_engine_version       = "15.8"
@@ -147,11 +157,132 @@ module "lbh-db-postgres" {
 
 # ECS
 
-# CloudWatch Log Group for ECS
+# CloudWatch Log Group
 resource "aws_cloudwatch_log_group" "report_a_defect" {
   name              = "ecs-task-report-a-defect-${local.environment_name}"
   retention_in_days = 60
 }
+
+# IAM Roles and Policies
+
+# Execution Role
+resource "aws_iam_role" "ecs_execution_role" {
+  name = "report-a-defect-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement: [{
+      Effect = "Allow",
+      Principal = {
+        Service = "ecs-tasks.amazonaws.com"
+      },
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+resource "aws_iam_policy" "ecs_execution_policy" {
+  name        = "report-a-defect-execution-policy"
+  description = "Scoped permissions for ECS task execution role"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement: [
+      {
+        Sid: "ECRAccess",
+        Effect: "Allow",
+        Action: [
+          "ecr:GetAuthorizationToken"
+        ],
+        Resource: "*"
+      },
+      {
+        Sid: "ECRRepoAccess",
+        Effect: "Allow",
+        Action: [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ],
+        Resource: "arn:aws:ecr:eu-west-2:${data.aws_caller_identity.current.account_id}:repository/report-a-defect-ecr-development"
+      },
+      {
+        Sid: "CloudWatchLogsAccess",
+        Effect: "Allow",
+        Action: [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Resource: aws_cloudwatch_log_group.report_a_defect.arn
+      },
+      {
+        Sid: "SecretsAccess",
+        Effect: "Allow",
+        Action: [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
+        ],
+        Resource: [
+          aws_secretsmanager_secret.database_url.arn,
+          aws_secretsmanager_secret.db_username.arn,
+          aws_secretsmanager_secret.db_password.arn
+        ]
+      },
+      {
+        Sid: "KMSAccess",
+        Effect: "Allow",
+        Action: [
+          "kms:Decrypt"
+        ],
+        Resource: data.aws_kms_alias.secretsmanager.target_key_arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_execution_attachment" {
+  role       = aws_iam_role.ecs_execution_role.name
+  policy_arn = aws_iam_policy.ecs_execution_policy.arn
+}
+
+# Task Role
+resource "aws_iam_role" "ecs_task_role" {
+  name = "report-a-defect-task-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement: [{
+      Effect = "Allow",
+      Principal = {
+        Service = "ecs-tasks.amazonaws.com"
+      },
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+resource "aws_iam_policy" "ecs_task_policy" {
+  name        = "report-a-defect-task-policy"
+  description = "Permissions for ECS task role"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement: [
+      {
+        Effect: "Allow",
+        Action: [
+          "s3:GetObject",
+          "s3:PutObject",
+        ],
+        Resource: "*" # TODO: Update to specific S3 bucket ARN when migrated
+      }
+    ]
+  })
+}
+resource "aws_iam_role_policy_attachment" "ecs_task_attachment" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = aws_iam_policy.ecs_task_policy.arn
+}
+
+
 
 module "aws-ecs-lbh" {
   source                = "github.com/LBHackney-IT/aws-ecs-lbh?ref=27607834b4821b01ba0f0fade8e292181fe9658e"
@@ -177,8 +308,8 @@ module "aws-ecs-lbh" {
       family             = "report-a-defect"
       memory             = 1024
       cpu                = 512
-      execution_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
-      task_role_arn      = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
+      execution_role_arn = aws_iam_role.ecs_execution_role.arn
+      task_role_arn      = aws_iam_role.ecs_task_role.arn
       launch_type        = "FARGATE"
       container_definitions = jsonencode([
         {
