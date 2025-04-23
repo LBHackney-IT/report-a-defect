@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "app_repository" {
-  name = "report-a-defect-ecr-development"
+  name = "report-a-defect-ecr-dev"
 }
 
 resource "aws_ecs_task_definition" "app_task" {
@@ -154,6 +154,7 @@ resource "aws_lb_listener" "app_listener" {
 resource "aws_security_group" "alb_sg" {
   name        = "report-a-defect-alb-sg"
   description = "Allow inbound traffic to the ALB"
+  vpc_id      = data.aws_vpc.development_vpc.id
 
   ingress {
     from_port   = 80
