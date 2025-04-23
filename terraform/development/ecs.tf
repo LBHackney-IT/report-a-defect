@@ -67,10 +67,17 @@ module "aws-ecs-lbh" {
   listener_port         = 80
   listener_protocol     = "HTTP"
   depends_on            = [aws_cloudwatch_log_group.report_a_defect]
-
   alb_access_logs_configuration = {
     access_log_prefix = "ecs-task-report-a-defect-${local.environment_name}"
     retention_period  = 7
+  }
+  target_group_maps = {
+    "report-a-defect-tg" = {
+      target_port                   = local.app_port
+      target_protocol               = "HTTP"
+      load_balancing_algorithm_type = "round_robin"
+      slow_start                    = 30
+    }
   }
 
   ecs_service_config = {
@@ -85,17 +92,9 @@ module "aws-ecs-lbh" {
         {
           container_name    = "report-a-defect-container"
           container_port    = local.app_port
-          target_group_name = "report-a-defect"
+          target_group_name = "report-a-defect-tg"
         }
       ]
-      target_group_map = {
-        "report-a-defect" = {
-          target_port                   = local.app_port
-          target_protocol               = "HTTP"
-          load_balancing_algorithm_type = "round_robin"
-          slow_start                    = 30
-        }
-      }
 
       container_definitions = jsonencode([
         {
