@@ -135,7 +135,7 @@ module "lbh-db-postgres" {
   db_engine               = "postgres"
   db_engine_version       = "15.8"
   db_instance_class       = "db.t3.micro"
-  db_parameter_group_name = "postgres-15"
+  db_parameter_group_name = "default.postgres15"
   db_allocated_storage    = 10
   maintenance_window      = "sun:01:00-sun:01:30"
   db_username             = aws_secretsmanager_secret_version.db_username.secret_string
