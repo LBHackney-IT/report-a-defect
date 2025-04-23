@@ -92,6 +92,8 @@ module "aws-ecs-lbh" {
         timeout             = 5
         unhealthy_threshold = 3
       }
+      host_header = "report-a-defect.service.internal"
+      priority    = 100
     }
   }
 
