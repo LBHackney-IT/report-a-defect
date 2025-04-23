@@ -72,7 +72,7 @@ module "aws-ecs-lbh" {
     retention_period  = 7
   }
   target_group_maps = {
-    "report-a-defect-tg" = {
+    "report-a-defect-lb-tg" = {
       target_port                   = local.app_port
       target_protocol               = "HTTP"
       load_balancing_algorithm_type = "round_robin"
@@ -109,7 +109,7 @@ module "aws-ecs-lbh" {
         {
           container_name    = "report-a-defect-container"
           container_port    = local.app_port
-          target_group_name = "report-a-defect-tg"
+          target_group_name = "report-a-defect-lb-tg"
         }
       ]
 
