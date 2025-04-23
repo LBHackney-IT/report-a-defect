@@ -56,6 +56,7 @@ resource "aws_cloudwatch_log_group" "report_a_defect" {
 
 module "aws-ecs-lbh" {
   source                = "github.com/LBHackney-IT/aws-ecs-lbh?ref=27607834b4821b01ba0f0fade8e292181fe9658e"
+  depends_on            = [aws_cloudwatch_log_group.report_a_defect]
   application           = "report-a-defect"
   environment           = local.environment_name
   vpc_id                = data.aws_vpc.development_vpc.id
@@ -66,7 +67,6 @@ module "aws-ecs-lbh" {
   create_ecr_repository = true
   listener_port         = 80
   listener_protocol     = "HTTP"
-  depends_on            = [aws_cloudwatch_log_group.report_a_defect]
   alb_access_logs_configuration = {
     access_log_prefix = "ecs-task-report-a-defect-${local.environment_name}"
     retention_period  = 7
