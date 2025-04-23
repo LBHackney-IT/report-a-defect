@@ -85,49 +85,71 @@ data "aws_subnets" "development_public_subnets" {
   }
 }
 
-# Database Module (postgres)
-module "aws-rds-lbh" {
-  source               = "github.com/LBHackney-IT/aws-rds-lbh?ref=5583941f81fe14c3f365b19de22ec256a3b1ceae"
-  application          = "report-a-defect"
-  db_allocated_storage = 10
-  db_engine_version    = "15.8"
-  db_family            = "postgres15"
-  db_identifier        = "report-a-defect-db"
-  db_instance_class    = "db.t3.micro"
-  db_name              = "reportadefect"
-  db_port              = 5432
-  db_subnet_group_name = "report-a-defect-db-${local.environment_name}"
-  subnet_ids           = data.aws_subnets.development_private_subnets.ids
-  db_username          = "report_a_defect_admin"
-  environment          = local.environment_name
-  kms_key_arn          = "arn:aws:kms:eu-west-2:${data.aws_caller_identity.current.account_id}:key/3cdafea1-f12f-4a3b-84c1-3a284d5ebaf4"
-  vpc_id               = data.aws_vpc.development_vpc.id
-  allowed_security_group_ids = [
-    module.aws-ecs-lbh.ecs_task_security_group_ids["report-a-defect"]
-  ]
+
+# Credentials
+
+# DB Username
+resource "aws_secretsmanager_secret" "db_username" {
+  name = "report-a-defect-db-username"
+}
+resource "aws_secretsmanager_secret_version" "db_username" {
+  secret_id     = aws_secretsmanager_secret.db_username.id
+  secret_string = "report_a_defect_admin"
 }
 
-# Create connection string & store in Secrets Manager
+# DB Password
+resource "random_password" "db_password" {
+  length  = 16
+  special = false
+}
+resource "aws_secretsmanager_secret" "db_password" {
+  name                    = "report-a-defect-db-password"
+  recovery_window_in_days = 0
+}
+resource "aws_secretsmanager_secret_version" "db_password" {
+  secret_id     = aws_secretsmanager_secret.db_password.id
+  secret_string = random_password.db_password.result
+}
+
+# DB URL
 resource "aws_secretsmanager_secret" "database_url" {
   name = "report-a-defect-database-url"
 }
 
-data "aws_secretsmanager_secret_version" "db_password" {
-  secret_id = module.aws-rds-lbh.db_password_secret_arn
-}
-
 resource "aws_secretsmanager_secret_version" "database_url_version" {
-  secret_id     = aws_secretsmanager_secret.database_url.id
+  secret_id = aws_secretsmanager_secret.database_url.id
   secret_string = jsonencode({
-    DATABASE_URL = "postgres://${module.aws-rds-lbh.db_username}:${data.aws_secretsmanager_secret_version.db_password.secret_string}@${module.aws-rds-lbh.db_instance_endpoint}:${module.aws-rds-lbh.db_port}/${module.aws-rds-lbh.db_instance_name}"
+    DATABASE_URL = "postgres://${data.aws_secretsmanager_secret_version.db_username.secret_string}:${data.aws_secretsmanager_secret_version.db_password.secret_string}@${module.lbh-db-postgres.instance_id}.eu-west-2.rds.amazonaws.com:5432}/reportadefect"
   })
 }
 
-# ECS Module
+module "lbh-db-postgres" {
+  source                  = "github.com/LBHackney-IT/aws-hackney-common-terraform//modules/database/postgres"
+  project_name            = "report-a-defect"
+  environment_name        = local.environment_name
+  vpc_id                  = data.aws_vpc.development_vpc.id
+  db_identifier           = "report-a-defect-db"
+  db_name                 = "reportadefect"
+  db_port                 = 5432
+  subnet_ids              = data.aws_subnets.development_private_subnets.ids
+  db_engine               = "postgres"
+  db_engine_version       = "15.8"
+  db_instance_class       = "db.t3.micro"
+  db_parameter_group_name = "postgres-15"
+  db_allocated_storage    = 10
+  maintenance_window      = "Mon:00:00-Mon:01:00"
+  db_username             = aws_secretsmanager_secret_version.db_username.secret_string
+  db_password             = aws_secretsmanager_secret_version.db_password.secret_string
+  storage_encrypted       = true
+  multi_az                = false
+  publicly_accessible     = false
+}
+
+# ECS
 
 # CloudWatch Log Group for ECS
 resource "aws_cloudwatch_log_group" "report_a_defect" {
-  name = "ecs-task-report-a-defect-${local.environment_name}"
+  name              = "ecs-task-report-a-defect-${local.environment_name}"
   retention_in_days = 60
 }
 
@@ -174,7 +196,7 @@ module "aws-ecs-lbh" {
               awslogs-stream-prefix = "report-a-defect-${local.environment_name}-logs"
             }
           }
-          secrets   = [{
+          secrets = [{
             name      = "DATABASE_URL"
             valueFrom = aws_secretsmanager_secret.database_url.arn
           }]
