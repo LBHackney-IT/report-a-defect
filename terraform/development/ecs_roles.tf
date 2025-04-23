@@ -9,7 +9,7 @@ resource "aws_iam_role" "ecs_execution_role" {
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
-    Statement: [{
+    Statement : [{
       Effect = "Allow",
       Principal = {
         Service = "ecs-tasks.amazonaws.com"
@@ -24,57 +24,61 @@ resource "aws_iam_policy" "ecs_execution_policy" {
 
   policy = jsonencode({
     Version = "2012-10-17",
-    Statement: [
+    Statement : [
       {
-        Sid: "ECRAccess",
-        Effect: "Allow",
-        Action: [
+        Sid : "ECRAccess",
+        Effect : "Allow",
+        Action : [
           "ecr:GetAuthorizationToken"
         ],
-        Resource: "*"
+        Resource : "*"
       },
       {
-        Sid: "ECRRepoAccess",
-        Effect: "Allow",
-        Action: [
+        Sid : "ECRRepoAccess",
+        Effect : "Allow",
+        Action : [
           "ecr:BatchCheckLayerAvailability",
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage"
         ],
-        Resource: "arn:aws:ecr:eu-west-2:${data.aws_caller_identity.current.account_id}:repository/report-a-defect-ecr-development"
+        Resource : "arn:aws:ecr:eu-west-2:${data.aws_caller_identity.current.account_id}:repository/report-a-defect-ecr-development"
       },
       {
-        Sid: "CloudWatchLogsAccess",
-        Effect: "Allow",
-        Action: [
+        Sid : "CloudWatchLogsAccess",
+        Effect : "Allow",
+        Action : [
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ],
-        Resource: [
+        Resource : [
           aws_cloudwatch_log_group.report_a_defect.arn,
           "${aws_cloudwatch_log_group.report_a_defect.arn}:log-stream:*"
         ]
       },
       {
-        Sid: "SecretsAccess",
-        Effect: "Allow",
-        Action: [
+        Sid : "SecretsAccess",
+        Effect : "Allow",
+        Action : [
           "secretsmanager:GetSecretValue",
           "secretsmanager:DescribeSecret"
         ],
-        Resource: [
+        Resource : [
           aws_secretsmanager_secret.database_url.arn,
-          aws_secretsmanager_secret.db_username.arn,
-          aws_secretsmanager_secret.db_password.arn
+          data.aws_secretsmanager_secret.aws_access_key_id.arn,
+          data.aws_secretsmanager_secret.aws_secret_access_key.arn,
+          data.aws_secretsmanager_secret.auth0_client_secret.arn,
+          data.aws_secretsmanager_secret.notify_key.arn,
+          data.aws_secretsmanager_secret.papertrail_api_token.arn,
+          data.aws_secretsmanager_secret.secret_key_base.arn
         ]
       },
       {
-        Sid: "KMSAccess",
-        Effect: "Allow",
-        Action: [
+        Sid : "KMSAccess",
+        Effect : "Allow",
+        Action : [
           "kms:Decrypt"
         ],
-        Resource: data.aws_kms_alias.secretsmanager.target_key_arn
+        Resource : data.aws_kms_alias.secretsmanager.target_key_arn
       }
     ]
   })
@@ -90,7 +94,7 @@ resource "aws_iam_role" "ecs_task_role" {
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
-    Statement: [{
+    Statement : [{
       Effect = "Allow",
       Principal = {
         Service = "ecs-tasks.amazonaws.com"
@@ -105,14 +109,14 @@ resource "aws_iam_policy" "ecs_task_policy" {
 
   policy = jsonencode({
     Version = "2012-10-17",
-    Statement: [
+    Statement : [
       {
-        Effect: "Allow",
-        Action: [
+        Effect : "Allow",
+        Action : [
           "s3:GetObject",
           "s3:PutObject",
         ],
-        Resource: "*" # TODO: Update to specific S3 bucket ARN when migrated
+        Resource : "*" # TODO: Update to specific S3 bucket ARN when migrated
       }
     ]
   })

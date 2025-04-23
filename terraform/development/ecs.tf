@@ -6,9 +6,10 @@ locals {
   rails_env                = "staging"
   rails_log_to_stdout      = "enabled"
   rails_serve_static_files = "enabled"
+  aws_region               = "eu-west-2"
+  aws_bucket               = "hackney-s3-report-a-defect-development"
   ssm_params = [
     "auth0_client_id",
-    "auth0_client_secret",
     "auth0_domain",
     "http_pass",
     "http_user",
@@ -20,10 +21,7 @@ locals {
     "notify_defect_completed_template",
     "notify_defect_sent_to_contractor_template",
     "notify_forward_defect_template",
-    "notify_key",
-    "papertrail_api_token",
     "redis_url",
-    "secret_key_base",
     "sentry_dsn",
     "sms_blacklist"
   ]
@@ -34,6 +32,30 @@ data "aws_ssm_parameter" "params" {
   for_each = toset(local.ssm_params)
   name     = "/report-a-defect/${local.environment_name}/${each.value}"
 }
+
+# Pull secrets from AWS Secrets Manager
+data "aws_secretsmanager_secret" "database_url" {
+  name = "report-a-defect-database-url"
+}
+data "aws_secretsmanager_secret" "aws_access_key_id" {
+  name = "report-a-defect-aws-access-key-id"
+}
+data "aws_secretsmanager_secret" "aws_secret_access_key" {
+  name = "report-a-defect-aws-secret-access-key"
+}
+data "aws_secretsmanager_secret" "auth0_client_secret" {
+  name = "report-a-defect-auth0-client-secret"
+}
+data "aws_secretsmanager_secret" "notify_key" {
+  name = "report-a-defect-notify-key"
+}
+data "aws_secretsmanager_secret" "papertrail_api_token" {
+  name = "report-a-defect-papertrail-api-token"
+}
+data "aws_secretsmanager_secret" "secret_key_base" {
+  name = "report-a-defect-secret_key_base"
+}
+
 
 # CloudWatch Log Group for ECS Task
 resource "aws_cloudwatch_log_group" "report_a_defect" {
@@ -87,10 +109,35 @@ module "aws-ecs-lbh" {
           secrets = [{
             name      = "DATABASE_URL"
             valueFrom = aws_secretsmanager_secret.database_url.arn
+            },
+            {
+              name      = "AWS_ACCESS_KEY_ID"
+              valueFrom = data.aws_secretsmanager_secret.aws_access_key_id.arn
+            },
+            {
+              name      = "AWS_SECRET_ACCESS_KEY"
+              valueFrom = data.aws_secretsmanager_secret.aws_secret_access_key.arn
+            },
+            {
+              name      = "AUTH0_CLIENT_SECRET"
+              valueFrom = data.aws_secretsmanager_secret.auth0_client_secret.arn
+            },
+            {
+              name      = "NOTIFY_KEY"
+              valueFrom = data.aws_secretsmanager_secret.notify_key.arn
+            },
+            {
+              name      = "PAPERTRAIL_API_TOKEN"
+              valueFrom = data.aws_secretsmanager_secret.papertrail_api_token.arn
+            },
+            {
+              name      = "SECRET_KEY_BASE"
+              valueFrom = data.aws_secretsmanager_secret.secret_key_base.arn
           }]
           environment = [
+            { name = "AWS_REGION", value = local.aws_region },
+            { name = "AWS_BUCKET", value = local.aws_bucket },
             { name = "AUTH0_CLIENT_ID", value = data.aws_ssm_parameter.params["auth0_client_id"].value },
-            { name = "AUTH0_CLIENT_SECRET", value = data.aws_ssm_parameter.params["auth0_client_secret"].value },
             { name = "AUTH0_DOMAIN", value = data.aws_ssm_parameter.params["auth0_domain"].value },
             { name = "HTTP_PASS", value = data.aws_ssm_parameter.params["http_pass"].value },
             { name = "HTTP_USER", value = data.aws_ssm_parameter.params["http_user"].value },
@@ -104,14 +151,11 @@ module "aws-ecs-lbh" {
             { name = "NOTIFY_DEFECT_COMPLETED_TEMPLATE", value = data.aws_ssm_parameter.params["notify_defect_completed_template"].value },
             { name = "NOTIFY_DEFECT_SENT_TO_CONTRACTOR_TEMPLATE", value = data.aws_ssm_parameter.params["notify_defect_sent_to_contractor_template"].value },
             { name = "NOTIFY_FORWARD_DEFECT_TEMPLATE", value = data.aws_ssm_parameter.params["notify_forward_defect_template"].value },
-            { name = "NOTIFY_KEY", value = data.aws_ssm_parameter.params["notify_key"].value },
-            { name = "PAPERTRAIL_API_TOKEN", value = data.aws_ssm_parameter.params["papertrail_api_token"].value },
             { name = "RACK_ENV", value = local.rack_env },
             { name = "RAILS_ENV", value = local.rails_env },
             { name = "RAILS_LOG_TO_STDOUT", value = local.rails_log_to_stdout },
             { name = "RAILS_SERVE_STATIC_FILES", value = local.rails_serve_static_files },
             { name = "REDIS_URL", value = data.aws_ssm_parameter.params["redis_url"].value },
-            { name = "SECRET_KEY_BASE", value = data.aws_ssm_parameter.params["secret_key_base"].value },
             { name = "SENTRY_DSN", value = data.aws_ssm_parameter.params["sentry_dsn"].value },
             { name = "SMS_BLACKLIST", value = data.aws_ssm_parameter.params["sms_blacklist"].value }
           ]
