@@ -137,7 +137,7 @@ module "lbh-db-postgres" {
   db_instance_class       = "db.t3.micro"
   db_parameter_group_name = "postgres-15"
   db_allocated_storage    = 10
-  maintenance_window      = "Mon:00:00-Mon:01:00"
+  maintenance_window      = "sun:01:00-sun:01:30"
   db_username             = aws_secretsmanager_secret_version.db_username.secret_string
   db_password             = aws_secretsmanager_secret_version.db_password.secret_string
   storage_encrypted       = true
