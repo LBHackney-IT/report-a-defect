@@ -79,7 +79,7 @@ module "aws-ecs-lbh" {
       slow_start                    = 30
       stickiness = {
         enabled = false
-        type    = "source_ip"
+        type    = "lb_cookie"
       }
       health_check = {
         enabled             = true
