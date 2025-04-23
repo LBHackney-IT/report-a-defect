@@ -9,9 +9,6 @@ provider "aws" {
   }
 }
 
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-
 terraform {
   backend "s3" {
     bucket  = "terraform-state-housing-development"
@@ -20,6 +17,9 @@ terraform {
     key     = "services/lbh-report-a-defect/state"
   }
 }
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
 
 locals {
   environment_name         = "development"
@@ -29,6 +29,7 @@ locals {
   rails_env                = "staging"
   rails_log_to_stdout      = "enabled"
   rails_serve_static_files = "enabled"
+  database_url_value       = "postgres://${aws_secretsmanager_secret_version.db_username.secret_string}:${random_password.db_password.result}@${module.lbh-db-postgres.instance_id}.eu-west-2.rds.amazonaws.com:5432/reportadefect"
   ssm_params = [
     "auth0_client_id",
     "auth0_client_secret",
@@ -117,14 +118,13 @@ resource "aws_secretsmanager_secret" "database_url" {
 }
 
 resource "aws_secretsmanager_secret_version" "database_url_version" {
-  secret_id = aws_secretsmanager_secret.database_url.id
-  secret_string = jsonencode({
-    DATABASE_URL = "postgres://${data.aws_secretsmanager_secret_version.db_username.secret_string}:${data.aws_secretsmanager_secret_version.db_password.secret_string}@${module.lbh-db-postgres.instance_id}.eu-west-2.rds.amazonaws.com:5432}/reportadefect"
-  })
+  secret_id     = aws_secretsmanager_secret.database_url.id
+  secret_string = jsonencode({ DATABASE_URL = local.database_url_value })
 }
 
+
 module "lbh-db-postgres" {
-  source                  = "github.com/LBHackney-IT/aws-hackney-common-terraform//modules/database/postgres"
+  source                  = "github.com/LBHackney-IT/aws-hackney-common-terraform//modules/database/postgres?ref=15d6da7fb25f6925d9e33530b8245a3a300053ac"
   project_name            = "report-a-defect"
   environment_name        = local.environment_name
   vpc_id                  = data.aws_vpc.development_vpc.id
