@@ -50,9 +50,10 @@ commands:
             terraform get -update=true
             terraform init
       - run:
-          name: apply & save env variables
+          name: apply
           command: |
             cd ./terraform/<<parameters.environment>>/
+            terraform state rm 'module.aws-rds-lbh.aws_security_group_rule.ingress["sg-0e391bc2427225afe"]'
             terraform apply -auto-approve
 
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
