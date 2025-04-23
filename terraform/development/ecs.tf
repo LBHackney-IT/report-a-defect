@@ -1,39 +1,36 @@
 locals {
-  # Environment variables for the application
-  lang                     = "en_US.UTF-8"
-  new_relic_log            = "stdout"
-  rack_env                 = "staging"
-  rails_env                = "staging"
-  rails_log_to_stdout      = "enabled"
-  rails_serve_static_files = "enabled"
-  aws_region               = "eu-west-2"
-  aws_bucket               = "hackney-s3-report-a-defect-development"
+# Dynamically pull all environment variables from SSM
   ssm_params = [
     "auth0_client_id",
     "auth0_domain",
+    "aws_bucket",
+    "aws_region",
     "http_pass",
     "http_user",
+    "lang",
     "nbt_group_email",
-    "new_relic_license_key",
+    "new_relic_log",
     "notify_daily_due_soon_template",
     "notify_daily_escalation_template",
     "notify_defect_accepted_by_contractor_template",
     "notify_defect_completed_template",
     "notify_defect_sent_to_contractor_template",
     "notify_forward_defect_template",
+    "rack_env",
+    "rails_env",
+    "rails_log_to_stdout",
+    "rails_serve_static_files",
     "redis_url",
     "sentry_dsn",
     "sms_blacklist"
   ]
 }
-
-# Dynamically pull all SSM parameters
 data "aws_ssm_parameter" "params" {
   for_each = toset(local.ssm_params)
   name     = "/report-a-defect/${local.environment_name}/${each.value}"
 }
 
-# Pull secrets from AWS Secrets Manager
+# Get secret arns from AWS Secrets Manager
 data "aws_secretsmanager_secret" "database_url" {
   name = "report-a-defect-database-url"
 }
@@ -46,6 +43,9 @@ data "aws_secretsmanager_secret" "aws_secret_access_key" {
 data "aws_secretsmanager_secret" "auth0_client_secret" {
   name = "report-a-defect-auth0-client-secret"
 }
+data "aws_secretsmanager_secret" "new_relic_license_key" {
+  name = "report-a-defect-new-relic-license-key"
+}
 data "aws_secretsmanager_secret" "notify_key" {
   name = "report-a-defect-notify-key"
 }
@@ -53,9 +53,8 @@ data "aws_secretsmanager_secret" "papertrail_api_token" {
   name = "report-a-defect-papertrail-api-token"
 }
 data "aws_secretsmanager_secret" "secret_key_base" {
-  name = "report-a-defect-secret_key_base"
+  name = "report-a-defect-secret-key-base"
 }
-
 
 # CloudWatch Log Group for ECS Task
 resource "aws_cloudwatch_log_group" "report_a_defect" {
@@ -123,6 +122,10 @@ module "aws-ecs-lbh" {
               valueFrom = data.aws_secretsmanager_secret.auth0_client_secret.arn
             },
             {
+              name      = "NEW_RELIC_LICENSE_KEY"
+              valueFrom = data.aws_secretsmanager_secret.new_relic_license_key.arn
+            },
+            {
               name      = "NOTIFY_KEY"
               valueFrom = data.aws_secretsmanager_secret.notify_key.arn
             },
@@ -135,26 +138,25 @@ module "aws-ecs-lbh" {
               valueFrom = data.aws_secretsmanager_secret.secret_key_base.arn
           }]
           environment = [
-            { name = "AWS_REGION", value = local.aws_region },
-            { name = "AWS_BUCKET", value = local.aws_bucket },
+            { name = "AWS_REGION", value = data.aws_ssm_parameter.params["aws_region"].value },
+            { name = "AWS_BUCKET", value = data.aws_ssm_parameter.params["aws_bucket"].value },
             { name = "AUTH0_CLIENT_ID", value = data.aws_ssm_parameter.params["auth0_client_id"].value },
             { name = "AUTH0_DOMAIN", value = data.aws_ssm_parameter.params["auth0_domain"].value },
             { name = "HTTP_PASS", value = data.aws_ssm_parameter.params["http_pass"].value },
             { name = "HTTP_USER", value = data.aws_ssm_parameter.params["http_user"].value },
-            { name = "LANG", value = local.lang },
+            { name = "LANG", value = data.aws_ssm_parameter.params["lang"].value },
             { name = "NBT_GROUP_EMAIL", value = data.aws_ssm_parameter.params["nbt_group_email"].value },
-            { name = "NEW_RELIC_LICENSE_KEY", value = data.aws_ssm_parameter.params["new_relic_license_key"].value },
-            { name = "NEW_RELIC_LOG", value = local.new_relic_log },
+            { name = "NEW_RELIC_LOG", value = data.aws_ssm_parameter.params["new_relic_log"].value },
             { name = "NOTIFY_DAILY_DUE_SOON_TEMPLATE", value = data.aws_ssm_parameter.params["notify_daily_due_soon_template"].value },
             { name = "NOTIFY_DAILY_ESCALATION_TEMPLATE", value = data.aws_ssm_parameter.params["notify_daily_escalation_template"].value },
             { name = "NOTIFY_DEFECT_ACCEPTED_BY_CONTRACTOR_TEMPLATE", value = data.aws_ssm_parameter.params["notify_defect_accepted_by_contractor_template"].value },
             { name = "NOTIFY_DEFECT_COMPLETED_TEMPLATE", value = data.aws_ssm_parameter.params["notify_defect_completed_template"].value },
             { name = "NOTIFY_DEFECT_SENT_TO_CONTRACTOR_TEMPLATE", value = data.aws_ssm_parameter.params["notify_defect_sent_to_contractor_template"].value },
             { name = "NOTIFY_FORWARD_DEFECT_TEMPLATE", value = data.aws_ssm_parameter.params["notify_forward_defect_template"].value },
-            { name = "RACK_ENV", value = local.rack_env },
-            { name = "RAILS_ENV", value = local.rails_env },
-            { name = "RAILS_LOG_TO_STDOUT", value = local.rails_log_to_stdout },
-            { name = "RAILS_SERVE_STATIC_FILES", value = local.rails_serve_static_files },
+            { name = "RACK_ENV", value = data.aws_ssm_parameter.params["rack_env"].value },
+            { name = "RAILS_ENV", value = data.aws_ssm_parameter.params["rails_env"].value },
+            { name = "RAILS_LOG_TO_STDOUT", value = data.aws_ssm_parameter.params["rails_log_to_stdout"].value },
+            { name = "RAILS_SERVE_STATIC_FILES", value = data.aws_ssm_parameter.params["rails_serve_static_files"].value },
             { name = "REDIS_URL", value = data.aws_ssm_parameter.params["redis_url"].value },
             { name = "SENTRY_DSN", value = data.aws_ssm_parameter.params["sentry_dsn"].value },
             { name = "SMS_BLACKLIST", value = data.aws_ssm_parameter.params["sms_blacklist"].value }
