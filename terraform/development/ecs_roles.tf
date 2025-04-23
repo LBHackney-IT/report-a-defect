@@ -63,13 +63,7 @@ resource "aws_iam_policy" "ecs_execution_policy" {
           "secretsmanager:DescribeSecret"
         ],
         Resource : [
-          aws_secretsmanager_secret.database_url.arn,
-          data.aws_secretsmanager_secret.aws_access_key_id.arn,
-          data.aws_secretsmanager_secret.aws_secret_access_key.arn,
-          data.aws_secretsmanager_secret.auth0_client_secret.arn,
-          data.aws_secretsmanager_secret.notify_key.arn,
-          data.aws_secretsmanager_secret.papertrail_api_token.arn,
-          data.aws_secretsmanager_secret.secret_key_base.arn
+          for secret in data.aws_secretsmanager_secret.secrets : secret.arn
         ]
       },
       {
