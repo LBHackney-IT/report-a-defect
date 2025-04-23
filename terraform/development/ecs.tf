@@ -1,5 +1,5 @@
-# Get secret ARNs from AWS Secrets Manager
 locals {
+  app_port = 3001
   secret_names = [
     "database-url",
     "aws-access-key-id",
@@ -10,14 +10,6 @@ locals {
     "papertrail-api-token",
     "secret-key-base"
   ]
-}
-data "aws_secretsmanager_secret" "secrets" {
-  for_each = toset(local.secret_names)
-  name     = "report-a-defect-${each.value}"
-}
-
-# Pull all environment variables from SSM
-locals {
   ssm_params = [
     "auth0_client_id",
     "auth0_domain",
@@ -43,6 +35,13 @@ locals {
     "sms_blacklist"
   ]
 }
+
+# Get secret ARNs from AWS Secrets Manager
+data "aws_secretsmanager_secret" "secrets" {
+  for_each = toset(local.secret_names)
+  name     = "report-a-defect-${each.value}"
+}
+# Pull all environment variables from SSM
 data "aws_ssm_parameter" "params" {
   for_each = toset(local.ssm_params)
   name     = "/report-a-defect/${local.environment_name}/${each.value}"
@@ -85,10 +84,18 @@ module "aws-ecs-lbh" {
       ecs_service_alb_configs = [
         {
           container_name    = "report-a-defect-container"
-          container_port    = 3001
+          container_port    = local.app_port
           target_group_name = "report-a-defect"
         }
       ]
+      target_group_map = {
+        "report-a-defect" = {
+          target_port                   = local.app_port
+          target_protocol               = "HTTP"
+          load_balancing_algorithm_type = "round_robin"
+          slow_start                    = 30
+        }
+      }
 
       container_definitions = jsonencode([
         {
@@ -97,7 +104,7 @@ module "aws-ecs-lbh" {
           memory       = 1024
           cpu          = 512
           essential    = true
-          portMappings = [{ containerPort = 3001 }]
+          portMappings = [{ containerPort = local.app_port }]
           logConfiguration = {
             logDriver = "awslogs"
             options = {
