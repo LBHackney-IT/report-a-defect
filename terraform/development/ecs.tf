@@ -1,5 +1,23 @@
+# Get secret ARNs from AWS Secrets Manager
 locals {
-  # Dynamically pull all environment variables from SSM
+  secret_names = [
+    "database-url",
+    "aws-access-key-id",
+    "aws-secret-access-key",
+    "auth0-client-secret",
+    "new-relic-license-key",
+    "notify-key",
+    "papertrail-api-token",
+    "secret-key-base"
+  ]
+}
+data "aws_secretsmanager_secret" "secrets" {
+  for_each = toset(local.secret_names)
+  name     = "report-a-defect-${each.value}"
+}
+
+# Pull all environment variables from SSM
+locals {
   ssm_params = [
     "auth0_client_id",
     "auth0_domain",
@@ -30,24 +48,6 @@ data "aws_ssm_parameter" "params" {
   name     = "/report-a-defect/${local.environment_name}/${each.value}"
 }
 
-# Get secret arns from AWS Secrets Manager
-locals {
-  secret_names = [
-    "database-url",
-    "aws-access-key-id",
-    "aws-secret-access-key",
-    "auth0-client-secret",
-    "new-relic-license-key",
-    "notify-key",
-    "papertrail-api-token",
-    "secret-key-base"
-  ]
-}
-
-data "aws_secretsmanager_secret" "secrets" {
-  for_each = toset(local.secret_names)
-  name     = "report-a-defect-${each.value}"
-}
 
 # CloudWatch Log Group for ECS Task
 resource "aws_cloudwatch_log_group" "report_a_defect" {

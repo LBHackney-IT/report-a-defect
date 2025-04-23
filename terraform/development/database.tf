@@ -63,7 +63,7 @@ resource "aws_secretsmanager_secret" "database_url" {
 }
 resource "aws_secretsmanager_secret_version" "database_url_version" {
   secret_id     = aws_secretsmanager_secret.database_url.id
-  secret_string = jsonencode({ DATABASE_URL = local.database_url })
+  secret_string = local.database_url
 }
 
 module "lbh-db-postgres" {
