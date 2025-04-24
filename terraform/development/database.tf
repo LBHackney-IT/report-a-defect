@@ -65,7 +65,7 @@ resource "aws_secretsmanager_secret_version" "database_url_version" {
 }
 
 module "lbh-db-postgres" {
-  source                  = "github.com/LBHackney-IT/aws-hackney-common-terraform//modules/database/postgres?ref=15d6da7fb25f6925d9e33530b8245a3a300053ac"
+  source                  = "github.com/LBHackney-IT/aws-hackney-common-terraform//modules/database/postgres"
   project_name            = "report-a-defect"
   environment_name        = var.environment_name
   vpc_id                  = data.aws_vpc.development_vpc.id
