@@ -70,8 +70,8 @@ resource "aws_security_group" "ecs_task_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  egress {
-    description = "allow all outbound traffic"
+  ingress {
+    description = "allow all inbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
