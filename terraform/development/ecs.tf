@@ -222,13 +222,17 @@ resource "aws_ecs_task_definition" "app_task" {
       secrets = [
         for secret_key, secret_value in data.aws_secretsmanager_secret.secrets :
         {
-          name      = upper(replace(secret_key, "_", "-"))
+          name      = upper(replace(secret_key, "-", "_")) # kebab to screaming_snake
           valueFrom = secret_value.arn
         }
       ]
+
       environment = [
         for param_key, param_value in data.aws_ssm_parameter.params :
-        { name = upper(replace(param_key, "_", "-")), value = param_value.value }
+        {
+          name  = upper(param_key) # snake to screaming_snake
+          value = param_value.value
+        }
       ]
     }
   ])
