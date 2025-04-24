@@ -1,10 +1,58 @@
 resource "aws_ecr_repository" "app_repository" {
-  name = "report-a-defect-ecr-dev"
+  name                 = "report-a-defect-ecr-dev"
+  image_tag_mutability = "MUTABLE"
+}
+
+resource "aws_ecr_repository_policy" "app_policy" {
+  repository = aws_ecr_repository.app_repository.name
+  policy     = <<EOF
+  {
+    "Version": "2008-10-17",
+    "Statement": [
+      {
+        "Sid": "adds full ecr access to the repository",
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
+          "ecr:CompleteLayerUpload",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetLifecyclePolicy",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart",
+          "logs:CreateLogGroup"
+        ]
+      }
+    ]
+  }
+  EOF
+}
+
+resource "aws_ecs_service" "app_service" {
+  name            = "report-a-defect-service"
+  cluster         = aws_ecs_cluster.app_cluster.id
+  task_definition = aws_ecs_task_definition.app_task.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = data.aws_subnets.development_public_subnets.ids
+    security_groups  = ["sg-00d2e14f38245dd0b"]
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.lb_tg.arn
+    container_name   = "report-a-defect-app-container"
+    container_port   = 3000
+  }
 }
 
 resource "aws_ecs_task_definition" "app_task" {
   depends_on               = [aws_cloudwatch_log_group.report_a_defect]
-  family                   = "report-a-defect-task"
+  family                   = "ecs-task-definition-report-a-defect"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
@@ -96,82 +144,153 @@ resource "aws_ecs_cluster" "app_cluster" {
   name = "report-a-defect-cluster"
 }
 
-resource "aws_lb" "app_alb" {
-  name                       = "report-a-defect-alb"
-  internal                   = false # public ALB
-  load_balancer_type         = "application"
-  security_groups            = [aws_security_group.alb_sg.id]
+# Network Load Balancer (NLB) setup
+resource "aws_lb" "lb" {
+  name                       = "lb-report-a-defect"
+  internal                   = true
+  load_balancer_type         = "network"
   subnets                    = data.aws_subnets.development_public_subnets.ids
   enable_deletion_protection = false
 }
-
-resource "aws_lb_target_group" "app_tg" {
-  name     = "report-a-defect-target-group"
-  port     = 3000
-  protocol = "HTTP"
-  vpc_id   = data.aws_vpc.development_vpc.id
-
-  health_check {
-    path                = "/health"
-    interval            = 30
-    timeout             = 5
-    healthy_threshold   = 3
-    unhealthy_threshold = 3
-  }
-}
-
-resource "aws_ecs_service" "app_service" {
-  name            = "report-a-defect-service"
-  cluster         = aws_ecs_cluster.app_cluster.id
-  task_definition = aws_ecs_task_definition.app_task.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
-
-  network_configuration {
-    subnets          = data.aws_subnets.development_public_subnets.ids
-    security_groups  = [aws_security_group.ecs_sg.id]
-    assign_public_ip = true
-  }
-
-  load_balancer {
-    target_group_arn = aws_lb_target_group.app_tg.arn
-    container_name   = "report-a-defect-app-container"
-    container_port   = 3000
-  }
-}
-
-resource "aws_lb_listener" "app_listener" {
-  load_balancer_arn = aws_lb.app_alb.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.app_tg.arn
-  }
-}
-
-resource "aws_security_group" "alb_sg" {
-  name        = "report-a-defect-alb-sg"
-  description = "Allow inbound traffic to the ALB"
+resource "aws_lb_target_group" "lb_tg" {
+  depends_on  = [aws_lb.lb]
+  name_prefix = "rd-tg-"
+  port        = 3000
+  protocol    = "TCP"
   vpc_id      = data.aws_vpc.development_vpc.id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  target_type = "ip"
+  stickiness {
+    enabled = false
+    type    = "source_ip"
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+# Redirect all traffic from the NLB to the target group
+resource "aws_lb_listener" "lb_listener" {
+  load_balancer_arn = aws_lb.lb.id
+  port              = 3000
+  protocol          = "TCP"
+  default_action {
+    target_group_arn = aws_lb_target_group.lb_tg.id
+    type             = "forward"
   }
 }
 
-resource "aws_security_group" "ecs_sg" {
-  name        = "report-a-defect-ecs-sg"
-  description = "Allow ECS tasks to receive traffic from ALB"
+# API Gateway setup
 
-  ingress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [aws_security_group.alb_sg.id]
+# VPC Link
+resource "aws_api_gateway_vpc_link" "this" {
+  name        = "vpc-link-report-a-defect-fe"
+  target_arns = [aws_lb.lb.arn]
+}
+
+# API Gateway, Private Integration with VPC Link
+# and deployment of a single resource that will take ANY
+# HTTP method and proxy the request to the NLB
+resource "aws_api_gateway_rest_api" "main" {
+  name = "development-report-a-defect"
+}
+
+resource "aws_api_gateway_resource" "main" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "{proxy+}"
+}
+
+resource "aws_api_gateway_method" "main" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_resource.main.id
+  http_method      = "ANY"
+  authorization    = "NONE"
+  api_key_required = false
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
+}
+
+resource "aws_api_gateway_integration" "main" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_resource.main.id
+  http_method = aws_api_gateway_method.main.http_method
+  request_parameters = {
+    "integration.request.path.proxy" = "method.request.path.proxy"
+  }
+  type                    = "HTTP_PROXY"
+  uri                     = "http://${aws_lb.lb.dns_name}:3000/{proxy}"
+  integration_http_method = "ANY"
+  connection_type         = "VPC_LINK"
+  connection_id           = aws_api_gateway_vpc_link.this.id
+}
+
+resource "aws_api_gateway_deployment" "main" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  depends_on  = [aws_api_gateway_integration.main]
+  variables = {
+    # just to trigger redeploy on resource changes
+    resources = join(", ", [aws_api_gateway_resource.main.id])
+    # note: redeployment might be required with other gateway changes.
+    # when necessary run `terraform taint <this resource's address>`
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Cloudfront Distribution
+locals {
+  origin_id = "report-a-defect-origin"
+}
+
+resource "aws_cloudfront_distribution" "app_distribution" {
+  origin {
+    domain_name = replace(aws_api_gateway_deployment.main.invoke_url, "/^https?://([^/]*).*/", "$1")
+    origin_id   = local.origin_id
+    origin_path = "/development"
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "match-viewer"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+  aliases         = []
+  enabled         = true
+  is_ipv6_enabled = true
+  comment         = "Distribution for report a defect front end"
+
+  //  aliases = ["a valid url"] - probably not needed for dev but we'll need a proper url for production
+
+  default_cache_behavior {
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = local.origin_id
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+    min_ttl                = 0
+    default_ttl            = 0
+    max_ttl                = 0
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  tags = {
+    Environment = "development"
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
   }
 }
