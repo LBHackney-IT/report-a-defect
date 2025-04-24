@@ -1,57 +1,134 @@
-locals {
-  app_port = 3001
-  secret_names = [
-    "database-url",
-    "aws-access-key-id",
-    "aws-secret-access-key",
-    "auth0-client-secret",
-    "new-relic-license-key",
-    "notify-key",
-    "papertrail-api-token",
-    "secret-key-base"
-  ]
-  ssm_params = [
-    "auth0_client_id",
-    "auth0_domain",
-    "aws_bucket",
-    "aws_region",
-    "http_pass",
-    "http_user",
-    "lang",
-    "nbt_group_email",
-    "new_relic_log",
-    "notify_daily_due_soon_template",
-    "notify_daily_escalation_template",
-    "notify_defect_accepted_by_contractor_template",
-    "notify_defect_completed_template",
-    "notify_defect_sent_to_contractor_template",
-    "notify_forward_defect_template",
-    "rack_env",
-    "rails_env",
-    "rails_log_to_stdout",
-    "rails_serve_static_files",
-    "redis_url",
-    "sentry_dsn",
-    "sms_blacklist"
-  ]
-}
-
 # Get secret ARNs from AWS Secrets Manager
 data "aws_secretsmanager_secret" "secrets" {
-  for_each = toset(local.secret_names)
+  for_each = toset(var.secret_names)
   name     = "report-a-defect-${each.value}"
 }
 # Pull all environment variables from SSM
 data "aws_ssm_parameter" "params" {
-  for_each = toset(local.ssm_params)
-  name     = "/report-a-defect/${local.environment_name}/${each.value}"
+  for_each = toset(var.ssm_params)
+  name     = "/report-a-defect/${var.environment_name}/${each.value}"
 }
 
+# Role
+data "aws_kms_alias" "secretsmanager" {
+  name = "alias/aws/secretsmanager"
+}
 
-# CloudWatch Log Group for ECS Task
-resource "aws_cloudwatch_log_group" "report_a_defect" {
-  name              = "ecs-task-report-a-defect-${local.environment_name}"
-  retention_in_days = 60
+# Execution Role
+resource "aws_iam_role" "ecs_execution_role" {
+  name = "report-a-defect-execution-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement : [{
+      Effect = "Allow",
+      Principal = {
+        Service = "ecs-tasks.amazonaws.com"
+      },
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+resource "aws_iam_policy" "ecs_execution_policy" {
+  name        = "report-a-defect-execution-policy"
+  description = "Scoped permissions for ECS task execution role"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement : [
+      {
+        Sid : "ECRAccess",
+        Effect : "Allow",
+        Action : [
+          "ecr:GetAuthorizationToken"
+        ],
+        Resource : "*"
+      },
+      {
+        Sid : "ECRRepoAccess",
+        Effect : "Allow",
+        Action : [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage"
+        ],
+        Resource : "${aws_ecr_repository.app_repository.arn}"
+      },
+      {
+        Sid : "CloudWatchLogsAccess",
+        Effect : "Allow",
+        Action : [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Resource : [
+          aws_cloudwatch_log_group.report_a_defect.arn,
+          "${aws_cloudwatch_log_group.report_a_defect.arn}:log-stream:*"
+        ]
+      },
+      {
+        Sid : "SecretsAccess",
+        Effect : "Allow",
+        Action : [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
+        ],
+        Resource : [
+          for secret in data.aws_secretsmanager_secret.secrets : secret.arn
+        ]
+      },
+      {
+        Sid : "KMSAccess",
+        Effect : "Allow",
+        Action : [
+          "kms:Decrypt"
+        ],
+        Resource : data.aws_kms_alias.secretsmanager.target_key_arn
+      }
+    ]
+  })
+}
+resource "aws_iam_role_policy_attachment" "ecs_execution_attachment" {
+  role       = aws_iam_role.ecs_execution_role.name
+  policy_arn = aws_iam_policy.ecs_execution_policy.arn
+}
+
+# Task Role
+resource "aws_iam_role" "ecs_task_role" {
+  name = "report-a-defect-task-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement : [{
+      Effect = "Allow",
+      Principal = {
+        Service = "ecs-tasks.amazonaws.com"
+      },
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+resource "aws_iam_policy" "ecs_task_policy" {
+  name        = "report-a-defect-task-policy"
+  description = "Permissions for ECS task role"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement : [
+      {
+        Effect : "Allow",
+        Action : [
+          "s3:GetObject",
+          "s3:PutObject",
+        ],
+        Resource : "*" # TODO: Update to specific S3 bucket ARN when migrated
+      }
+    ]
+  })
+}
+resource "aws_iam_role_policy_attachment" "ecs_task_attachment" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = aws_iam_policy.ecs_task_policy.arn
 }
 
 # ECR
@@ -60,7 +137,6 @@ resource "aws_ecr_repository" "app_repository" {
   name                 = "report-a-defect-ecr-dev"
   image_tag_mutability = "MUTABLE"
 }
-
 resource "aws_ecr_repository_policy" "app_policy" {
   repository = aws_ecr_repository.app_repository.name
   policy     = <<EOF
@@ -89,6 +165,10 @@ resource "aws_ecr_repository_policy" "app_policy" {
 }
 
 # ECS
+resource "aws_cloudwatch_log_group" "report_a_defect" {
+  name              = "ecs-task-report-a-defect-${var.environment_name}"
+  retention_in_days = 60
+}
 resource "aws_ecs_service" "app_service" {
   name            = "report-a-defect-service"
   cluster         = aws_ecs_cluster.app_cluster.id
@@ -105,10 +185,9 @@ resource "aws_ecs_service" "app_service" {
   load_balancer {
     target_group_arn = aws_lb_target_group.lb_tg.arn
     container_name   = "report-a-defect-app-container"
-    container_port   = local.app_port
+    container_port   = var.app_port
   }
 }
-
 resource "aws_ecs_task_definition" "app_task" {
   depends_on               = [aws_cloudwatch_log_group.report_a_defect]
   family                   = "ecs-task-definition-report-a-defect"
@@ -126,8 +205,8 @@ resource "aws_ecs_task_definition" "app_task" {
       essential = true
       portMappings = [
         {
-          containerPort = local.app_port
-          hostPort      = local.app_port
+          containerPort = var.app_port
+          hostPort      = var.app_port
           protocol      = "tcp"
         }
       ]
@@ -136,7 +215,7 @@ resource "aws_ecs_task_definition" "app_task" {
         options = {
           awslogs-group         = "${aws_cloudwatch_log_group.report_a_defect.name}"
           awslogs-region        = "eu-west-2"
-          awslogs-stream-prefix = "report-a-defect-${local.environment_name}-logs"
+          awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
         }
       }
       secrets = [{
@@ -198,158 +277,6 @@ resource "aws_ecs_task_definition" "app_task" {
     }
   ])
 }
-
 resource "aws_ecs_cluster" "app_cluster" {
   name = "report-a-defect-cluster"
-}
-
-# Network Load Balancer (NLB) setup
-resource "aws_lb" "lb" {
-  name                       = "lb-report-a-defect"
-  internal                   = true
-  load_balancer_type         = "network"
-  subnets                    = data.aws_subnets.development_public_subnets.ids
-  enable_deletion_protection = false
-}
-resource "aws_lb_target_group" "lb_tg" {
-  depends_on  = [aws_lb.lb]
-  name_prefix = "rd-tg-"
-  port        = local.app_port
-  protocol    = "TCP"
-  vpc_id      = data.aws_vpc.development_vpc.id
-  target_type = "ip"
-  stickiness {
-    enabled = false
-    type    = "source_ip"
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-# Redirect all traffic from the NLB to the target group
-resource "aws_lb_listener" "lb_listener" {
-  load_balancer_arn = aws_lb.lb.id
-  port              = local.app_port
-  protocol          = "TCP"
-  default_action {
-    target_group_arn = aws_lb_target_group.lb_tg.id
-    type             = "forward"
-  }
-}
-
-# API Gateway setup
-
-# VPC Link
-resource "aws_api_gateway_vpc_link" "this" {
-  name        = "vpc-link-report-a-defect-fe"
-  target_arns = [aws_lb.lb.arn]
-}
-
-# API Gateway, Private Integration with VPC Link
-# and deployment of a single resource that will take ANY
-# HTTP method and proxy the request to the NLB
-resource "aws_api_gateway_rest_api" "main" {
-  name = "development-report-a-defect"
-}
-
-resource "aws_api_gateway_resource" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
-  path_part   = "{proxy+}"
-}
-
-resource "aws_api_gateway_method" "main" {
-  rest_api_id      = aws_api_gateway_rest_api.main.id
-  resource_id      = aws_api_gateway_resource.main.id
-  http_method      = "ANY"
-  authorization    = "NONE"
-  api_key_required = false
-  request_parameters = {
-    "method.request.path.proxy" = true
-  }
-}
-
-resource "aws_api_gateway_integration" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.main.id
-  http_method = aws_api_gateway_method.main.http_method
-  request_parameters = {
-    "integration.request.path.proxy" = "method.request.path.proxy"
-  }
-  type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.lb.dns_name}:${local.app_port}/{proxy}"
-  integration_http_method = "ANY"
-  connection_type         = "VPC_LINK"
-  connection_id           = aws_api_gateway_vpc_link.this.id
-}
-
-resource "aws_api_gateway_deployment" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  depends_on  = [aws_api_gateway_integration.main]
-  variables = {
-    # just to trigger redeploy on resource changes
-    resources = join(", ", [aws_api_gateway_resource.main.id])
-    # note: redeployment might be required with other gateway changes.
-    # when necessary run `terraform taint <this resource's address>`
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-# Cloudfront Distribution
-locals {
-  origin_id = "report-a-defect-origin"
-}
-
-resource "aws_cloudfront_distribution" "app_distribution" {
-  origin {
-    domain_name = replace(aws_api_gateway_deployment.main.invoke_url, "/^https?://([^/]*).*/", "$1")
-    origin_id   = local.origin_id
-    origin_path = "/development"
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "match-viewer"
-      origin_ssl_protocols   = ["TLSv1.2"]
-    }
-  }
-  aliases         = []
-  enabled         = true
-  is_ipv6_enabled = true
-  comment         = "Distribution for report a defect front end"
-
-  //  aliases = ["a valid url"] - probably not needed for dev but we'll need a proper url for production
-
-  default_cache_behavior {
-    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.origin_id
-
-    forwarded_values {
-      query_string = true
-      cookies {
-        forward = "all"
-      }
-    }
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
-    compress               = true
-    viewer_protocol_policy = "redirect-to-https"
-  }
-
-  restrictions {
-    geo_restriction {
-      restriction_type = "none"
-    }
-  }
-
-  tags = {
-    Environment = "development"
-  }
-
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
 }

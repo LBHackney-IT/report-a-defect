@@ -1,9 +1,3 @@
-locals {
-  database_name = "reportadefect"
-  database_port = 5432
-  database_url  = "postgres://${aws_secretsmanager_secret_version.db_username.secret_string}:${aws_secretsmanager_secret_version.db_password.secret_string}@${module.lbh-db-postgres.instance_id}.eu-west-2.rds.amazonaws.com:${local.database_port}/${local.database_name}"
-}
-
 # Get VPC and Subnets
 data "aws_vpc" "development_vpc" {
   tags = {
@@ -58,6 +52,10 @@ resource "aws_secretsmanager_secret_version" "db_password" {
 }
 
 # DB URL
+
+locals {
+  database_url = "postgres://${aws_secretsmanager_secret_version.db_username.secret_string}:${aws_secretsmanager_secret_version.db_password.secret_string}@${module.lbh-db-postgres.instance_id}.eu-west-2.rds.amazonaws.com:${var.database_port}/${var.database_name}"
+}
 resource "aws_secretsmanager_secret" "database_url" {
   name = "report-a-defect-database-url"
 }
@@ -69,11 +67,11 @@ resource "aws_secretsmanager_secret_version" "database_url_version" {
 module "lbh-db-postgres" {
   source                  = "github.com/LBHackney-IT/aws-hackney-common-terraform//modules/database/postgres?ref=15d6da7fb25f6925d9e33530b8245a3a300053ac"
   project_name            = "report-a-defect"
-  environment_name        = local.environment_name
+  environment_name        = var.environment_name
   vpc_id                  = data.aws_vpc.development_vpc.id
   db_identifier           = "report-a-defect"
-  db_name                 = local.database_name
-  db_port                 = local.database_port
+  db_name                 = var.database_name
+  db_port                 = var.database_port
   subnet_ids              = data.aws_subnets.development_private_subnets.ids
   db_engine               = "postgres"
   db_engine_version       = "15.8"
