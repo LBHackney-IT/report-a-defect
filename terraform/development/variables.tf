@@ -7,12 +7,12 @@ variable "database_name" {
   default = "reportadefect"
 }
 variable "database_port" {
-  type    = string
+  type    = number
   default = 5432
 }
 
 variable "app_port" {
-  type    = string
+  type    = number
   default = 3001
 }
 
