@@ -25,7 +25,7 @@ data "aws_subnets" "development_public_subnets" {
   }
 }
 resource "aws_db_subnet_group" "db_subnets" {
-  name       = "${var.database_name}-db-subnet-${var.environment_name}"
+  name       = "${var.database_name}-db-subnet"
   subnet_ids = data.aws_subnets.development_private_subnets.ids
 
   lifecycle {
