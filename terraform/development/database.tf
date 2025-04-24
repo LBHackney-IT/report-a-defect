@@ -99,6 +99,7 @@ resource "aws_ssm_parameter" "database_url" {
   name = "/report-a-defect/${var.environment_name}/database-url"
   type = "String"
   value = local.database_url
+  overwrite = true
 }
 
 # DB Instance
