@@ -46,13 +46,11 @@ resource "aws_api_gateway_vpc_link" "this" {
 resource "aws_api_gateway_rest_api" "main" {
   name = "development-report-a-defect"
 }
-
 resource "aws_api_gateway_resource" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_rest_api.main.root_resource_id
   path_part   = "{proxy+}"
 }
-
 resource "aws_api_gateway_method" "main" {
   rest_api_id      = aws_api_gateway_rest_api.main.id
   resource_id      = aws_api_gateway_resource.main.id
@@ -63,7 +61,6 @@ resource "aws_api_gateway_method" "main" {
     "method.request.path.proxy" = true
   }
 }
-
 resource "aws_api_gateway_integration" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_resource.main.id
@@ -73,6 +70,29 @@ resource "aws_api_gateway_integration" "main" {
   }
   type                    = "HTTP_PROXY"
   uri                     = "http://${aws_lb.lb.dns_name}:${var.app_port}/{proxy}"
+  integration_http_method = "ANY"
+  connection_type         = "VPC_LINK"
+  connection_id           = aws_api_gateway_vpc_link.this.id
+}
+
+# Add same vpc link integration to the root resource 
+resource "aws_api_gateway_resource" "root_proxy" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = ""
+}
+resource "aws_api_gateway_method" "root_any" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.root_proxy.id
+  http_method   = "ANY"
+  authorization = "NONE"
+}
+resource "aws_api_gateway_integration" "root_proxy" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.root_proxy.id
+  http_method             = aws_api_gateway_method.root_any.http_method
+  type                    = "HTTP_PROXY"
+  uri                     = "http://${aws_lb.lb.dns_name}:${var.app_port}/"
   integration_http_method = "ANY"
   connection_type         = "VPC_LINK"
   connection_id           = aws_api_gateway_vpc_link.this.id
@@ -91,12 +111,12 @@ resource "aws_api_gateway_deployment" "main" {
     create_before_destroy = true
   }
 }
-
 resource "aws_api_gateway_stage" "main" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
   stage_name    = "development"
   deployment_id = aws_api_gateway_deployment.main.id
 }
+
 
 # Cloudfront Distribution
 resource "aws_cloudfront_distribution" "app_distribution" {
