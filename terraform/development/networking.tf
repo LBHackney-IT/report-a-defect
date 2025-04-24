@@ -64,16 +64,24 @@ resource "aws_security_group" "ecs_task_sg" {
   description = "Security group for report a defect ECS tasks"
   vpc_id      = data.aws_vpc.main_vpc.id
 
-  # Allow PostgreSQL access within VPC
+  egress {
+    description = "allow all outbound traffic for Secrets Manager"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress {
+    description = "allow inbound traffic from the VPC"
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
     security_groups = [aws_security_group.db_security_group.id]
   }
 
-  # Allow HTTP access from the load balancer
   ingress {
+    description = "allow inbound traffic from the load balancer"
     from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
