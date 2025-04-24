@@ -64,6 +64,7 @@ commands:
             terraform apply -auto-approve
 
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
+            echo "export ECR_REPO_URL_2=$(terraform output -raw ecr_repo_url_2)" >> $BASH_ENV
             cp $BASH_ENV ~/bash.env
       - persist_to_workspace:
           root: *workspace_root
@@ -195,10 +196,16 @@ jobs:
           command: |
             docker image load --input /tmp/built-image.tar
             docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:$CIRCLE_SHA1
+
+            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL_2:$CIRCLE_SHA1
+            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:latest
       - run:
           name: Release new image to ECR
           command: |
             docker push $ECR_REPO_URL:$CIRCLE_SHA1
+            
+            docker push $ECR_REPO_URL_2:$CIRCLE_SHA1
+            docker push $ECR_REPO_URL:latest
   deploy_staging:
     working_directory: ~/report_a_defect
     docker:
