@@ -86,7 +86,7 @@ resource "aws_secretsmanager_secret_version" "db_password" {
 }
 # DB URL
 locals {
-  database_url = "postgres://${aws_secretsmanager_secret_version.db_username.secret_string}:${aws_secretsmanager_secret_version.db_password.secret_string}@${aws_db_instance.lbh-db.identifier}.eu-west-2.rds.amazonaws.com:${var.database_port}/${var.database_name}"
+  database_url = "postgres://${aws_secretsmanager_secret_version.db_username.secret_string}:${aws_secretsmanager_secret_version.db_password.secret_string}@${aws_db_instance.lbh-db.address}:${var.database_port}/${var.database_name}"
 }
 resource "aws_secretsmanager_secret" "database_url" {
   name = "report-a-defect-database-url"
