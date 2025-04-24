@@ -203,9 +203,9 @@ jobs:
           name: Release new image to ECR
           command: |
             docker push $ECR_REPO_URL:$CIRCLE_SHA1
-            
+
             docker push $ECR_REPO_URL_2:$CIRCLE_SHA1
-            docker push $ECR_REPO_URL:latest
+            docker push $ECR_REPO_URL_2:latest
   deploy_staging:
     working_directory: ~/report_a_defect
     docker:
