@@ -46,6 +46,32 @@ resource "aws_api_gateway_vpc_link" "this" {
 resource "aws_api_gateway_rest_api" "main" {
   name = "development-report-a-defect"
 }
+# Add proxy to the root resource
+resource "aws_api_gateway_method" "root" {
+  rest_api_id      = aws_api_gateway_rest_api.main.id
+  resource_id      = aws_api_gateway_rest_api.main.root_resource_id
+  http_method      = "ANY"
+  authorization    = "NONE"
+  api_key_required = false
+  request_parameters = {
+    "method.request.path.proxy" = true
+  }
+}
+resource "aws_api_gateway_integration" "root" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  resource_id = aws_api_gateway_rest_api.main.root_resource_id
+  http_method = aws_api_gateway_method.root.http_method
+  request_parameters = {
+    "integration.request.path.proxy" = "method.request.path.proxy"
+  }
+  type                    = "HTTP_PROXY"
+  uri                     = "http://${aws_lb.lb.dns_name}:${var.app_port}/{proxy}"
+  integration_http_method = "ANY"
+  connection_type         = "VPC_LINK"
+  connection_id           = aws_api_gateway_vpc_link.this.id
+}
+
+# Add a proxy resource to the API Gateway
 resource "aws_api_gateway_resource" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_rest_api.main.root_resource_id
@@ -75,35 +101,15 @@ resource "aws_api_gateway_integration" "main" {
   connection_id           = aws_api_gateway_vpc_link.this.id
 }
 
-# Add same vpc link integration to the root resource 
-resource "aws_api_gateway_resource" "root_proxy" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
-  path_part   = ""
-}
-resource "aws_api_gateway_method" "root_any" {
-  rest_api_id   = aws_api_gateway_rest_api.main.id
-  resource_id   = aws_api_gateway_resource.root_proxy.id
-  http_method   = "ANY"
-  authorization = "NONE"
-}
-resource "aws_api_gateway_integration" "root_proxy" {
-  rest_api_id             = aws_api_gateway_rest_api.main.id
-  resource_id             = aws_api_gateway_resource.root_proxy.id
-  http_method             = aws_api_gateway_method.root_any.http_method
-  type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.lb.dns_name}:${var.app_port}/"
-  integration_http_method = "ANY"
-  connection_type         = "VPC_LINK"
-  connection_id           = aws_api_gateway_vpc_link.this.id
-}
-
 resource "aws_api_gateway_deployment" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  depends_on  = [aws_api_gateway_integration.main]
+  depends_on = [
+    aws_api_gateway_integration.root,
+    aws_api_gateway_integration.main
+  ]
   variables = {
     # just to trigger redeploy on resource changes
-    resources = join(", ", [aws_api_gateway_resource.main.id])
+    resources = join(", ", [aws_api_gateway_resource.main.id, aws_api_gateway_rest_api.main.root_resource_id])
     # note: redeployment might be required with other gateway changes.
     # when necessary run `terraform taint <this resource's address>`
   }
