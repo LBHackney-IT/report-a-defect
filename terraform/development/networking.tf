@@ -83,7 +83,7 @@ resource "aws_security_group" "ecs_task_sg" {
 
 # Network Load Balancer (NLB) setup
 resource "aws_lb" "lb" {
-  name                       = "lb-report-a-defect"
+  name                       = "report-a-defect-nlb"
   internal                   = true
   load_balancer_type         = "network"
   subnets                    = data.aws_subnets.private_subnets.ids
