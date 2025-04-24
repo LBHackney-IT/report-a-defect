@@ -13,7 +13,7 @@ variable "database_port" {
 
 variable "app_port" {
   type    = number
-  default = 3001
+  default = 3000
 }
 
 variable "secret_names" {
