@@ -33,14 +33,6 @@ resource "aws_secretsmanager_secret_version" "database_url_version" {
   secret_string = local.database_url
 }
 
-# DB Host
-resource "aws_ssm_parameter" "db_host" {
-  name        = "/report-a-defect/${var.environment_name}/db_host"
-  description = "Database host for report-a-defect"
-  type        = "String"
-  value       = aws_db_instance.lbh-db.address
-}
-
 # DB Instance
 resource "aws_db_instance" "lbh-db" {
   identifier                  = "report-a-defect-db-${var.environment_name}"

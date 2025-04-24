@@ -53,10 +53,4 @@ RUN RAILS_ENV=production SECRET_KEY_BASE="secret" bin/rails DATABASE_URL=postgre
 
 EXPOSE 3000
 
-COPY docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
-RUN chmod +x /usr/bin/docker-entrypoint.sh
-ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
-CMD ["bundle", "exec", "rails", "server"]
-
-
 CMD ["bundle", "exec", "rails", "server"]

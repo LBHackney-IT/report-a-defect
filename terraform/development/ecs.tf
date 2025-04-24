@@ -1,14 +1,12 @@
 # Get secret ARNs from AWS Secrets Manager
 data "aws_secretsmanager_secret" "secrets" {
-  depends_on = [aws_secretsmanager_secret.database_url]
-  for_each   = toset(var.secret_names)
-  name       = "report-a-defect-${each.value}"
+  for_each = toset(var.secret_names)
+  name     = "report-a-defect-${each.value}"
 }
 # Pull all environment variables from SSM
 data "aws_ssm_parameter" "params" {
-  depends_on = [aws_ssm_parameter.db_host]
-  for_each   = toset(var.ssm_params)
-  name       = "/report-a-defect/${var.environment_name}/${each.value}"
+  for_each = toset(var.ssm_params)
+  name     = "/report-a-defect/${var.environment_name}/${each.value}"
 }
 
 # Roles
