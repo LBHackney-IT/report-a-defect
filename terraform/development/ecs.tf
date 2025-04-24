@@ -255,8 +255,6 @@ resource "aws_ecs_task_definition" "app_task" {
         { name = "AWS_BUCKET", value = data.aws_ssm_parameter.params["aws_bucket"].value },
         { name = "AUTH0_CLIENT_ID", value = data.aws_ssm_parameter.params["auth0_client_id"].value },
         { name = "AUTH0_DOMAIN", value = data.aws_ssm_parameter.params["auth0_domain"].value },
-        { name = "HTTP_PASS", value = data.aws_ssm_parameter.params["http_pass"].value },
-        { name = "HTTP_USER", value = data.aws_ssm_parameter.params["http_user"].value },
         { name = "LANG", value = data.aws_ssm_parameter.params["lang"].value },
         { name = "NBT_GROUP_EMAIL", value = data.aws_ssm_parameter.params["nbt_group_email"].value },
         { name = "NEW_RELIC_LOG", value = data.aws_ssm_parameter.params["new_relic_log"].value },
