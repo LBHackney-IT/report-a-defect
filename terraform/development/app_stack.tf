@@ -1,3 +1,61 @@
+locals {
+  app_port = 3001
+  secret_names = [
+    "database-url",
+    "aws-access-key-id",
+    "aws-secret-access-key",
+    "auth0-client-secret",
+    "new-relic-license-key",
+    "notify-key",
+    "papertrail-api-token",
+    "secret-key-base"
+  ]
+  ssm_params = [
+    "auth0_client_id",
+    "auth0_domain",
+    "aws_bucket",
+    "aws_region",
+    "http_pass",
+    "http_user",
+    "lang",
+    "nbt_group_email",
+    "new_relic_log",
+    "notify_daily_due_soon_template",
+    "notify_daily_escalation_template",
+    "notify_defect_accepted_by_contractor_template",
+    "notify_defect_completed_template",
+    "notify_defect_sent_to_contractor_template",
+    "notify_forward_defect_template",
+    "rack_env",
+    "rails_env",
+    "rails_log_to_stdout",
+    "rails_serve_static_files",
+    "redis_url",
+    "sentry_dsn",
+    "sms_blacklist"
+  ]
+}
+
+# Get secret ARNs from AWS Secrets Manager
+data "aws_secretsmanager_secret" "secrets" {
+  for_each = toset(local.secret_names)
+  name     = "report-a-defect-${each.value}"
+}
+# Pull all environment variables from SSM
+data "aws_ssm_parameter" "params" {
+  for_each = toset(local.ssm_params)
+  name     = "/report-a-defect/${local.environment_name}/${each.value}"
+}
+
+
+# CloudWatch Log Group for ECS Task
+resource "aws_cloudwatch_log_group" "report_a_defect" {
+  name              = "ecs-task-report-a-defect-${local.environment_name}"
+  retention_in_days = 60
+}
+
+# ECR
+
 resource "aws_ecr_repository" "app_repository" {
   name                 = "report-a-defect-ecr-dev"
   image_tag_mutability = "MUTABLE"
@@ -30,6 +88,7 @@ resource "aws_ecr_repository_policy" "app_policy" {
   EOF
 }
 
+# ECS
 resource "aws_ecs_service" "app_service" {
   name            = "report-a-defect-service"
   cluster         = aws_ecs_cluster.app_cluster.id

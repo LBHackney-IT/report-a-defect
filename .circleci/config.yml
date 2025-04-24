@@ -64,26 +64,12 @@ commands:
             terraform apply -auto-approve
 
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
-            echo "export ECR_REPO_URL_2=$(terraform output -raw ecr_repo_url_2)" >> $BASH_ENV
             cp $BASH_ENV ~/bash.env
       - persist_to_workspace:
           root: *workspace_root
           paths:
             - .aws
             - bash.env
-  terraform-update-ecs-container-image:
-    description: "Updates the ECS container to use the newly deployed image"
-    parameters:
-      environment:
-        type: string
-    steps:
-      - terraform-init:
-          environment: <<parameters.environment>>
-      - run:
-          name: apply with image tag
-          command: |
-            cd ./terraform/<<parameters.environment>>/
-            terraform apply -var image_tag=${CIRCLE_SHA1} -auto-approve
 
 jobs:
   build-and-test:
@@ -128,37 +114,21 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
+
   terraform-init-then-apply-development:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
           environment: "development"
-  terraform-update-container-image-development:
-    executor: docker-terraform
-    steps:
-      - terraform-update-ecs-container-image:
-          environment: "development"
-
   terraform-init-then-apply-staging:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
           environment: "staging"
-  terraform-update-container-image-staging:
-    executor: docker-terraform
-    steps:
-      - terraform-update-ecs-container-image:
-          environment: "staging"
-
   terraform-init-then-apply-production:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
-          environment: "production"
-  terraform-update-container-image-production:
-    executor: docker-terraform
-    steps:
-      - terraform-update-ecs-container-image:
           environment: "production"
 
   deploy-development:
@@ -196,16 +166,12 @@ jobs:
           command: |
             docker image load --input /tmp/built-image.tar
             docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:$CIRCLE_SHA1
-
-            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL_2:$CIRCLE_SHA1
             docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:latest
       - run:
           name: Release new image to ECR
           command: |
             docker push $ECR_REPO_URL:$CIRCLE_SHA1
-
-            docker push $ECR_REPO_URL_2:$CIRCLE_SHA1
-            docker push $ECR_REPO_URL_2:latest
+            docker push $ECR_REPO_URL:latest
   deploy_staging:
     working_directory: ~/report_a_defect
     docker:
@@ -274,9 +240,6 @@ workflows:
           requires:
             - build-and-test
             - terraform-init-then-apply-development
-      - terraform-update-container-image-development:
-          requires:
-            - deploy-development
   continuous_delivery:
     jobs:
       - build-and-test:
