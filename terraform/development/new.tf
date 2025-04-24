@@ -62,7 +62,7 @@ resource "aws_ecs_task_definition" "app_task" {
 
   container_definitions = jsonencode([
     {
-      name      = "report-a-defect-container"
+      name      = "report-a-defect-app-container"
       image     = "${aws_ecr_repository.app_repository.repository_url}:latest"
       essential = true
       portMappings = [
