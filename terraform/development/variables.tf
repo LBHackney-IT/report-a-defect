@@ -16,6 +16,11 @@ variable "app_port" {
   default = 3000
 }
 
+variable "vpc_name" {
+  type    = string
+  default = "housing-dev"
+}
+
 variable "secret_names" {
   type = list(string)
   default = [

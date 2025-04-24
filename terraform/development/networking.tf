@@ -1,23 +1,23 @@
 # Get existing VPC and Subnets
-data "aws_vpc" "development_vpc" {
+data "aws_vpc" "main_vpc" {
   tags = {
-    Name = "housing-dev"
+    Name = var.vpc_name
   }
 }
-data "aws_subnets" "development_private_subnets" {
+data "aws_subnets" "private_subnets" {
   filter {
     name   = "vpc-id"
-    values = [data.aws_vpc.development_vpc.id]
+    values = [data.aws_vpc.main_vpc.id]
   }
   filter {
     name   = "tag:Type"
     values = ["private"]
   }
 }
-data "aws_subnets" "development_public_subnets" {
+data "aws_subnets" "public_subnets" {
   filter {
     name   = "vpc-id"
-    values = [data.aws_vpc.development_vpc.id]
+    values = [data.aws_vpc.main_vpc.id]
   }
   filter {
     name   = "tag:Type"
@@ -28,31 +28,30 @@ data "aws_subnets" "development_public_subnets" {
 # DB Subnet + Security Group
 resource "aws_db_subnet_group" "db_subnets" {
   name       = "${var.database_name}-db-subnet"
-  subnet_ids = data.aws_subnets.development_private_subnets.ids
+  subnet_ids = data.aws_subnets.private_subnets.ids
 
   lifecycle {
     create_before_destroy = true
   }
 }
 resource "aws_security_group" "db_security_group" {
-  vpc_id      = data.aws_vpc.development_vpc.id
+  vpc_id      = data.aws_vpc.main_vpc.id
   name_prefix = "allow_${var.database_name}_db_traffic"
 
   egress {
-    description = "allow outbound traffic"
+    description = "allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-
-    cidr_blocks = [aws_vpc.development_vpc.cidr_block]
+    cidr_blocks = [data.aws_vpc.main_vpc.cidr_block]
   }
 
   ingress {
-    description     = "${var.database_name}-${var.environment_name}"
-    from_port       = var.database_port
-    to_port         = var.database_port
-    protocol        = "tcp"
-    security_groups = [aws_security_group.ecs_task_sg.id]
+    description = "allow inbound traffic from the VPC"
+    from_port   = var.database_port
+    to_port     = var.database_port
+    protocol    = "tcp"
+    cidr_blocks = [data.aws_vpc.main_vpc.cidr_block]
   }
 
   lifecycle { ignore_changes = [ingress] }
@@ -63,7 +62,7 @@ resource "aws_security_group" "db_security_group" {
 resource "aws_security_group" "ecs_task_sg" {
   name        = "report-a-defect-ecs-sg"
   description = "Security group for report a defect ECS tasks"
-  vpc_id      = data.aws_vpc.main.id
+  vpc_id      = data.aws_vpc.main_vpc.id
 
   # Allow PostgreSQL access within VPC
   ingress {
@@ -78,7 +77,7 @@ resource "aws_security_group" "ecs_task_sg" {
     from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
-    cidr_blocks = [aws_vpc.development_vpc.cidr_block]
+    cidr_blocks = [data.aws_vpc.main_vpc.cidr_block]
   }
 }
 
@@ -87,7 +86,7 @@ resource "aws_lb" "lb" {
   name                       = "lb-report-a-defect"
   internal                   = true
   load_balancer_type         = "network"
-  subnets                    = data.aws_subnets.development_private_subnets
+  subnets                    = data.aws_subnets.private_subnets
   enable_deletion_protection = false
 }
 resource "aws_lb_target_group" "lb_tg" {
@@ -95,7 +94,7 @@ resource "aws_lb_target_group" "lb_tg" {
   name_prefix = "rd-tg-"
   port        = var.app_port
   protocol    = "TCP"
-  vpc_id      = data.aws_vpc.development_vpc.id
+  vpc_id      = data.aws_vpc.main_vpc.id
   target_type = "ip"
   stickiness {
     enabled = false

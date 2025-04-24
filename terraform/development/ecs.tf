@@ -176,8 +176,8 @@ resource "aws_ecs_service" "app_service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = data.aws_subnets.development_public_subnets.ids
-    security_groups  = ["sg-00d2e14f38245dd0b"]
+    subnets          = data.aws_subnets.public_subnets.ids
+    security_groups  = [aws_security_group.ecs_task_sg.id]
     assign_public_ip = false
   }
 
