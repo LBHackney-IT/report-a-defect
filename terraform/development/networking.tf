@@ -43,18 +43,16 @@ resource "aws_security_group" "db_security_group" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [data.aws_vpc.main_vpc.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    description = "allow inbound traffic from the VPC"
+    description = "allow inbound traffic"
     from_port   = var.database_port
     to_port     = var.database_port
     protocol    = "tcp"
-    cidr_blocks = [data.aws_vpc.main_vpc.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
-
-  lifecycle { ignore_changes = [ingress] }
 }
 
 
@@ -72,21 +70,29 @@ resource "aws_security_group" "ecs_task_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    description = "allow inbound traffic from the VPC"
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.db_security_group.id]
+  egress {
+    description = "allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    description = "allow inbound traffic from the load balancer"
-    from_port   = 3000
-    to_port     = 3000
-    protocol    = "tcp"
-    cidr_blocks = [data.aws_vpc.main_vpc.cidr_block]
-  }
+  # ingress {
+  #   description = "allow inbound traffic from the VPC"
+  #   from_port       = 5432
+  #   to_port         = 5432
+  #   protocol        = "tcp"
+  #   security_groups = [aws_security_group.db_security_group.id]
+  # }
+
+  # ingress {
+  #   description = "allow inbound traffic from the load balancer"
+  #   from_port   = 3000
+  #   to_port     = 3000
+  #   protocol    = "tcp"
+  #   cidr_blocks = [data.aws_vpc.main_vpc.cidr_block]
+  # }
 }
 
 # Network Load Balancer (NLB) setup
