@@ -36,8 +36,6 @@ variable "ssm_params" {
     "auth0_domain",
     "aws_bucket",
     "aws_region",
-    "http_pass",
-    "http_user",
     "lang",
     "nbt_group_email",
     "new_relic_log",
