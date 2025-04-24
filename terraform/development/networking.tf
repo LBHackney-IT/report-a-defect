@@ -100,7 +100,7 @@ resource "aws_lb" "lb" {
   name                       = "report-a-defect-nlb"
   internal                   = true
   load_balancer_type         = "network"
-  subnets                    = data.aws_subnets.private_subnets.ids
+  subnets                    = data.aws_subnets.public_subnets.ids
   enable_deletion_protection = false
 }
 resource "aws_lb_target_group" "lb_tg" {
