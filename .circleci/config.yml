@@ -64,6 +64,9 @@ commands:
             terraform apply -auto-approve
 
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
+            echo "export CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $BASH_ENV
+            echo "export SERVICE_NAME=$(terraform output -raw service_name)" >> $BASH_ENV
+            
             cp $BASH_ENV ~/bash.env
       - persist_to_workspace:
           root: *workspace_root
@@ -172,6 +175,11 @@ jobs:
           command: |
             docker push $ECR_REPO_URL:$CIRCLE_SHA1
             docker push $ECR_REPO_URL:latest
+      - run:
+          name: Force new deployment of the ECS service
+          command: |
+            aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --force-new-deployment --region eu-west-2
+
   deploy_staging:
     working_directory: ~/report_a_defect
     docker:
