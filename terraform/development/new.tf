@@ -46,7 +46,7 @@ resource "aws_ecs_service" "app_service" {
   load_balancer {
     target_group_arn = aws_lb_target_group.lb_tg.arn
     container_name   = "report-a-defect-app-container"
-    container_port   = 3000
+    container_port   = local.app_port
   }
 }
 
@@ -155,7 +155,7 @@ resource "aws_lb" "lb" {
 resource "aws_lb_target_group" "lb_tg" {
   depends_on  = [aws_lb.lb]
   name_prefix = "rd-tg-"
-  port        = 3000
+  port        = local.app_port
   protocol    = "TCP"
   vpc_id      = data.aws_vpc.development_vpc.id
   target_type = "ip"
@@ -170,7 +170,7 @@ resource "aws_lb_target_group" "lb_tg" {
 # Redirect all traffic from the NLB to the target group
 resource "aws_lb_listener" "lb_listener" {
   load_balancer_arn = aws_lb.lb.id
-  port              = 3000
+  port              = local.app_port
   protocol          = "TCP"
   default_action {
     target_group_arn = aws_lb_target_group.lb_tg.id
@@ -218,7 +218,7 @@ resource "aws_api_gateway_integration" "main" {
     "integration.request.path.proxy" = "method.request.path.proxy"
   }
   type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.lb.dns_name}:3000/{proxy}"
+  uri                     = "http://${aws_lb.lb.dns_name}:local.app_port/{proxy}"
   integration_http_method = "ANY"
   connection_type         = "VPC_LINK"
   connection_id           = aws_api_gateway_vpc_link.this.id
