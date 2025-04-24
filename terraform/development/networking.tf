@@ -198,76 +198,76 @@ resource "aws_api_gateway_rest_api" "main" {
 #   connection_id           = aws_api_gateway_vpc_link.this.id
 # }
 
-resource "aws_api_gateway_deployment" "main" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  # depends_on = [
-  #   aws_api_gateway_integration.root,
-  #   aws_api_gateway_integration.main
-  # ]
-  # variables = {
-  #   # just to trigger redeploy on resource changes
-  #   resources = join(", ", [aws_api_gateway_resource.main.id, aws_api_gateway_rest_api.main.root_resource_id])
-  #   # note: redeployment might be required with other gateway changes.
-  #   # when necessary run `terraform taint <this resource's address>`
-  # }
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-resource "aws_api_gateway_stage" "main" {
-  rest_api_id   = aws_api_gateway_rest_api.main.id
-  stage_name    = "development"
-  deployment_id = aws_api_gateway_deployment.main.id
-}
+# resource "aws_api_gateway_deployment" "main" {
+#   rest_api_id = aws_api_gateway_rest_api.main.id
+#   # depends_on = [
+#   #   aws_api_gateway_integration.root,
+#   #   aws_api_gateway_integration.main
+#   # ]
+#   # variables = {
+#   #   # just to trigger redeploy on resource changes
+#   #   resources = join(", ", [aws_api_gateway_resource.main.id, aws_api_gateway_rest_api.main.root_resource_id])
+#   #   # note: redeployment might be required with other gateway changes.
+#   #   # when necessary run `terraform taint <this resource's address>`
+#   # }
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
+# resource "aws_api_gateway_stage" "main" {
+#   rest_api_id   = aws_api_gateway_rest_api.main.id
+#   stage_name    = "development"
+#   deployment_id = aws_api_gateway_deployment.main.id
+# }
 
 
-# Cloudfront Distribution
-resource "aws_cloudfront_distribution" "app_distribution" {
-  origin {
-    domain_name = replace(aws_api_gateway_stage.main.invoke_url, "/^https?://([^/]*).*/", "$1")
-    origin_id   = "api-gateway-origin"
-    origin_path = "/development"
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "match-viewer"
-      origin_ssl_protocols   = ["TLSv1.2"]
-    }
-  }
-  aliases         = []
-  enabled         = true
-  is_ipv6_enabled = true
-  comment         = "Distribution for report a defect front end"
+# # Cloudfront Distribution
+# resource "aws_cloudfront_distribution" "app_distribution" {
+#   origin {
+#     domain_name = replace(aws_api_gateway_stage.main.invoke_url, "/^https?://([^/]*).*/", "$1")
+#     origin_id   = "api-gateway-origin"
+#     origin_path = "/development"
+#     custom_origin_config {
+#       http_port              = 80
+#       https_port             = 443
+#       origin_protocol_policy = "match-viewer"
+#       origin_ssl_protocols   = ["TLSv1.2"]
+#     }
+#   }
+#   aliases         = []
+#   enabled         = true
+#   is_ipv6_enabled = true
+#   comment         = "Distribution for report a defect front end"
 
-  default_cache_behavior {
-    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "api-gateway-origin"
+#   default_cache_behavior {
+#     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+#     cached_methods   = ["GET", "HEAD"]
+#     target_origin_id = "api-gateway-origin"
 
-    forwarded_values {
-      query_string = true
-      cookies {
-        forward = "all"
-      }
-    }
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
-    compress               = true
-    viewer_protocol_policy = "redirect-to-https"
-  }
+#     forwarded_values {
+#       query_string = true
+#       cookies {
+#         forward = "all"
+#       }
+#     }
+#     min_ttl                = 0
+#     default_ttl            = 0
+#     max_ttl                = 0
+#     compress               = true
+#     viewer_protocol_policy = "redirect-to-https"
+#   }
 
-  restrictions {
-    geo_restriction {
-      restriction_type = "none"
-    }
-  }
+#   restrictions {
+#     geo_restriction {
+#       restriction_type = "none"
+#     }
+#   }
 
-  tags = {
-    Environment = "development"
-  }
+#   tags = {
+#     Environment = "development"
+#   }
 
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
-}
+#   viewer_certificate {
+#     cloudfront_default_certificate = true
+#   }
+# }
