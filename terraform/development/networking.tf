@@ -81,7 +81,6 @@ resource "aws_api_gateway_integration" "main" {
 resource "aws_api_gateway_deployment" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   depends_on  = [aws_api_gateway_integration.main]
-  stage_name  = "development"
   variables = {
     # just to trigger redeploy on resource changes
     resources = join(", ", [aws_api_gateway_resource.main.id])
@@ -93,10 +92,16 @@ resource "aws_api_gateway_deployment" "main" {
   }
 }
 
+resource "aws_api_gateway_stage" "main" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  stage_name    = "development"
+  deployment_id = aws_api_gateway_deployment.main.id
+}
+
 # Cloudfront Distribution
 resource "aws_cloudfront_distribution" "app_distribution" {
   origin {
-    domain_name = replace(aws_api_gateway_deployment.main.invoke_url, "/^https?://([^/]*).*/", "$1")
+    domain_name = replace(aws_api_gateway_stage.main.invoke_url, "/^https?://([^/]*).*/", "$1")
     origin_id   = "api-gateway-origin"
     origin_path = "/development"
     custom_origin_config {
