@@ -218,59 +218,17 @@ resource "aws_ecs_task_definition" "app_task" {
           awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
         }
       }
-      secrets = [{
-        name      = "DATABASE_URL"
-        valueFrom = data.aws_secretsmanager_secret.secrets["database-url"].arn
-        },
+      # Dynamically set secrets and environment variables from SSM and Secrets Manager
+      secrets = [
+        for secret_key, secret_value in data.aws_secretsmanager_secret.secrets :
         {
-          name      = "AWS_ACCESS_KEY_ID"
-          valueFrom = data.aws_secretsmanager_secret.secrets["aws-access-key-id"].arn
-        },
-        {
-          name      = "AWS_SECRET_ACCESS_KEY"
-          valueFrom = data.aws_secretsmanager_secret.secrets["aws-secret-access-key"].arn
-        },
-        {
-          name      = "AUTH0_CLIENT_SECRET"
-          valueFrom = data.aws_secretsmanager_secret.secrets["auth0-client-secret"].arn
-        },
-        {
-          name      = "NEW_RELIC_LICENSE_KEY"
-          valueFrom = data.aws_secretsmanager_secret.secrets["new-relic-license-key"].arn
-        },
-        {
-          name      = "NOTIFY_KEY"
-          valueFrom = data.aws_secretsmanager_secret.secrets["notify-key"].arn
-        },
-        {
-          name      = "PAPERTRAIL_API_TOKEN"
-          valueFrom = data.aws_secretsmanager_secret.secrets["papertrail-api-token"].arn
-        },
-        {
-          name      = "SECRET_KEY_BASE"
-          valueFrom = data.aws_secretsmanager_secret.secrets["secret-key-base"].arn
-      }]
+          name      = upper(replace(secret_key, "_", "-"))
+          valueFrom = secret_value.arn
+        }
+      ]
       environment = [
-        { name = "AWS_REGION", value = data.aws_ssm_parameter.params["aws_region"].value },
-        { name = "AWS_BUCKET", value = data.aws_ssm_parameter.params["aws_bucket"].value },
-        { name = "AUTH0_CLIENT_ID", value = data.aws_ssm_parameter.params["auth0_client_id"].value },
-        { name = "AUTH0_DOMAIN", value = data.aws_ssm_parameter.params["auth0_domain"].value },
-        { name = "LANG", value = data.aws_ssm_parameter.params["lang"].value },
-        { name = "NBT_GROUP_EMAIL", value = data.aws_ssm_parameter.params["nbt_group_email"].value },
-        { name = "NEW_RELIC_LOG", value = data.aws_ssm_parameter.params["new_relic_log"].value },
-        { name = "NOTIFY_DAILY_DUE_SOON_TEMPLATE", value = data.aws_ssm_parameter.params["notify_daily_due_soon_template"].value },
-        { name = "NOTIFY_DAILY_ESCALATION_TEMPLATE", value = data.aws_ssm_parameter.params["notify_daily_escalation_template"].value },
-        { name = "NOTIFY_DEFECT_ACCEPTED_BY_CONTRACTOR_TEMPLATE", value = data.aws_ssm_parameter.params["notify_defect_accepted_by_contractor_template"].value },
-        { name = "NOTIFY_DEFECT_COMPLETED_TEMPLATE", value = data.aws_ssm_parameter.params["notify_defect_completed_template"].value },
-        { name = "NOTIFY_DEFECT_SENT_TO_CONTRACTOR_TEMPLATE", value = data.aws_ssm_parameter.params["notify_defect_sent_to_contractor_template"].value },
-        { name = "NOTIFY_FORWARD_DEFECT_TEMPLATE", value = data.aws_ssm_parameter.params["notify_forward_defect_template"].value },
-        { name = "RACK_ENV", value = data.aws_ssm_parameter.params["rack_env"].value },
-        { name = "RAILS_ENV", value = data.aws_ssm_parameter.params["rails_env"].value },
-        { name = "RAILS_LOG_TO_STDOUT", value = data.aws_ssm_parameter.params["rails_log_to_stdout"].value },
-        { name = "RAILS_SERVE_STATIC_FILES", value = data.aws_ssm_parameter.params["rails_serve_static_files"].value },
-        { name = "REDIS_URL", value = data.aws_ssm_parameter.params["redis_url"].value },
-        { name = "SENTRY_DSN", value = data.aws_ssm_parameter.params["sentry_dsn"].value },
-        { name = "SMS_BLACKLIST", value = data.aws_ssm_parameter.params["sms_blacklist"].value }
+        for param_key, param_value in data.aws_ssm_parameter.params :
+        { name = upper(replace(param_key, "_", "-")), value = param_value.value }
       ]
     }
   ])
