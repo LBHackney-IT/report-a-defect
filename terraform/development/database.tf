@@ -97,7 +97,7 @@ resource "aws_secretsmanager_secret_version" "database_url_version" {
 }
 resource "aws_ssm_parameter" "database_url" {
   name = "/report-a-defect/${var.environment_name}/database-url"
-  type = string
+  type = "String"
   value = local.database_url
 }
 
