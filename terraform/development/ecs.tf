@@ -9,7 +9,7 @@ data "aws_ssm_parameter" "params" {
   name     = "/report-a-defect/${var.environment_name}/${each.value}"
 }
 
-# Role
+# Roles
 data "aws_kms_alias" "secretsmanager" {
   name = "alias/aws/secretsmanager"
 }
@@ -132,7 +132,6 @@ resource "aws_iam_role_policy_attachment" "ecs_task_attachment" {
 }
 
 # ECR
-
 resource "aws_ecr_repository" "app_repository" {
   name                 = "report-a-defect-ecr-dev"
   image_tag_mutability = "MUTABLE"

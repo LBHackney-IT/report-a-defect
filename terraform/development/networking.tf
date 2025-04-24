@@ -1,9 +1,93 @@
+# Get existing VPC and Subnets
+data "aws_vpc" "development_vpc" {
+  tags = {
+    Name = "housing-dev"
+  }
+}
+data "aws_subnets" "development_private_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.development_vpc.id]
+  }
+  filter {
+    name   = "tag:Type"
+    values = ["private"]
+  }
+}
+data "aws_subnets" "development_public_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.development_vpc.id]
+  }
+  filter {
+    name   = "tag:Type"
+    values = ["public"]
+  }
+}
+
+# DB Subnet + Security Group
+resource "aws_db_subnet_group" "db_subnets" {
+  name       = "${var.database_name}-db-subnet"
+  subnet_ids = data.aws_subnets.development_private_subnets.ids
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+resource "aws_security_group" "db_security_group" {
+  vpc_id      = data.aws_vpc.development_vpc.id
+  name_prefix = "allow_${var.database_name}_db_traffic"
+
+  egress {
+    description = "allow outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+
+    cidr_blocks = [aws_vpc.development_vpc.cidr_block]
+  }
+
+  ingress {
+    description     = "${var.database_name}-${var.environment_name}"
+    from_port       = var.database_port
+    to_port         = var.database_port
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs_task_sg.id]
+  }
+
+  lifecycle { ignore_changes = [ingress] }
+}
+
+
+# ECS Security Group
+resource "aws_security_group" "ecs_task_sg" {
+  name        = "report-a-defect-ecs-sg"
+  description = "Security group for report a defect ECS tasks"
+  vpc_id      = data.aws_vpc.main.id
+
+  # Allow PostgreSQL access within VPC
+  ingress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.db_security_group.id]
+  }
+
+  # Allow HTTP access from the load balancer
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.development_vpc.cidr_block]
+  }
+}
+
 # Network Load Balancer (NLB) setup
 resource "aws_lb" "lb" {
   name                       = "lb-report-a-defect"
   internal                   = true
   load_balancer_type         = "network"
-  subnets                    = data.aws_subnets.development_public_subnets.ids
+  subnets                    = data.aws_subnets.development_private_subnets
   enable_deletion_protection = false
 }
 resource "aws_lb_target_group" "lb_tg" {
@@ -21,18 +105,18 @@ resource "aws_lb_target_group" "lb_tg" {
     create_before_destroy = true
   }
 }
-# Redirect all traffic from the NLB to the target group
 resource "aws_lb_listener" "lb_listener" {
   load_balancer_arn = aws_lb.lb.id
   port              = var.app_port
   protocol          = "TCP"
+  # Redirect all traffic from the NLB to the target group
   default_action {
     target_group_arn = aws_lb_target_group.lb_tg.id
     type             = "forward"
   }
 }
 
-# API Gateway setup
+# API Gateway
 
 # VPC Link
 resource "aws_api_gateway_vpc_link" "this" {
