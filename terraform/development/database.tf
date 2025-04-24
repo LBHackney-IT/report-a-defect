@@ -95,6 +95,11 @@ resource "aws_secretsmanager_secret_version" "database_url_version" {
   secret_id     = aws_secretsmanager_secret.database_url.id
   secret_string = local.database_url
 }
+resource "aws_ssm_parameter" "database_url" {
+  name = "/report-a-defect/${var.environment_name}/database-url"
+  type = string
+  value = local.database_url
+}
 
 # DB Instance
 resource "aws_db_instance" "lbh-db" {

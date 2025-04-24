@@ -19,7 +19,6 @@ variable "app_port" {
 variable "secret_names" {
   type = list(string)
   default = [
-    "database-url",
     "aws-access-key-id",
     "aws-secret-access-key",
     "auth0-client-secret",
@@ -36,6 +35,7 @@ variable "ssm_params" {
     "auth0_domain",
     "aws_bucket",
     "aws_region",
+    "database-url",
     "lang",
     "nbt_group_email",
     "new_relic_log",
