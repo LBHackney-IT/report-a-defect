@@ -28,7 +28,6 @@ variable "secret_names" {
     "aws-secret-access-key",
     "auth0-client-secret",
     "database-url",
-    "new-relic-license-key",
     "notify-key",
     "papertrail-api-token",
     "secret-key-base"
@@ -43,7 +42,6 @@ variable "ssm_params" {
     "aws_region",
     "lang",
     "nbt_group_email",
-    "new_relic_log",
     "notify_daily_due_soon_template",
     "notify_daily_escalation_template",
     "notify_defect_accepted_by_contractor_template",
