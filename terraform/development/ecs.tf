@@ -189,7 +189,7 @@ resource "aws_ecs_service" "app_service" {
 }
 resource "aws_ecs_task_definition" "app_task" {
   depends_on               = [aws_cloudwatch_log_group.report_a_defect]
-  family                   = "ecs-task-definition-report-a-defect"
+  family                   = "report-a-defect-app-container"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn

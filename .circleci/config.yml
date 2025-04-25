@@ -63,6 +63,8 @@ commands:
             echo "export SECURITY_GROUP_IDS=$(terraform output -raw ecs_security_group_ids)" >> $BASH_ENV
             
             cp $BASH_ENV ~/bash.env
+
+            cat ~/bash.env
       - persist_to_workspace:
           root: *workspace_root
           paths:
@@ -88,14 +90,9 @@ jobs:
             docker image tag report_a_defect-test:latest reportadefect:$CIRCLE_SHA1
             docker image save -o /tmp/built-image.tar reportadefect:$CIRCLE_SHA1
             docker image load --input /tmp/built-image.tar
-      - run:
-          name: Save the application for deployment
-          command: |
-            cp -rT . /tmp/report-a-defect
       - save_cache:
           key: docker-images-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - /tmp/report-a-defect
             - /tmp/built-image.tar
   assume-role-development:
     executor: docker-python
@@ -180,7 +177,7 @@ jobs:
             --network-configuration 'awsvpcConfiguration={
               subnets=[$SUBNET_IDS],
               securityGroups=$SECURITY_GROUP_IDS,
-              assignPublicIp="DISBLED"
+              assignPublicIp="DISABLED"
             }' \
             --overrides '{
               "containerOverrides": [{
@@ -208,9 +205,8 @@ jobs:
       - run:
           name: Setup Heroku CLI
           command: |
-            cd /tmp/report-a-defect
-            chmod +x .circleci/setup-heroku.sh
-            .circleci/setup-heroku.sh
+            chmod +x ~/.circleci/setup-heroku.sh
+            ~/.circleci/setup-heroku.sh
       - run:
           name: Deploy the Docker image to Heroku Staging
           command: |
@@ -235,9 +231,8 @@ jobs:
       - run:
           name: Setup Heroku
           command: |
-            cd /tmp/report-a-defect
-            chmod +x .circleci/setup-heroku.sh
-            .circleci/setup-heroku.sh
+            chmod +x ~/.circleci/setup-heroku.sh
+            ~/.circleci/setup-heroku.sh
       - run:
           name: Deploy the Docker image to Heroku Production
           command: |
