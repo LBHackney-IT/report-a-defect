@@ -182,7 +182,7 @@ jobs:
             }' \
             --overrides '{
               "containerOverrides": [{
-                "name": report-a-defect-app-container,
+                "name": "report-a-defect-app-container",
                 "command": ["bundle", "exec", "rake", "db:migrate"]
               }]
             }'    
