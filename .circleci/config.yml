@@ -128,33 +128,7 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment: "production"
-  
-  migrate-db:
-    working_directory: ~/report_a_defect
-    docker:
-      - image: cimg/base:2025.04
-    steps:
-      - attach_workspace:
-         at: *workspace_root
-      - run:
-          name: Migrate the database
-          command: |
-            aws ecs run-task \
-            --cluster $CLUSTER_NAME \
-            --launch-type FARGATE \
-            --task-definition $TASK_DEFINITION_NAME \
-            --network-configuration 'awsvpcConfiguration={
-              subnets=[$SUBNET_IDS],
-              securityGroups=$SECURITY_GROUP_IDS,
-              assignPublicIp="DISBLED"
-            }' \
-            --overrides '{
-              "containerOverrides": [{
-                "name": "report-a-defect",
-                "command": ["bundle", "exec", "rake", "db:migrate"]
-              }]
-            }'
-  
+
   deploy-development:
     working_directory: ~/report_a_defect
     docker:
@@ -196,6 +170,24 @@ jobs:
           command: |
             docker push $ECR_REPO_URL:$CIRCLE_SHA1
             docker push $ECR_REPO_URL:latest
+      - run:
+          name: Migrate the database
+          command: |
+            aws ecs run-task \
+            --cluster $CLUSTER_NAME \
+            --launch-type FARGATE \
+            --task-definition $TASK_DEFINITION_NAME \
+            --network-configuration 'awsvpcConfiguration={
+              subnets=[$SUBNET_IDS],
+              securityGroups=$SECURITY_GROUP_IDS,
+              assignPublicIp="DISBLED"
+            }' \
+            --overrides '{
+              "containerOverrides": [{
+                "name": "report-a-defect",
+                "command": ["bundle", "exec", "rake", "db:migrate"]
+              }]
+            }'    
       - run:
           name: Force new deployment of the ECS service
           command: |
@@ -265,13 +257,10 @@ workflows:
       - terraform-init-then-apply-development:
           requires:
             - assume-role-development
-      - migrate-db:
+      - deploy-development:
           requires:
             - build-and-test
             - terraform-init-then-apply-development
-      - deploy-development:
-          requires:
-            - migrate-db
   continuous_delivery:
     jobs:
       - build-and-test:
