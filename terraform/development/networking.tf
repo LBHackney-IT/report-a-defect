@@ -112,6 +112,7 @@ resource "aws_lb_target_group" "lb_tg" {
   target_type = "ip"
   health_check {
     enabled = false
+    path   = "/health"
   }
   stickiness {
     enabled = false
