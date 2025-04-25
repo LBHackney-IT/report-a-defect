@@ -175,7 +175,7 @@ jobs:
             --launch-type FARGATE \
             --task-definition $TASK_DEFINITION_NAME \
             --network-configuration 'awsvpcConfiguration={
-              subnets=[$SUBNET_IDS],
+              subnets=$SUBNET_IDS,
               securityGroups=$SECURITY_GROUP_IDS,
               assignPublicIp="DISABLED"
             }' \
