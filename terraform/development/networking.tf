@@ -45,14 +45,16 @@ resource "aws_security_group" "db_security_group" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
 
-  ingress {
-    description = "allow inbound traffic"
-    from_port   = var.database_port
-    to_port     = var.database_port
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+resource "aws_security_group_rule" "allow_ecs_to_rds" {
+  type                     = "ingress"
+  from_port                = var.database_port
+  to_port                  = var.database_port
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.db_security_group.id
+  source_security_group_id = aws_security_group.ecs_task_sg.id
+  description              = "Allow ECS tasks to talk to Postgres"
 }
 
 
