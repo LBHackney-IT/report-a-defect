@@ -111,7 +111,7 @@ resource "aws_lb_target_group" "lb_tg" {
   vpc_id      = data.aws_vpc.main_vpc.id
   target_type = "ip"
   health_check {
-    enabled = false
+    enabled = true
     path    = "/health"
     matcher = "200"
   }
