@@ -25,19 +25,21 @@ data "aws_subnets" "public_subnets" {
   }
 }
 
-# DB Subnet + Security Group
-data "aws_security_group" "bastion_sg" {
-  filter {
-    name   = "group-name"
-    values = ["PlatformAPIsBastionSecurityGroup"]
-  }
-}
+# DB Subnet
 resource "aws_db_subnet_group" "db_subnets" {
   name       = "${var.database_name}-db-subnet"
   subnet_ids = data.aws_subnets.private_subnets.ids
 
   lifecycle {
     create_before_destroy = true
+  }
+}
+
+# DB Security Group
+data "aws_security_group" "bastion_sg" {
+  filter {
+    name   = "group-name"
+    values = ["PlatformAPIsBastionSecurityGroup"]
   }
 }
 resource "aws_security_group" "db_security_group" {
@@ -67,7 +69,7 @@ resource "aws_security_group_rule" "allow_bastion_to_rds" {
   to_port                  = var.database_port
   protocol                 = "tcp"
   security_group_id        = aws_security_group.db_security_group.id
-  source_security_group_id = aws_security_group.bastion_sg.id
+  source_security_group_id = data.aws_security_group.bastion_sg.id
   description              = "Allow Bastion access to RDS"
 }
 
@@ -84,30 +86,15 @@ resource "aws_security_group" "ecs_task_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  ingress {
-    description = "allow all inbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # ingress {
-  #   description = "allow inbound traffic from the VPC"
-  #   from_port       = 5432
-  #   to_port         = 5432
-  #   protocol        = "tcp"
-  #   security_groups = [aws_security_group.db_security_group.id]
-  # }
-
-  # ingress {
-  #   description = "allow inbound traffic from the load balancer"
-  #   from_port   = 3000
-  #   to_port     = 3000
-  #   protocol    = "tcp"
-  #   cidr_blocks = [data.aws_vpc.main_vpc.cidr_block]
-  # }
+}
+resource "aws_security_group_rule" "allow_vpc_to_ecs" {
+  type              = "ingress"
+  from_port         = var.database_port
+  to_port           = var.database_port
+  protocol          = "tcp"
+  security_group_id = aws_security_group.ecs_task_sg.id
+  cidr_blocks       = [data.aws_vpc.main_vpc.cidr_block]
+  description       = "allow inbound traffic from the VPC"
 }
 
 # Network Load Balancer (NLB) setup
