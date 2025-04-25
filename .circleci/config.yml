@@ -35,8 +35,8 @@ commands:
           root: *workspace_root
           paths:
             - .aws
-  terraform-init:
-    description: "Initializes terraform"
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform"
     parameters:
       environment:
         type: string
@@ -49,14 +49,6 @@ commands:
             cd ./terraform/<<parameters.environment>>/
             terraform get -update=true
             terraform init
-  terraform-init-then-apply:
-    description: "Initializes and applies terraform"
-    parameters:
-      environment:
-        type: string
-    steps:
-      - terraform-init:
-          environment: <<parameters.environment>>
       - run:
           name: apply
           command: |
@@ -66,6 +58,9 @@ commands:
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
             echo "export CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $BASH_ENV
             echo "export SERVICE_NAME=$(terraform output -raw service_name)" >> $BASH_ENV
+            echo "export TASK_DEFINITION_NAME=$(terraform output -raw task_definition_name)" >> $BASH_ENV
+            echo "export SUBNET_IDS=$(terraform output -raw subnet_ids)" >> $BASH_ENV
+            echo "export SECURITY_GROUP_IDS=$(terraform output -raw ecs_security_group_ids)" >> $BASH_ENV
             
             cp $BASH_ENV ~/bash.env
       - persist_to_workspace:
@@ -133,7 +128,33 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment: "production"
-
+  
+  migrate-db:
+    working_directory: ~/report_a_defect
+    docker:
+      - image: cimg/base:2025.04
+    steps:
+      - attach_workspace:
+         at: *workspace_root
+      - run:
+          name: Migrate the database
+          command: |
+            aws ecs run-task \
+            --cluster $CLUSTER_NAME \
+            --launch-type FARGATE \
+            --task-definition $TASK_DEFINITION_NAME \
+            --network-configuration 'awsvpcConfiguration={
+              subnets=$SUBNET_IDS,
+              securityGroups=$SECURITY_GROUP_IDS,
+              assignPublicIp="DISBLED"
+            }' \
+            --overrides '{
+              "containerOverrides": [{
+                "name": "report-a-defect",
+                "command": ["bundle", "exec", "rake", "db:migrate"]
+              }]
+            }'
+  
   deploy-development:
     working_directory: ~/report_a_defect
     docker:
@@ -244,10 +265,13 @@ workflows:
       - terraform-init-then-apply-development:
           requires:
             - assume-role-development
-      - deploy-development:
+      - migrate-db:
           requires:
             - build-and-test
             - terraform-init-then-apply-development
+      - deploy-development:
+          requires:
+            - migrate-db
   continuous_delivery:
     jobs:
       - build-and-test:
