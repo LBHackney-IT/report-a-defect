@@ -26,6 +26,12 @@ data "aws_subnets" "public_subnets" {
 }
 
 # DB Subnet + Security Group
+data "aws_security_group" "bastion_sg" {
+  filter {
+    name   = "group-name"
+    values = ["PlatformAPIsBastionSecurityGroup"]
+  }
+}
 resource "aws_db_subnet_group" "db_subnets" {
   name       = "${var.database_name}-db-subnet"
   subnet_ids = data.aws_subnets.private_subnets.ids
@@ -46,7 +52,6 @@ resource "aws_security_group" "db_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
 resource "aws_security_group_rule" "allow_ecs_to_rds" {
   type                     = "ingress"
   from_port                = var.database_port
@@ -56,7 +61,15 @@ resource "aws_security_group_rule" "allow_ecs_to_rds" {
   source_security_group_id = aws_security_group.ecs_task_sg.id
   description              = "Allow ECS tasks to talk to Postgres"
 }
-
+resource "aws_security_group_rule" "allow_bastion_to_rds" {
+  type                     = "ingress"
+  from_port                = var.database_port
+  to_port                  = var.database_port
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.db_security_group.id
+  source_security_group_id = aws_security_group.bastion_sg.id
+  description              = "Allow Bastion access to RDS"
+}
 
 # ECS Security Group
 resource "aws_security_group" "ecs_task_sg" {
