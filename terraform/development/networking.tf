@@ -113,6 +113,9 @@ resource "aws_lb_target_group" "lb_tg" {
   health_check {
     enabled = false
     path   = "/health"
+    matcher = {
+      http_code = "200"
+    }
   }
   stickiness {
     enabled = false
