@@ -59,7 +59,7 @@ commands:
             echo "export CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $BASH_ENV
             echo "export SERVICE_NAME=$(terraform output -raw service_name)" >> $BASH_ENV
             echo "export TASK_DEFINITION_NAME=$(terraform output -raw task_definition_name)" >> $BASH_ENV
-            echo "export SUBNET_IDS=$(terraform output -json subnet_ids | jq -r '.subnet_ids | join(",")') >> $BASH_ENV
+            echo "export SUBNET_IDS=$(terraform output -json subnet_ids | jq -r '.subnet_ids | join(\",\")')" >> $BASH_ENV
             echo "export SECURITY_GROUP_IDS=$(terraform output -raw ecs_security_group_ids)" >> $BASH_ENV
             
             cp $BASH_ENV ~/bash.env
