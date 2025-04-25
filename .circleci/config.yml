@@ -59,6 +59,7 @@ commands:
             echo "export CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $BASH_ENV
             echo "export SERVICE_NAME=$(terraform output -raw service_name)" >> $BASH_ENV
             echo "export TASK_DEFINITION_NAME=$(terraform output -raw task_definition_name)" >> $BASH_ENV
+            echo "export CONTAINER_NAME=$(terraform output -raw container_name)" >> $BASH_ENV
             echo "export SUBNET_IDS=$(terraform output -json subnet_ids)" >> $BASH_ENV
             echo "export SECURITY_GROUP_IDS=$(terraform output -raw ecs_security_group_ids)" >> $BASH_ENV
             
@@ -181,7 +182,7 @@ jobs:
             }' \
             --overrides '{
               "containerOverrides": [{
-                "name": "report-a-defect",
+                "name": $CONTAINER_NAME,
                 "command": ["bundle", "exec", "rake", "db:migrate"]
               }]
             }'    

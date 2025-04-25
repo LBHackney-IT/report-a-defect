@@ -18,6 +18,11 @@ output "task_definition_name" {
   value       = aws_ecs_task_definition.app_task.family
 }
 
+output "container_name" {
+  description = "value of the ECS container name"
+  value       = aws_ecs_task_definition.app_task.family
+}
+
 output "subnet_ids" {
   description = "value of the subnet IDs"
   value       = data.aws_subnets.private_subnets.ids
