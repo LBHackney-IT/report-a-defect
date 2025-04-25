@@ -111,13 +111,7 @@ resource "aws_lb_target_group" "lb_tg" {
   vpc_id      = data.aws_vpc.main_vpc.id
   target_type = "ip"
   health_check {
-    protocol = "HTTP"
-    port     = "traffic-port" 
-    path     = "/check"  # The path to the health check route
-    interval = 30
-    timeout  = 5  
-    healthy_threshold = 5
-    unhealthy_threshold = 2
+    enabled = false
   }
   stickiness {
     enabled = false
