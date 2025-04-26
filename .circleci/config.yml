@@ -91,10 +91,15 @@ jobs:
             docker image tag report_a_defect-test:latest reportadefect:$CIRCLE_SHA1
             docker image save -o /tmp/built-image.tar reportadefect:$CIRCLE_SHA1
             docker image load --input /tmp/built-image.tar
+      - run:
+          name: Save the application for deployment
+          command: |
+            cp -rT . /tmp/report-a-defect
       - save_cache:
           key: docker-images-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - /tmp/built-image.tar
+            - /tmp/report-a-defect
   assume-role-development:
     executor: docker-python
     steps:
@@ -171,8 +176,9 @@ jobs:
       - run:
           name: Migrate the database
           command: |
-            chmod +x ~/.circleci/run-db-migrate.sh
-            ~/.circleci/run-db-migrate.sh
+            cd /tmp/report-a-defect
+            chmod +x .circleci/run-db-migrate.sh
+            .circleci/run-db-migrate.sh
 
       - run:
           name: Force new deployment of the ECS service
@@ -194,8 +200,9 @@ jobs:
       - run:
           name: Setup Heroku CLI
           command: |
-            chmod +x ~/.circleci/setup-heroku.sh
-            ~/.circleci/setup-heroku.sh
+            cd /tmp/report-a-defect
+            chmod +x .circleci/setup-heroku.sh
+            .circleci/setup-heroku.sh
       - run:
           name: Deploy the Docker image to Heroku Staging
           command: |
@@ -220,8 +227,9 @@ jobs:
       - run:
           name: Setup Heroku
           command: |
-            chmod +x ~/.circleci/setup-heroku.sh
-            ~/.circleci/setup-heroku.sh
+            cd /tmp/report-a-defect
+            chmod +x .circleci/setup-heroku.sh
+            .circleci/setup-heroku.sh
       - run:
           name: Deploy the Docker image to Heroku Production
           command: |
