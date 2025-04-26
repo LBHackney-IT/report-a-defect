@@ -10,15 +10,15 @@ set -euo pipefail
 
 # Format network config
 NETWORK_CONFIG=$(jq -n \
-  --arg subnets $SUBNET_IDS \
-  --arg securityGroups $SECURITY_GROUP_IDS \
-  '{
-    awsvpcConfiguration: {
-      subnets: $subnets,
-      securityGroups: $securityGroups,
-      assignPublicIp: "DISABLED"
-    }
-  }')
+    --argjson subnets "$(echo $SUBNET_IDS | sed 's/[][]//g' | jq -R 'split(",")')" \
+    --arg securityGroups $SECURITY_GROUP_IDS \
+    '{
+        awsvpcConfiguration: {
+            subnets: $subnets,
+            securityGroups: [$securityGroups],
+            assignPublicIp: "DISABLED"
+        }
+    }')
 
 # Format overrides
 OVERRIDES=$(jq -n \
@@ -32,10 +32,12 @@ OVERRIDES=$(jq -n \
     ]
   }')
 
+echo $NETWORK_CONFIG
+echo $OVERRIDES
 # Run the task
-aws ecs run-task \
-  --cluster "$CLUSTER_NAME" \
-  --launch-type FARGATE \
-  --task-definition "$TASK_DEFINITION_NAME" \
-  --network-configuration "$NETWORK_CONFIG" \
-  --overrides "$OVERRIDES"
+# aws ecs run-task \
+#   --cluster "$CLUSTER_NAME" \
+#   --launch-type FARGATE \
+#   --task-definition "$TASK_DEFINITION_NAME" \
+#   --network-configuration "$NETWORK_CONFIG" \
+#   --overrides "$OVERRIDES"
