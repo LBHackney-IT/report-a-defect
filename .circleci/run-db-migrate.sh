@@ -32,12 +32,11 @@ OVERRIDES=$(jq -n \
     ]
   }')
 
-echo $NETWORK_CONFIG
-echo $OVERRIDES
+
 # Run the task
-# aws ecs run-task \
-#   --cluster "$CLUSTER_NAME" \
-#   --launch-type FARGATE \
-#   --task-definition "$TASK_DEFINITION_NAME" \
-#   --network-configuration "$NETWORK_CONFIG" \
-#   --overrides "$OVERRIDES"
+aws ecs run-task \
+  --cluster "$CLUSTER_NAME" \
+  --launch-type FARGATE \
+  --task-definition "$TASK_DEFINITION_NAME" \
+  --network-configuration "$NETWORK_CONFIG" \
+  --overrides "$OVERRIDES"
