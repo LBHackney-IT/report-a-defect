@@ -171,21 +171,9 @@ jobs:
       - run:
           name: Migrate the database
           command: |
-            aws ecs run-task \
-            --cluster $CLUSTER_NAME \
-            --launch-type FARGATE \
-            --task-definition $TASK_DEFINITION_NAME \
-            --network-configuration 'awsvpcConfiguration={
-              subnets=$SUBNET_IDS,
-              securityGroups=$SECURITY_GROUP_IDS,
-              assignPublicIp="DISABLED"
-            }' \
-            --overrides '{
-              "containerOverrides": [{
-                "name": "report-a-defect-app-container",
-                "command": ["bundle", "exec", "rake", "db:migrate"]
-              }]
-            }'    
+            chmod +x ~/.circleci/run-db-migrate.sh
+            ~/.circleci/run-db-migrate.sh
+
       - run:
           name: Force new deployment of the ECS service
           command: |
