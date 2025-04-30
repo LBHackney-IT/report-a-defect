@@ -94,8 +94,9 @@ resource "aws_security_group_rule" "allow_vpc_to_ecs" {
   to_port           = var.database_port
   protocol          = "tcp"
   security_group_id = aws_security_group.ecs_task_sg.id
-  cidr_blocks       = [data.aws_vpc.main_vpc.cidr_block]
-  description       = "allow inbound traffic from the VPC"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "allow all inbound traffic"
+  lifecycle { ignore_changes = [cidr_blocks] }
 }
 
 # LB security group
