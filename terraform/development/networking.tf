@@ -136,6 +136,7 @@ resource "aws_lb_target_group" "lb_target_group" {
   vpc_id      = data.aws_vpc.main_vpc.id
   target_type = "ip"
   health_check {
+    enabled =  false
     protocol = "TCP"
     timeout  = 10
     interval = 30
