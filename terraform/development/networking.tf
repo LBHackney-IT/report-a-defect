@@ -257,11 +257,23 @@ resource "aws_api_gateway_deployment" "main" {
     create_before_destroy = true
   }
 }
+
 resource "aws_api_gateway_stage" "main" {
   depends_on    = [aws_api_gateway_deployment.main, aws_cloudwatch_log_group.api_gateway_log_group]
   rest_api_id   = aws_api_gateway_rest_api.main.id
   stage_name    = var.environment_name
   deployment_id = aws_api_gateway_deployment.main.id
+}
+resource "aws_api_gateway_method_settings" "all" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  stage_name  = aws_api_gateway_stage.main.stage_name
+  method_path = "*/*"
+
+  settings {
+    logging_level      = "INFO"
+    metrics_enabled    = true
+    data_trace_enabled = true
+  }
 }
 
 
