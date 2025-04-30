@@ -88,15 +88,23 @@ resource "aws_security_group_rule" "allow_outbound_to_secrets_manager" {
   cidr_blocks       = ["0.0.0.0/0"]
   description       = "allow outbound traffic to Secrets Manager"
 }
-resource "aws_security_group_rule" "allow_vpc_to_ecs" {
-  type              = "ingress"
-  from_port         = var.database_port
-  to_port           = var.database_port
-  protocol          = "tcp"
-  security_group_id = aws_security_group.ecs_task_sg.id
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "allow all inbound traffic"
-  lifecycle { ignore_changes = [cidr_blocks] }
+resource "aws_security_group_rule" "allow_inbound_from_db" {
+  type                     = "ingress"
+  from_port                = var.database_port
+  to_port                  = var.database_port
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ecs_task_sg.id
+  source_security_group_id = aws_security_group.db_security_group.id
+  description              = "allow inbound traffic from the DB security group"
+}
+resource "aws_security_group_rule" "allow_inbound_from_lb" {
+  type                     = "ingress"
+  from_port                = var.app_port
+  to_port                  = var.app_port
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ecs_task_sg.id
+  source_security_group_id = aws_security_group.lb_sg.id
+  description              = "allow inbound traffic from the load balancer"
 }
 
 # LB security group
