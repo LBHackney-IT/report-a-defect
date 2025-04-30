@@ -116,7 +116,8 @@ resource "aws_lb_target_group" "lb_tg" {
     enabled = true
     path    = "/check"
     matcher = "200"
-    timeout = 120
+    timeout = 100
+    interval = 120
   }
   stickiness {
     enabled = false
