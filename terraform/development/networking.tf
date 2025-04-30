@@ -116,10 +116,14 @@ resource "aws_lb_target_group" "lb_tg" {
     enabled = true
     path    = "/check"
     matcher = "200"
+    timeout = 120
   }
   stickiness {
     enabled = false
     type    = "source_ip"
+  }
+  target_health_state {
+    enable_unhealthy_connection_termination = false
   }
   lifecycle {
     create_before_destroy = true
