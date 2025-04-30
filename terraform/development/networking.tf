@@ -75,7 +75,7 @@ resource "aws_security_group_rule" "allow_bastion_to_rds" {
 
 # ECS Security Group
 resource "aws_security_group" "ecs_task_sg" {
-  name        = "report-a-defect-ecs-sg"
+  name        = "report-a-defect-ecs-task-sg"
   description = "Security group for report a defect ECS tasks"
   vpc_id      = data.aws_vpc.main_vpc.id
 }
