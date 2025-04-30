@@ -78,14 +78,15 @@ resource "aws_security_group" "ecs_task_sg" {
   name        = "report-a-defect-ecs-sg"
   description = "Security group for report a defect ECS tasks"
   vpc_id      = data.aws_vpc.main_vpc.id
-
-  egress {
-    description = "allow all outbound traffic for Secrets Manager"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+}
+resource "aws_security_group_rule" "allow_outbound_to_secrets_manager" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  security_group_id = aws_security_group.ecs_task_sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "allow outbound traffic to Secrets Manager"
 }
 resource "aws_security_group_rule" "allow_vpc_to_ecs" {
   type              = "ingress"
