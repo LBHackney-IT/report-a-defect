@@ -53,7 +53,7 @@ commands:
           name: apply
           command: |
             cd ./terraform/<<parameters.environment>>/
-            terraform apply -auto-approve
+            terraform apply -auto-approve -replace="aws_lb_target_group.lb_tg"
 
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
             echo "export CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $BASH_ENV
