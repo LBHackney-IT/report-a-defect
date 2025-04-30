@@ -165,6 +165,12 @@ resource "aws_lb_listener" "lb_listener" {
 
 # API Gateway
 
+# CloudWatch Log Group
+resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.main.id}/${var.environment_name}"
+  retention_in_days = 7
+}
+
 # VPC Link
 resource "aws_api_gateway_vpc_link" "this" {
   depends_on  = [aws_lb.nlb]
@@ -252,9 +258,9 @@ resource "aws_api_gateway_deployment" "main" {
   }
 }
 resource "aws_api_gateway_stage" "main" {
-  depends_on = [aws_api_gateway_deployment.main]
+  depends_on    = [aws_api_gateway_deployment.main, aws_cloudwatch_log_group.api_gateway_log_group]
   rest_api_id   = aws_api_gateway_rest_api.main.id
-  stage_name    = "development"
+  stage_name    = var.environment_name
   deployment_id = aws_api_gateway_deployment.main.id
 }
 
