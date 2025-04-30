@@ -113,11 +113,9 @@ resource "aws_lb_target_group" "lb_tg" {
   vpc_id      = data.aws_vpc.main_vpc.id
   target_type = "ip"
   health_check {
-    enabled = true
-    path    = "/check"
-    matcher = "200"
-    timeout = 100
-    interval = 120
+    protocol = "TCP"
+    timeout  = 10
+    interval = 30
   }
   stickiness {
     enabled = false
