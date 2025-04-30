@@ -130,7 +130,7 @@ resource "aws_lb" "nlb" {
 }
 resource "aws_lb_target_group" "lb_target_group" {
   depends_on  = [aws_lb.nlb]
-  name_prefix = "rd-tg-"
+  name        = "tg-report-a-defect-${var.environment_name}"
   port        = var.app_port
   protocol    = "TCP"
   vpc_id      = data.aws_vpc.main_vpc.id
