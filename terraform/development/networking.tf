@@ -97,12 +97,35 @@ resource "aws_security_group_rule" "allow_vpc_to_ecs" {
   description       = "allow inbound traffic from the VPC"
 }
 
+# LB security group
+resource "aws_security_group" "lb_sg" {
+  name        = "report-a-defect-lb-sg"
+  description = "Security group for report a defect NLB"
+  vpc_id      = data.aws_vpc.main_vpc.id
+
+  ingress {
+    description = "allow all inbound traffic from the VPC"
+    from_port   = var.app_port
+    to_port     = var.app_port
+    protocol    = "tcp"
+    cidr_blocks = [data.aws_vpc.main_vpc.cidr_block]
+  }
+  egress {
+    description     = "allow outbound traffic to the ECS tasks"
+    from_port       = var.app_port
+    to_port         = var.app_port
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ecs_task_sg.id]
+  }
+}
+
 # Network Load Balancer (NLB) setup
 resource "aws_lb" "lb" {
   name                       = "report-a-defect-lb"
   internal                   = true
   load_balancer_type         = "network"
   subnets                    = data.aws_subnets.public_subnets.ids
+  security_groups            = [aws_security_group.lb_sg.id]
   enable_deletion_protection = false
 }
 resource "aws_lb_target_group" "lb_target_group" {
