@@ -121,7 +121,7 @@ resource "aws_security_group" "lb_sg" {
 
 # Network Load Balancer (NLB) setup
 resource "aws_lb" "nlb" {
-  name                       = "report-a-defect-lb"
+  name                       = "lb-report-a-defect"
   internal                   = true
   load_balancer_type         = "network"
   subnets                    = data.aws_subnets.public_subnets.ids
@@ -152,6 +152,7 @@ resource "aws_lb_target_group" "lb_target_group" {
   }
 }
 resource "aws_lb_listener" "lb_listener" {
+  depends_on        = [aws_lb.nlb]
   load_balancer_arn = aws_lb.nlb.id
   port              = var.app_port
   protocol          = "TCP"
@@ -166,6 +167,7 @@ resource "aws_lb_listener" "lb_listener" {
 
 # VPC Link
 resource "aws_api_gateway_vpc_link" "this" {
+  depends_on  = [aws_lb.nlb]
   name        = "vpc-link-report-a-defect-fe"
   target_arns = [aws_lb.nlb.arn]
 }
@@ -188,6 +190,7 @@ resource "aws_api_gateway_method" "root" {
   }
 }
 resource "aws_api_gateway_integration" "root" {
+  depends_on  = [aws_lb.nlb, aws_api_gateway_vpc_link.this]
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_rest_api.main.root_resource_id
   http_method = aws_api_gateway_method.root.http_method
@@ -218,6 +221,7 @@ resource "aws_api_gateway_method" "main" {
   }
 }
 resource "aws_api_gateway_integration" "main" {
+  depends_on  = [aws_lb.nlb, aws_api_gateway_vpc_link.this]
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_resource.main.id
   http_method = aws_api_gateway_method.main.http_method
