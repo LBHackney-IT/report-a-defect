@@ -120,7 +120,7 @@ resource "aws_security_group" "lb_sg" {
 }
 
 # Network Load Balancer (NLB) setup
-resource "aws_lb" "lb" {
+resource "aws_lb" "nlb" {
   name                       = "report-a-defect-lb"
   internal                   = true
   load_balancer_type         = "network"
@@ -129,7 +129,7 @@ resource "aws_lb" "lb" {
   enable_deletion_protection = false
 }
 resource "aws_lb_target_group" "lb_target_group" {
-  depends_on  = [aws_lb.lb]
+  depends_on  = [aws_lb.nlb]
   name_prefix = "rd-tg-"
   port        = var.app_port
   protocol    = "TCP"
@@ -152,7 +152,7 @@ resource "aws_lb_target_group" "lb_target_group" {
   }
 }
 resource "aws_lb_listener" "lb_listener" {
-  load_balancer_arn = aws_lb.lb.id
+  load_balancer_arn = aws_lb.nlb.id
   port              = var.app_port
   protocol          = "TCP"
   # Redirect all traffic from the NLB to the target group
@@ -167,7 +167,7 @@ resource "aws_lb_listener" "lb_listener" {
 # VPC Link
 resource "aws_api_gateway_vpc_link" "this" {
   name        = "vpc-link-report-a-defect-fe"
-  target_arns = [aws_lb.lb.arn]
+  target_arns = [aws_lb.nlb.arn]
 }
 
 # API Gateway, Private Integration with VPC Link
@@ -195,7 +195,7 @@ resource "aws_api_gateway_integration" "root" {
     "integration.request.path.proxy" = "method.request.path.proxy"
   }
   type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.lb.dns_name}:${var.app_port}/{proxy}"
+  uri                     = "http://${aws_lb.nlb.dns_name}:${var.app_port}/{proxy}"
   integration_http_method = "ANY"
   connection_type         = "VPC_LINK"
   connection_id           = aws_api_gateway_vpc_link.this.id
@@ -225,7 +225,7 @@ resource "aws_api_gateway_integration" "main" {
     "integration.request.path.proxy" = "method.request.path.proxy"
   }
   type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.lb.dns_name}:${var.app_port}/{proxy}"
+  uri                     = "http://${aws_lb.nlb.dns_name}:${var.app_port}/{proxy}"
   integration_http_method = "ANY"
   connection_type         = "VPC_LINK"
   connection_id           = aws_api_gateway_vpc_link.this.id
