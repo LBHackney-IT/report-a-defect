@@ -105,7 +105,7 @@ resource "aws_lb" "lb" {
   subnets                    = data.aws_subnets.public_subnets.ids
   enable_deletion_protection = false
 }
-resource "aws_lb_target_group" "lb_tg" {
+resource "aws_lb_target_group" "lb_target_group" {
   depends_on  = [aws_lb.lb]
   name_prefix = "rd-tg-"
   port        = var.app_port
@@ -134,7 +134,7 @@ resource "aws_lb_listener" "lb_listener" {
   protocol          = "TCP"
   # Redirect all traffic from the NLB to the target group
   default_action {
-    target_group_arn = aws_lb_target_group.lb_tg.id
+    target_group_arn = aws_lb_target_group.lb_target_group.id
     type             = "forward"
   }
 }

@@ -182,7 +182,7 @@ resource "aws_ecs_service" "app_service" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.lb_tg.arn
+    target_group_arn = aws_lb_target_group.lb_target_group.arn
     container_name   = "report-a-defect-app-container"
     container_port   = var.app_port
   }
