@@ -250,16 +250,16 @@ resource "aws_api_gateway_integration" "main" {
 
 resource "aws_api_gateway_deployment" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  depends_on = [
-    aws_api_gateway_integration.root,
-    aws_api_gateway_integration.main
-  ]
-  variables = {
-    # just to trigger redeploy on resource changes
-    resources = join(", ", [aws_api_gateway_resource.main.id, aws_api_gateway_rest_api.main.root_resource_id])
-    # note: redeployment might be required with other gateway changes.
-    # when necessary run `terraform taint <this resource's address>`
-  }
+  # depends_on = [
+  #   aws_api_gateway_integration.root,
+  #   aws_api_gateway_integration.main
+  # ]
+  # variables = {
+  #   # just to trigger redeploy on resource changes
+  #   resources = join(", ", [aws_api_gateway_resource.main.id, aws_api_gateway_rest_api.main.root_resource_id])
+  #   # note: redeployment might be required with other gateway changes.
+  #   # when necessary run `terraform taint <this resource's address>`
+  # }
   lifecycle {
     create_before_destroy = true
   }
