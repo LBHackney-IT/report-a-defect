@@ -139,7 +139,7 @@ resource "aws_security_group" "lb_sg" {
 
 # Network Load Balancer (NLB) setup
 resource "aws_lb" "nlb" {
-  name                       = "lb-report-a-defect"
+  name                       = "nlb-report-a-defect"
   internal                   = true
   load_balancer_type         = "network"
   subnets                    = data.aws_subnets.private_subnets.ids
@@ -204,20 +204,14 @@ resource "aws_api_gateway_method" "root" {
   http_method      = "ANY"
   authorization    = "NONE"
   api_key_required = false
-  request_parameters = {
-    "method.request.path.proxy" = true
-  }
 }
 resource "aws_api_gateway_integration" "root" {
   depends_on  = [aws_lb.nlb, aws_api_gateway_vpc_link.this]
   rest_api_id = aws_api_gateway_rest_api.main.id
   resource_id = aws_api_gateway_rest_api.main.root_resource_id
   http_method = aws_api_gateway_method.root.http_method
-  request_parameters = {
-    "integration.request.path.proxy" = "method.request.path.proxy"
-  }
   type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.nlb.dns_name}:${var.app_port}/{proxy}"
+  uri                     = "http://${aws_lb.nlb.dns_name}:${var.app_port}/"
   integration_http_method = "ANY"
   connection_type         = "VPC_LINK"
   connection_id           = aws_api_gateway_vpc_link.this.id
