@@ -143,7 +143,7 @@ resource "aws_lb" "nlb" {
   internal                   = true
   load_balancer_type         = "network"
   subnets                    = data.aws_subnets.private_subnets.ids
-  security_groups            = ["sg-00d2e14f38245dd0b"]
+  security_groups            = [aws_security_group.lb_sg.id, "sg-00d2e14f38245dd0b"]
   enable_deletion_protection = false
 }
 resource "aws_lb_target_group" "lb_target_group" {
