@@ -178,12 +178,6 @@ resource "aws_lb_listener" "lb_listener" {
 
 # API Gateway
 
-# CloudWatch Log Group
-resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
-  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.main.id}/${var.environment_name}"
-  retention_in_days = 7
-}
-
 # VPC Link
 resource "aws_api_gateway_vpc_link" "this" {
   depends_on  = [aws_lb.nlb]
@@ -270,18 +264,6 @@ resource "aws_api_gateway_stage" "main" {
   rest_api_id          = aws_api_gateway_rest_api.main.id
   stage_name           = var.environment_name
   deployment_id        = aws_api_gateway_deployment.main.id
-  xray_tracing_enabled = true
-}
-resource "aws_api_gateway_method_settings" "all" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  stage_name  = aws_api_gateway_stage.main.stage_name
-  method_path = "*/*"
-
-  settings {
-    logging_level      = "INFO"
-    metrics_enabled    = true
-    data_trace_enabled = true
-  }
 }
 
 
