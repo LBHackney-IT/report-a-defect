@@ -45,14 +45,15 @@ data "aws_security_group" "bastion_sg" {
 resource "aws_security_group" "db_security_group" {
   vpc_id      = data.aws_vpc.main_vpc.id
   name_prefix = "allow_${var.database_name}_db_traffic"
-
-  egress {
-    description = "allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+}
+resource "aws_security_group_rule" "allow_rds_all_outbound" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  security_group_id = aws_security_group.db_security_group.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "allow all outbound traffic"
 }
 resource "aws_security_group_rule" "allow_ecs_to_rds" {
   type                     = "ingress"
@@ -105,6 +106,15 @@ resource "aws_security_group_rule" "allow_inbound_from_lb" {
   security_group_id        = aws_security_group.ecs_task_sg.id
   source_security_group_id = aws_security_group.lb_sg.id
   description              = "allow inbound traffic from the load balancer"
+}
+resource "aws_security_group_rule" "allow_bastion_to_ecs" {
+  type                     = "ingress"
+  from_port                = var.app_port
+  to_port                  = var.app_port
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ecs_task_sg.id
+  source_security_group_id = data.aws_security_group.bastion_sg.id
+  description              = "Allow Bastion access to ECS tasks"
 }
 
 # LB security group
