@@ -44,7 +44,7 @@ data "aws_security_group" "bastion_sg" {
 }
 resource "aws_security_group" "db_security_group" {
   vpc_id      = data.aws_vpc.main_vpc.id
-  name_prefix = "allow_${var.database_name}_db_traffic"
+  name_prefix = "${var.database_name}_db_traffic"
 }
 resource "aws_security_group_rule" "allow_rds_all_outbound" {
   type              = "egress"
