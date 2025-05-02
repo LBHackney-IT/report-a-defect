@@ -200,10 +200,10 @@ resource "aws_api_gateway_method" "root" {
   api_key_required = false
 }
 resource "aws_api_gateway_integration" "root" {
-  depends_on  = [aws_lb.nlb, aws_api_gateway_vpc_link.this]
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_rest_api.main.root_resource_id
-  http_method = aws_api_gateway_method.root.http_method
+  depends_on              = [aws_lb.nlb, aws_api_gateway_vpc_link.this]
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_rest_api.main.root_resource_id
+  http_method             = aws_api_gateway_method.root.http_method
   type                    = "HTTP_PROXY"
   uri                     = "http://${aws_lb.nlb.dns_name}:${var.app_port}/"
   integration_http_method = "ANY"
@@ -260,10 +260,10 @@ resource "aws_api_gateway_deployment" "main" {
 }
 
 resource "aws_api_gateway_stage" "main" {
-  depends_on           = [aws_api_gateway_deployment.main, aws_cloudwatch_log_group.api_gateway_log_group]
-  rest_api_id          = aws_api_gateway_rest_api.main.id
-  stage_name           = var.environment_name
-  deployment_id        = aws_api_gateway_deployment.main.id
+  depends_on    = [aws_api_gateway_deployment.main]
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  stage_name    = var.environment_name
+  deployment_id = aws_api_gateway_deployment.main.id
 }
 
 
