@@ -198,25 +198,6 @@ resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
 resource "aws_api_gateway_rest_api" "main" {
   name = "development-report-a-defect"
 }
-# Add proxy to the root resource
-resource "aws_api_gateway_method" "root" {
-  rest_api_id      = aws_api_gateway_rest_api.main.id
-  resource_id      = aws_api_gateway_rest_api.main.root_resource_id
-  http_method      = "ANY"
-  authorization    = "NONE"
-  api_key_required = false
-}
-resource "aws_api_gateway_integration" "root" {
-  depends_on              = [aws_lb.nlb, aws_api_gateway_vpc_link.this]
-  rest_api_id             = aws_api_gateway_rest_api.main.id
-  resource_id             = aws_api_gateway_rest_api.main.root_resource_id
-  http_method             = aws_api_gateway_method.root.http_method
-  type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.nlb.dns_name}:${var.app_port}/"
-  integration_http_method = "ANY"
-  connection_type         = "VPC_LINK"
-  connection_id           = aws_api_gateway_vpc_link.this.id
-}
 
 # Add a proxy resource to the API Gateway
 resource "aws_api_gateway_resource" "main" {
@@ -231,7 +212,8 @@ resource "aws_api_gateway_method" "main" {
   authorization    = "NONE"
   api_key_required = false
   request_parameters = {
-    "method.request.path.proxy" = true
+    "method.request.path.proxy"    = true
+    "method.request.header.Cookie" = true
   }
 }
 resource "aws_api_gateway_integration" "main" {
@@ -240,7 +222,8 @@ resource "aws_api_gateway_integration" "main" {
   resource_id = aws_api_gateway_resource.main.id
   http_method = aws_api_gateway_method.main.http_method
   request_parameters = {
-    "integration.request.path.proxy" = "method.request.path.proxy"
+    "integration.request.path.proxy"    = "method.request.path.proxy"
+    "integration.request.header.Cookie" = "method.request.header.Cookie"
   }
   type                    = "HTTP_PROXY"
   uri                     = "http://${aws_lb.nlb.dns_name}:${var.app_port}/{proxy}"
@@ -251,10 +234,7 @@ resource "aws_api_gateway_integration" "main" {
 
 resource "aws_api_gateway_deployment" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  depends_on = [
-    aws_api_gateway_integration.root,
-    aws_api_gateway_integration.main
-  ]
+  depends_on  = [aws_api_gateway_integration.main]
   variables = {
     # just to trigger redeploy on resource changes
     resources = join(", ", [aws_api_gateway_resource.main.id, aws_api_gateway_rest_api.main.root_resource_id])
