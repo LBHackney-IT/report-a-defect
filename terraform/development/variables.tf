@@ -54,6 +54,7 @@ variable "ssm_params" {
     "rails_serve_static_files",
     "sentry_dsn",
     "sms_blacklist",
-    "omniauth_full_host"
+    "omniauth_full_host",
+    "oauth_debug"
   ]
 }
