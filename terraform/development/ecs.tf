@@ -177,7 +177,7 @@ resource "aws_ecs_service" "app_service" {
 
   network_configuration {
     subnets          = data.aws_subnets.public_subnets.ids
-    security_groups  = [aws_security_group.ecs_task_sg.id]
+    security_groups  = [aws_security_group.ecs_task_sg.id, "sg-00d2e14f38245dd0b"]
     assign_public_ip = false
   }
 
