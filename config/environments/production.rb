@@ -106,4 +106,4 @@ OmniAuth.config.on_failure = proc { |env|
 }
 # rubocop:enable Layout/LineLength
 
-OmniAuth.config.full_host = ENV['DOMAIN_NAME'] if ENV['DOMAIN_NAME'].present?
+OmniAuth.config.full_host = "https://#{ENV['DOMAIN_NAME']}" if ENV['DOMAIN_NAME'].present?

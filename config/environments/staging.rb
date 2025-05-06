@@ -98,4 +98,4 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 end
 
-OmniAuth.config.full_host = ENV['DOMAIN_NAME'] if ENV['DOMAIN_NAME'].present?
+OmniAuth.config.full_host = "https://#{ENV['DOMAIN_NAME']}" if ENV['DOMAIN_NAME'].present?
