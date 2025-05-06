@@ -287,7 +287,7 @@ resource "aws_cloudfront_distribution" "app_distribution" {
     target_origin_id = "api-gateway-origin"
 
     forwarded_values {
-      headers      = "*"
+      headers      = ["*"]
       query_string = true
       cookies {
         forward = "all"
