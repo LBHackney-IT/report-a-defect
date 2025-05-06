@@ -154,11 +154,8 @@ resource "aws_lb_target_group" "lb_target_group" {
   vpc_id      = data.aws_vpc.main_vpc.id
   target_type = "ip"
   stickiness {
-    enabled = false
+    enabled = true
     type    = "source_ip"
-  }
-  target_health_state {
-    enable_unhealthy_connection_termination = false
   }
   lifecycle {
     create_before_destroy = true
