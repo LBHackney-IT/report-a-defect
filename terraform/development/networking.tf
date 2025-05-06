@@ -320,4 +320,5 @@ resource "aws_ssm_parameter" "app_domain_name" {
   description = "Domain name for the report a defect app"
   type        = "String"
   value       = aws_cloudfront_distribution.app_distribution.domain_name
+  overwrite   = true
 }
