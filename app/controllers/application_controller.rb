@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :check_staging_auth, except: :check
 
   before_action do
+    Rails.logger.info "=== REQUEST HOST: #{request.host}"
     Rails.logger.info "=== SESSION: #{request.session_options[:id]}"
     Rails.logger.info "=== CSRF token from session: #{session[:_csrf_token]}"
     Rails.logger.info "=== CSRF token from params: #{params[:authenticity_token]}"
