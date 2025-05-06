@@ -1,3 +1,5 @@
+Rails.application.routes.default_url_options[:host] = ENV['DOMAIN_NAME'] if ENV['DOMAIN_NAME'].present?
+
 Rails.application.routes.draw do
   get 'check' => 'application#check'
   get 'auth/oauth2/callback' => 'auth0#callback'
