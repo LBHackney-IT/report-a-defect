@@ -106,4 +106,4 @@ OmniAuth.config.on_failure = proc { |env|
 }
 # rubocop:enable Layout/LineLength
 
-OmniAuth.config.full_host = 'https://lbh-report-a-defect-production.herokuapp.com'
+OmniAuth.config.full_host = ENV['OMNIAUTH_FULL_HOST'] if ENV['OMNIAUTH_FULL_HOST'].present?
