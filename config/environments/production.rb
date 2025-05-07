@@ -107,3 +107,4 @@ OmniAuth.config.on_failure = proc { |env|
 # rubocop:enable Layout/LineLength
 
 OmniAuth.config.full_host = "https://#{ENV['DOMAIN_NAME']}" if ENV['DOMAIN_NAME'].present?
+Rails.application.routes.default_url_options[:host] = ENV['DOMAIN_NAME'] if ENV['DOMAIN_NAME'].present?
