@@ -285,6 +285,7 @@ resource "aws_cloudfront_distribution" "app_distribution" {
     allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods           = ["GET", "HEAD"]
     target_origin_id         = "api-gateway-origin"
+    cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # CachingDisabled (for now)
     origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac" # AllViewerExceptHostHeader
     min_ttl                  = 0
     default_ttl              = 0
