@@ -19,7 +19,7 @@ class Staff::Defects::CompletionController < Staff::BaseController
     UpdateDefect.new(defect: @defect).call
 
     flash[:success] = I18n.t('generic.notice.update.success', resource: 'defect')
-    redirect_to defect_path_for(defect: @defect)
+    redirect_to defect_url_for(defect: @defect)
   end
 
   private

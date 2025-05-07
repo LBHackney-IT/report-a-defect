@@ -27,4 +27,4 @@
         %td.govuk-table__cell= defect.created_at.to_date
         %td.govuk-table__cell= defect.target_completion_date
         %td.govuk-table__cell= defect.trade
-        %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), view_path_for(parent: parent, defect: defect), class: 'govuk-link')
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), view_url_for(parent: parent, defect: defect), class: 'govuk-link')

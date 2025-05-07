@@ -3,13 +3,13 @@
     Flagged
 
   = button_to(I18n.t('button.flag.remove'),
-              defect_flag_path(defect),
+              defect_flag_url(defect),
               method: :delete,
               class: 'govuk-button govuk-button--secondary',
               form_class: 'defect-flagged-toggle')
 - else
   = button_to(I18n.t('button.flag.add'),
-              defect_flag_path(defect),
+              defect_flag_url(defect),
               method: :post,
               class: 'govuk-button govuk-button--secondary',
               form_class: 'defect-flagged-toggle')

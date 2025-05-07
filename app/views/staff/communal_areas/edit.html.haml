@@ -1,6 +1,6 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.communal_areas.edit', name: @scheme.name)
 
-= link_to "Back to #{I18n.t('page_title.staff.schemes.show', name: @scheme.name)}", estate_scheme_path(@scheme.estate, @scheme), class: 'govuk-back-link'
+= link_to "Back to #{I18n.t('page_title.staff.schemes.show', name: @scheme.name)}", estate_scheme_url(@scheme.estate, @scheme), class: 'govuk-back-link'
 
 .govuk-grid-row
   .govuk-grid-column-two-thirds

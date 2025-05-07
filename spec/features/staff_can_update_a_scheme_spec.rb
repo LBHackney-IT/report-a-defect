@@ -10,7 +10,7 @@ RSpec.feature 'Staff can update a scheme' do
   scenario 'a scheme can be udpated' do
     scheme = create(:scheme)
 
-    visit estate_scheme_path(scheme.estate, scheme)
+    visit estate_scheme_url(scheme.estate, scheme)
 
     within('.scheme_contractor') do
       expect(page).to have_content(scheme.contractor_name)
@@ -35,7 +35,7 @@ RSpec.feature 'Staff can update a scheme' do
   scenario 'an invalid scheme cannot be updated' do
     scheme = create(:scheme)
 
-    visit estate_scheme_path(scheme.estate, scheme)
+    visit estate_scheme_url(scheme.estate, scheme)
 
     click_on(I18n.t('button.edit.scheme'))
 

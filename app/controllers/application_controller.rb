@@ -12,10 +12,10 @@ class ApplicationController < ActionController::Base
     Rails.logger.info "=== CSRF token from session: #{session[:_csrf_token]}"
     Rails.logger.info "=== CSRF token from params: #{params[:authenticity_token]}"
   end
-  
+
   def default_url_options
     if ENV['DOMAIN_NAME'].present?
-      { :host => ENV['DOMAIN_NAME'] }
+      { host: ENV['DOMAIN_NAME'] }
     else
       {}
     end

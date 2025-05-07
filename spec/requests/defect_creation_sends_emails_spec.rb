@@ -37,7 +37,7 @@ RSpec.describe 'Defect creation', type: :request do
         .and_return(employer_agent_message_delivery)
       expect(employer_agent_message_delivery).to receive(:deliver_later)
 
-      post property_defects_path(property), params: params
+      post property_defects_url(property), params: params
     end
 
     context 'when the email should not be sent automatically' do
@@ -59,7 +59,7 @@ RSpec.describe 'Defect creation', type: :request do
         expect(DefectMailer).not_to receive(:forward)
           .with('employer_agent', property.scheme.employer_agent_email_address, anything)
 
-        post property_defects_path(property), params: params
+        post property_defects_url(property), params: params
       end
     end
   end
@@ -86,7 +86,7 @@ RSpec.describe 'Defect creation', type: :request do
         .and_return(employer_agent_message_delivery)
       expect(employer_agent_message_delivery).to receive(:deliver_later)
 
-      post communal_area_defects_path(communal_area), params: params
+      post communal_area_defects_url(communal_area), params: params
     end
 
     context 'when the email should not be sent automatically' do
@@ -108,7 +108,7 @@ RSpec.describe 'Defect creation', type: :request do
         expect(DefectMailer).not_to receive(:forward)
           .with('employer_agent', communal_area.scheme.employer_agent_email_address, anything)
 
-        post communal_area_defects_path(communal_area), params: params
+        post communal_area_defects_url(communal_area), params: params
       end
     end
   end

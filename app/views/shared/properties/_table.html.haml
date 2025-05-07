@@ -17,5 +17,5 @@
         %td.govuk-table__cell= property.uprn
         %td.govuk-table__cell= property.address
         %td.govuk-table__cell= property.postcode
-        %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), property_path(property), class: 'govuk-link')
-        %td.govuk-table__cell= link_to(I18n.t('generic.link.edit'), edit_estate_scheme_property_path(property.scheme.estate, property.scheme, property), class: 'govuk-link')
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), property_url(property), class: 'govuk-link')
+        %td.govuk-table__cell= link_to(I18n.t('generic.link.edit'), edit_estate_scheme_property_url(property.scheme.estate, property.scheme, property), class: 'govuk-link')

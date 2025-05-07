@@ -10,7 +10,7 @@ RSpec.feature 'Staff can find a communal_area' do
     interested_communal_area = create(:communal_area, scheme: scheme, name: 'Clift House')
     uninterested_communal_area = create(:communal_area, scheme: scheme, name: 'Darling House')
 
-    visit dashboard_path
+    visit dashboard_url
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 

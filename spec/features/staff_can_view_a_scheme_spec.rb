@@ -11,7 +11,7 @@ RSpec.feature 'Staff can view a scheme' do
     communal_area = create(:communal_area, scheme: scheme)
     priority = create(:priority, scheme: scheme)
 
-    visit dashboard_path
+    visit dashboard_url
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
     within('.estates') do
@@ -56,13 +56,13 @@ RSpec.feature 'Staff can view a scheme' do
   scenario 'can use breadcrumbs to navigate' do
     scheme = create(:scheme)
 
-    visit estate_scheme_path(scheme.estate, scheme)
+    visit estate_scheme_url(scheme.estate, scheme)
 
     within('.govuk-breadcrumbs') do
       expect(page).to have_link('Home', href: '/dashboard')
       expect(page).to have_link(
         I18n.t('page_title.staff.estates.show', name: scheme.estate.name),
-        href: estate_path(scheme.estate)
+        href: estate_url(scheme.estate)
       )
     end
   end
@@ -70,7 +70,7 @@ RSpec.feature 'Staff can view a scheme' do
   scenario 'when there are no priorities' do
     scheme = create(:scheme)
 
-    visit estate_scheme_path(scheme.estate, scheme)
+    visit estate_scheme_url(scheme.estate, scheme)
     within('.scheme-priorities') do
       expect(page).to have_content(
         I18n.t('page_content.scheme.show.priorities.no_priorities')

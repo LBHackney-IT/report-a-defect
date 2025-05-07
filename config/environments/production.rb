@@ -96,7 +96,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
   # config.hosts << ENV['DOMAIN_NAME'] if ENV['DOMAIN_NAME'].present?
-  config.action_dispatch.trusted_proxies = [IPAddr.new("0.0.0.0/0")] # Change to VPC CIDR range
+  config.action_dispatch.trusted_proxies = [IPAddr.new('0.0.0.0/0')] # Change to VPC CIDR range
 end
 
 # rubocop:disable Layout/LineLength
@@ -109,4 +109,7 @@ OmniAuth.config.on_failure = proc { |env|
 # rubocop:enable Layout/LineLength
 
 OmniAuth.config.full_host = "https://#{ENV['DOMAIN_NAME']}" if ENV['DOMAIN_NAME'].present?
-Rails.application.routes.default_url_options[:host] = ENV['DOMAIN_NAME'] if ENV['DOMAIN_NAME'].present?
+if ENV['DOMAIN_NAME'].present?
+  Rails.application.routes.default_url_options[:host] =
+    ENV['DOMAIN_NAME']
+end

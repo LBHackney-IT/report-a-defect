@@ -13,4 +13,4 @@
     - else
       .govuk-inset-text= I18n.t('page_content.defect.forwarding.unsent', recipient_type: formatted_recipient_type)
 
-    = button_to I18n.t('generic.button.send'), defect_forward_path(recipient_type: recipient_type), class: 'govuk-button'
+    = button_to I18n.t('generic.button.send'), defect_forward_url(recipient_type: recipient_type), class: 'govuk-button'

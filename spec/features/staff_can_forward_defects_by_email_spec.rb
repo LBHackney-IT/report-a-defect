@@ -12,7 +12,7 @@ RSpec.feature 'Staff can forward defect information by email' do
     scenario 'a defect can be forwarded to the contractor' do
       defect = create(:property_defect, property: property)
 
-      visit property_defect_path(defect.property, defect)
+      visit property_defect_url(defect.property, defect)
 
       expect(page).not_to have_content('An email was sent to the contractor')
 
@@ -33,7 +33,7 @@ RSpec.feature 'Staff can forward defect information by email' do
     scenario 'a defect can be forwarded to the employer agent' do
       defect = create(:property_defect, property: property)
 
-      visit property_defect_path(defect.property, defect)
+      visit property_defect_url(defect.property, defect)
 
       expect(page).not_to have_content('An email was sent to the employer agent')
 
@@ -57,7 +57,7 @@ RSpec.feature 'Staff can forward defect information by email' do
     scenario 'a defect can be forwarded to the contractor' do
       defect = create(:communal_defect, communal_area: communal_area)
 
-      visit communal_area_defect_path(defect.communal_area, defect)
+      visit communal_area_defect_url(defect.communal_area, defect)
 
       expect(page).not_to have_content('An email was sent to the contractor')
 
@@ -78,7 +78,7 @@ RSpec.feature 'Staff can forward defect information by email' do
     scenario 'a defect can be forwarded to the employer agent' do
       defect = create(:communal_defect, communal_area: communal_area)
 
-      visit communal_area_defect_path(defect.communal_area, defect)
+      visit communal_area_defect_url(defect.communal_area, defect)
 
       expect(page).not_to have_content('An email was sent to the employer agent')
 
@@ -101,7 +101,7 @@ RSpec.feature 'Staff can forward defect information by email' do
     communal_area = create(:communal_area, scheme: scheme)
     defect = create(:communal_defect, communal_area: communal_area)
 
-    visit communal_area_defect_path(defect.communal_area, defect)
+    visit communal_area_defect_url(defect.communal_area, defect)
 
     click_on(I18n.t('button.forward.contractor'))
 

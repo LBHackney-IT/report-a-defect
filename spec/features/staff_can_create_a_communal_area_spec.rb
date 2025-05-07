@@ -8,7 +8,7 @@ RSpec.feature 'Staff can create a communal_area' do
   let!(:scheme) { create(:scheme) }
 
   scenario 'a communal_area can be created' do
-    visit estate_scheme_path(scheme.estate, scheme)
+    visit estate_scheme_url(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
@@ -30,7 +30,7 @@ RSpec.feature 'Staff can create a communal_area' do
   end
 
   scenario 'an invalid communal_area cannot be submitted' do
-    visit estate_scheme_path(scheme.estate, scheme)
+    visit estate_scheme_url(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 

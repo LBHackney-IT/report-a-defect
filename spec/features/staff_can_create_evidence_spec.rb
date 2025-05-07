@@ -18,7 +18,7 @@ RSpec.feature 'Staff can create evidence' do
     let!(:defect) { create(:property_defect, property: property) }
 
     scenario 'evidence can be created' do
-      visit property_defect_path(defect.property, defect)
+      visit property_defect_url(defect.property, defect)
 
       expect(page).to have_content(I18n.t('button.create.evidence'))
 
@@ -40,11 +40,11 @@ RSpec.feature 'Staff can create evidence' do
     end
 
     scenario 'can use breadcrumbs to navigate' do
-      visit new_defect_evidence_path(defect)
+      visit new_defect_evidence_url(defect)
 
       expect(page).to have_link(
         "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",
-        href: property_defect_path(property, defect)
+        href: property_defect_url(property, defect)
       )
     end
   end
@@ -54,7 +54,7 @@ RSpec.feature 'Staff can create evidence' do
     let!(:defect) { create(:communal_defect, communal_area: communal_area) }
 
     scenario 'a communal_area can be found and evidence can be created' do
-      visit communal_area_defect_path(defect.communal_area, defect)
+      visit communal_area_defect_url(defect.communal_area, defect)
 
       expect(page).to have_content(I18n.t('button.create.evidence'))
 
@@ -75,11 +75,11 @@ RSpec.feature 'Staff can create evidence' do
     end
 
     scenario 'can use breadcrumbs to navigate' do
-      visit new_defect_evidence_path(defect)
+      visit new_defect_evidence_url(defect)
 
       expect(page).to have_link(
         "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",
-        href: communal_area_defect_path(communal_area, defect)
+        href: communal_area_defect_url(communal_area, defect)
       )
     end
   end
@@ -88,7 +88,7 @@ RSpec.feature 'Staff can create evidence' do
     property = create(:property, address: '1 Hackney Street')
     defect = create(:property_defect, property: property)
 
-    visit new_defect_evidence_path(defect)
+    visit new_defect_evidence_url(defect)
 
     within('form.new_evidence') do
       # Deliberately forget to fill out the required name field

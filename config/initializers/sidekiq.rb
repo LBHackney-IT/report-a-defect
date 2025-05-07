@@ -1,4 +1,4 @@
-options = {
+{
   concurrency: Integer(ENV.fetch('RAILS_MAX_THREADS', 5)),
 }
 

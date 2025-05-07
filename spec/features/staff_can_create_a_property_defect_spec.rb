@@ -9,7 +9,7 @@ RSpec.feature 'Staff can create a defect for a property' do
     property = create(:property, address: '1 Hackney Street')
     priority = create(:priority, scheme: property.scheme, name: 'P1', days: 1)
 
-    visit dashboard_path
+    visit dashboard_url
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -78,7 +78,7 @@ RSpec.feature 'Staff can create a defect for a property' do
   scenario 'an invalid defect cannot be submitted' do
     property = create(:property)
 
-    visit property_path(property)
+    visit property_url(property)
 
     click_on(I18n.t('button.create.property_defect'))
 
@@ -104,7 +104,7 @@ RSpec.feature 'Staff can create a defect for a property' do
   scenario 'any status can be given' do
     property = create(:property)
 
-    visit property_path(property)
+    visit property_url(property)
 
     click_on(I18n.t('button.create.property_defect'))
 
@@ -124,11 +124,11 @@ RSpec.feature 'Staff can create a defect for a property' do
     property_defect = create(:property_defect)
 
     # Skip a manual defect creation when it's not the part under test
-    visit property_path(property_defect.property)
+    visit property_url(property_defect.property)
 
     expect(page).to have_link(
       I18n.t('button.create.communal_defect'),
-      href: estate_scheme_path(property_defect.scheme.estate, property_defect.scheme, anchor: 'communal-areas')
+      href: estate_scheme_url(property_defect.scheme.estate, property_defect.scheme, anchor: 'communal-areas')
     )
     click_on(I18n.t('button.create.communal_defect'))
 

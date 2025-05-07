@@ -37,7 +37,7 @@
             = t('app.title')
           - if current_user
             %a.govuk-header__link.govuk-header__link--service-name.sign-out-link{href: "/sign_out"}
-              = link_to I18n.t('generic.link.sign_out'), sign_out_path, class: 'govuk-header__link sign-out-link'
+              = link_to I18n.t('generic.link.sign_out'), sign_out_url, class: 'govuk-header__link sign-out-link'
 
     .govuk-width-container
       .govuk-phase-banner

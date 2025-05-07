@@ -28,7 +28,7 @@ module RequestARepair
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
     config.autoloader = :classic
-    
+
     config.active_job.queue_adapter = :sidekiq
     config.action_mailer.delivery_method = :notify
     config.action_mailer.deliver_later_queue_name = :mailers
@@ -37,12 +37,12 @@ module RequestARepair
     }
 
     # Default host for mailers
-    config.action_mailer.default_url_options = { 
+    config.action_mailer.default_url_options = {
       host: ENV['DOMAIN_NAME'], protocol: 'https'
     }
     # Default host for controllers
-    config.action_controller.default_url_options = { 
-      :host => ENV['DOMAIN_NAME'] 
+    config.action_controller.default_url_options = {
+      host: ENV['DOMAIN_NAME'],
     }
     config.root_url = ENV['DOMAIN_NAME'] || 'http://localhost:3000'
 

@@ -2,8 +2,8 @@
 
 .govuk-breadcrumbs
   %ol.govuk-breadcrumbs__list
-    = breadcrumb_link_to('Home', dashboard_path)
-    = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @scheme.estate.name), estate_path(@scheme.estate))
+    = breadcrumb_link_to('Home', dashboard_url)
+    = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @scheme.estate.name), estate_url(@scheme.estate))
     = breadcrumb_current(I18n.t('page_title.staff.schemes.show', name: @scheme.name))
 
 .govuk-grid-row
@@ -23,7 +23,7 @@
       = render partial: '/shared/schemes/information', locals: { scheme: @scheme }
     .govuk-grid-row
       .govuk-grid-column-full
-        = link_to(I18n.t('button.edit.scheme'), edit_estate_scheme_path(@scheme.estate, @scheme), class: 'govuk-button govuk-button--secondary mb0')
+        = link_to(I18n.t('button.edit.scheme'), edit_estate_scheme_url(@scheme.estate, @scheme), class: 'govuk-button govuk-button--secondary mb0')
 
   .govuk-grid-column-full.govuk-grid-column-one-third-from-desktop.scheme-priorities
     %h3.govuk-heading-s
@@ -35,18 +35,18 @@
       %p.govuk-body
         = I18n.t('page_content.scheme.show.priorities.no_priorities')
 
-    = link_to(I18n.t('button.create.priority'), new_estate_scheme_priority_path(@scheme.estate, @scheme), class: 'govuk-button govuk-button--secondary mb0')
+    = link_to(I18n.t('button.create.priority'), new_estate_scheme_priority_url(@scheme.estate, @scheme), class: 'govuk-button govuk-button--secondary mb0')
 
 .govuk-grid-row
   .govuk-grid-column-full
     %h2.govuk-heading-m.section-heading#communal-areas
       Communal Areas
-    = link_to(I18n.t('button.create.communal_area'), new_estate_scheme_communal_area_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
+    = link_to(I18n.t('button.create.communal_area'), new_estate_scheme_communal_area_url(@scheme.estate, @scheme), class: 'govuk-button mb0')
     = render partial: '/shared/communal_areas/table', locals: { communal_areas: @scheme.communal_areas }
 
 .govuk-grid-row
   .govuk-grid-column-full
     %h2.govuk-heading-m.section-heading#properties
       Properties
-    = link_to(I18n.t('button.create.property'), new_estate_scheme_property_path(@scheme.estate, @scheme), class: 'govuk-button mb0')
+    = link_to(I18n.t('button.create.property'), new_estate_scheme_property_url(@scheme.estate, @scheme), class: 'govuk-button mb0')
     = render partial: '/shared/properties/table', locals: { properties: @scheme.properties }

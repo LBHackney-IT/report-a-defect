@@ -1,7 +1,7 @@
 %p.govuk-body-s
   In this section you can view and create Estate records and add schemes, contractors, priorities and property addresses.
 
-= link_to(I18n.t('button.create.estate'), new_estate_path, class: 'govuk-button govuk-button--secondary mb0')
+= link_to(I18n.t('button.create.estate'), new_estate_url, class: 'govuk-button govuk-button--secondary mb0')
 %table.govuk-table.estates
   %thead.govuk-table__head
     %tr.govuk-table__row
@@ -13,4 +13,4 @@
     - estates.each do |estate|
       %tr.govuk-table__row
         %td.govuk-table__cell= estate.name
-        %td.govuk-table__cell= link_to I18n.t('generic.link.show'), estate_path(estate), class: 'govuk-link govuk-link--no-visited-state'
+        %td.govuk-table__cell= link_to I18n.t('generic.link.show'), estate_url(estate), class: 'govuk-link govuk-link--no-visited-state'

@@ -18,7 +18,7 @@ RSpec.feature 'Staff can create a comment' do
     let!(:defect) { create(:property_defect, property: property) }
 
     scenario 'a property can be found and comment can be created' do
-      visit dashboard_path
+      visit dashboard_url
 
       expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -56,11 +56,11 @@ RSpec.feature 'Staff can create a comment' do
     end
 
     scenario 'can use breadcrumbs to navigate' do
-      visit new_defect_comment_path(defect)
+      visit new_defect_comment_url(defect)
 
       expect(page).to have_link(
         "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",
-        href: property_defect_path(property, defect)
+        href: property_defect_url(property, defect)
       )
     end
   end
@@ -70,7 +70,7 @@ RSpec.feature 'Staff can create a comment' do
     let!(:defect) { create(:communal_defect, communal_area: communal_area) }
 
     scenario 'a communal_area can be found and comment can be created' do
-      visit dashboard_path
+      visit dashboard_url
 
       expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -106,11 +106,11 @@ RSpec.feature 'Staff can create a comment' do
     end
 
     scenario 'can use breadcrumbs to navigate' do
-      visit new_defect_comment_path(defect)
+      visit new_defect_comment_url(defect)
 
       expect(page).to have_link(
         "Back to #{I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number)}",
-        href: communal_area_defect_path(communal_area, defect)
+        href: communal_area_defect_url(communal_area, defect)
       )
     end
   end
@@ -119,7 +119,7 @@ RSpec.feature 'Staff can create a comment' do
     property = create(:property, address: '1 Hackney Street')
     defect = create(:property_defect, property: property)
 
-    visit new_defect_comment_path(defect)
+    visit new_defect_comment_url(defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.comments.create'))
     within('form.new_comment') do

@@ -9,7 +9,7 @@ RSpec.feature 'Staff can download defect data' do
     property_defect = DefectPresenter.new(create(:property_defect))
     communal_defect = DefectPresenter.new(create(:communal_defect))
 
-    visit dashboard_path
+    visit dashboard_url
 
     click_on(I18n.t('button.report.download_all'))
 

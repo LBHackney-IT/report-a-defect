@@ -1,6 +1,6 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.evidences.create')
 
-= link_to "Back to #{I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)}", defect_path_for(defect: @defect), class: 'govuk-back-link'
+= link_to "Back to #{I18n.t('page_title.staff.defects.show', reference_number: @defect.reference_number)}", defect_url_for(defect: @defect), class: 'govuk-back-link'
 
 .govuk-grid-row
   .govuk-grid-column-two-thirds

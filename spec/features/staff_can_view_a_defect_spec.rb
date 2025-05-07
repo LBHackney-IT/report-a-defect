@@ -8,7 +8,7 @@ RSpec.feature 'Staff can view a defect' do
   scenario 'a defect can be found and viewed' do
     defect = create(:property_defect)
 
-    visit dashboard_path
+    visit dashboard_url
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -54,7 +54,7 @@ RSpec.feature 'Staff can view a defect' do
   scenario 'a property defect can be found by reference number' do
     defect = create(:property_defect)
 
-    visit dashboard_path
+    visit dashboard_url
 
     within('form.search') do
       fill_in 'query', with: defect.reference_number
@@ -70,7 +70,7 @@ RSpec.feature 'Staff can view a defect' do
   scenario 'a communal defect can be found by reference number' do
     defect = create(:communal_defect)
 
-    visit dashboard_path
+    visit dashboard_url
 
     within('form.search') do
       fill_in 'query', with: defect.reference_number
@@ -86,7 +86,7 @@ RSpec.feature 'Staff can view a defect' do
   scenario 'a defect can be found by reformatted reference number' do
     defect = create(:property_defect)
 
-    visit dashboard_path
+    visit dashboard_url
 
     within('form.search') do
       fill_in 'query', with: defect.reference_number.gsub('-', '')
@@ -100,7 +100,7 @@ RSpec.feature 'Staff can view a defect' do
   end
 
   scenario 'entering an unknown reference number' do
-    visit dashboard_path
+    visit dashboard_url
 
     reference_number = ReferenceNumber.new(0)
 
@@ -116,17 +116,17 @@ RSpec.feature 'Staff can view a defect' do
   scenario 'can use breadcrumbs to navigate back to a property' do
     defect = create(:property_defect)
 
-    visit property_defect_path(defect.property, defect)
+    visit property_defect_url(defect.property, defect)
 
-    expect(page).to have_link(defect.property.address, href: property_path(defect.property))
+    expect(page).to have_link(defect.property.address, href: property_url(defect.property))
   end
 
   scenario 'can use breadcrumbs to navigate back to a communal_area' do
     defect = create(:communal_defect)
 
-    visit communal_area_defect_path(defect.communal_area, defect)
+    visit communal_area_defect_url(defect.communal_area, defect)
 
-    expect(page).to have_link(defect.communal_area.name, href: communal_area_path(defect.communal_area))
+    expect(page).to have_link(defect.communal_area.name, href: communal_area_url(defect.communal_area))
   end
 
   scenario 'can see comments' do
@@ -135,7 +135,7 @@ RSpec.feature 'Staff can view a defect' do
     defect = create(:property_defect)
     comment = create(:comment, defect: defect)
 
-    visit property_defect_path(defect.property, defect)
+    visit property_defect_url(defect.property, defect)
 
     within('.comments') do
       expect(page).to have_content("Comment left by #{comment.user.name} posted on 23 May 2019 at 00:00")
@@ -150,7 +150,7 @@ RSpec.feature 'Staff can view a defect' do
 
     defect = create(:property_defect)
 
-    visit property_defect_path(defect.property, defect)
+    visit property_defect_url(defect.property, defect)
 
     within('.events') do
       expect(page).to have_content('defect.create on 23 May 2019 at 00:00')
