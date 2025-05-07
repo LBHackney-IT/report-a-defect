@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   
   def default_url_options
     if ENV['DOMAIN_NAME'].present?
-      { host: ENV['DOMAIN_NAME'] }
+      { :host => ENV['DOMAIN_NAME'] }
     else
       {}
     end
