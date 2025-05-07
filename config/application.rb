@@ -44,7 +44,7 @@ module RequestARepair
     config.action_controller.default_url_options = { 
       :host => ENV['DOMAIN_NAME'] 
     }
-    config.root_url = ENV.fetch('DOMAIN_NAME')
+    config.root_url = ENV['DOMAIN_NAME'] || 'http://localhost:3000'
 
     config.active_record.yaml_column_permitted_classes = [Symbol,
                                                           ActiveSupport::HashWithIndifferentAccess]
