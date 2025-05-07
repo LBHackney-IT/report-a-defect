@@ -28,14 +28,22 @@ module RequestARepair
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
     config.autoloader = :classic
-
+    
     config.active_job.queue_adapter = :sidekiq
     config.action_mailer.delivery_method = :notify
     config.action_mailer.deliver_later_queue_name = :mailers
     config.action_mailer.notify_settings = {
       api_key: ENV['NOTIFY_KEY'],
     }
-    config.action_mailer.default_url_options = { protocol: 'https' }
+
+    # Default host for mailers
+    config.action_mailer.default_url_options = { 
+      host: ENV['DOMAIN_NAME'], protocol: 'https'
+    }
+    # Default host for controllers
+    config.action_controller.default_url_options = { 
+      :host => ENV['DOMAIN_NAME'] 
+    }
 
     config.active_record.yaml_column_permitted_classes = [Symbol,
                                                           ActiveSupport::HashWithIndifferentAccess]

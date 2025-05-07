@@ -95,6 +95,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+  config.hosts << ENV['DOMAIN_NAME'] if ENV['DOMAIN_NAME'].present?
+  config.action_dispatch.trusted_proxies = [IPAddr.new("0.0.0.0/0")] # Change to VPC CIDR range
 end
 
 # rubocop:disable Layout/LineLength
