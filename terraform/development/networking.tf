@@ -282,15 +282,15 @@ resource "aws_cloudfront_distribution" "app_distribution" {
   comment         = "Distribution for report a defect front end"
 
   default_cache_behavior {
-    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "api-gateway-origin"
-    cache_policy_id        = "b689b0a8-53d0-40ab-baf2-68738e2966ac" # AllViewerExceptHostHeader
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
-    compress               = true
-    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods           = ["GET", "HEAD"]
+    target_origin_id         = "api-gateway-origin"
+    origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac" # AllViewerExceptHostHeader
+    min_ttl                  = 0
+    default_ttl              = 0
+    max_ttl                  = 0
+    compress                 = true
+    viewer_protocol_policy   = "redirect-to-https"
   }
 
   restrictions {
