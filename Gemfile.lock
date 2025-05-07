@@ -84,18 +84,9 @@ GEM
       uniform_notifier (~> 1.11)
     byebug (12.0.0)
     capybara (3.40.0)
-    byebug (12.0.0)
-    capybara (3.40.0)
       addressable
       matrix
-      matrix
       mini_mime (>= 0.1.3)
-      nokogiri (~> 1.11)
-      rack (>= 1.6.0)
-      rack-test (>= 0.6.3)
-      regexp_parser (>= 1.5, < 3.0)
-      xpath (~> 3.2)
-    carrierwave (2.2.6)
       nokogiri (~> 1.11)
       rack (>= 1.6.0)
       rack-test (>= 0.6.3)
@@ -109,9 +100,6 @@ GEM
       marcel (~> 1.0.0)
       mini_mime (>= 0.1.3)
       ssrf_filter (~> 1.0)
-    cgi (0.4.2)
-    childprocess (5.1.0)
-      logger (~> 1.5)
     cgi (0.4.2)
     childprocess (5.1.0)
       logger (~> 1.5)
@@ -144,7 +132,6 @@ GEM
     factory_bot_rails (6.4.4)
       factory_bot (~> 6.5)
       railties (>= 5.0.0)
-    faker (3.5.1)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
     faraday (2.13.0)
@@ -180,20 +167,15 @@ GEM
       thor
       tilt
     haml-rails (2.1.0)
-    haml-rails (2.1.0)
       actionpack (>= 5.1)
       activesupport (>= 5.1)
-      haml (>= 4.0.6)
       haml (>= 4.0.6)
       railties (>= 5.1)
     hashdiff (1.1.2)
     hashie (5.0.0)
     high_voltage (4.0.0)
     html2haml (2.3.0)
-    high_voltage (4.0.0)
-    html2haml (2.3.0)
       erubis (~> 2.7.0)
-      haml (>= 4.0)
       haml (>= 4.0)
       nokogiri (>= 1.6.0)
       ruby_parser (~> 3.5)
@@ -202,7 +184,6 @@ GEM
     image_processing (1.14.0)
       mini_magick (>= 4.9.5, < 6)
       ruby-vips (>= 2.0.17, < 3)
-    jquery-rails (4.6.0)
     jquery-rails (4.6.0)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -270,7 +251,6 @@ GEM
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     notifications-ruby-client (5.4.0)
-    notifications-ruby-client (5.4.0)
       jwt (>= 1.5, < 3)
     oauth2 (2.0.9)
       faraday (>= 0.17.3, < 3.0)
@@ -304,13 +284,12 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_activity (2.0.2)
-    public_activity (2.0.2)
       actionpack (>= 5.0.0)
       activerecord (>= 5.0)
       i18n (>= 0.5.0)
       railties (>= 5.0.0)
     public_suffix (6.0.1)
-    puma (4.3.12)
+    puma (5.6.9)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (2.2.13)
@@ -411,12 +390,7 @@ GEM
     selenium-webdriver (4.31.0)
       base64 (~> 0.2)
       logger (~> 1.4)
-    selenium-webdriver (4.31.0)
-      base64 (~> 0.2)
-      logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2, < 3.0)
-      websocket (~> 1.0)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     sentry-raven (3.1.2)
@@ -464,7 +438,6 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.1)
-    uglifier (4.2.1)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
@@ -477,7 +450,6 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
-    webmock (3.25.1)
     webmock (3.25.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -500,7 +472,6 @@ DEPENDENCIES
   bullet
   byebug
   capybara (~> 3.4)
-  capybara (~> 3.4)
   carrierwave (~> 2.0)
   concurrent-ruby (= 1.3.4)
   database_cleaner
@@ -516,9 +487,7 @@ DEPENDENCIES
   launchy
   listen (>= 3.0.5, < 3.2)
   mail-notify (~> 1.1.0)
-  mail-notify (~> 1.1.0)
   mimemagic (~> 0.3.8)
-  net-smtp
   net-smtp
   newrelic_rpm
   omniauth-auth0 (~> 2.2)
@@ -527,7 +496,7 @@ DEPENDENCIES
   pg_search
   pry
   public_activity (~> 2.0)
-  puma (~> 4.3)
+  puma (~> 5.6)
   rails (~> 6.1.6)
   rails_layout
   redis
@@ -545,7 +514,6 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
   tzinfo-data
-  uglifier (>= 4.2.0)
   uglifier (>= 4.2.0)
   web-console (>= 3.3.0)
   webmock (~> 3.5)
