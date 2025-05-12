@@ -155,6 +155,7 @@ resource "aws_iam_policy" "ecs_task_policy" {
         Action : [
           "s3:GetObject",
           "s3:PutObject",
+          "s3:DeleteObject",
         ],
         Resource : [
           aws_s3_bucket.image_bucket.arn,
