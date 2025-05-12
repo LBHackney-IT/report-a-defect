@@ -385,8 +385,6 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sentry-raven (3.1.2)
-      faraday (>= 1.0)
     sexp_processor (4.17.3)
     shoulda (4.0.0)
       shoulda-context (~> 2.0)
@@ -493,7 +491,6 @@ DEPENDENCIES
   rubocop
   sass-rails (~> 6.0)
   selenium-webdriver
-  sentry-raven
   shoulda
   sidekiq
   simple_form
