@@ -31,7 +31,7 @@ resource "aws_s3_bucket_policy" "image_bucket_policy" {
     }]
   })
 }
-resource "aws_s3_cors_configuration" "image_bucket_cors" {
+resource "aws_s3_bucket_cors_configuration" "image_bucket_cors" {
   bucket = aws_s3_bucket.image_bucket.id
 
   cors_rule {
