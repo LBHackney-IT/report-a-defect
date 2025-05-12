@@ -1,14 +1,3 @@
-# Get secret ARNs from AWS Secrets Manager
-data "aws_secretsmanager_secret" "secrets" {
-  for_each = toset(var.secret_names)
-  name     = "report-a-defect-${each.value}"
-}
-# Pull all environment variables from SSM
-data "aws_ssm_parameter" "params" {
-  for_each = toset(var.ssm_params)
-  name     = "/report-a-defect/${var.environment_name}/${each.value}"
-}
-
 # S3 Bucket
 resource "aws_s3_bucket" "image_bucket" {
   bucket = "report-a-defect-images-${var.environment_name}"
@@ -55,6 +44,7 @@ resource "aws_ssm_parameter" "bucket_name" {
 }
 
 # Roles
+
 data "aws_kms_alias" "secretsmanager" {
   name = "alias/aws/secretsmanager"
 }
@@ -166,7 +156,10 @@ resource "aws_iam_policy" "ecs_task_policy" {
           "s3:GetObject",
           "s3:PutObject",
         ],
-        Resource : aws_s3_bucket.image_bucket.arn
+        Resource : [
+          aws_s3_bucket.image_bucket.arn,
+          "${aws_s3_bucket.image_bucket.arn}/*"
+        ]
       }
     ]
   })
@@ -209,10 +202,25 @@ resource "aws_ecr_repository_policy" "app_policy" {
 }
 
 # ECS
+
+# Get secret ARNs from AWS Secrets Manager
+data "aws_secretsmanager_secret" "secrets" {
+  for_each = toset(var.secret_names)
+  name     = "report-a-defect-${each.value}"
+}
+# Pull all environment variables from SSM
+data "aws_ssm_parameter" "params" {
+  for_each = toset(var.ssm_params)
+  name     = "/report-a-defect/${var.environment_name}/${each.value}"
+}
+
+# Logging
 resource "aws_cloudwatch_log_group" "report_a_defect" {
   name              = "ecs-task-report-a-defect-${var.environment_name}"
   retention_in_days = 60
 }
+
+# Service + Task Definition
 resource "aws_ecs_service" "app_service" {
   name            = "report-a-defect-service"
   cluster         = aws_ecs_cluster.app_cluster.id
