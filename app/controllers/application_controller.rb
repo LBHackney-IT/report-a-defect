@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include Logout
   include PublicActivity::StoreController
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
 
   before_action :check_staging_auth, except: :check
 
