@@ -24,8 +24,6 @@ variable "vpc_name" {
 variable "secret_names" {
   type = list(string)
   default = [
-    "aws-access-key-id",
-    "aws-secret-access-key",
     "auth0-client-secret",
     "database-url",
     "notify-key",

@@ -9,6 +9,47 @@ data "aws_ssm_parameter" "params" {
   name     = "/report-a-defect/${var.environment_name}/${each.value}"
 }
 
+# S3 Bucket
+resource "aws_s3_bucket" "image_bucket" {
+  bucket = "report-a-defect-images-${var.environment_name}"
+}
+resource "aws_s3_bucket_policy" "image_bucket_policy" {
+  bucket = aws_s3_bucket.image_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement : [{
+      Effect = "Allow",
+      Principal = {
+        Service = "ecs-tasks.amazonaws.com"
+      },
+      Action = [
+        "s3:PutObject",
+        "s3:GetObject",
+      ],
+      Resource = "${aws_s3_bucket.image_bucket.arn}/*"
+    }]
+  })
+}
+resource "aws_s3_cors_configuration" "image_bucket_cors" {
+  bucket = aws_s3_bucket.image_bucket.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "PUT", "POST", "DELETE"]
+    allowed_origins = [aws_lb.nlb.dns_name]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
+}
+resource "aws_ssm_parameter" "bucket_name" {
+  name        = "/report-a-defect/${var.environment_name}/aws_bucket"
+  type        = "String"
+  value       = aws_s3_bucket.image_bucket.bucket
+  description = "S3 bucket name for report-a-defect images"
+  overwrite   = true
+}
+
 # Roles
 data "aws_kms_alias" "secretsmanager" {
   name = "alias/aws/secretsmanager"
@@ -121,7 +162,7 @@ resource "aws_iam_policy" "ecs_task_policy" {
           "s3:GetObject",
           "s3:PutObject",
         ],
-        Resource : "*" # TODO: Update to specific S3 bucket ARN when migrated
+        Resource : aws_s3_bucket.image_bucket.arn
       }
     ]
   })
@@ -177,7 +218,7 @@ resource "aws_ecs_service" "app_service" {
 
   network_configuration {
     subnets          = data.aws_subnets.public_subnets.ids
-    security_groups  = [aws_security_group.ecs_task_sg.id, "sg-00d2e14f38245dd0b"]
+    security_groups  = [aws_security_group.ecs_task_sg.id]
     assign_public_ip = false
   }
 

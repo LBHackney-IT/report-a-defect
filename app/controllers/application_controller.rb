@@ -1,17 +1,9 @@
 class ApplicationController < ActionController::Base
   include Logout
   include PublicActivity::StoreController
-  # protect_from_forgery with: :exception
+  protect_from_forgery with: :exception
 
   before_action :check_staging_auth, except: :check
-
-  before_action do
-    Rails.logger.info "=== REQUEST HEADERS: #{request.headers}"
-    Rails.logger.info "=== REQUEST HOST: #{request.host}"
-    Rails.logger.info "=== SESSION: #{request.session_options[:id]}"
-    Rails.logger.info "=== CSRF token from session: #{session[:_csrf_token]}"
-    Rails.logger.info "=== CSRF token from params: #{params[:authenticity_token]}"
-  end
 
   def default_url_options
     if ENV['DOMAIN_NAME'].present?

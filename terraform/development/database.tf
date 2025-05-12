@@ -48,7 +48,7 @@ resource "aws_db_instance" "lbh-db" {
   backup_window               = "00:01-00:31"
   username                    = aws_secretsmanager_secret_version.db_username.secret_string
   password                    = aws_secretsmanager_secret_version.db_password.secret_string
-  vpc_security_group_ids      = [aws_security_group.db_security_group.id, "sg-00d2e14f38245dd0b"]
+  vpc_security_group_ids      = [aws_security_group.db_security_group.id]
   db_subnet_group_name        = aws_db_subnet_group.db_subnets.name
   db_name                     = var.database_name
   monitoring_interval         = 0
