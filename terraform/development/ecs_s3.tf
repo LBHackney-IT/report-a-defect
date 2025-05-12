@@ -339,7 +339,7 @@ resource "aws_scheduler_schedule" "cron" {
     mode = "OFF"
   }
 
-  schedule_expression = "cron(30 17 0 * ? *)" # Every day at 17:30 UTC
+  schedule_expression = "cron(30 17 * * *)" # Every day at 17:30 UTC
 
   target {
     arn      = aws_ecs_cluster.app_cluster.arn
