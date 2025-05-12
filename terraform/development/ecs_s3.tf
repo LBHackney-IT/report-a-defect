@@ -297,7 +297,7 @@ resource "aws_ecs_task_definition" "app_task" {
       name      = "report-a-defect-worker-container"
       image     = "${aws_ecr_repository.app_repository.repository_url}:latest"
       essential = true
-      command   = ["rake", "\"notify:escalated_defects\"", "rake", "\"notify:due_soon_and_overdue_defects\""]
+      command   = ["rake", "notify:escalated_defects", "rake", "notify:due_soon_and_overdue_defects"]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
