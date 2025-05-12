@@ -5,8 +5,6 @@ CarrierWave.configure do |config|
     config.fog_provider = 'fog/aws'
     config.fog_credentials = {
       provider: 'AWS',
-      aws_access_key_id: "", # Credentials are set with IAM profile but this is required for fog
-      aws_secret_access_key: "",
       region: ENV['AWS_REGION'],
       use_iam_profile: true,
     }

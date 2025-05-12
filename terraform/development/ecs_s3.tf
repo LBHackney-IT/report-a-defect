@@ -27,13 +27,17 @@ resource "aws_s3_bucket_policy" "image_bucket_policy" {
         "s3:PutObject",
         "s3:GetObject",
       ],
-      Resource = "${aws_s3_bucket.image_bucket.arn}/*"
+      Resource = "${aws_s3_bucket.image_bucket.arn}/*",
+      Condition = {
+        Bool = {
+          "aws:SecureTransport" = "true"
+        }
+      }
     }]
   })
 }
 resource "aws_s3_bucket_cors_configuration" "image_bucket_cors" {
   bucket = aws_s3_bucket.image_bucket.id
-
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["GET", "PUT", "POST", "DELETE"]
