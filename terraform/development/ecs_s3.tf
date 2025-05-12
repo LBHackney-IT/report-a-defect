@@ -98,7 +98,9 @@ resource "aws_iam_policy" "ecs_execution_policy" {
         ],
         Resource : [
           aws_cloudwatch_log_group.report_a_defect.arn,
-          "${aws_cloudwatch_log_group.report_a_defect.arn}:log-stream:*"
+          "${aws_cloudwatch_log_group.report_a_defect.arn}:log-stream:*",
+          aws_cloudwatch_log_group.report_a_defect_worker.arn,
+          "${aws_cloudwatch_log_group.report_a_defect_worker.arn}:log-stream:*"
         ]
       },
       {
