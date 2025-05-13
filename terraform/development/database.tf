@@ -67,3 +67,22 @@ resource "aws_db_instance" "lbh-db" {
   skip_final_snapshot   = true
   copy_tags_to_snapshot = false
 }
+
+# Redis Instance
+resource "aws_elasticache_cluster" "lbh-redis" {
+  cluster_id           = "report-a-defect-redis-${var.environment_name}"
+  engine               = "redis"
+  engine_version       = "7.0.11"
+  node_type            = "cache.t2.micro"
+  num_cache_nodes      = 1
+  port                 = var.redis_port
+  parameter_group_name = "default.redis7"
+  security_group_ids   = [aws_security_group.db_security_group]
+}
+
+resource "aws_ssm_parameter" "redis_url" {
+  name      = "/report-a-defect/${var.environment_name}/redis_url"
+  type      = "String"
+  value     = "redis://${aws_elasticache_cluster.lbh-redis.cluster_address}:${var.redis_port}"
+  overwrite = true
+}

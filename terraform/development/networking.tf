@@ -24,6 +24,12 @@ data "aws_subnets" "public_subnets" {
     values = ["public"]
   }
 }
+data "aws_security_group" "bastion_sg" {
+  filter {
+    name   = "group-name"
+    values = ["PlatformAPIsBastionSecurityGroup"]
+  }
+}
 
 # DB Subnet
 resource "aws_db_subnet_group" "db_subnets" {
@@ -36,12 +42,6 @@ resource "aws_db_subnet_group" "db_subnets" {
 }
 
 # DB Security Group
-data "aws_security_group" "bastion_sg" {
-  filter {
-    name   = "group-name"
-    values = ["PlatformAPIsBastionSecurityGroup"]
-  }
-}
 resource "aws_security_group" "db_security_group" {
   vpc_id      = data.aws_vpc.main_vpc.id
   name_prefix = "allow_${var.database_name}_db_traffic"
@@ -69,7 +69,25 @@ resource "aws_security_group_rule" "allow_bastion_to_rds" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.db_security_group.id
   source_security_group_id = data.aws_security_group.bastion_sg.id
-  description              = "Allow Bastion access to RDS"
+  description              = "Allow Bastion access to RDS (Postgres)"
+}
+resource "aws_security_group_rule" "allow_ecs_to_redis" {
+  type                     = "ingress"
+  from_port                = var.redis_port
+  to_port                  = var.redis_port
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.db_security_group.id
+  source_security_group_id = aws_security_group.ecs_task_sg.id
+  description              = "Allow ECS tasks to talk to Redis"
+}
+resource "aws_security_group_rule" "allow_bastion_to_redis" {
+  type                     = "ingress"
+  from_port                = var.redis_port
+  to_port                  = var.redis_port
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.db_security_group.id
+  source_security_group_id = data.aws_security_group.bastion_sg.id
+  description              = "Allow Bastion access to Redis"
 }
 
 # ECS Security Group

@@ -21,6 +21,11 @@ variable "vpc_name" {
   default = "housing-dev"
 }
 
+variable "redis_port" {
+  type    = number
+  default = 6379
+}
+
 variable "secret_names" {
   type = list(string)
   default = [
