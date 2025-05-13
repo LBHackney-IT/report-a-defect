@@ -121,6 +121,18 @@ resource "aws_iam_policy" "ecs_execution_policy" {
           "kms:Decrypt"
         ],
         Resource : data.aws_kms_alias.secretsmanager.target_key_arn
+      },
+      {
+        Sid : "ParameterStoreAccess",
+        Effect : "Allow",
+        Action : [
+          "ssm:GetParameters",
+          "ssm:GetParameter",
+          "ssm:DescribeParameters"
+        ],
+        Resource : [
+          for param in data.aws_ssm_parameter.params : param.arn
+        ]
       }
     ]
   })
@@ -208,11 +220,17 @@ resource "aws_ecr_repository_policy" "app_policy" {
 
 # Get secret ARNs from AWS Secrets Manager
 data "aws_secretsmanager_secret" "secrets" {
-  for_each = toset(var.secret_names)
-  name     = "report-a-defect-${each.value}"
+  depends_on = [aws_secretsmanager_secret_version.database_url_version]
+  for_each   = toset(var.secret_names)
+  name       = "report-a-defect-${each.value}"
 }
 # Pull all environment variables from SSM
 data "aws_ssm_parameter" "params" {
+  depends_on = [
+    aws_ssm_parameter.bucket_name,
+    aws_ssm_parameter.app_domain_name,
+    aws_ssm_parameter.redis_url
+  ]
   for_each = toset(var.ssm_params)
   name     = "/report-a-defect/${var.environment_name}/${each.value}"
 }
@@ -288,8 +306,8 @@ resource "aws_ecs_task_definition" "app_task" {
       environment = [
         for param_key, param_value in data.aws_ssm_parameter.params :
         {
-          name  = upper(param_key) # snake to screaming_snake
-          value = param_value.value
+          name      = upper(param_key) # snake to screaming_snake
+          valueFrom = param_value.arn
         }
       ]
     },
@@ -318,8 +336,8 @@ resource "aws_ecs_task_definition" "app_task" {
       environment = [
         for param_key, param_value in data.aws_ssm_parameter.params :
         {
-          name  = upper(param_key) # snake to screaming_snake
-          value = param_value.value
+          name      = upper(param_key) # snake to screaming_snake
+          valueFrom = param_value.arn
         }
       ]
     }

@@ -9,7 +9,6 @@ Sidekiq.configure_server do |config|
     url: redis_url,
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
     size: options[:concurrency] + 5,
-    name: 'primary',
   }
 end
 
@@ -18,7 +17,6 @@ Sidekiq.configure_client do |config|
     url: redis_url,
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
     size: options[:concurrency] + 5,
-    name: 'primary',
   }
 end
 
