@@ -49,6 +49,8 @@ RUN \
 
 COPY . $INSTALL_PATH
 
+RUN chmod +x ./entrypoint.sh
+
 RUN RAILS_ENV=production SECRET_KEY_BASE="secret" bin/rails DATABASE_URL=postgresql:does_not_exist assets:precompile DOMAIN_NAME=localhost:3000
 
 EXPOSE 3000
