@@ -121,18 +121,6 @@ resource "aws_iam_policy" "ecs_execution_policy" {
           "kms:Decrypt"
         ],
         Resource : data.aws_kms_alias.secretsmanager.target_key_arn
-      },
-      {
-        Sid : "ParameterStoreAccess",
-        Effect : "Allow",
-        Action : [
-          "ssm:GetParameters",
-          "ssm:GetParameter",
-          "ssm:DescribeParameters"
-        ],
-        Resource : [
-          for param in data.aws_ssm_parameter.params : param.arn
-        ]
       }
     ]
   })
@@ -306,8 +294,8 @@ resource "aws_ecs_task_definition" "app_task" {
       environment = [
         for param_key, param_value in data.aws_ssm_parameter.params :
         {
-          name      = upper(param_key) # snake to screaming_snake
-          valueFrom = param_value.arn
+          name  = upper(param_key) # snake to screaming_snake
+          value = param_value.value
         }
       ]
     },
@@ -336,8 +324,8 @@ resource "aws_ecs_task_definition" "app_task" {
       environment = [
         for param_key, param_value in data.aws_ssm_parameter.params :
         {
-          name      = upper(param_key) # snake to screaming_snake
-          valueFrom = param_value.arn
+          name  = upper(param_key) # snake to screaming_snake
+          value = param_value.value
         }
       ]
     }
