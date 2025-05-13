@@ -31,7 +31,7 @@ data "aws_security_group" "bastion_sg" {
   }
 }
 
-# DB Subnet
+# DB + Redis Subnets
 resource "aws_db_subnet_group" "db_subnets" {
   name       = "${var.database_name}-db-subnet"
   subnet_ids = data.aws_subnets.private_subnets.ids
@@ -39,6 +39,10 @@ resource "aws_db_subnet_group" "db_subnets" {
   lifecycle {
     create_before_destroy = true
   }
+}
+resource "aws_elasticache_subnet_group" "redis_subnets" {
+  name       = "${var.database_name}-redis-subnet"
+  subnet_ids = data.aws_subnets.private_subnets.ids
 }
 
 # DB Security Group
