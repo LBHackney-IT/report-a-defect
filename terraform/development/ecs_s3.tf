@@ -298,121 +298,82 @@ resource "aws_ecs_task_definition" "app_task" {
           value = param_value.value
         }
       ]
-    },
-    {
-      name      = "report-a-defect-worker-container"
-      image     = "${aws_ecr_repository.app_repository.repository_url}:latest"
-      essential = false
-      command   = ["sh", "-c", "./entrypoint.sh"]
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-group         = "${aws_cloudwatch_log_group.report_a_defect_worker.name}"
-          awslogs-region        = "eu-west-2"
-          awslogs-stream-prefix = "report-a-defect-worker-${var.environment_name}-logs"
-        }
-      }
-      # Dynamically set secrets and environment variables from SSM and Secrets Manager
-      secrets = [
-        for secret_key, secret_value in data.aws_secretsmanager_secret.secrets :
-        {
-          name      = upper(replace(secret_key, "-", "_")) # kebab to screaming_snake
-          valueFrom = secret_value.arn
-        }
-      ]
-
-      environment = [
-        for param_key, param_value in data.aws_ssm_parameter.params :
-        {
-          name  = upper(param_key) # snake to screaming_snake
-          value = param_value.value
-        }
-      ]
     }
   ])
+}
+resource "aws_ecs_task_definition" "worker_task" {
+  # Task definition for the worker (uses the same container image)
+  family                   = "report-a-defect-worker-task"
+  network_mode             = "awsvpc"
+  execution_role_arn       = aws_iam_role.ecs_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  container_definitions    = aws_ecs_task_definition.app_task.container_definitions
 }
 resource "aws_ecs_cluster" "app_cluster" {
   name = "report-a-defect-cluster"
 }
 
-# Scheduled Tasks
-resource "aws_scheduler_schedule" "cron" {
-  name        = "report-a-defect-scheduled-tasks"
-  description = "Scheduled tasks for report-a-defect"
-  group_name  = "default"
+# EventBridge 
 
-  flexible_time_window {
-    mode = "OFF"
-  }
+resource "aws_cloudwatch_event_rule" "worker_schedule" {
+  name                = "report-a-defect-worker-schedule"
+  description         = "Schedule to run the worker task for report-a-defect"
+  schedule_expression = "cron(0 7 * * ? *)" # 7AM UTC daily
+}
+resource "aws_cloudwatch_event_target" "worker_target" {
+  rule      = aws_cloudwatch_event_rule.worker_schedule.name
+  target_id = "report-a-defect-worker-target"
+  arn       = aws_ecs_cluster.app_cluster.arn
+  role_arn  = aws_iam_role.eventbridge_invoke_ecs.arn
 
-  schedule_expression = "cron(30 17 * * ? *)" # Every day at 17:30 UTC
+  ecs_target {
+    task_definition_arn = aws_ecs_task_definition.worker_task.arn
+    launch_type         = "FARGATE"
+    platform_version    = "LATEST"
 
-  target {
-    arn      = aws_ecs_cluster.app_cluster.arn
-    role_arn = aws_iam_role.scheduler.arn
-
-    ecs_parameters {
-      # trimming the revision suffix here so that schedule always uses latest revision
-      task_definition_arn = trimsuffix(aws_ecs_task_definition.app_task.arn, ":${aws_ecs_task_definition.app_task.revision}")
-      launch_type         = "FARGATE"
-
-      network_configuration {
-        assign_public_ip = false
-        security_groups  = [aws_security_group.ecs_task_sg.id]
-        subnets          = data.aws_subnets.public_subnets.ids
-      }
-    }
-
-    retry_policy {
-      maximum_event_age_in_seconds = 300
-      maximum_retry_attempts       = 10
+    network_configuration {
+      subnets          = data.aws_subnets.public_subnets.ids
+      security_groups  = [aws_security_group.ecs_task_sg.id]
+      assign_public_ip = false
     }
   }
 }
 
-resource "aws_iam_role" "scheduler" {
-  name = "report-a-defect-cron-scheduler-role"
+resource "aws_iam_role" "eventbridge_invoke_ecs" {
+  name = "eventbridge-invoke-ecs-role-report-a-defect"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
+        Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          Service = ["scheduler.amazonaws.com"]
+          Service = "events.amazonaws.com"
         }
-        Action = "sts:AssumeRole"
       }
     ]
   })
 }
-resource "aws_iam_role_policy_attachment" "scheduler" {
-  policy_arn = aws_iam_policy.scheduler.arn
-  role       = aws_iam_role.scheduler.name
-}
-resource "aws_iam_policy" "scheduler" {
-  name = "cron-scheduler-policy"
+resource "aws_iam_role_policy" "eventbridge_ecs_policy" {
+  name = "eventbridge-invoke-ecs-policy-report-a-defect"
+  role = aws_iam_role.eventbridge_invoke_ecs.id
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        # allow scheduler to execute the task
-        Effect = "Allow",
-        Action = [
-          "ecs:RunTask"
-        ]
-        # trim :<revision> from arn, to point at the whole task definition and not just one revision
-        Resource = [trimsuffix(aws_ecs_task_definition.app_task.arn, ":${aws_ecs_task_definition.app_task.revision}")]
+        Effect   = "Allow"
+        Action   = ["ecs:RunTask"]
+        Resource = aws_ecs_task_definition.worker_task.arn
       },
-      { # allow scheduler to set the IAM roles of your task
-        Effect = "Allow",
-        Action = [
-          "iam:PassRole"
-        ]
-        Resource = [
-          aws_iam_role.ecs_execution_role.arn,
-          aws_iam_role.ecs_task_role.arn,
-        ]
-      },
+      {
+        Effect   = "Allow"
+        Action   = ["iam:PassRole"]
+        Resource = aws_iam_role.ecs_task_role.arn
+      }
     ]
   })
 }
