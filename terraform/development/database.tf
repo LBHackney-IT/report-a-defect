@@ -72,7 +72,7 @@ resource "aws_db_instance" "lbh-db" {
 resource "aws_elasticache_cluster" "lbh-redis" {
   cluster_id           = "report-a-defect-redis-${var.environment_name}"
   engine               = "redis"
-  engine_version       = "7.0.11"
+  engine_version       = "7.0"
   node_type            = "cache.t2.micro"
   num_cache_nodes      = 1
   port                 = var.redis_port
