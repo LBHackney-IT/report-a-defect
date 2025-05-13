@@ -253,6 +253,35 @@ resource "aws_ecs_service" "app_service" {
     container_port   = var.app_port
   }
 }
+# Task definitions
+locals {
+  container_definition_base = {
+    image     = "${aws_ecr_repository.app_repository.repository_url}:latest"
+    essential = true
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = aws_cloudwatch_log_group.report_a_defect.name
+        awslogs-region        = "eu-west-2"
+        awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
+      }
+    }
+    secrets = [
+      for secret_key, secret_value in data.aws_secretsmanager_secret.secrets :
+      {
+        name      = upper(replace(secret_key, "-", "_")) # Convert to uppercase and replace dashes with underscores
+        valueFrom = secret_value.arn
+      }
+    ]
+    environment = [
+      for param_key, param_value in data.aws_ssm_parameter.params :
+      {
+        name  = upper(param_key) # Convert to uppercase
+        value = param_value.value
+      }
+    ]
+  }
+}
 resource "aws_ecs_task_definition" "app_task" {
   depends_on               = [aws_cloudwatch_log_group.report_a_defect, aws_cloudwatch_log_group.report_a_defect_worker]
   family                   = "report-a-defect-app-container"
@@ -262,47 +291,17 @@ resource "aws_ecs_task_definition" "app_task" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
   memory                   = "512"
-
   container_definitions = jsonencode([
-    {
-      name      = "report-a-defect-app-container"
-      image     = "${aws_ecr_repository.app_repository.repository_url}:latest"
-      essential = true
-      portMappings = [
-        {
-          containerPort = var.app_port
-          protocol      = "tcp"
-        }
-      ]
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-group         = "${aws_cloudwatch_log_group.report_a_defect.name}"
-          awslogs-region        = "eu-west-2"
-          awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
-        }
+    merge(
+      local.container_definition_base,
+      {
+        name         = "report-a-defect-app-container"
+        portMappings = [{ containerPort = var.app_port, protocol = "tcp" }]
       }
-      # Dynamically set secrets and environment variables from SSM and Secrets Manager
-      secrets = [
-        for secret_key, secret_value in data.aws_secretsmanager_secret.secrets :
-        {
-          name      = upper(replace(secret_key, "-", "_")) # kebab to screaming_snake
-          valueFrom = secret_value.arn
-        }
-      ]
-
-      environment = [
-        for param_key, param_value in data.aws_ssm_parameter.params :
-        {
-          name  = upper(param_key) # snake to screaming_snake
-          value = param_value.value
-        }
-      ]
-    }
+    )
   ])
 }
 resource "aws_ecs_task_definition" "worker_task" {
-  # Task definition for the worker (uses the same container image)
   family                   = "report-a-defect-worker-task"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
@@ -310,7 +309,15 @@ resource "aws_ecs_task_definition" "worker_task" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
   memory                   = "512"
-  container_definitions    = aws_ecs_task_definition.app_task.container_definitions
+  container_definitions = jsonencode([
+    merge(
+      local.container_definition_base,
+      {
+        name    = "report-a-defect-worker-container",
+        command = ["bin/send_notifications.sh"]
+      }
+    )
+  ])
 }
 resource "aws_ecs_cluster" "app_cluster" {
   name = "report-a-defect-cluster"
