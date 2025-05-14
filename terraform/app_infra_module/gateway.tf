@@ -46,7 +46,7 @@ resource "aws_api_gateway_vpc_link" "this" {
 
 # API Gateway with VPC Link (connected to NLB)
 resource "aws_api_gateway_rest_api" "main" {
-  name = "development-report-a-defect"
+  name = "${var.environment_name}-report-a-defect"
 }
 resource "aws_api_gateway_resource" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id

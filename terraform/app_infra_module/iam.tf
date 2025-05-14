@@ -7,7 +7,7 @@ data "aws_kms_alias" "secretsmanager" {
 
 # Execution Role
 resource "aws_iam_role" "ecs_execution_role" {
-  name = "report-a-defect-execution-role"
+  name = "report-a-defect-ecs-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -21,7 +21,7 @@ resource "aws_iam_role" "ecs_execution_role" {
   })
 }
 resource "aws_iam_policy" "ecs_execution_policy" {
-  name        = "report-a-defect-execution-policy"
+  name        = "report-a-defect-ecs-execution-policy"
   description = "Scoped permissions for ECS task execution role"
 
   policy = jsonencode({
@@ -88,7 +88,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_attachment" {
 
 # Task Role
 resource "aws_iam_role" "ecs_task_role" {
-  name = "report-a-defect-task-role"
+  name = "report-a-defect-ecs-task-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -102,7 +102,7 @@ resource "aws_iam_role" "ecs_task_role" {
   })
 }
 resource "aws_iam_policy" "ecs_task_policy" {
-  name        = "report-a-defect-task-policy"
+  name        = "report-a-defect-ecs-task-policy"
   description = "Permissions for ECS task role"
 
   policy = jsonencode({

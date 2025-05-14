@@ -3,8 +3,9 @@
 
 # ECR
 resource "aws_ecr_repository" "app_repository" {
-  name                 = "report-a-defect-ecr-dev"
+  name                 = "report-a-defect-ecr-${var.environment_name}"
   image_tag_mutability = "MUTABLE"
+  force_delete         = true
 }
 resource "aws_ecr_repository_policy" "app_policy" {
   repository = aws_ecr_repository.app_repository.name
@@ -76,11 +77,11 @@ data "aws_ssm_parameter" "params" {
 
 # Logging
 resource "aws_cloudwatch_log_group" "report_a_defect" {
-  name              = "ecs-task-report-a-defect-app-${var.environment_name}"
+  name              = "/ecs/report-a-defect-app-task-${var.environment_name}"
   retention_in_days = 60
 }
 resource "aws_cloudwatch_log_group" "report_a_defect_worker" {
-  name              = "ecs-task-report-a-defect-worker-${var.environment_name}"
+  name              = "/ecs/report-a-defect-worker-task-${var.environment_name}"
   retention_in_days = 60
 }
 

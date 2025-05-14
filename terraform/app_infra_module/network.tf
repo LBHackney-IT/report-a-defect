@@ -37,7 +37,7 @@ data "aws_security_group" "bastion_sg" {
 
 # DB Subnet Groups
 resource "aws_db_subnet_group" "db_subnets" {
-  name       = "${local.database_name}-db-subnet"
+  name       = "report-a-defect-db-subnet"
   subnet_ids = data.aws_subnets.private_subnets.ids
 
   lifecycle {
@@ -45,7 +45,7 @@ resource "aws_db_subnet_group" "db_subnets" {
   }
 }
 resource "aws_elasticache_subnet_group" "redis_subnets" {
-  name       = "${local.database_name}-redis-subnet"
+  name       = "report-a-defect-redis-subnet"
   subnet_ids = data.aws_subnets.private_subnets.ids
 }
 
@@ -100,7 +100,7 @@ resource "aws_security_group_rule" "allow_bastion_to_redis" {
 
 # ECS Security Group
 resource "aws_security_group" "ecs_task_sg" {
-  name        = "report-a-defect-ecs-task-sg"
+  name        = "report-a-defect-ecs-sg"
   description = "Security group for report a defect ECS tasks"
   vpc_id      = data.aws_vpc.main_vpc.id
 }
