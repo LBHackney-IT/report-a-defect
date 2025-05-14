@@ -25,6 +25,10 @@ RUN mkdir -p $INSTALL_PATH
 COPY --from=dependencies ./deps/node_modules $INSTALL_PATH/node_modules
 COPY --from=dependencies ./deps/node_modules/govuk-frontend/assets $INSTALL_PATH/app/assets
 
+# Copy scheduled tasks script (used by worker container)
+COPY scheduled_tasks.sh $INSTALL_PATH/scheduled_tasks.sh
+RUN chmod +x $INSTALL_PATH/scheduled_tasks.sh
+
 WORKDIR $INSTALL_PATH
 
 # set rails environment
@@ -48,8 +52,6 @@ RUN \
   fi
 
 COPY . $INSTALL_PATH
-
-RUN chmod +x ./bin/send_notifications.sh
 
 RUN RAILS_ENV=production SECRET_KEY_BASE="secret" bin/rails DATABASE_URL=postgresql:does_not_exist assets:precompile DOMAIN_NAME=localhost:3000
 

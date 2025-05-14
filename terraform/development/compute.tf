@@ -117,7 +117,7 @@ resource "aws_ecs_task_definition" "worker_task" {
       local.container_definition_base,
       {
         name    = "report-a-defect-worker-container",
-        command = ["./bin/send_notifications.sh"]
+        command = ["scheduled_tasks.sh"]
       }
     )
   ])
