@@ -37,48 +37,37 @@ resource "aws_lb_listener" "lb_listener" {
   }
 }
 
-# VPC Link
+# API Gateway with VPC Link (connected to NLB)
 resource "aws_api_gateway_vpc_link" "this" {
   depends_on  = [aws_lb.nlb]
   name        = "vpc-link-report-a-defect-fe"
   target_arns = [aws_lb.nlb.arn]
 }
-
-# API Gateway with VPC Link (connected to NLB)
 resource "aws_api_gateway_rest_api" "main" {
   name = "${var.environment_name}-report-a-defect"
 }
-resource "aws_api_gateway_resource" "root" {
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
-  path_part   = "/"
-}
+
+# Add proxy to the root resource (allows root path access - otherwise it gives 403)
 resource "aws_api_gateway_method" "root" {
   rest_api_id      = aws_api_gateway_rest_api.main.id
-  resource_id      = aws_api_gateway_resource.main.id
+  resource_id      = aws_api_gateway_rest_api.main.root_resource_id
   http_method      = "ANY"
   authorization    = "NONE"
   api_key_required = false
-  request_parameters = {
-    "method.request.path.proxy"    = true
-    "method.request.header.Cookie" = true
-  }
 }
 resource "aws_api_gateway_integration" "root" {
-  depends_on  = [aws_lb.nlb, aws_api_gateway_vpc_link.this]
-  rest_api_id = aws_api_gateway_rest_api.main.id
-  resource_id = aws_api_gateway_resource.root.id
-  http_method = aws_api_gateway_method.root.http_method
-  request_parameters = {
-    "integration.request.path.proxy"    = "method.request.path.proxy"
-    "integration.request.header.Cookie" = "method.request.header.Cookie"
-  }
+  depends_on              = [aws_lb.nlb, aws_api_gateway_vpc_link.this]
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_rest_api.main.root_resource_id
+  http_method             = aws_api_gateway_method.root.http_method
   type                    = "HTTP_PROXY"
-  uri                     = "http://${aws_lb.nlb.dns_name}:${local.app_port}/{proxy}"
+  uri                     = "http://${aws_lb.nlb.dns_name}:${local.app_port}/"
   integration_http_method = "ANY"
   connection_type         = "VPC_LINK"
   connection_id           = aws_api_gateway_vpc_link.this.id
 }
+
+# Add proxy to the main resource
 resource "aws_api_gateway_resource" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_rest_api.main.root_resource_id
@@ -91,8 +80,7 @@ resource "aws_api_gateway_method" "main" {
   authorization    = "NONE"
   api_key_required = false
   request_parameters = {
-    "method.request.path.proxy"    = true
-    "method.request.header.Cookie" = true
+    "method.request.path.proxy" = true
   }
 }
 resource "aws_api_gateway_integration" "main" {
@@ -101,8 +89,7 @@ resource "aws_api_gateway_integration" "main" {
   resource_id = aws_api_gateway_resource.main.id
   http_method = aws_api_gateway_method.main.http_method
   request_parameters = {
-    "integration.request.path.proxy"    = "method.request.path.proxy"
-    "integration.request.header.Cookie" = "method.request.header.Cookie"
+    "integration.request.path.proxy" = "method.request.path.proxy"
   }
   type                    = "HTTP_PROXY"
   uri                     = "http://${aws_lb.nlb.dns_name}:${local.app_port}/{proxy}"
@@ -110,12 +97,17 @@ resource "aws_api_gateway_integration" "main" {
   connection_type         = "VPC_LINK"
   connection_id           = aws_api_gateway_vpc_link.this.id
 }
+
+# Deployment + Stage
 resource "aws_api_gateway_deployment" "main" {
   rest_api_id = aws_api_gateway_rest_api.main.id
-  depends_on  = [aws_api_gateway_integration.root, aws_api_gateway_integration.main]
+  depends_on = [
+    aws_api_gateway_integration.root,
+    aws_api_gateway_integration.main
+  ]
   variables = {
     # just to trigger redeploy on resource changes
-    resources = join(", ", [aws_api_gateway_resource.main.id, aws_api_gateway_resource.root.id, aws_api_gateway_resource.root.id])
+    resources = join(", ", [aws_api_gateway_resource.main.id, aws_api_gateway_rest_api.main.root_resource_id])
     # note: redeployment might be required with other gateway changes.
     # when necessary run `terraform taint <this resource's address>`
   }
@@ -124,7 +116,7 @@ resource "aws_api_gateway_deployment" "main" {
   }
 }
 resource "aws_api_gateway_stage" "main" {
-  depends_on    = [aws_api_gateway_deployment.main]
+  depends_on    = [aws_api_gateway_deployment.main, aws_cloudwatch_log_group.api_gateway_log_group]
   rest_api_id   = aws_api_gateway_rest_api.main.id
   stage_name    = var.environment_name
   deployment_id = aws_api_gateway_deployment.main.id
