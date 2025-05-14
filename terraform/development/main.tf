@@ -15,8 +15,40 @@ module "main" {
   environment_name_tag = "dev"
 }
 
-resource "aws_ecr_repository" "app_repository" {
-  name                 = "report-a-defect-ecr-dev"
-  image_tag_mutability = "MUTABLE"
-  force_delete         = true
+
+# Pass all outputs from the module to the root module
+
+output "ecr_repository_url" {
+  description = "value of the ECR repository URL"
+  value       = module.main.ecr_repository_url
+}
+
+output "cluster_name" {
+  description = "value of the ECS cluster name"
+  value       = module.main.cluster_name
+}
+
+output "service_name" {
+  description = "value of the ECS service name"
+  value       = module.main.service_name
+}
+
+output "task_definition_name" {
+  description = "value of the ECS task definition name"
+  value       = module.main.task_definition_name
+}
+
+output "container_name" {
+  description = "value of the ECS container name"
+  value       = module.main.container_name
+}
+
+output "subnet_ids" {
+  description = "value of the subnet IDs"
+  value       = module.main.subnet_ids
+}
+
+output "ecs_security_group_ids" {
+  description = "value of the ECS security group IDs"
+  value       = module.main.ecs_security_group_ids
 }
