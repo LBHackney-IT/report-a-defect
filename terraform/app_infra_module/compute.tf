@@ -119,7 +119,7 @@ resource "aws_ecs_task_definition" "worker_task" {
       local.container_definition_base,
       {
         name    = "report-a-defect-worker-container",
-        command = ["scheduled_tasks.sh"]
+        command = ["/srv/report-a-defect/scheduled_tasks.sh"]
       }
     )
   ])
