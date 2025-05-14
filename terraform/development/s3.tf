@@ -9,6 +9,7 @@ resource "aws_s3_bucket_policy" "image_bucket_policy" {
   policy = jsonencode({
     Version = "2012-10-17",
     Statement : [{
+      Sid    = "AllowEcsTaskReadWriteAccess",
       Effect = "Allow",
       Principal = {
         Service = "ecs-tasks.amazonaws.com"
@@ -19,8 +20,14 @@ resource "aws_s3_bucket_policy" "image_bucket_policy" {
         "s3:DeleteObject",
       ],
       Resource = "${aws_s3_bucket.image_bucket.arn}/*",
+      Condition = {
+        StringEquals = {
+          "AWS:SourceArn" = aws_ecs_task_definition.app_task_definition.arn
+        }
+      }
       },
       {
+        Sid    = "AllowCloudFrontReadOnlyAccess",
         Effect = "Allow",
         Principal = {
           Service = "cloudfront.amazonaws.com"
@@ -29,6 +36,11 @@ resource "aws_s3_bucket_policy" "image_bucket_policy" {
           "s3:GetObject",
         ],
         Resource = "${aws_s3_bucket.image_bucket.arn}/*",
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.app_distribution.arn
+          }
+        }
     }]
   })
 }

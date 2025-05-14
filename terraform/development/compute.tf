@@ -84,6 +84,7 @@ resource "aws_cloudwatch_log_group" "report_a_defect_worker" {
   retention_in_days = 60
 }
 
+# Tasks
 resource "aws_ecs_task_definition" "app_task" {
   depends_on               = [aws_cloudwatch_log_group.report_a_defect, aws_cloudwatch_log_group.report_a_defect_worker]
   family                   = "report-a-defect-app-container"
@@ -116,7 +117,7 @@ resource "aws_ecs_task_definition" "worker_task" {
       local.container_definition_base,
       {
         name    = "report-a-defect-worker-container",
-        command = ["bin/send_notifications.sh"]
+        command = ["./bin/send_notifications.sh"]
       }
     )
   ])
