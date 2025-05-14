@@ -1,7 +1,7 @@
 # Configures S3 buckets used by the application, used for images and other static assets.
 
 resource "aws_s3_bucket" "image_bucket" {
-  bucket = "report-a-defect-images-${local.environment_name}"
+  bucket = "report-a-defect-images-${var.environment_name}"
 }
 resource "aws_s3_bucket_policy" "image_bucket_policy" {
   bucket = aws_s3_bucket.image_bucket.id
@@ -22,7 +22,7 @@ resource "aws_s3_bucket_policy" "image_bucket_policy" {
       Resource = "${aws_s3_bucket.image_bucket.arn}/*",
       Condition = {
         StringEquals = {
-          "AWS:SourceArn" = aws_ecs_task_definition.app_task_definition.arn
+          "AWS:SourceArn" = aws_ecs_task_definition.app_task.arn
         }
       }
       },
@@ -55,7 +55,7 @@ resource "aws_s3_bucket_cors_configuration" "image_bucket_cors" {
   }
 }
 resource "aws_ssm_parameter" "bucket_name" {
-  name        = "/report-a-defect/${local.environment_name}/aws_bucket"
+  name        = "/report-a-defect/${var.environment_name}/aws_bucket"
   type        = "String"
   value       = aws_s3_bucket.image_bucket.bucket
   description = "S3 bucket name for report-a-defect images"

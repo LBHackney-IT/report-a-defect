@@ -1,11 +1,9 @@
 locals {
-  environment_name = "development"
-  database_name    = "reportadefect"
-  database_port    = 5432
-  database_url     = "postgres://${aws_secretsmanager_secret_version.db_username.secret_string}:${aws_secretsmanager_secret_version.db_password.secret_string}@${aws_db_instance.lbh-db.address}:${local.database_port}/${local.database_name}"
-  app_port         = 3000
-  vpc_name         = "housing-dev"
-  redis_port       = 6379
+  database_name = "reportadefect"
+  database_port = 5432
+  database_url  = "postgres://${aws_secretsmanager_secret_version.db_username.secret_string}:${aws_secretsmanager_secret_version.db_password.secret_string}@${aws_db_instance.lbh-db.address}:${local.database_port}/${local.database_name}"
+  app_port      = 3000
+  redis_port    = 6379
   secret_names = [
     "auth0-client-secret",
     "database-url",
@@ -43,7 +41,7 @@ locals {
       options = {
         awslogs-group         = aws_cloudwatch_log_group.report_a_defect.name
         awslogs-region        = "eu-west-2"
-        awslogs-stream-prefix = "report-a-defect-${local.environment_name}-logs"
+        awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
       }
     }
     secrets = [

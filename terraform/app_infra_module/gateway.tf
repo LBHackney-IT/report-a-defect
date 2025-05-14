@@ -7,12 +7,12 @@ resource "aws_lb" "nlb" {
   internal                   = true
   load_balancer_type         = "network"
   subnets                    = data.aws_subnets.private_subnets.ids
-  security_groups            = [aws_security_group.lb_sg.id, "sg-00d2e14f38245dd0b"]
+  security_groups            = [aws_security_group.lb_sg.id, var.lb_security_group_id]
   enable_deletion_protection = false
 }
 resource "aws_lb_target_group" "lb_target_group" {
   depends_on  = [aws_lb.nlb]
-  name        = "tg-report-a-defect-${local.environment_name}"
+  name        = "tg-report-a-defect-${var.environment_name}"
   port        = local.app_port
   protocol    = "TCP"
   vpc_id      = data.aws_vpc.main_vpc.id
@@ -95,6 +95,6 @@ resource "aws_api_gateway_deployment" "main" {
 resource "aws_api_gateway_stage" "main" {
   depends_on    = [aws_api_gateway_deployment.main]
   rest_api_id   = aws_api_gateway_rest_api.main.id
-  stage_name    = local.environment_name
+  stage_name    = var.environment_name
   deployment_id = aws_api_gateway_deployment.main.id
 }

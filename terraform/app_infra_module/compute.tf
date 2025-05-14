@@ -71,16 +71,16 @@ data "aws_ssm_parameter" "params" {
     aws_ssm_parameter.redis_url
   ]
   for_each = toset(local.ssm_params)
-  name     = "/report-a-defect/${local.environment_name}/${each.value}"
+  name     = "/report-a-defect/${var.environment_name}/${each.value}"
 }
 
 # Logging
 resource "aws_cloudwatch_log_group" "report_a_defect" {
-  name              = "ecs-task-report-a-defect-app-${local.environment_name}"
+  name              = "ecs-task-report-a-defect-app-${var.environment_name}"
   retention_in_days = 60
 }
 resource "aws_cloudwatch_log_group" "report_a_defect_worker" {
-  name              = "ecs-task-report-a-defect-worker-${local.environment_name}"
+  name              = "ecs-task-report-a-defect-worker-${var.environment_name}"
   retention_in_days = 60
 }
 

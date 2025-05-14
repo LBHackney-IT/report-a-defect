@@ -31,7 +31,7 @@ resource "aws_secretsmanager_secret_version" "database_url_version" {
 
 # Postgres DB Instance
 resource "aws_db_instance" "lbh-db" {
-  identifier                  = "report-a-defect-db-${local.environment_name}"
+  identifier                  = "report-a-defect-db-${var.environment_name}"
   engine                      = "postgres"
   engine_version              = "15.8"
   instance_class              = "db.t3.micro"
@@ -66,7 +66,7 @@ resource "aws_db_instance" "lbh-db" {
 
 # Redis Instance
 resource "aws_elasticache_cluster" "lbh-redis" {
-  cluster_id           = "report-a-defect-redis-${local.environment_name}"
+  cluster_id           = "report-a-defect-redis-${var.environment_name}"
   engine               = "redis"
   engine_version       = "7.0"
   node_type            = "cache.t2.micro"
@@ -77,7 +77,7 @@ resource "aws_elasticache_cluster" "lbh-redis" {
   subnet_group_name    = aws_elasticache_subnet_group.redis_subnets.name
 }
 resource "aws_ssm_parameter" "redis_url" {
-  name      = "/report-a-defect/${local.environment_name}/redis_url"
+  name      = "/report-a-defect/${var.environment_name}/redis_url"
   type      = "String"
   value     = "redis://${aws_elasticache_cluster.lbh-redis.cache_nodes.0.address}:${local.redis_port}"
   overwrite = true

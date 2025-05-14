@@ -43,7 +43,7 @@ resource "aws_cloudfront_distribution" "app_distribution" {
 }
 
 resource "aws_ssm_parameter" "app_domain_name" {
-  name        = "/report-a-defect/${local.environment_name}/domain_name"
+  name        = "/report-a-defect/${var.environment_name}/domain_name"
   description = "Domain name for the report a defect app"
   type        = "String"
   value       = aws_cloudfront_distribution.app_distribution.domain_name
