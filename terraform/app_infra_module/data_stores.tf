@@ -3,7 +3,7 @@
 
 # Postgres Credentials
 resource "aws_secretsmanager_secret" "db_username" {
-  name                    = "report-a-defect-db-username"
+  name                    = "report-a-defect-database-username"
   recovery_window_in_days = 0
 }
 resource "aws_secretsmanager_secret_version" "db_username" {
@@ -15,7 +15,7 @@ resource "random_password" "db_password" {
   special = false
 }
 resource "aws_secretsmanager_secret" "db_password" {
-  name                    = "report-a-defect-db-password"
+  name                    = "report-a-defect-database-password"
   recovery_window_in_days = 0
 }
 resource "aws_secretsmanager_secret_version" "db_password" {
