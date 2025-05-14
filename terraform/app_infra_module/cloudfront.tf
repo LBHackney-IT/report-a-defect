@@ -37,6 +37,7 @@ resource "aws_cloudfront_distribution" "app_distribution" {
     }
   }
 
+  price_class = "PriceClass_100" //only US, Canada and Europe
   viewer_certificate {
     cloudfront_default_certificate = true
   }
