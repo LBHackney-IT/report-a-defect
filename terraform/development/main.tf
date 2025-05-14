@@ -16,7 +16,7 @@ module "main" {
 }
 
 resource "aws_ecr_repository" "app_repository" {
-  name                 = "report-a-defect-ecr-development"
+  name                 = "report-a-defect-ecr-dev"
   image_tag_mutability = "MUTABLE"
   force_delete         = true
 }
