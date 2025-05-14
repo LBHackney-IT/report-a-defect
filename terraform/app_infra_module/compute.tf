@@ -87,7 +87,7 @@ resource "aws_cloudwatch_log_group" "report_a_defect_worker" {
 
 # Tasks
 resource "aws_ecs_task_definition" "app_task" {
-  depends_on               = [aws_cloudwatch_log_group.report_a_defect, aws_cloudwatch_log_group.report_a_defect_worker]
+  depends_on               = [aws_cloudwatch_log_group.report_a_defect]
   family                   = "report-a-defect-app-container"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
@@ -106,6 +106,7 @@ resource "aws_ecs_task_definition" "app_task" {
   ])
 }
 resource "aws_ecs_task_definition" "worker_task" {
+  depends_on               = [aws_cloudwatch_log_group.report_a_defect_worker]
   family                   = "report-a-defect-worker-task"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
