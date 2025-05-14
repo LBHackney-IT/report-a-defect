@@ -3,7 +3,7 @@
 
 # ECR
 resource "aws_ecr_repository" "app_repository" {
-  name                 = "report-a-defect-ecr-${var.environment_name}"
+  name                 = "report-a-defect-${var.environment_name}"
   image_tag_mutability = "MUTABLE"
   force_delete         = true
 }

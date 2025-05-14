@@ -3,7 +3,8 @@
 
 # Postgres Credentials
 resource "aws_secretsmanager_secret" "db_username" {
-  name = "report-a-defect-db-username"
+  name                    = "report-a-defect-db-username"
+  recovery_window_in_days = 0
 }
 resource "aws_secretsmanager_secret_version" "db_username" {
   secret_id     = aws_secretsmanager_secret.db_username.id
@@ -22,7 +23,8 @@ resource "aws_secretsmanager_secret_version" "db_password" {
   secret_string = random_password.db_password.result
 }
 resource "aws_secretsmanager_secret" "database_url" {
-  name = "report-a-defect-database-url"
+  name                    = "report-a-defect-database-url"
+  recovery_window_in_days = 0
 }
 resource "aws_secretsmanager_secret_version" "database_url_version" {
   secret_id     = aws_secretsmanager_secret.database_url.id
