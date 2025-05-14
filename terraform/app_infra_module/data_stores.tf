@@ -23,7 +23,7 @@ resource "aws_secretsmanager_secret_version" "db_password" {
   secret_string = random_password.db_password.result
 }
 resource "aws_secretsmanager_secret" "database_url" {
-  name                    = "report-a-defect-database-url"
+  name                    = "report-a-defect-database-url-string"
   recovery_window_in_days = 0
 }
 resource "aws_secretsmanager_secret_version" "database_url_version" {

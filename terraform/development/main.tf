@@ -14,3 +14,9 @@ module "main" {
   lb_security_group_id = "sg-00d2e14f38245dd0b"
   environment_name_tag = "dev"
 }
+
+resource "aws_ecr_repository" "app_repository" {
+  name                 = "report-a-defect-ecr-development"
+  image_tag_mutability = "MUTABLE"
+  force_delete         = true
+}

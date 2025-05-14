@@ -6,7 +6,7 @@ locals {
   redis_port    = 6379
   secret_names = [
     "auth0-client-secret",
-    "database-url",
+    "database-url-string",
     "notify-key",
     "papertrail-api-token",
     "secret-key-base"
