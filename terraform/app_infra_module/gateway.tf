@@ -116,7 +116,7 @@ resource "aws_api_gateway_deployment" "main" {
   }
 }
 resource "aws_api_gateway_stage" "main" {
-  depends_on    = [aws_api_gateway_deployment.main, aws_cloudwatch_log_group.api_gateway_log_group]
+  depends_on    = [aws_api_gateway_deployment.main]
   rest_api_id   = aws_api_gateway_rest_api.main.id
   stage_name    = var.environment_name
   deployment_id = aws_api_gateway_deployment.main.id
