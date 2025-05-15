@@ -41,7 +41,7 @@ resource "aws_ecs_service" "app_service" {
   name            = "report-a-defect-service"
   cluster         = aws_ecs_cluster.app_cluster.id
   task_definition = aws_ecs_task_definition.app_task.arn
-  desired_count   = 1
+  desired_count   = 2
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -77,11 +77,11 @@ data "aws_ssm_parameter" "params" {
 
 # Logging
 resource "aws_cloudwatch_log_group" "report_a_defect" {
-  name              = "/ecs/report-a-defect-app-task-${var.environment_name}"
+  name              = "/ecs/report-a-defect-app-${var.environment_name}"
   retention_in_days = 60
 }
 resource "aws_cloudwatch_log_group" "report_a_defect_worker" {
-  name              = "/ecs/report-a-defect-worker-task-${var.environment_name}"
+  name              = "/ecs/report-a-defect-worker-${var.environment_name}"
   retention_in_days = 60
 }
 
