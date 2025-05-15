@@ -126,7 +126,7 @@ resource "aws_ecs_task_definition" "worker_task" {
     merge(
       local.container_definition_base,
       {
-        name    = "report-a-defect-worker-container",
+        name    = "report-a-defect-worker-task",
         command = ["bundle", "exec", "rake", "notify:all_notifications"]
         logConfiguration = {
           logDriver = "awslogs"
