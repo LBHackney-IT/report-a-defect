@@ -91,7 +91,7 @@ data "aws_ssm_parameter" "params" {
 
 # App Task Definition
 resource "aws_cloudwatch_log_group" "app_logs" {
-  name              = "/ecs/report-a-defect-app-${var.environment_name}"
+  name              = "/ecs/${var.environment_name}/report-a-defect-app-logs"
   retention_in_days = 60
 }
 resource "aws_ecs_task_definition" "app_task" {
@@ -123,7 +123,7 @@ resource "aws_ecs_task_definition" "app_task" {
 
 # Worker Task Definition
 resource "aws_cloudwatch_log_group" "worker_logs" {
-  name              = "/ecs/report-a-defect-worker-${var.environment_name}"
+  name              = "/ecs/${var.environment_name}/report-a-defect-worker-logs"
   retention_in_days = 60
 }
 resource "aws_ecs_task_definition" "worker_task" {
