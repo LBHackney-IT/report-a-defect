@@ -1,11 +1,11 @@
 default_domains = {
   test: 'localhost:3000',
   development: 'localhost:3000',
-  staging: 'lbh-report-a-defect-staging.herokuapp.com',
-  production: 'lbh-report-a-defect-production.herokuapp.com',
+  staging: 'localhost:3000',
+  production: 'localhost:3000',
 }
 
-DOMAIN = ENV.fetch('DOMAIN') { default_domains[Rails.env.to_sym] }
+DOMAIN = ENV.fetch('DOMAIN_NAME') { default_domains[Rails.env.to_sym] }
 domain = URI(DOMAIN)
 protocol = Rails.application.config.force_ssl ? 'https' : 'http'
 
