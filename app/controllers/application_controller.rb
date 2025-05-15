@@ -6,8 +6,8 @@ class ApplicationController < ActionController::Base
   before_action :check_staging_auth, except: :check
 
   def default_url_options
-    if ENV['DOMAIN_NAME'].present?
-      { host: ENV['DOMAIN_NAME'] }
+    if ENV['DOMAIN'].present?
+      { host: ENV['DOMAIN'] }
     else
       {}
     end

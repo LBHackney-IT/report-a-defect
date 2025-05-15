@@ -5,7 +5,7 @@ default_domains = {
   production: 'localhost:3000',
 }
 
-DOMAIN = ENV.fetch('DOMAIN_NAME') { default_domains[Rails.env.to_sym] }
+DOMAIN = ENV.fetch('DOMAIN') { default_domains[Rails.env.to_sym] }
 domain = URI(DOMAIN)
 protocol = Rails.application.config.force_ssl ? 'https' : 'http'
 

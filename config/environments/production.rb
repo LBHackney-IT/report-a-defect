@@ -56,7 +56,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :debug 
+  config.log_level = :debug
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
@@ -106,8 +106,8 @@ OmniAuth.config.on_failure = proc { |env|
 }
 # rubocop:enable Layout/LineLength
 
-OmniAuth.config.full_host = "https://#{ENV['DOMAIN_NAME']}" if ENV['DOMAIN_NAME'].present?
-if ENV['DOMAIN_NAME'].present?
+OmniAuth.config.full_host = "https://#{ENV['DOMAIN']}" if ENV['DOMAIN'].present?
+if ENV['DOMAIN'].present?
   Rails.application.routes.default_url_options[:host] =
-    ENV['DOMAIN_NAME']
+    ENV['DOMAIN']
 end

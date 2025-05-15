@@ -38,13 +38,13 @@ module RequestARepair
 
     # Default host for mailers
     config.action_mailer.default_url_options = {
-      host: ENV['DOMAIN_NAME'], protocol: 'https'
+      host: ENV['DOMAIN'], protocol: 'https'
     }
     # Default host for controllers
     config.action_controller.default_url_options = {
-      host: ENV['DOMAIN_NAME'],
+      host: ENV['DOMAIN'],
     }
-    config.root_url = ENV['DOMAIN_NAME'] || 'http://localhost:3000'
+    config.root_url = ENV['DOMAIN'] || 'http://localhost:3000'
 
     config.active_record.yaml_column_permitted_classes = [Symbol,
                                                           ActiveSupport::HashWithIndifferentAccess]
