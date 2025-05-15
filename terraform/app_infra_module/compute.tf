@@ -88,7 +88,7 @@ resource "aws_cloudwatch_log_group" "report_a_defect_worker" {
 # Tasks
 resource "aws_ecs_task_definition" "app_task" {
   depends_on               = [aws_cloudwatch_log_group.report_a_defect]
-  family                   = "report-a-defect-app-container"
+  family                   = "report-a-defect-app"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
@@ -99,7 +99,7 @@ resource "aws_ecs_task_definition" "app_task" {
     merge(
       local.container_definition_base,
       {
-        name         = "report-a-defect-app-container"
+        name         = "report-a-defect-app"
         portMappings = [{ containerPort = local.app_port, protocol = "tcp" }]
         logConfiguration = {
           logDriver = "awslogs"
@@ -115,7 +115,7 @@ resource "aws_ecs_task_definition" "app_task" {
 }
 resource "aws_ecs_task_definition" "worker_task" {
   depends_on               = [aws_cloudwatch_log_group.report_a_defect_worker]
-  family                   = "report-a-defect-worker-task"
+  family                   = "report-a-defect-worker"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_task_role.arn
@@ -126,8 +126,8 @@ resource "aws_ecs_task_definition" "worker_task" {
     merge(
       local.container_definition_base,
       {
-        name    = "report-a-defect-worker-task",
-        command = ["bundle", "exec", "rake", "notify:all_notifications"]
+        name    = "report-a-defect-worker",
+        command = ["/bin/sh", "-c", "bundle exec sidekiq -C config/sidekiq.yml"],
         logConfiguration = {
           logDriver = "awslogs"
           options = {
