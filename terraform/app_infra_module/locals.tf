@@ -36,14 +36,6 @@ locals {
   container_definition_base = {
     image     = "${aws_ecr_repository.app_repository.repository_url}:latest"
     essential = true
-    logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-        awslogs-group         = aws_cloudwatch_log_group.report_a_defect.name
-        awslogs-region        = "eu-west-2"
-        awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
-      }
-    }
     secrets = [
       for secret_key, secret_value in data.aws_secretsmanager_secret.secrets :
       {

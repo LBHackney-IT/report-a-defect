@@ -101,6 +101,14 @@ resource "aws_ecs_task_definition" "app_task" {
       {
         name         = "report-a-defect-app-container"
         portMappings = [{ containerPort = local.app_port, protocol = "tcp" }]
+        logConfiguration = {
+          logDriver = "awslogs"
+          options = {
+            awslogs-group         = aws_cloudwatch_log_group.report_a_defect.name
+            awslogs-region        = "eu-west-2"
+            awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
+          }
+        }
       }
     )
   ])
@@ -120,6 +128,14 @@ resource "aws_ecs_task_definition" "worker_task" {
       {
         name    = "report-a-defect-worker-container",
         command = ["bundle", "exec", "rake", "notify:escalated_defects"]
+        logConfiguration = {
+          logDriver = "awslogs"
+          options = {
+            awslogs-group         = aws_cloudwatch_log_group.report_a_defect_worker.name
+            awslogs-region        = "eu-west-2"
+            awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
+          }
+        }
       }
     )
   ])
