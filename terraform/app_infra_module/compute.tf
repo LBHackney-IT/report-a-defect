@@ -114,6 +114,7 @@ resource "aws_ecs_task_definition" "app_task" {
           options = {
             awslogs-group         = aws_cloudwatch_log_group.app_logs.name
             awslogs-region        = "eu-west-2"
+            awslogs-stream-prefix = "ecs"
           }
         }
       }
@@ -146,6 +147,7 @@ resource "aws_ecs_task_definition" "worker_task" {
           options = {
             awslogs-group         = aws_cloudwatch_log_group.worker_logs.name
             awslogs-region        = "eu-west-2"
+            awslogs-stream-prefix = "ecs"
           }
         }
       }
