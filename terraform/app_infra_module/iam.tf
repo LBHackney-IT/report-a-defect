@@ -157,8 +157,8 @@ resource "aws_iam_role_policy" "eventbridge_ecs_policy" {
         Resource = aws_ecs_task_definition.worker_task.arn
       },
       {
-        Effect   = "Allow"
-        Action   = ["iam:PassRole"]
+        Effect = "Allow"
+        Action = ["iam:PassRole"]
         Resource = [
           aws_iam_role.ecs_task_role.arn,
           aws_iam_role.ecs_execution_role.arn

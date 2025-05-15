@@ -6,6 +6,7 @@ resource "aws_cloudwatch_event_rule" "worker_schedule" {
   description         = "Schedule to run the worker task for report-a-defect"
   schedule_expression = "cron(0 7 * * ? *)" # 7AM UTC daily
 }
+
 resource "aws_cloudwatch_event_target" "worker_target" {
   rule      = aws_cloudwatch_event_rule.worker_schedule.name
   target_id = "report-a-defect-worker-target"
@@ -13,6 +14,7 @@ resource "aws_cloudwatch_event_target" "worker_target" {
   role_arn  = aws_iam_role.eventbridge_invoke_ecs.arn
 
   ecs_target {
+    task_count          = 1
     task_definition_arn = aws_ecs_task_definition.worker_task.arn
     launch_type         = "FARGATE"
     platform_version    = "LATEST"
@@ -23,4 +25,13 @@ resource "aws_cloudwatch_event_target" "worker_target" {
       assign_public_ip = false
     }
   }
+
+  input = jsonencode({
+    containerOverrides = [
+      {
+        name    = "report-a-defect-worker",
+        command = ["bundle", "exec", "rake", "notify:all_notifications"]
+      }
+    ]
+  })
 }
