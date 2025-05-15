@@ -48,8 +48,6 @@ RUN \
   fi
 
 COPY . $INSTALL_PATH
-# Make scheduled_tasks.sh executable
-RUN chmod +x $INSTALL_PATH/scheduled_tasks.sh
 
 RUN RAILS_ENV=production SECRET_KEY_BASE="secret" bin/rails DATABASE_URL_STRING=postgresql:does_not_exist assets:precompile DOMAIN_NAME=localhost:3000
 
