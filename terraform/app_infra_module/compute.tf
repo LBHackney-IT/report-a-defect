@@ -33,15 +33,16 @@ resource "aws_ecr_repository_policy" "app_policy" {
   )
 }
 
-# Cluster & Service
+# Cluster & Two Services (App and Worker)
+# The app service is the main web app, while the worker service handles background jobs (sidekiq).
 resource "aws_ecs_cluster" "app_cluster" {
   name = "report-a-defect-cluster"
 }
 resource "aws_ecs_service" "app_service" {
-  name            = "report-a-defect-service"
+  name            = "report-a-defect-app-service"
   cluster         = aws_ecs_cluster.app_cluster.id
   task_definition = aws_ecs_task_definition.app_task.arn
-  desired_count   = 2
+  desired_count   = 1
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -54,6 +55,19 @@ resource "aws_ecs_service" "app_service" {
     target_group_arn = aws_lb_target_group.lb_target_group.arn
     container_name   = "report-a-defect-app"
     container_port   = local.app_port
+  }
+}
+resource "aws_ecs_service" "worker_service" {
+  name            = "report-a-defect-worker-service"
+  cluster         = aws_ecs_cluster.app_cluster.id
+  task_definition = aws_ecs_task_definition.worker_task.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = data.aws_subnets.public_subnets.ids
+    security_groups  = [aws_security_group.ecs_task_sg.id]
+    assign_public_ip = false
   }
 }
 
@@ -75,19 +89,13 @@ data "aws_ssm_parameter" "params" {
   name     = "/report-a-defect/${var.environment_name}/${each.value}"
 }
 
-# Logging
-resource "aws_cloudwatch_log_group" "report_a_defect" {
+# App Task Definition
+resource "aws_cloudwatch_log_group" "app_logs" {
   name              = "/ecs/report-a-defect-app-${var.environment_name}"
   retention_in_days = 60
 }
-resource "aws_cloudwatch_log_group" "report_a_defect_worker" {
-  name              = "/ecs/report-a-defect-worker-${var.environment_name}"
-  retention_in_days = 60
-}
-
-# Tasks
 resource "aws_ecs_task_definition" "app_task" {
-  depends_on               = [aws_cloudwatch_log_group.report_a_defect]
+  depends_on               = [aws_cloudwatch_log_group.app_logs]
   family                   = "report-a-defect-app"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
@@ -104,17 +112,22 @@ resource "aws_ecs_task_definition" "app_task" {
         logConfiguration = {
           logDriver = "awslogs"
           options = {
-            awslogs-group         = aws_cloudwatch_log_group.report_a_defect.name
+            awslogs-group         = aws_cloudwatch_log_group.app_logs.name
             awslogs-region        = "eu-west-2"
-            awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
           }
         }
       }
     )
   ])
 }
+
+# Worker Task Definition
+resource "aws_cloudwatch_log_group" "worker_logs" {
+  name              = "/ecs/report-a-defect-worker-${var.environment_name}"
+  retention_in_days = 60
+}
 resource "aws_ecs_task_definition" "worker_task" {
-  depends_on               = [aws_cloudwatch_log_group.report_a_defect_worker]
+  depends_on               = [aws_cloudwatch_log_group.worker_logs]
   family                   = "report-a-defect-worker"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
@@ -131,9 +144,8 @@ resource "aws_ecs_task_definition" "worker_task" {
         logConfiguration = {
           logDriver = "awslogs"
           options = {
-            awslogs-group         = aws_cloudwatch_log_group.report_a_defect_worker.name
+            awslogs-group         = aws_cloudwatch_log_group.worker_logs.name
             awslogs-region        = "eu-west-2"
-            awslogs-stream-prefix = "report-a-defect-${var.environment_name}-logs"
           }
         }
       }

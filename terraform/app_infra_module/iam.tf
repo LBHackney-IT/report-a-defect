@@ -53,10 +53,10 @@ resource "aws_iam_policy" "ecs_execution_policy" {
           "logs:PutLogEvents"
         ],
         Resource : [
-          aws_cloudwatch_log_group.report_a_defect.arn,
-          "${aws_cloudwatch_log_group.report_a_defect.arn}:log-stream:*",
-          aws_cloudwatch_log_group.report_a_defect_worker.arn,
-          "${aws_cloudwatch_log_group.report_a_defect_worker.arn}:log-stream:*"
+          aws_cloudwatch_log_group.app_logs.arn,
+          "${aws_cloudwatch_log_group.app_logs.arn}:log-stream:*",
+          aws_cloudwatch_log_group.worker_logs.arn,
+          "${aws_cloudwatch_log_group.worker_logs.arn}:log-stream:*"
         ]
       },
       {

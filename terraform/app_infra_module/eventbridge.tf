@@ -4,7 +4,7 @@
 resource "aws_cloudwatch_event_rule" "worker_schedule" {
   name                = "report-a-defect-worker-schedule"
   description         = "Schedule to run the worker task for report-a-defect"
-  schedule_expression = "rate(5 minutes)" # 7AM UTC daily
+  schedule_expression = "cron(0 7 * * ? *)" # 7AM UTC daily
 }
 resource "aws_cloudwatch_event_target" "worker_target" {
   rule      = aws_cloudwatch_event_rule.worker_schedule.name
