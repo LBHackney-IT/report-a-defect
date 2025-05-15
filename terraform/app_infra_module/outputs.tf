@@ -13,14 +13,14 @@ output "service_name" {
   value       = aws_ecs_service.app_service.name
 }
 
-output "task_definition_name" {
-  description = "value of the ECS task definition name"
-  value       = aws_ecs_task_definition.app_task.family
+output "worker_task_definition_name" {
+  description = "value of the ECS task definition name for the worker"
+  value       = aws_ecs_task_definition.worker_task.family
 }
 
-output "container_name" {
-  description = "value of the ECS container name"
-  value       = aws_ecs_task_definition.app_task.family
+output "worker_container_name" {
+  description = "value of the ECS container name for the worker"
+  value       = aws_ecs_task_definition.worker_task.family
 }
 
 output "subnet_ids" {

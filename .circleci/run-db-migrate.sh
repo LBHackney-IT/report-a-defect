@@ -3,8 +3,8 @@ set -euo pipefail
 
 # Required ENV vars
 : "${CLUSTER_NAME:?Need to set CLUSTER_NAME}"
-: "${TASK_DEFINITION_NAME:?Need to set TASK_DEFINITION_NAME}"
-: "${CONTAINER_NAME:?Need to set CONTAINER_NAME}"
+: "${WORKER_TASK_DEFINITION_NAME:?Need to set WORKER_TASK_DEFINITION_NAME}"
+: "${WORKER_CONTAINER_NAME:?Need to set WORKER_CONTAINER_NAME}"
 : "${SUBNET_IDS:?Need to set SUBNET_IDS}"
 : "${SECURITY_GROUP_IDS:?Need to set SECURITY_GROUP_IDS}"
 
@@ -22,7 +22,7 @@ NETWORK_CONFIG=$(jq -n \
 
 # Format overrides
 OVERRIDES=$(jq -n \
-  --arg name "$CONTAINER_NAME" \
+  --arg name "$WORKER_CONTAINER_NAME" \
   '{
     containerOverrides: [
       {
@@ -37,6 +37,6 @@ OVERRIDES=$(jq -n \
 aws ecs run-task \
   --cluster "$CLUSTER_NAME" \
   --launch-type FARGATE \
-  --task-definition "$TASK_DEFINITION_NAME" \
+  --task-definition "$WORKER_TASK_DEFINITION_NAME" \
   --network-configuration "$NETWORK_CONFIG" \
   --overrides "$OVERRIDES"

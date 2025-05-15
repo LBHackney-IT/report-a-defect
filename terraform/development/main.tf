@@ -33,14 +33,14 @@ output "service_name" {
   value       = module.main.service_name
 }
 
-output "task_definition_name" {
-  description = "value of the ECS task definition name"
-  value       = module.main.task_definition_name
+output "worker_task_definition_name" {
+  description = "value of the ECS task definition name for the worker"
+  value       = module.main.worker_task_definition_name
 }
 
-output "container_name" {
-  description = "value of the ECS container name"
-  value       = module.main.container_name
+output "worker_container_name" {
+  description = "value of the ECS container name for the worker"
+  value       = module.main.worker_container_name
 }
 
 output "subnet_ids" {
