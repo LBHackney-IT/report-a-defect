@@ -14,7 +14,7 @@ class Staff::EvidencesController < Staff::BaseController
     if @evidence.valid?
       @evidence.save
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'evidence')
-      redirect_to defect_url_for(defect: @defect)
+      redirect_to defect_path_for(defect: @defect)
     else
       render :new
     end

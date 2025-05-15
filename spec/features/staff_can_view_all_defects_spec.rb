@@ -9,7 +9,7 @@ RSpec.feature 'Staff can view all defects' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
-    visit dashboard_url
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -24,7 +24,7 @@ RSpec.feature 'Staff can view all defects' do
       expect(page).to have_content(property_defect.trade)
       expect(page).to have_content(property_defect.target_completion_date)
       expect(page).to have_link(
-        href: property_defect_url(property_defect.property, property_defect)
+        href: property_defect_path(property_defect.property, property_defect)
       )
       expect(page).to have_content(communal_defect.reference_number)
       expect(page).to have_content(communal_defect.title)
@@ -36,7 +36,7 @@ RSpec.feature 'Staff can view all defects' do
       expect(page).to have_content(communal_defect.trade)
       expect(page).to have_content(communal_defect.target_completion_date)
       expect(page).to have_link(
-        href: communal_area_defect_url(communal_defect.communal_area, communal_defect)
+        href: communal_area_defect_path(communal_defect.communal_area, communal_defect)
       )
     end
   end
@@ -45,7 +45,7 @@ RSpec.feature 'Staff can view all defects' do
     _open_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     closed_defect = DefectPresenter.new(create(:property_defect, :completed))
 
-    visit dashboard_url
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -65,7 +65,7 @@ RSpec.feature 'Staff can view all defects' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
-    visit dashboard_url
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -84,7 +84,7 @@ RSpec.feature 'Staff can view all defects' do
     property_defect = DefectPresenter.new(create(:property_defect, status: :outstanding))
     communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
 
-    visit dashboard_url
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -105,7 +105,7 @@ RSpec.feature 'Staff can view all defects' do
     open_communal_defect = DefectPresenter.new(create(:communal_defect, status: :outstanding))
     closed_communal_defect = DefectPresenter.new(create(:communal_defect, status: :closed))
 
-    visit dashboard_url
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -144,7 +144,7 @@ RSpec.feature 'Staff can view all defects' do
       create(:communal_defect, communal_area: distracting_communal_area, status: :outstanding)
     )
 
-    visit dashboard_url
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -166,7 +166,7 @@ RSpec.feature 'Staff can view all defects' do
     flagged_defect = DefectPresenter.new(create(:property_defect, flagged: true))
     unflagged_defect = DefectPresenter.new(create(:property_defect, flagged: false))
 
-    visit dashboard_url
+    visit dashboard_path
 
     click_on('View all defects')
 
@@ -187,7 +187,7 @@ RSpec.feature 'Staff can view all defects' do
       on_time_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 29), status: :outstanding)
       overdue_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 20), status: :outstanding)
 
-      visit dashboard_url
+      visit dashboard_path
 
       click_on('View all defects')
 
@@ -209,7 +209,7 @@ RSpec.feature 'Staff can view all defects' do
       on_time_defect = create(:property_defect, target_completion_date: Date.new(2019, 12, 5), status: :outstanding)
       due_soon_defect = create(:property_defect, target_completion_date: Date.new(2019, 11, 27), status: :outstanding)
 
-      visit dashboard_url
+      visit dashboard_path
 
       click_on('View all defects')
 

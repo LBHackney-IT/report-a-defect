@@ -15,7 +15,7 @@ class Staff::CommentsController < Staff::BaseController
     if @comment.valid?
       @comment.save
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'comment')
-      redirect_to defect_url_for(defect: @defect)
+      redirect_to defect_path_for(defect: @defect)
     else
       render :new
     end

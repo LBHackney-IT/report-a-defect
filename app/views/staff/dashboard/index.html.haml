@@ -9,7 +9,7 @@
     %p.govuk-body-s
       = I18n.t('page_content.dashboard.description.find_defect')
 
-    = form_tag search_url, method: :get, class: 'search' do |f|
+    = form_tag search_path, method: :get, class: 'search' do |f|
       .govuk-form-group
         = label_tag 'query', 'Reference number, address or communal area name', class: 'govuk-label'
         = search_field_tag :query, @search.query, class: 'govuk-input form-control form-control-communal_area govuk-!-width-three-quarters', placeholder: '1 Hackney Street or Clift House'
@@ -22,7 +22,7 @@
     %p.govuk-body-s
       = I18n.t('page_content.dashboard.description.defect_overview')
 
-    = form_tag defects_url, method: :get do
+    = form_tag defects_path, method: :get do
       = hidden_field_tag 'statuses[]', 'Open'
       = hidden_field_tag 'types[]', 'Property'
       = hidden_field_tag 'types[]', 'Communal'
@@ -34,7 +34,7 @@
 
     %h3.govuk-heading-m
       = I18n.t('page_content.dashboard.header.reporting')
-    = link_to(I18n.t('button.report.download_all'), report_url(format: :csv), class: 'govuk-button govuk-button--secondary mb0')
+    = link_to(I18n.t('button.report.download_all'), report_path(format: :csv), class: 'govuk-button govuk-button--secondary mb0')
 
     %table.govuk-table.scheme-reports
       %thead.govuk-table__head
@@ -47,8 +47,8 @@
         - Scheme.all.each do |scheme|
           %tr.govuk-table__row
             %td.govuk-table__cell= scheme.name
-            %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), report_scheme_url(scheme), class: 'govuk-link')
-    = link_to(I18n.t('button.report.view_combined'), report_url, class: 'govuk-button')
+            %td.govuk-table__cell= link_to(I18n.t('generic.link.show'), report_scheme_path(scheme), class: 'govuk-link')
+    = link_to(I18n.t('button.report.view_combined'), report_path, class: 'govuk-button')
 
   .govuk-grid-column-one-third
     %h2.govuk-heading-m

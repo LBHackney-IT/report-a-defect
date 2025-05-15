@@ -9,7 +9,7 @@ RSpec.feature 'Staff can flag a communal defect' do
     let(:defect) { create(:communal_defect, flagged: false) }
 
     before do
-      visit communal_area_defect_url(defect.communal_area, defect)
+      visit communal_area_defect_path(defect.communal_area, defect)
       click_button I18n.t('button.flag.add')
     end
 
@@ -26,7 +26,7 @@ RSpec.feature 'Staff can flag a communal defect' do
     end
 
     it 'shows the flag in the list of defects' do
-      visit defects_url
+      visit defects_path
 
       within('table.defects tbody th:first-child') do
         expect(page).to have_content('Flagged')
@@ -38,7 +38,7 @@ RSpec.feature 'Staff can flag a communal defect' do
     let(:defect) { create(:communal_defect, flagged: true) }
 
     before do
-      visit communal_area_defect_url(defect.communal_area, defect)
+      visit communal_area_defect_path(defect.communal_area, defect)
       click_button I18n.t('button.flag.remove')
     end
 
@@ -55,7 +55,7 @@ RSpec.feature 'Staff can flag a communal defect' do
     end
 
     it 'does not show a flag in the list of defects' do
-      visit defects_url
+      visit defects_path
 
       within('table.defects tbody th:first-child') do
         expect(page).not_to have_content('Flagged')

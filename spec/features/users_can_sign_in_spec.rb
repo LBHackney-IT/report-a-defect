@@ -2,7 +2,7 @@ RSpec.feature 'Users can sign in with auth0' do
   scenario 'successful sign in' do
     mock_successful_authentication
 
-    visit dashboard_url
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.welcome'))
 
@@ -10,14 +10,14 @@ RSpec.feature 'Users can sign in with auth0' do
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
-    expect(page).to have_link(I18n.t('generic.link.sign_out'), href: sign_out_url)
+    expect(page).to have_link(I18n.t('generic.link.sign_out'), href: sign_out_path)
   end
 
   scenario 'protected pages cannot be visited unless signed in' do
-    visit dashboard_url
+    visit dashboard_path
     expect(page).to have_content(I18n.t('page_title.welcome'))
 
-    visit defects_url
+    visit defects_path
     expect(page).to have_content(I18n.t('page_title.welcome'))
   end
 end

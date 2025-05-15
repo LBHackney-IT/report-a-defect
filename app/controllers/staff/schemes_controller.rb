@@ -13,7 +13,7 @@ class Staff::SchemesController < Staff::BaseController
     if @scheme.valid?
       @scheme.save
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'scheme')
-      redirect_to estate_url(@estate)
+      redirect_to estate_path(@estate)
     else
       render :new
     end
@@ -35,7 +35,7 @@ class Staff::SchemesController < Staff::BaseController
     if @scheme.valid?
       @scheme.save
       flash[:success] = I18n.t('generic.notice.update.success', resource: 'scheme')
-      redirect_to estate_scheme_url(@scheme.estate, @scheme)
+      redirect_to estate_scheme_path(@scheme.estate, @scheme)
     else
       render :edit
     end

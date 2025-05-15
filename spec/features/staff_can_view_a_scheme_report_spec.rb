@@ -17,7 +17,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
     create_list(:property_defect, property_defects_count, property: property, priority: priority)
     create_list(:communal_defect, communal_defects_count, communal_area: communal_area, priority: priority)
 
-    visit dashboard_url
+    visit dashboard_path
 
     within('.scheme-reports') do
       click_on(I18n.t('generic.link.show'))
@@ -43,7 +43,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
     closed_property_defects = create_list(:property_defect, 3, property: property, status: :closed)
     closed_communal_defects = create_list(:communal_defect, 4, communal_area: communal_area, status: :closed)
 
-    visit report_scheme_url(scheme)
+    visit report_scheme_path(scheme)
 
     within('.statuses') do
       %w[Name Property Communal Total].each do |header|
@@ -71,7 +71,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
     plumbing_property_defects = create_list(:property_defect, 3, property: property, trade: 'Plumbing')
     plumbing_communal_defects = create_list(:communal_defect, 4, communal_area: communal_area, trade: 'Plumbing')
 
-    visit report_scheme_url(scheme)
+    visit report_scheme_path(scheme)
 
     within('.trades') do
       %w[Name Percentage Total].each do |header|
@@ -118,7 +118,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
                                status: :outstanding,
                                target_completion_date: Date.new(2019, 5, 22))
 
-    visit report_scheme_url(scheme)
+    visit report_scheme_path(scheme)
 
     within('.priorities') do
       [
@@ -184,7 +184,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
                                                         status: :completed,
                                                         target_completion_date: Date.new(2019, 5, 24))
 
-    visit report_scheme_url(scheme)
+    visit report_scheme_path(scheme)
 
     within('.priorities') do
       expect(page).to have_content(
@@ -204,7 +204,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
     create(:communal_defect, added_at: Time.utc(2019, 5, 24), communal_area: communal_area)
     create(:property_defect, added_at: Time.utc(2019, 5, 25), property: property)
 
-    visit report_scheme_url(scheme)
+    visit report_scheme_path(scheme)
 
     within('.summary') do
       expect(page).to have_content('Total defects 3 1 4')

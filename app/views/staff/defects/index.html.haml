@@ -1,5 +1,5 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.defects.index')
-= link_to 'Back', dashboard_url, class: 'govuk-back-link'
+= link_to 'Back', dashboard_path, class: 'govuk-back-link'
 
 .govuk-grid-row
   .govuk-grid-column-full
@@ -12,7 +12,7 @@
     .govuk-grid-column-one-quarter
       %h2.govuk-heading-m Filter by
 
-      = form_tag defects_url, class: 'filter-defects', method: :get do
+      = form_tag defects_path, class: 'filter-defects', method: :get do
         .govuk-form-group
           %fieldset.govuk-fieldset.lbh-fieldset
             = label_tag 'statuses', 'Status', class: 'govuk-label govuk-!-font-weight-bold'
@@ -78,7 +78,7 @@
           - @defects.each do |defect|
             %tr.govuk-table__row
               %th.govuk-table__header.lbh-table-cell{scope:'row'}
-                %a{href: defect_url_for(defect: defect), arialabeledby: 'Click the link to get to defects full details page', class: ''}
+                %a{href: defect_path_for(defect: defect), arialabeledby: 'Click the link to get to defects full details page', class: ''}
 
                   %span.cell-defect-ref
                     %span.visually-hidden

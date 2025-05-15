@@ -10,7 +10,7 @@ RSpec.feature 'Staff can update a communal_area' do
   scenario 'a communal_area can be udpated' do
     create(:communal_area, scheme: scheme)
 
-    visit estate_scheme_url(scheme.estate, scheme)
+    visit estate_scheme_path(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
@@ -28,7 +28,7 @@ RSpec.feature 'Staff can update a communal_area' do
   scenario 'an invalid communal_area cannot be updated' do
     create(:communal_area, scheme: scheme)
 
-    visit estate_scheme_url(scheme.estate, scheme)
+    visit estate_scheme_path(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 

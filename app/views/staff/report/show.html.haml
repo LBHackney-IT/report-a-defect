@@ -2,7 +2,7 @@
 
 .govuk-breadcrumbs
   %ol.govuk-breadcrumbs__list
-    = breadcrumb_link_to('Home', dashboard_url)
+    = breadcrumb_link_to('Home', dashboard_path)
 
 .govuk-grid-row
   .govuk-grid-column-full
@@ -11,7 +11,7 @@
       %span.govuk-caption-l= @presenter.scheme.contractor_name
       %span.govuk-caption-l= @presenter.date_range
 
-    = form_tag report_scheme_url(scheme: @presenter.scheme.id), class: 'date-filter', method: :get do
+    = form_tag report_scheme_path(scheme: @presenter.scheme.id), class: 'date-filter', method: :get do
       %h2.govuk-heading-m From
       = render partial: 'shared/defects/date_fields', locals: { name: 'from_date', date: @report_form.from_date }
       %h2.govuk-heading-m To

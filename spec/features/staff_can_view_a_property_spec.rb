@@ -8,7 +8,7 @@ RSpec.feature 'Staff can view a property' do
   scenario 'a property can be found and viewed' do
     property = create(:property, address: '1 Hackney Street')
 
-    visit dashboard_url
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -39,17 +39,17 @@ RSpec.feature 'Staff can view a property' do
   scenario 'can use breadcrumbs to navigate' do
     property = create(:property)
 
-    visit property_url(property)
+    visit property_path(property)
 
     within('.govuk-breadcrumbs') do
       expect(page).to have_link('Home', href: '/dashboard')
       expect(page).to have_link(
         I18n.t('page_title.staff.estates.show', name: property.scheme.estate.name),
-        href: estate_url(property.scheme.estate)
+        href: estate_path(property.scheme.estate)
       )
       expect(page).to have_link(
         I18n.t('page_title.staff.schemes.show', name: property.scheme.name),
-        href: estate_scheme_url(property.scheme.estate, property.scheme)
+        href: estate_scheme_path(property.scheme.estate, property.scheme)
       )
     end
   end

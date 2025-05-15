@@ -10,7 +10,7 @@ RSpec.feature 'Staff can create a priority for a scheme' do
   scenario 'a scheme priority can be viewed' do
     priority = create(:priority, scheme: scheme)
 
-    visit estate_scheme_url(scheme.estate, scheme)
+    visit estate_scheme_path(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
@@ -21,7 +21,7 @@ RSpec.feature 'Staff can create a priority for a scheme' do
   end
 
   scenario 'a scheme priority can be created' do
-    visit estate_scheme_url(scheme.estate, scheme)
+    visit estate_scheme_path(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
@@ -43,7 +43,7 @@ RSpec.feature 'Staff can create a priority for a scheme' do
   end
 
   scenario 'an invalid priority cannot be submitted' do
-    visit new_estate_scheme_priority_url(scheme.estate, scheme)
+    visit new_estate_scheme_priority_path(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.priorities.create'))
 

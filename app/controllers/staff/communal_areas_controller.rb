@@ -16,7 +16,7 @@ class Staff::CommunalAreasController < Staff::BaseController
     if @communal_area.valid?
       @communal_area.save
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'Communal Area')
-      redirect_to estate_scheme_url(@scheme.estate, @scheme)
+      redirect_to estate_scheme_path(@scheme.estate, @scheme)
     else
       render :new
     end
@@ -35,7 +35,7 @@ class Staff::CommunalAreasController < Staff::BaseController
     if @communal_area.valid?
       @communal_area.save
       flash[:success] = I18n.t('generic.notice.update.success', resource: 'Communal Area')
-      redirect_to estate_scheme_url(@scheme.estate, @scheme)
+      redirect_to estate_scheme_path(@scheme.estate, @scheme)
     else
       render :edit
     end

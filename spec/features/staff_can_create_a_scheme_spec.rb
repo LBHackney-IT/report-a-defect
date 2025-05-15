@@ -8,7 +8,7 @@ RSpec.feature 'Staff can create a scheme' do
   let!(:estate) { create(:estate) }
 
   scenario 'a scheme can be created' do
-    visit estate_url(estate)
+    visit estate_path(estate)
 
     expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name))
 
@@ -50,7 +50,7 @@ RSpec.feature 'Staff can create a scheme' do
   end
 
   scenario 'an invalid scheme cannot be submitted' do
-    visit estate_url(estate)
+    visit estate_path(estate)
 
     expect(page).to have_content(I18n.t('page_title.staff.estates.show', name: estate.name))
 

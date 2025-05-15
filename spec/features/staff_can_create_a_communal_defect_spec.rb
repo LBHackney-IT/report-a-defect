@@ -9,7 +9,7 @@ RSpec.feature 'Staff can create a defect for a communal_area', :carrierwave do
     communal_area = create(:communal_area, name: 'Chipping')
     priority = create(:priority, scheme: communal_area.scheme, name: 'P1', days: 1)
 
-    visit dashboard_url
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -78,7 +78,7 @@ RSpec.feature 'Staff can create a defect for a communal_area', :carrierwave do
   scenario 'an invalid defect cannot be submitted' do
     communal_area = create(:communal_area)
 
-    visit communal_area_url(communal_area)
+    visit communal_area_path(communal_area)
 
     click_on(I18n.t('button.create.communal_defect'))
 
@@ -105,11 +105,11 @@ RSpec.feature 'Staff can create a defect for a communal_area', :carrierwave do
     communal_defect = create(:communal_defect)
 
     # Skip a manual defect creation when it's not the part under test
-    visit communal_area_url(communal_defect.communal_area)
+    visit communal_area_path(communal_defect.communal_area)
 
     expect(page).to have_link(
       I18n.t('button.create.property_defect'),
-      href: estate_scheme_url(communal_defect.scheme.estate, communal_defect.scheme, anchor: 'properties')
+      href: estate_scheme_path(communal_defect.scheme.estate, communal_defect.scheme, anchor: 'properties')
     )
     click_on(I18n.t('button.create.property_defect'))
 
@@ -119,7 +119,7 @@ RSpec.feature 'Staff can create a defect for a communal_area', :carrierwave do
   scenario 'any status can be given' do
     communal_area = create(:communal_area)
 
-    visit communal_area_url(communal_area)
+    visit communal_area_path(communal_area)
 
     click_on(I18n.t('button.create.communal_defect'))
 

@@ -10,7 +10,7 @@ RSpec.feature 'Staff can find a property' do
     interested_property = create(:property, scheme: scheme, address: '1 Hackney Street')
     uninterested_property = create(:property, scheme: scheme, address: '60 London Road')
 
-    visit dashboard_url
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -26,7 +26,7 @@ RSpec.feature 'Staff can find a property' do
   end
 
   scenario 'can navigate back to make another search' do
-    visit dashboard_url
+    visit dashboard_path
 
     within('form.search') do
       fill_in 'query', with: 'Hackney'

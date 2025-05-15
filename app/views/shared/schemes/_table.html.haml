@@ -12,4 +12,4 @@
       %tr.govuk-table__row
         %td.govuk-table__cell= scheme.name
         %td.govuk-table__cell= scheme.contractor_name
-        %td.govuk-table__cell= link_to I18n.t('generic.link.show'), estate_scheme_url(scheme.estate, scheme), class: 'govuk-link'
+        %td.govuk-table__cell= link_to I18n.t('generic.link.show'), estate_scheme_path(scheme.estate, scheme), class: 'govuk-link'

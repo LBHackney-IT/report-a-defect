@@ -6,7 +6,7 @@ RSpec.feature 'Staff can create a estate' do
   end
 
   scenario 'a estate can be created' do
-    visit dashboard_url
+    visit dashboard_path
 
     expect(page).to have_content(I18n.t('page_title.staff.dashboard'))
 
@@ -25,7 +25,7 @@ RSpec.feature 'Staff can create a estate' do
   end
 
   scenario 'an invalid estate cannot be submitted' do
-    visit dashboard_url
+    visit dashboard_path
 
     click_on(I18n.t('button.create.estate'))
 

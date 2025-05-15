@@ -12,7 +12,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
   scenario 'a defect can be updated' do
     new_priority = create(:priority, scheme: communal_area.scheme, days: 999)
 
-    visit communal_area_defect_url(defect.communal_area, defect)
+    visit communal_area_defect_path(defect.communal_area, defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
 
@@ -55,7 +55,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
   end
 
   scenario 'any defect status can be chosen' do
-    visit edit_communal_area_defect_url(defect.communal_area, defect)
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     expected_statues = %w[outstanding completed closed raised_in_error follow_on end_of_year referral rejected dispute]
 
@@ -71,7 +71,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
   end
 
   scenario 'an invalid defect cannot be updated' do
-    visit communal_area_defect_url(defect.communal_area, defect)
+    visit communal_area_defect_path(defect.communal_area, defect)
 
     expect(page).to have_content(I18n.t('page_title.staff.defects.show', reference_number: defect.reference_number))
 
@@ -94,7 +94,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
   end
 
   scenario 'setting the target completion date' do
-    visit edit_communal_area_defect_url(defect.communal_area, defect)
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     within('form.edit_defect') do
       fill_in 'target_completion_date_day', with: '31'
@@ -108,7 +108,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
   end
 
   scenario 'updating the priority is optional' do
-    visit edit_communal_area_defect_url(defect.communal_area, defect)
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     within('.existing-priority-information') do
       expect(page).to have_content('Priority status')
@@ -128,7 +128,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
   scenario 'completing a defect and providing the actual completion date' do
     defect = create(:communal_defect, communal_area: communal_area, status: :outstanding)
 
-    visit edit_communal_area_defect_url(defect.communal_area, defect)
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     expect(NotifyDefectCompletedJob).to receive(:perform_later).with(defect.id)
 
@@ -153,7 +153,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
   scenario 'updating the actual completion date' do
     defect = create(:communal_defect, :completed, communal_area: communal_area)
 
-    visit edit_communal_area_defect_url(defect.communal_area, defect)
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     within('form.edit_defect') do
       fill_in 'actual_completion_date_day', with: '29'
@@ -169,7 +169,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
   scenario 'adding an actual completion date after completion' do
     defect = create(:communal_defect, :completed, communal_area: communal_area, actual_completion_date: nil)
 
-    visit edit_communal_area_defect_url(defect.communal_area, defect)
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     within('form.edit_defect') do
       fill_in 'actual_completion_date_day', with: '29'
@@ -185,7 +185,7 @@ RSpec.feature 'Staff can update a communal_area defect' do
   scenario 'attempting to update the actual completion date before completion' do
     defect = create(:communal_defect, communal_area: communal_area, status: :outstanding)
 
-    visit edit_communal_area_defect_url(defect.communal_area, defect)
+    visit edit_communal_area_defect_path(defect.communal_area, defect)
 
     within('form.edit_defect') do
       expect(page).to_not have_field 'actual_completion_date[day]'

@@ -10,7 +10,7 @@ RSpec.feature 'Staff can update a property' do
   scenario 'a property can be udpated' do
     create(:property, scheme: scheme)
 
-    visit estate_scheme_url(scheme.estate, scheme)
+    visit estate_scheme_path(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 
@@ -31,7 +31,7 @@ RSpec.feature 'Staff can update a property' do
   scenario 'an invalid property cannot be updated' do
     create(:property, scheme: scheme)
 
-    visit estate_scheme_url(scheme.estate, scheme)
+    visit estate_scheme_path(scheme.estate, scheme)
 
     expect(page).to have_content(I18n.t('page_title.staff.schemes.show', name: scheme.name))
 

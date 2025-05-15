@@ -11,16 +11,16 @@ module DefectHelper
     format_status(option_array.first)
   end
 
-  def view_url_for(parent:, defect:)
-    return property_defect_url(parent, defect) if parent.is_a?(Property)
-    communal_area_defect_url(parent, defect) if parent.is_a?(CommunalArea)
+  def view_path_for(parent:, defect:)
+    return property_defect_path(parent, defect) if parent.is_a?(Property)
+    communal_area_defect_path(parent, defect) if parent.is_a?(CommunalArea)
   end
 
-  def defect_url_for(defect:)
+  def defect_path_for(defect:)
     if defect.communal?
-      communal_area_defect_url(defect.communal_area, defect.id)
+      communal_area_defect_path(defect.communal_area, defect.id)
     else
-      property_defect_url(defect.property, defect.id)
+      property_defect_path(defect.property, defect.id)
     end
   end
 

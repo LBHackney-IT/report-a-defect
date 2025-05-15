@@ -2,9 +2,9 @@
 
 .govuk-breadcrumbs
   %ol.govuk-breadcrumbs__list
-    = breadcrumb_link_to('Home', dashboard_url)
-    = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @communal_area.scheme.estate.name), estate_url(@communal_area.scheme.estate))
-    = breadcrumb_link_to(I18n.t('page_title.staff.schemes.show', name: @communal_area.scheme.name), estate_scheme_url(@communal_area.scheme.estate, @communal_area.scheme))
+    = breadcrumb_link_to('Home', dashboard_path)
+    = breadcrumb_link_to(I18n.t('page_title.staff.estates.show', name: @communal_area.scheme.estate.name), estate_path(@communal_area.scheme.estate))
+    = breadcrumb_link_to(I18n.t('page_title.staff.schemes.show', name: @communal_area.scheme.name), estate_scheme_path(@communal_area.scheme.estate, @communal_area.scheme))
     = breadcrumb_current(I18n.t('page_title.staff.communal_areas.show', name: @communal_area.name))
 
 .govuk-grid-row
@@ -26,8 +26,8 @@
       = I18n.t('page_content.defect.communal_area.table.header')
 
   .govuk-grid-column-full
-    = link_to(I18n.t('button.create.communal_defect'), new_communal_area_defect_url(@communal_area), class: 'govuk-button mb0')
-    = link_to(I18n.t('button.create.property_defect'), estate_scheme_url(@communal_area.scheme.estate, @communal_area.scheme, anchor: 'properties'), class: 'govuk-button govuk-button--secondary mb0')
+    = link_to(I18n.t('button.create.communal_defect'), new_communal_area_defect_path(@communal_area), class: 'govuk-button mb0')
+    = link_to(I18n.t('button.create.property_defect'), estate_scheme_path(@communal_area.scheme.estate, @communal_area.scheme, anchor: 'properties'), class: 'govuk-button govuk-button--secondary mb0')
 
   .govuk-grid-column-full
     = render partial: '/shared/defects/table', locals: { scheme: @communal_area.scheme, defects: @communal_area.defects, parent: @communal_area }

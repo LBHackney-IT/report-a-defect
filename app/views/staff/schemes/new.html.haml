@@ -1,6 +1,6 @@
 - content_for :page_title_prefix, I18n.t('page_title.staff.schemes.create')
 
-= link_to "Back to #{I18n.t('page_title.staff.estates.show', name: @estate.name)}", estate_url(@estate), class: 'govuk-back-link'
+= link_to "Back to #{I18n.t('page_title.staff.estates.show', name: @estate.name)}", estate_path(@estate), class: 'govuk-back-link'
 
 
 

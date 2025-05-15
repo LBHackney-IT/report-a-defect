@@ -29,7 +29,7 @@ module AuthHelpers
   def stub_authenticated_session(name: 'Alex')
     mock_successful_authentication(name: name)
 
-    visit dashboard_url
+    visit dashboard_path
 
     click_on(I18n.t('generic.button.sign_in'))
   end

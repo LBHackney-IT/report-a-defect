@@ -5,7 +5,7 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
     it 'shows a confirmation page' do
       defect = create(:property_defect)
 
-      visit defect_accept_url(defect.token)
+      visit defect_accept_path(defect.token)
 
       expect(page).to have_content(I18n.t('page_title.contractor.defects.accepted.title'))
     end
@@ -15,7 +15,7 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
 
       defect = create(:property_defect)
 
-      visit defect_accept_url(defect.token)
+      visit defect_accept_path(defect.token)
 
       result = PublicActivity::Activity.find_by(
         trackable_id: defect.id,
@@ -36,13 +36,13 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
         .to receive(:perform_later)
         .with(defect.id)
 
-      visit defect_accept_url(defect.token)
+      visit defect_accept_path(defect.token)
     end
   end
 
   context 'with an incorrect token' do
     it 'returns a custom unprocessable_entity error' do
-      visit defect_accept_url('an-unknown-token')
+      visit defect_accept_path('an-unknown-token')
       expect(page.status_code).to eq(422)
       expect(page).to have_content(I18n.t('page_title.contractor.defects.unprocessable_entity.body'))
     end
@@ -57,7 +57,7 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
 
       travel_to Time.zone.parse('2019-04-02')
 
-      visit defect_accept_url(token)
+      visit defect_accept_path(token)
       expect(page.status_code).to eq(422)
       expect(page).to have_content(I18n.t('page_title.contractor.defects.unprocessable_entity.body'))
 
@@ -69,13 +69,13 @@ RSpec.feature 'Contractor can accept the receipt of a defect' do
     it 'does not store an accept event' do
       defect = create(:property_defect)
 
-      visit defect_accept_url(defect.token)
+      visit defect_accept_path(defect.token)
 
       expect(page).to have_content(I18n.t('page_title.contractor.defects.accepted.title'))
       expect(PublicActivity::Activity.where(key: 'defect.accepted').count).to eq(1)
 
       # Visit again
-      visit defect_accept_url(defect.token)
+      visit defect_accept_path(defect.token)
 
       expect(page).to have_content(I18n.t('page_title.contractor.defects.unprocessable_entity.body'))
       expect(PublicActivity::Activity.where(key: 'defect.accepted').count).to eq(1)

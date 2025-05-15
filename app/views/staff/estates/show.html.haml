@@ -2,13 +2,13 @@
 
 .govuk-breadcrumbs
   %ol.govuk-breadcrumbs__list
-    = breadcrumb_link_to('Home', dashboard_url)
+    = breadcrumb_link_to('Home', dashboard_path)
     = breadcrumb_current(I18n.t('page_title.staff.estates.show', name: @estate.name))
 
 .govuk-grid-row
   .govuk-grid-column-two-thirds
     %h1.govuk-heading-l= I18n.t('page_title.staff.estates.show', name: @estate.name)
-    = link_to(I18n.t('button.create.scheme'), new_estate_scheme_url(@estate), class: 'govuk-button mb0')
+    = link_to(I18n.t('button.create.scheme'), new_estate_scheme_path(@estate), class: 'govuk-button mb0')
 
 
     %h2.govuk-heading-m.section-heading
