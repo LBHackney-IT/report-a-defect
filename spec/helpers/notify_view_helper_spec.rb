@@ -18,7 +18,7 @@ RSpec.describe NotifyViewHelper, type: :helper do
   describe '#accept_defect_ownership_link' do
     it 'returns a capitalized string' do
       result = helper.accept_defect_ownership_link('foo')
-      expect(result).to eql("[#{I18n.t('email.defect.forward.accept.link')}](http://test.host/defects/foo/accept)")
+      expect(result).to eql("[#{I18n.t('email.defect.forward.accept.link')}](http://localhost/defects/foo/accept)")
     end
   end
 end

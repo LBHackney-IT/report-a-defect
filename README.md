@@ -69,10 +69,11 @@ This application supports branch based deployments.
   the `master` branch and push
 
 [Circle CI](https://app.circleci.com/pipelines/github/LBHackney-IT/report-a-defect)
-will automatically deploy this to Heroku.
+will automatically deploy this to AWS.
 
 ## Access
 
+TODO: UPDATE 
 ### Staging
 
 <https://lbh-report-a-defect-staging.herokuapp.com/>

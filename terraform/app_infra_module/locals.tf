@@ -30,7 +30,7 @@ locals {
     "rails_serve_static_files",
     "redis_url",
     "sms_blacklist",
-    "domain_name",
+    "domain",
     "oauth_debug"
   ]
   container_definition_base = {
