@@ -218,10 +218,11 @@ workflows:
                 - master
       - assume-role-production:
           context: api-assume-role-housing-production-context
+          requires:
+            - build-and-test
       - terraform-init-then-apply-production:
           requires:
             - assume-role-production
       - deploy:
           requires:
-            - build-and-test
             - terraform-init-then-apply-production
