@@ -101,32 +101,33 @@ resource "aws_iam_role" "ecs_task_role" {
     }]
   })
 }
-resource "aws_iam_policy" "ecs_task_policy" {
-  name        = "report-a-defect-ecs-task-policy"
-  description = "Permissions for ECS task role"
+# Policy for ECS Task Role - Allows access to S3 bucket (not currently used - see s3.tf)
+# resource "aws_iam_policy" "ecs_task_policy" {
+#   name        = "report-a-defect-ecs-task-policy"
+#   description = "Permissions for ECS task role"
 
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement : [
-      {
-        Effect : "Allow",
-        Action : [
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:DeleteObject",
-        ],
-        Resource : [
-          aws_s3_bucket.image_bucket.arn,
-          "${aws_s3_bucket.image_bucket.arn}/*"
-        ]
-      }
-    ]
-  })
-}
-resource "aws_iam_role_policy_attachment" "ecs_task_attachment" {
-  role       = aws_iam_role.ecs_task_role.name
-  policy_arn = aws_iam_policy.ecs_task_policy.arn
-}
+#   policy = jsonencode({
+#     Version = "2012-10-17",
+#     Statement : [
+#       {
+#         Effect : "Allow",
+#         Action : [
+#           "s3:GetObject",
+#           "s3:PutObject",
+#           "s3:DeleteObject",
+#         ],
+#         Resource : [
+#           aws_s3_bucket.image_bucket.arn,
+#           "${aws_s3_bucket.image_bucket.arn}/*"
+#         ]
+#       }
+#     ]
+#   })
+# }
+# resource "aws_iam_role_policy_attachment" "ecs_task_attachment" {
+#   role       = aws_iam_role.ecs_task_role.name
+#   policy_arn = aws_iam_policy.ecs_task_policy.arn
+# }
 
 # EventBridge Role
 resource "aws_iam_role" "eventbridge_invoke_ecs" {

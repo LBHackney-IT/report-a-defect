@@ -81,7 +81,6 @@ data "aws_secretsmanager_secret" "secrets" {
 }
 data "aws_ssm_parameter" "params" {
   depends_on = [
-    aws_ssm_parameter.bucket_name,
     aws_ssm_parameter.app_domain_name,
     aws_ssm_parameter.redis_url
   ]
