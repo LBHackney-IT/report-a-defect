@@ -1,8 +1,8 @@
 default_domains = {
   test: 'localhost:3000',
   development: 'localhost:3000',
-  staging: 'lbh-report-a-defect-staging.herokuapp.com',
-  production: 'lbh-report-a-defect-production.herokuapp.com',
+  staging: 'd2snsyd9d1jklu.cloudfront.net',
+  production: 'lbh-report-a-defect.hackney.gov.uk',
 }
 
 DOMAIN = ENV.fetch('DOMAIN') { default_domains[Rails.env.to_sym] }

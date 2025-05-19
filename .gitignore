@@ -86,3 +86,7 @@ pickle-email-*.html
 
 /node_modules
 docker-compose.env
+
+# Terraform files
+**/.terraform/*
+.terraform.lock.hcl

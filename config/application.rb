@@ -35,7 +35,16 @@ module RequestARepair
     config.action_mailer.notify_settings = {
       api_key: ENV['NOTIFY_KEY'],
     }
-    config.action_mailer.default_url_options = { protocol: 'https' }
+
+    # Default host for mailers
+    config.action_mailer.default_url_options = {
+      host: ENV['DOMAIN'], protocol: 'https'
+    }
+    # Default host for controllers
+    config.action_controller.default_url_options = {
+      host: ENV['DOMAIN'],
+    }
+    config.root_url = ENV['DOMAIN'] || 'http://localhost:3000'
 
     config.active_record.yaml_column_permitted_classes = [Symbol,
                                                           ActiveSupport::HashWithIndifferentAccess]

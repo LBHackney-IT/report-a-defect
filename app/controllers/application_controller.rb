@@ -1,9 +1,17 @@
 class ApplicationController < ActionController::Base
   include Logout
   include PublicActivity::StoreController
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
 
   before_action :check_staging_auth, except: :check
+
+  def default_url_options
+    if ENV['DOMAIN'].present?
+      { host: ENV['DOMAIN'] }
+    else
+      {}
+    end
+  end
 
   def check
     render json: { status: 'OK' }, status: :ok

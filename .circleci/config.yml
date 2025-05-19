@@ -1,6 +1,77 @@
-version: 2
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@3.0.0
+  aws-cli: circleci/aws-cli@0.1.9
+  aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
+
+executors:
+  docker-python:
+    docker:
+      - image: circleci/python:3.8
+  docker-terraform:
+    docker:
+      - image: hashicorp/terraform:1.5.7
+
+references:
+  workspace_root: &workspace_root "~"
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+commands:
+  assume-role-and-persist-workspace:
+    description: "Assumes deployment role and persists credentials across jobs"
+    parameters:
+      aws-account:
+        type: string
+    steps:
+      - checkout
+      - aws_assume_role/assume_role:
+          account: <<parameters.aws-account>>
+          profile_name: default
+          role: "LBH_Circle_CI_Deployment_Role"
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          name: get and init
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+      - run:
+          name: apply
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -auto-approve
+
+            echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
+            echo "export CLUSTER_NAME=$(terraform output -raw cluster_name)" >> $BASH_ENV
+            echo "export SERVICE_NAME=$(terraform output -raw service_name)" >> $BASH_ENV
+            echo "export WORKER_TASK_DEFINITION_NAME=$(terraform output -raw worker_task_definition_name)" >> $BASH_ENV
+            echo "export WORKER_CONTAINER_NAME=$(terraform output -raw worker_container_name)" >> $BASH_ENV
+            echo "export SUBNET_IDS=$(terraform output -json subnet_ids)" >> $BASH_ENV
+            echo "export SECURITY_GROUP_IDS=$(terraform output -raw ecs_security_group_ids)" >> $BASH_ENV
+            
+            cp $BASH_ENV ~/bash.env
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+            - bash.env
+
 jobs:
-  build_and_test:
+  build-and-test:
     working_directory: ~/report_a_defect
     docker:
       - image: cimg/base:2025.04
@@ -25,8 +96,92 @@ jobs:
       - save_cache:
           key: docker-images-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - /tmp/report-a-defect
             - /tmp/built-image.tar
+            - /tmp/report-a-defect
+  assume-role-development:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+  assume-role-staging:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_STAGING
+  assume-role-production:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_PRODUCTION
+
+  terraform-init-then-apply-development:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "development"
+  terraform-init-then-apply-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "staging"
+  terraform-init-then-apply-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
+
+  deploy-development:
+    working_directory: ~/report_a_defect
+    docker:
+      - image: cimg/base:2025.04
+    steps:
+      - *attach_workspace
+      - restore_cache:
+          keys:
+            - docker-images-{{ .Environment.CIRCLE_SHA1 }}
+      - setup_remote_docker
+      - run:
+          name: Install Python
+          command: |
+            sudo apt update
+            sudo apt install software-properties-common
+            sudo add-apt-repository --yes ppa:deadsnakes/ppa
+            sudo apt install python3-pip
+      - run:
+          name: Install AWS CLI
+          command: pip3 install awscli --upgrade --user
+      - run:
+          name: Load environment variables
+          command: |
+            cat ~/bash.env >> $BASH_ENV
+      - run:
+          name: Login to ECR
+          command: |
+            export AWS_REGION=eu-west-2
+            export AWS_ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
+            docker login -u AWS -p $(aws ecr get-login-password --region eu-west-2) $AWS_ACCOUNT.dkr.ecr.eu-west-2.amazonaws.com
+      - run:
+          name: Tag new image for development release
+          command: |
+            docker image load --input /tmp/built-image.tar
+            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:$CIRCLE_SHA1
+            docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:latest
+      - run:
+          name: Release new image to ECR
+          command: |
+            docker push $ECR_REPO_URL:$CIRCLE_SHA1
+            docker push $ECR_REPO_URL:latest
+      - run:
+          name: Migrate the database
+          command: |
+            cd /tmp/report-a-defect
+            chmod +x .circleci/run-db-migrate.sh
+            .circleci/run-db-migrate.sh
+
+      - run:
+          name: Force new deployment of the ECS service
+          command: |
+            aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --force-new-deployment --region eu-west-2
 
   deploy_staging:
     working_directory: ~/report_a_defect
@@ -84,19 +239,48 @@ jobs:
 
 workflows:
   version: 2
+  check:
+    jobs:
+      - build-and-test:
+          filters:
+            branches:
+              ignore:
+                - develop
+                - master
+  check-and-deploy-development:
+    jobs:
+      - build-and-test
+          # filters:
+          #   branches:
+          #     only:
+          #       - develop
+      - assume-role-development:
+          context: api-assume-role-housing-development-context
+      - terraform-init-then-apply-development:
+          requires:
+            - assume-role-development
+      - deploy-development:
+          requires:
+            - build-and-test
+            - terraform-init-then-apply-development
   continuous_delivery:
     jobs:
-      - build_and_test
+      - build-and-test:
+          filters:
+            branches:
+              only:
+                - develop
+                - master
       - deploy_staging:
           requires:
-            - build_and_test
+            - build-and-test
           filters:
             branches:
               only:
                 - develop
       - deploy_production:
           requires:
-            - build_and_test
+            - build-and-test
           filters:
             branches:
               only:
