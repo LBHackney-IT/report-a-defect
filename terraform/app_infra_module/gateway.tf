@@ -111,6 +111,9 @@ resource "aws_api_gateway_deployment" "main" {
     # note: redeployment might be required with other gateway changes.
     # when necessary run `terraform taint <this resource's address>`
   }
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 resource "aws_api_gateway_stage" "main" {
   depends_on    = [aws_api_gateway_deployment.main, aws_cloudwatch_log_group.this]
