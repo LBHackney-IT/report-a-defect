@@ -13,6 +13,11 @@ variable "lb_security_group_id" {
   type        = string
 }
 
+variable "bastion_sg_id" {
+  description = "The security group ID for the bastion host"
+  type        = string
+}
+
 variable "environment_name_tag" {
   description = "The environment name for tagging resources (not the same as environment_name)"
   type        = string

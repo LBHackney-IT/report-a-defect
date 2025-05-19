@@ -27,13 +27,6 @@ data "aws_subnets" "public_subnets" {
     values = ["public"]
   }
 }
-data "aws_security_group" "bastion_sg" {
-  filter {
-    name   = "group-name"
-    values = ["PlatformAPIsBastionSecurityGroup"]
-  }
-}
-
 
 # DB Subnet Groups
 resource "aws_db_subnet_group" "db_subnets" {
@@ -76,7 +69,7 @@ resource "aws_security_group_rule" "allow_bastion_to_rds" {
   to_port                  = local.database_port
   protocol                 = "tcp"
   security_group_id        = aws_security_group.db_security_group.id
-  source_security_group_id = data.aws_security_group.bastion_sg.id
+  source_security_group_id = var.bastion_sg_id
   description              = "Allow Bastion access to RDS (Postgres)"
 }
 resource "aws_security_group_rule" "allow_ecs_to_redis" {
@@ -94,7 +87,7 @@ resource "aws_security_group_rule" "allow_bastion_to_redis" {
   to_port                  = local.redis_port
   protocol                 = "tcp"
   security_group_id        = aws_security_group.db_security_group.id
-  source_security_group_id = data.aws_security_group.bastion_sg.id
+  source_security_group_id = var.bastion_sg_id
   description              = "Allow Bastion access to Redis"
 }
 
@@ -137,7 +130,7 @@ resource "aws_security_group_rule" "allow_bastion_to_ecs" {
   to_port                  = local.app_port
   protocol                 = "tcp"
   security_group_id        = aws_security_group.ecs_task_sg.id
-  source_security_group_id = data.aws_security_group.bastion_sg.id
+  source_security_group_id = var.bastion_sg_id
   description              = "Allow Bastion access to ECS tasks"
 }
 

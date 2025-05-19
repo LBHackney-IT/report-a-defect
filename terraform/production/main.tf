@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket  = "terraform-state-housing-development"
+    bucket  = "terraform-state-housing-production"
     encrypt = true
     region  = "eu-west-2"
     key     = "services/lbh-report-a-defect/state"
@@ -9,11 +9,11 @@ terraform {
 
 module "main" {
   source               = "../app_infra_module"
-  environment_name     = "development"
-  vpc_name             = "housing-dev"
-  lb_security_group_id = "sg-00d2e14f38245dd0b"
-  bastion_sg_id        = "sg-07fc77dda64f4b948"
-  environment_name_tag = "dev"
+  environment_name     = "production"
+  vpc_name             = "housing-prod"
+  lb_security_group_id = "sg-01396d0029aa1c950"
+  bastion_sg_id        = "sg-080ea6ec2415dea47"
+  environment_name_tag = "prod"
 }
 
 
