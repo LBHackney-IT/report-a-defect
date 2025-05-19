@@ -9,7 +9,9 @@ locals {
     "database-url-string",
     "notify-key",
     "papertrail-api-token",
-    "secret-key-base"
+    "secret-key-base",
+    "aws-access-key-id",
+    "aws-secret-access-key",
   ]
   ssm_params = [
     "auth0_client_id",
