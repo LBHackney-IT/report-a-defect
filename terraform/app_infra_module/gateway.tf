@@ -44,7 +44,7 @@ resource "aws_api_gateway_vpc_link" "this" {
   target_arns = [aws_lb.nlb.arn]
 }
 resource "aws_api_gateway_rest_api" "main" {
-  name = "${var.environment_name}-report-a-defect"
+  name = "report-a-defect-${var.environment_name}"
 }
 
 # Add proxy to the root resource (allows root path access - otherwise it gives 403)
