@@ -56,6 +56,11 @@ resource "aws_ecs_service" "app_service" {
     container_name   = "report-a-defect-app"
     container_port   = local.app_port
   }
+
+  tags = {
+    WeekendShutdown    = "true"
+    OutOfHoursShutdown = "true"
+  }
 }
 resource "aws_ecs_service" "worker_service" {
   name            = "report-a-defect-worker-service"
@@ -68,6 +73,11 @@ resource "aws_ecs_service" "worker_service" {
     subnets          = data.aws_subnets.public_subnets.ids
     security_groups  = [aws_security_group.ecs_task_sg.id]
     assign_public_ip = false
+  }
+
+  tags = {
+    WeekendShutdown    = "true"
+    OutOfHoursShutdown = "true"
   }
 }
 

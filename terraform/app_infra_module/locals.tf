@@ -6,18 +6,18 @@ locals {
   redis_port    = 6379
   secret_names = [
     "auth0-client-secret",
-    "database-url-string",
-    "notify-key",
-    "papertrail-api-token",
-    "secret-key-base",
     "aws-access-key-id",
     "aws-secret-access-key",
+    "database-url-string",
+    "notify-key",
+    "secret-key-base",
   ]
   ssm_params = [
     "auth0_client_id",
     "auth0_domain",
     "aws_bucket",
     "aws_region",
+    "domain",
     "lang",
     "nbt_group_email",
     "notify_daily_due_soon_template",
@@ -32,8 +32,6 @@ locals {
     "rails_serve_static_files",
     "redis_url",
     "sms_blacklist",
-    "domain",
-    "oauth_debug"
   ]
   container_definition_base = {
     image     = "${aws_ecr_repository.app_repository.repository_url}:latest"

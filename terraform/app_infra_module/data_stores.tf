@@ -64,6 +64,9 @@ resource "aws_db_instance" "lbh-db" {
   deletion_protection   = false
   skip_final_snapshot   = true
   copy_tags_to_snapshot = false
+  tags = {
+    Confidentiality = "Internal"
+  }
 }
 
 # Redis Instance
