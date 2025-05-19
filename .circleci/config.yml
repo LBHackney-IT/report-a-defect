@@ -195,11 +195,11 @@ workflows:
                 - master
   check-and-deploy-development:
     jobs:
-      - build-and-test
-          # filters:
-          #   branches:
-          #     only:
-          #       - develop
+      - build-and-test:
+          filters:
+            branches:
+              only:
+                - develop
       - assume-role-development:
           context: api-assume-role-housing-development-context
       - terraform-init-then-apply-development:
