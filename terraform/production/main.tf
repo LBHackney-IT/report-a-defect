@@ -14,9 +14,11 @@ module "main" {
   lb_security_group_id = "sg-01396d0029aa1c950"
   bastion_sg_id        = "sg-080ea6ec2415dea47"
   environment_name_tag = "prod"
+  
+  use_cloudfront_cert  = true
+
   # TODO: Uncomment once the DNS record is created & SSL certificate is issued
   # cname_aliases        = ["https://lbh-report-a-defect.hackney.gov.uk.com"]
-  # use_cloudfront_cert  = false
   # hackney_cert_arn     = ""
 }
 

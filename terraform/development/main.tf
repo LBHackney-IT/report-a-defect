@@ -14,6 +14,7 @@ module "main" {
   lb_security_group_id = "sg-00d2e14f38245dd0b"
   bastion_sg_id        = "sg-07fc77dda64f4b948"
   environment_name_tag = "dev"
+  use_cloudfront_cert  = true
 }
 
 

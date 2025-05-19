@@ -40,7 +40,7 @@ resource "aws_cloudfront_distribution" "app_distribution" {
   price_class = "PriceClass_100" //only US, Canada and Europe
 
   dynamic "viewer_certificate" {
-    for_each = var.use_cloudfront_cert ? [] : [1] //if false, use certicate arn
+    for_each = var.use_cloudfront_cert ? [] : [1] //if false, use certificate arn
     content {
       acm_certificate_arn      = var.hackney_cert_arn
       minimum_protocol_version = "TLSv1.2_2018"
