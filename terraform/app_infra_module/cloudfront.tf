@@ -13,7 +13,7 @@ resource "aws_cloudfront_distribution" "app_distribution" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
-  aliases         = []
+  aliases         = var.cname_aliases
   enabled         = true
   is_ipv6_enabled = true
   comment         = "Distribution for report a defect front end"
@@ -38,8 +38,20 @@ resource "aws_cloudfront_distribution" "app_distribution" {
   }
 
   price_class = "PriceClass_100" //only US, Canada and Europe
-  viewer_certificate {
-    cloudfront_default_certificate = true
+
+  dynamic "viewer_certificate" {
+    for_each = var.use_cloudfront_cert ? [] : [1] //if false, use certicate arn
+    content {
+      acm_certificate_arn      = var.hackney_cert_arn
+      minimum_protocol_version = "TLSv1.2_2018"
+      ssl_support_method       = "sni-only"
+    }
+  }
+  dynamic "viewer_certificate" {
+    for_each = var.use_cloudfront_cert ? [1] : [] //if true, use cloudfront certificate
+    content {
+      cloudfront_default_certificate = var.use_cloudfront_cert
+    }
   }
 }
 

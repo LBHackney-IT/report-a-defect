@@ -22,3 +22,21 @@ variable "environment_name_tag" {
   description = "The environment name for tagging resources (not the same as environment_name)"
   type        = string
 }
+
+variable "cname_aliases" {
+  description = "CNAME aliases for the CloudFront distribution"
+  type        = list(string)
+  default     = []
+}
+
+variable "use_cloudfront_cert" {
+  description = "Whether to use a CloudFront certificate"
+  type        = bool
+  default     = false
+}
+
+variable "hackney_cert_arn" {
+  description = "The ARN of the ACM certificate for the CloudFront distribution"
+  type        = string
+  default     = ""
+}
