@@ -79,4 +79,4 @@ will automatically deploy this to AWS.
 
 ### Production
 
-<https://lbh-report-a-defect.hackney.gov.uk.com/>
+<https://lbh-report-a-defect.hackney.gov.uk/>
