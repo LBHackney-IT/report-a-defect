@@ -53,6 +53,7 @@ commands:
           name: apply
           command: |
             cd ./terraform/<<parameters.environment>>/
+            terraform import module.main.aws_cloudwatch_log_group.this "API-Gateway-Execution-Logs_wgjcvcky0e/development"
             terraform apply -auto-approve
 
             echo "export ECR_REPO_URL=$(terraform output -raw ecr_repository_url)" >> $BASH_ENV
