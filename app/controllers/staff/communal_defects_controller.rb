@@ -23,7 +23,7 @@ class Staff::CommunalDefectsController < Staff::BaseController
         send_email_to_employer_agent: send_email_to_employer_agent
       ).call
       flash[:success] = I18n.t('generic.notice.create.success', resource: 'defect')
-      redirect_to communal_area_path(@communal_area)
+      redirect_to communal_area_url(@communal_area)
     else
       render :new
     end
@@ -47,10 +47,10 @@ class Staff::CommunalDefectsController < Staff::BaseController
     UpdateDefect.new(defect: @defect).call
 
     if @defect.saved_change_to_status? && @defect.completed?
-      redirect_to new_defect_completion_path(@defect)
+      redirect_to new_defect_completion_url(@defect)
     else
       flash[:success] = I18n.t('generic.notice.update.success', resource: 'defect')
-      redirect_to communal_area_defect_path(@defect.communal_area, @defect)
+      redirect_to communal_area_defect_url(@defect.communal_area, @defect)
     end
   end
 

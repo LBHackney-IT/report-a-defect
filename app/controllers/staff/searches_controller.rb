@@ -22,7 +22,7 @@ class Staff::SearchesController < Staff::BaseController
       redirect_to helpers.defect_path_for(defect: defect)
     else
       flash[:notice] = I18n.t('page_content.defect.not_found', reference_number: query)
-      redirect_to dashboard_path
+      redirect_to dashboard_url
     end
   end
 end
