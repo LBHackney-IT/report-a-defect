@@ -116,8 +116,24 @@ resource "aws_api_gateway_deployment" "main" {
   }
 }
 resource "aws_api_gateway_stage" "main" {
-  depends_on    = [aws_api_gateway_deployment.main]
+  depends_on    = [aws_api_gateway_deployment.main, aws_cloudwatch_log_group.this]
   rest_api_id   = aws_api_gateway_rest_api.main.id
   stage_name    = var.environment_name
   deployment_id = aws_api_gateway_deployment.main.id
+}
+
+# Logging
+resource "aws_cloudwatch_log_group" "this" {
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.main.id}/${var.environment_name}"
+  retention_in_days = 7
+}
+resource "aws_api_gateway_method_settings" "this" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  stage_name  = aws_api_gateway_stage.main.stage_name
+  method_path = "*/*"
+
+  settings {
+    metrics_enabled = true
+    logging_level   = "INFO"
+  }
 }
