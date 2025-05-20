@@ -3,11 +3,12 @@ services:
   test:
     build:
       context: .
+      dockerfile: Dockerfile
       args:
         RAILS_ENV: "test"
     environment:
       RAILS_ENV: "test"
-      DATABASE_URL: "postgres://postgres:password@db-test:5432/report-a-defect?template=template0&pool=5&encoding=unicode"
+      DATABASE_URL_STRING: "postgres://postgres:password@db-test:5432/report-a-defect?template=template0&pool=5&encoding=unicode"
     container_name: report-a-defect_test_web_1
     env_file:
       - docker-compose.env.example

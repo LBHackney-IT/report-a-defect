@@ -50,7 +50,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
         expect(page).to have_content(header)
       end
 
-      Defect.statuses.each do |text, _integer|
+      Defect.statuses.each_key do |text|
         expect(page).to have_content(format_status(text))
       end
 
@@ -78,7 +78,7 @@ RSpec.feature 'Staff can view a report for a scheme' do
         expect(page).to have_content(header)
       end
 
-      Defect::CATEGORIES.each do |category, _trades|
+      Defect::CATEGORIES.each_key do |category|
         expect(page).to have_content(category)
       end
 

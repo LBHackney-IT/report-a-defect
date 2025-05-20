@@ -9,4 +9,9 @@ namespace :notify do
   task due_soon_and_overdue_defects: :environment do
     EmailDueSoonAndOverdueDefects.new.call
   end
+
+  task all_notifications: :environment do
+    EmailEscalatedDefects.new.call
+    EmailDueSoonAndOverdueDefects.new.call
+  end
 end

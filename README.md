@@ -27,7 +27,7 @@ bin/dstart
 If you'd like to see all logs, like Sidekiq or Redis you can use the default:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 ## Running the tests
@@ -69,14 +69,14 @@ This application supports branch based deployments.
   the `master` branch and push
 
 [Circle CI](https://app.circleci.com/pipelines/github/LBHackney-IT/report-a-defect)
-will automatically deploy this to Heroku.
+will automatically deploy this to AWS.
 
 ## Access
 
 ### Staging
 
-<https://lbh-report-a-defect-staging.herokuapp.com/>
+<https://d2snsyd9d1jklu.cloudfront.net/>
 
 ### Production
 
-<https://lbh-report-a-defect-production.herokuapp.com/>
+<https://lbh-report-a-defect.hackney.gov.uk/>

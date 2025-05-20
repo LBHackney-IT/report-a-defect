@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.6.6'
+ruby '3.1.0'
 gem 'activerecord-session_store'
 gem 'dotenv-rails'
 gem 'haml-rails', '~> 2.0'
@@ -10,10 +10,10 @@ gem 'pg', '~> 1.3.5'
 gem 'pg_search'
 gem 'public_activity', '~> 2.0'
 gem 'puma', '~> 4.3'
-gem 'mail-notify', '~> 1.0.4'
+gem 'mail-notify', '~> 1.1.0'
 gem 'mimemagic', '~> 0.3.8'
 gem 'omniauth-auth0', '~> 2.2'
-gem 'omniauth-rails_csrf_protection'
+# gem 'omniauth-rails_csrf_protection'
 gem 'rails', '~> 6.1.6'
 gem 'redis'
 gem 'redis-namespace'
@@ -22,10 +22,10 @@ gem 'sidekiq'
 gem 'simple_form'
 gem 'turbolinks', '~> 5'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
-gem 'uglifier', '>= 1.3.0'
-gem 'sentry-raven'
-gem 'newrelic_rpm'
+gem 'uglifier', '>= 4.2.0'
 gem 'figaro'
+gem 'net-smtp'
+gem 'concurrent-ruby', '1.3.4'
 
 # Support file upload
 gem 'fog-aws'
@@ -37,11 +37,12 @@ gem 'factory_bot_rails'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
-  gem 'capybara', '~> 2.13'
+  gem 'capybara', '~> 3.4'
   gem 'selenium-webdriver'
   gem 'pry'
   gem 'bullet'
   gem 'rubocop'
+  gem 'rspec-rails'
 end
 
 group :development do
@@ -53,10 +54,6 @@ group :development do
   gem 'spring-commands-rspec'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console', '>= 3.3.0'
-end
-
-group :development, :test do
-  gem 'rspec-rails'
 end
 
 group :test do

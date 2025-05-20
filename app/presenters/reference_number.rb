@@ -1,5 +1,5 @@
 class ReferenceNumber
-  FORMAT = /^ *NB([0-9-]+) *$/i.freeze
+  FORMAT = /^ *NB([0-9-]+) *$/i
 
   def self.parse(string)
     match = FORMAT.match(string)

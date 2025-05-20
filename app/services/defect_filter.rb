@@ -22,13 +22,13 @@ class DefectFilter
   def status_scope
     return :open_and_closed if open? && closed?
     return :open if open?
-    return :closed if closed?
+    :closed if closed?
   end
 
   def type_scope
     return :property_and_communal if property? && communal?
     return :property if property?
-    return :communal if communal?
+    :communal if communal?
   end
 
   def scheme_scope

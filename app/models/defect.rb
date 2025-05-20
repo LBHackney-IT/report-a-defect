@@ -30,34 +30,34 @@ class Defect < ApplicationRecord
     rejected
   ]
 
-  scope :open_and_closed, (-> { open.or(closed) })
-  scope :open, (-> { where(status: %i[outstanding follow_on end_of_year dispute referral]) })
-  scope :closed, (-> { where(status: %i[completed closed raised_in_error rejected]) })
+  scope :open_and_closed, -> { open.or(closed) }
+  scope :open, -> { where(status: %i[outstanding follow_on end_of_year dispute referral]) }
+  scope :closed, -> { where(status: %i[completed closed raised_in_error rejected]) }
 
-  scope :property_and_communal, (-> { property.or(communal) })
-  scope :property, (-> { where(communal: false) })
-  scope :communal, (-> { where(communal: true) })
+  scope :property_and_communal, -> { property.or(communal) }
+  scope :property, -> { where(communal: false) }
+  scope :communal, -> { where(communal: true) }
 
-  scope :for_priorities, (->(priority_ids) { where(priority_id: priority_ids) })
-  scope :for_properties, (->(property_ids) { where(property_id: property_ids) })
-  scope :for_communal_areas, (->(communal_area_ids) { where(communal_area_id: communal_area_ids) })
+  scope :for_priorities, ->(priority_ids) { where(priority_id: priority_ids) }
+  scope :for_properties, ->(property_ids) { where(property_id: property_ids) }
+  scope :for_communal_areas, ->(communal_area_ids) { where(communal_area_id: communal_area_ids) }
   scope :for_properties_or_communal_areas, lambda { |property_ids, communal_area_ids|
     for_properties(property_ids).or(for_communal_areas(communal_area_ids))
   }
-  scope :for_scheme, (lambda { |scheme_ids|
+  scope :for_scheme, lambda { |scheme_ids|
     property_ids = Property.joins(:scheme).where(schemes: { id: scheme_ids }).pluck(:id)
     communal_area_ids = CommunalArea.joins(:scheme).where(schemes: { id: scheme_ids }).pluck(:id)
     for_properties_or_communal_areas(property_ids, communal_area_ids)
-  })
+  }
 
-  scope :for_trades, (->(trade_names) { where(trade: trade_names) })
+  scope :for_trades, ->(trade_names) { where(trade: trade_names) }
 
-  scope :flagged, (-> { where(flagged: true) })
-  scope :overdue, (-> { open.where('target_completion_date < ?', Date.current) })
-  scope :due_soon, (-> { open.where(target_completion_date: Date.current..3.days.since) })
-  scope :flagged_and_overdue, (-> { flagged.or(overdue) })
-  scope :overdue_and_due_soon, (-> { overdue.or(due_soon) })
-  scope :flagged_and_due_soon, (-> { flagged.or(due_soon) })
+  scope :flagged, -> { where(flagged: true) }
+  scope :overdue, -> { open.where('target_completion_date < ?', Date.current) }
+  scope :due_soon, -> { open.where(target_completion_date: Date.current..3.days.since) }
+  scope :flagged_and_overdue, -> { flagged.or(overdue) }
+  scope :overdue_and_due_soon, -> { overdue.or(due_soon) }
+  scope :flagged_and_due_soon, -> { flagged.or(due_soon) }
 
   belongs_to :property, optional: true
   belongs_to :communal_area, optional: true
@@ -69,7 +69,7 @@ class Defect < ApplicationRecord
 
   def scheme
     return communal_area&.scheme if communal_area
-    return property&.scheme if property
+    property&.scheme
   end
 
   include PublicActivity::Model

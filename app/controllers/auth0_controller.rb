@@ -4,8 +4,10 @@ class Auth0Controller < ApplicationController
     # and the IdP
     session[:userinfo] = request.env['omniauth.auth']
 
+    Rails.logger.info "Session after assignment: #{request.session.inspect}"
+
     # Redirect to the URL you want after successful auth
-    redirect_to '/dashboard'
+    redirect_to dashboard_url
   end
 
   def failure
