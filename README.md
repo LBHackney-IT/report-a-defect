@@ -73,11 +73,10 @@ will automatically deploy this to AWS.
 
 ## Access
 
-TODO: UPDATE 
 ### Staging
 
-<https://lbh-report-a-defect-staging.herokuapp.com/>
+<https://d2snsyd9d1jklu.cloudfront.net/>
 
 ### Production
 
-<https://lbh-report-a-defect-production.herokuapp.com/>
+<https://lbh-report-a-defect.hackney.gov.uk/>

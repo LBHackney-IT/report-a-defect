@@ -98,6 +98,7 @@ jobs:
           paths:
             - /tmp/built-image.tar
             - /tmp/report-a-defect
+  
   assume-role-development:
     executor: docker-python
     steps:
@@ -130,7 +131,7 @@ jobs:
       - terraform-init-then-apply:
           environment: "production"
 
-  deploy-development:
+  deploy:
     working_directory: ~/report_a_defect
     docker:
       - image: cimg/base:2025.04
@@ -161,7 +162,7 @@ jobs:
             export AWS_ACCOUNT=$(aws sts get-caller-identity --query "Account" --output text)
             docker login -u AWS -p $(aws ecr get-login-password --region eu-west-2) $AWS_ACCOUNT.dkr.ecr.eu-west-2.amazonaws.com
       - run:
-          name: Tag new image for development release
+          name: Tag new image for release
           command: |
             docker image load --input /tmp/built-image.tar
             docker tag reportadefect:$CIRCLE_SHA1 $ECR_REPO_URL:$CIRCLE_SHA1
@@ -182,61 +183,6 @@ jobs:
           name: Force new deployment of the ECS service
           command: |
             aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --force-new-deployment --region eu-west-2
-
-  deploy_staging:
-    working_directory: ~/report_a_defect
-    docker:
-      - image: cimg/base:2025.04
-    steps:
-      - restore_cache:
-          keys:
-            - docker-images-{{ .Environment.CIRCLE_SHA1 }}
-      - setup_remote_docker
-      - run:
-          name: Login to Docker
-          command: echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
-      - run:
-          name: Setup Heroku CLI
-          command: |
-            cd /tmp/report-a-defect
-            chmod +x .circleci/setup-heroku.sh
-            .circleci/setup-heroku.sh
-      - run:
-          name: Deploy the Docker image to Heroku Staging
-          command: |
-            docker image load --input /tmp/built-image.tar
-            docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
-            docker push registry.heroku.com/$HEROKU_APP_NAME_STAGING/web
-            heroku container:release web --app $HEROKU_APP_NAME_STAGING
-            heroku container:release worker --app $HEROKU_APP_NAME_STAGING
-
-  deploy_production:
-    working_directory: ~/report_a_defect
-    docker:
-      - image: cimg/ruby:3.1.0
-    steps:
-      - restore_cache:
-          keys:
-            - docker-images-{{ .Environment.CIRCLE_SHA1 }}
-      - setup_remote_docker
-      - run:
-          name: Login to Docker
-          command: docker login --username=_ --password-stdin=$HEROKU_API_KEY registry.heroku.com
-      - run:
-          name: Setup Heroku
-          command: |
-            cd /tmp/report-a-defect
-            chmod +x .circleci/setup-heroku.sh
-            .circleci/setup-heroku.sh
-      - run:
-          name: Deploy the Docker image to Heroku Production
-          command: |
-            docker image load --input /tmp/built-image.tar
-            docker tag reportadefect:$CIRCLE_SHA1 registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
-            docker push registry.heroku.com/$HEROKU_APP_NAME_PRODUCTION/web
-            heroku container:release web --app $HEROKU_APP_NAME_PRODUCTION
-            heroku container:release worker --app $HEROKU_APP_NAME_STAGING
-
 workflows:
   version: 2
   check:
@@ -249,39 +195,36 @@ workflows:
                 - master
   check-and-deploy-development:
     jobs:
-      - build-and-test
-          # filters:
-          #   branches:
-          #     only:
-          #       - develop
-      - assume-role-development:
-          context: api-assume-role-housing-development-context
-      - terraform-init-then-apply-development:
-          requires:
-            - assume-role-development
-      - deploy-development:
-          requires:
-            - build-and-test
-            - terraform-init-then-apply-development
-  continuous_delivery:
-    jobs:
       - build-and-test:
           filters:
             branches:
               only:
                 - develop
-                - master
-      - deploy_staging:
+      - assume-role-development:
+          context: api-assume-role-housing-development-context
           requires:
             - build-and-test
+      - terraform-init-then-apply-development:
+          requires:
+            - assume-role-development
+      - deploy:
+          requires:
+            - build-and-test
+            - terraform-init-then-apply-development
+  check-and-deploy-production:
+    jobs:
+      - build-and-test:
           filters:
             branches:
               only:
-                - develop
-      - deploy_production:
+                - master
+      - assume-role-production:
+          context: api-assume-role-housing-production-context
           requires:
             - build-and-test
-          filters:
-            branches:
-              only:
-                - master
+      - terraform-init-then-apply-production:
+          requires:
+            - assume-role-production
+      - deploy:
+          requires:
+            - terraform-init-then-apply-production
