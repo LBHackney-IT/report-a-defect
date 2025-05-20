@@ -71,7 +71,7 @@ commands:
             - bash.env
 
 jobs:
-  build-and-test:
+  build_and_test:
     working_directory: ~/report_a_defect
     docker:
       - image: cimg/base:2025.04
@@ -187,7 +187,7 @@ workflows:
   version: 2
   check:
     jobs:
-      - build-and-test:
+      - build_and_test:
           filters:
             branches:
               ignore:
@@ -195,7 +195,7 @@ workflows:
                 - master
   check-and-deploy-development:
     jobs:
-      - build-and-test:
+      - build_and_test:
           filters:
             branches:
               only:
@@ -203,17 +203,17 @@ workflows:
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-            - build-and-test
+            - build_and_test
       - terraform-init-then-apply-development:
           requires:
             - assume-role-development
       - deploy:
           requires:
-            - build-and-test
+            - build_and_test
             - terraform-init-then-apply-development
   check-and-deploy-production:
     jobs:
-      - build-and-test:
+      - build_and_test:
           filters:
             branches:
               only:
@@ -221,7 +221,7 @@ workflows:
       - assume-role-production:
           context: api-assume-role-housing-production-context
           requires:
-            - build-and-test
+            - build_and_test
       - terraform-init-then-apply-production:
           requires:
             - assume-role-production
