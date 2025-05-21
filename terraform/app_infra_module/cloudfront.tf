@@ -59,6 +59,6 @@ resource "aws_ssm_parameter" "app_domain_name" {
   name        = "/report-a-defect/${var.environment_name}/domain"
   description = "Domain name for the report a defect app"
   type        = "String"
-  value       = aws_cloudfront_distribution.app_distribution.domain_name
+  value       = var.use_cloudfront_cert ? aws_cloudfront_distribution.app_distribution.domain_name : var.cname_aliases[0]
   overwrite   = true
 }
