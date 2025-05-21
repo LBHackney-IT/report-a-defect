@@ -7,6 +7,13 @@ terraform {
   }
 }
 
+
+data "aws_acm_certificate" "hackney_cert" {
+  domain   = "lbh-report-a-defect.hackney.gov.uk.com"
+  statuses = ["ISSUED"]
+}
+
+
 module "main" {
   source               = "../app_infra_module"
   environment_name     = "production"
@@ -15,11 +22,8 @@ module "main" {
   bastion_sg_id        = "sg-080ea6ec2415dea47"
   environment_name_tag = "prod"
   
-  use_cloudfront_cert  = true
-
-  # TODO: Uncomment once the DNS record is created & SSL certificate is issued
-  # cname_aliases        = ["https://lbh-report-a-defect.hackney.gov.uk.com"]
-  # hackney_cert_arn     = ""
+  cname_aliases        = ["lbh-report-a-defect.hackney.gov.uk.com"]
+  hackney_cert_arn     = data.aws_acm_certificate.hackney_cert.arn
 }
 
 

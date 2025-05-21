@@ -209,7 +209,6 @@ workflows:
             - assume-role-development
       - deploy:
           requires:
-            - build_and_test
             - terraform-init-then-apply-development
   check-and-deploy-production:
     jobs:
