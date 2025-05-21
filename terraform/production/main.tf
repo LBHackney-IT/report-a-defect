@@ -7,13 +7,6 @@ terraform {
   }
 }
 
-
-data "aws_acm_certificate" "hackney_cert" {
-  domain   = "lbh-report-a-defect.hackney.gov.uk.com"
-  statuses = ["ISSUED"]
-}
-
-
 module "main" {
   source               = "../app_infra_module"
   environment_name     = "production"
@@ -22,8 +15,8 @@ module "main" {
   bastion_sg_id        = "sg-080ea6ec2415dea47"
   environment_name_tag = "prod"
   
-  cname_aliases        = ["lbh-report-a-defect.hackney.gov.uk.com"]
-  hackney_cert_arn     = data.aws_acm_certificate.hackney_cert.arn
+  cname_aliases        = ["lbh-report-a-defect.hackney.gov.uk"]
+  hackney_cert_arn     = "arn:aws:acm:us-east-1:282997303675:certificate/7f43c31a-6078-4a49-811c-fc9145a2b1d2"
 }
 
 
