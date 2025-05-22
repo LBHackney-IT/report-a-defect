@@ -16,7 +16,7 @@ class Staff::Defects::ForwardingController < Staff::BaseController
       EmailEmployerAgent.new(defect: defect).call
     end
 
-    redirect_to defect_path_for(defect: defect),
+    redirect_to defect_url_for(defect: defect),
                 flash: {
                   success: I18n.t('page_content.defect.forwarding.success',
                                   recipient_type: formatted_recipient_type),
