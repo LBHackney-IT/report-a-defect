@@ -24,6 +24,14 @@ module DefectHelper
     end
   end
 
+  def defect_url_for(defect:)
+    if defect.communal?
+      communal_area_defect_url(defect.communal_area, defect.id)
+    else
+      property_defect_url(defect.property, defect.id)
+    end
+  end
+
   def defect_type_for(defect:)
     defect.communal? ? 'Communal Area' : 'Property'
   end

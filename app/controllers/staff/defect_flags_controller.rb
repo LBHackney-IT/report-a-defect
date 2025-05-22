@@ -1,12 +1,12 @@
 class Staff::DefectFlagsController < Staff::BaseController
   def create
     defect.update!(flagged: true)
-    redirect_to helpers.defect_path_for(defect: defect)
+    redirect_to helpers.defect_url_for(defect: defect)
   end
 
   def destroy
     defect.update!(flagged: false)
-    redirect_to helpers.defect_path_for(defect: defect)
+    redirect_to helpers.defect_url_for(defect: defect)
   end
 
   private
